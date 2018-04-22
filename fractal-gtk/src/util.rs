@@ -7,7 +7,7 @@ use self::gdk_pixbuf::PixbufExt;
 use failure::Error;
 use self::gdk::ContextExt;
 
-use html2pango::{html_escape, markup_links};
+use html2pango::{html_escape, markup_links, markup_html};
 
 pub mod glib_thread_prelude {
     pub use std::thread;
@@ -58,4 +58,8 @@ pub fn get_pixbuf_data(pb: &Pixbuf) -> Result<Vec<u8>, Error> {
 
 pub fn markup_text(s: &str) -> String {
     markup_links(&html_escape(s))
+}
+
+pub fn markup_body(s: &str) -> String {
+    markup_html(s.to_string()).unwrap_or_default().trim().to_string()
 }

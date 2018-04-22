@@ -16,6 +16,7 @@ use backend::BKCommand;
 
 use fractal_api as api;
 use util::markup_text;
+use util::markup_body;
 
 use std::path::Path;
 
@@ -119,7 +120,7 @@ impl<'a> MessageBox<'a> {
                 body = self.build_room_msg_file();
             }
             _ => {
-                body = self.build_room_msg_body(&msg.body);
+                body = self.build_room_msg_body(&msg);
             }
         }
 
@@ -210,11 +211,19 @@ impl<'a> MessageBox<'a> {
         w.set_selectable(true);
     }
 
-    fn build_room_msg_body(&self, body: &str) -> gtk::Box {
+    fn build_room_msg_body(&self, message: &Message) -> gtk::Box {
         let bx = gtk::Box::new(gtk::Orientation::Horizontal, 0);
         let msg = gtk::Label::new("");
 
-        msg.set_markup(&markup_text(body));
+        match message.format {
+            Some(ref f) if f == "org.matrix.custom.html" => {
+                let raw = message.formatted_body.clone().unwrap_or_default();
+                msg.set_markup(&markup_body(&raw));
+            }
+            _ => {
+                msg.set_markup(&markup_text(&message.body));
+            }
+        }
         self.set_msg_styles(&msg);
 
         bx.add(&msg);
