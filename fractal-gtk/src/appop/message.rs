@@ -189,9 +189,7 @@ impl AppOp {
     }
 
     pub fn append_tmp_msgs(&mut self) {
-        let messages = self.ui.builder
-            .get_object::<gtk::ListBox>("message_list")
-            .expect("Can't find message_list in ui file.");
+        let messages = self.message_box.clone();
 
         if let Some(r) = self.rooms.get(&self.active_room.clone().unwrap_or_default()) {
             let mut widgets = vec![];
