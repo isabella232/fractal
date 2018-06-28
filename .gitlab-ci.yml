@@ -35,7 +35,7 @@ flatpak:
           - .flatpak-builder/cache/
           - target/
 
-pages:
+.pages:
     image: fedora
     stage: deploy
     only:
