@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/World/fractal/issues\n"
-"POT-Creation-Date: 2018-06-18 12:49+0000\n"
-"PO-Revision-Date: 2018-06-18 14:50+0200\n"
+"POT-Creation-Date: 2018-06-27 19:52+0000\n"
+"PO-Revision-Date: 2018-06-29 11:38+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: es <gnome-es-list@gnome.org>\n"
 "Language: es\n"
@@ -230,6 +230,10 @@ msgstr "Nueva sala"
 msgid "New direct chat"
 msgstr "Nuevo chat directo"
 
+#: fractal-gtk/res/ui/audio_player.ui:34 fractal-gtk/res/ui/audio_player.ui:50
+msgid "Play"
+msgstr "Reproducir"
+
 #: fractal-gtk/res/ui/direct_chat.ui:64 fractal-gtk/res/ui/invite_user.ui:64
 #: fractal-gtk/res/ui/main_window.ui:645
 msgid "Matrix username, email or phone number"
@@ -437,7 +441,7 @@ msgstr "*cursiva*"
 msgid "Media viewer"
 msgstr "Visor de medios"
 
-#: fractal-gtk/res/ui/media_viewer_menu.ui:18
+#: fractal-gtk/res/ui/media_viewer_menu.ui:26
 msgid "Save as"
 msgstr "Guardar como"
 
@@ -670,11 +674,11 @@ msgid_plural "and {member_count} more"
 msgstr[0] "y {member_count} más"
 msgstr[1] "y {member_count} más"
 
-#: fractal-gtk/src/appop/message.rs:172
+#: fractal-gtk/src/appop/message.rs:171
 msgid "New Messages"
 msgstr "Mensajes nuevos"
 
-#: fractal-gtk/src/appop/message.rs:414
+#: fractal-gtk/src/appop/message.rs:413
 msgid "Select"
 msgstr "Seleccionar"
 
@@ -702,15 +706,26 @@ msgstr "{m1} y Otros"
 msgid "Syncing, this could take a while"
 msgstr "Sincronizando, esto puede tardar un tiempo"
 
-#: fractal-gtk/src/widgets/message.rs:332
-msgid "Download"
-msgstr "Descargar"
+#: fractal-gtk/src/widgets/message.rs:323
+#| msgid "Could not save the file"
+msgid "Could not retrieve file URI"
+msgstr "No se pudo obtener el URI del archivo"
 
-#: fractal-gtk/src/widgets/message.rs:342
+#: fractal-gtk/src/widgets/message.rs:339
+#| msgid "_Save"
+msgid "Save"
+msgstr "Guardar"
+
+#: fractal-gtk/src/widgets/message.rs:349
+#: fractal-gtk/src/widgets/message.rs:392
 msgid "Could not download the file"
 msgstr "No se puede descargar el archivo"
 
-#: fractal-gtk/src/widgets/message.rs:359
+#: fractal-gtk/src/widgets/message.rs:382
+msgid "Download"
+msgstr "Descargar"
+
+#: fractal-gtk/src/widgets/message.rs:409
 msgid "Open"
 msgstr "Abrir"
 
