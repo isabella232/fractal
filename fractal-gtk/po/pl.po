@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/World/fractal/issues\n"
-"POT-Creation-Date: 2018-06-18 12:49+0000\n"
-"PO-Revision-Date: 2018-06-18 16:33+0200\n"
+"POT-Creation-Date: 2018-06-27 19:52+0000\n"
+"PO-Revision-Date: 2018-07-01 18:58+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -228,6 +228,10 @@ msgstr "Nowy pokój"
 msgid "New direct chat"
 msgstr "Nowa rozmowa"
 
+#: fractal-gtk/res/ui/audio_player.ui:34 fractal-gtk/res/ui/audio_player.ui:50
+msgid "Play"
+msgstr "Odtwarza"
+
 #: fractal-gtk/res/ui/direct_chat.ui:64 fractal-gtk/res/ui/invite_user.ui:64
 #: fractal-gtk/res/ui/main_window.ui:645
 msgid "Matrix username, email or phone number"
@@ -435,7 +439,7 @@ msgstr "*pochylenie*"
 msgid "Media viewer"
 msgstr "Przeglądarka multimediów"
 
-#: fractal-gtk/res/ui/media_viewer_menu.ui:18
+#: fractal-gtk/res/ui/media_viewer_menu.ui:26
 msgid "Save as"
 msgstr "Zapisz jako"
 
@@ -669,11 +673,11 @@ msgstr[0] "i jeden więcej"
 msgstr[1] "i {member_count} więcej"
 msgstr[2] "i {member_count} więcej"
 
-#: fractal-gtk/src/appop/message.rs:172
+#: fractal-gtk/src/appop/message.rs:171
 msgid "New Messages"
 msgstr "Nowe wiadomości"
 
-#: fractal-gtk/src/appop/message.rs:414
+#: fractal-gtk/src/appop/message.rs:413
 msgid "Select"
 msgstr "Wybierz"
 
@@ -701,15 +705,24 @@ msgstr "{m1} i inni"
 msgid "Syncing, this could take a while"
 msgstr "Synchronizowanie. Może to chwilę zająć."
 
-#: fractal-gtk/src/widgets/message.rs:332
-msgid "Download"
-msgstr "Pobierz"
+#: fractal-gtk/src/widgets/message.rs:323
+msgid "Could not retrieve file URI"
+msgstr "Nie można odebrać adresu URI pliku"
 
-#: fractal-gtk/src/widgets/message.rs:342
+#: fractal-gtk/src/widgets/message.rs:339
+msgid "Save"
+msgstr "Zapisuje"
+
+#: fractal-gtk/src/widgets/message.rs:349
+#: fractal-gtk/src/widgets/message.rs:392
 msgid "Could not download the file"
 msgstr "Nie można pobrać pliku"
 
-#: fractal-gtk/src/widgets/message.rs:359
+#: fractal-gtk/src/widgets/message.rs:382
+msgid "Download"
+msgstr "Pobierz"
+
+#: fractal-gtk/src/widgets/message.rs:409
 msgid "Open"
 msgstr "Otwórz"
 
