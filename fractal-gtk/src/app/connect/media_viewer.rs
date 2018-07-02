@@ -132,18 +132,18 @@ impl App {
             let main_window = ui.builder
                 .get_object::<gtk::Window>("main_window")
                 .expect("Cant find main_window in ui file.");
-            if let Some(win) = main_window.get_window() {
-                if let Some(disp) = gdk::Display::get_default() {
-                    if let Some(seat) = disp.get_default_seat() {
-                        if let Some(ptr) = seat.get_pointer() {
-                            let (_, _, y, _) = win.get_device_position(&ptr);
-                            if y <= 6 && win.get_state().contains(gdk::WindowState::FULLSCREEN) {
-                                headerbar_revealer.set_reveal_child(true);
-                            }
-                        }
+
+            gdk::Display::get_default()
+                .and_then(|disp| disp.get_default_seat())
+                .and_then(|seat| seat.get_pointer())
+                .map(|ptr| {
+                    let win = main_window.get_window()?;
+                    let (_, _, y, _) = win.get_device_position(&ptr);
+                    if y <= 6 && win.get_state().contains(gdk::WindowState::FULLSCREEN) {
+                        headerbar_revealer.set_reveal_child(true);
                     }
-                }
-            }
+                    Some(true)
+                });
 
             let previous_media_revealer = ui.builder
                 .get_object::<gtk::Revealer>("previous_media_revealer")
