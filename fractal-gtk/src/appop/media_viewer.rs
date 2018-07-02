@@ -239,6 +239,11 @@ impl AppOp {
         media_viewer_headerbar.remove(&media_viewer_back_button);
         media_viewer_headerbar.set_show_close_button(false);
 
+        let full_screen_button_icon = self.ui.builder
+            .get_object::<gtk::Image>("full_screen_button_icon")
+            .expect("Can't find full_screen_button_icon in ui file.");
+        full_screen_button_icon.set_property_icon_name(Some("view-restore-symbolic"));
+
         headerbar_revealer.add(&media_viewer_headerbar_box);
 
         self.update_media_viewport();
@@ -274,6 +279,11 @@ impl AppOp {
         media_viewer_headerbar.pack_start(&media_viewer_back_button);
         media_viewer_headerbar.set_child_position(&media_viewer_back_button, 0);
         media_viewer_headerbar.set_show_close_button(true);
+
+        let full_screen_button_icon = self.ui.builder
+            .get_object::<gtk::Image>("full_screen_button_icon")
+            .expect("Can't find full_screen_button_icon in ui file.");
+        full_screen_button_icon.set_property_icon_name(Some("view-fullscreen-symbolic"));
 
         stack_header.add_named(&media_viewer_headerbar_box, "media-viewer");
         stack_header.set_visible_child_name("media-viewer");

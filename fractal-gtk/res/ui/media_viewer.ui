@@ -276,7 +276,7 @@
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
             <child>
-              <object class="GtkImage">
+              <object class="GtkImage" id="full_screen_button_icon">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="icon_name">view-fullscreen-symbolic</property>
