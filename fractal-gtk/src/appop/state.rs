@@ -1,6 +1,8 @@
 extern crate gtk;
+extern crate gdk;
 
 use self::gtk::prelude::*;
+use self::gdk::WindowExt;
 
 use appop::AppOp;
 use appop::room::RoomPanel;
@@ -72,11 +74,31 @@ impl AppOp {
         }
     }
 
-    pub fn escape(&mut self) {
-        if let AppState::Chat = self.state {
-            self.room_panel(RoomPanel::NoRoom);
-            self.active_room = None;
-            self.clear_tmp_msgs();
+    pub fn escape(&mut self, w: &gtk::ApplicationWindow) -> bool {
+        if self.inhibit_escape {
+            return true;
+        }
+
+        // leave full screen only if we're currently in fullscreen
+        if let Some(win) = w.get_window() {
+            if win.get_state().contains(gdk::WindowState::FULLSCREEN) {
+                self.leave_full_screen();
+                return true;
+            }
+        }
+
+        match self.state {
+            AppState::Chat => {
+                self.room_panel(RoomPanel::NoRoom);
+                self.active_room = None;
+                self.clear_tmp_msgs();
+                true
+            },
+            AppState::MediaViewer => {
+                self.hide_media_viewer();
+                true
+            },
+            _ => { false }
         }
     }
 }

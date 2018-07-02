@@ -293,6 +293,7 @@ impl Autocomplete {
         self.popover_search = None;
         let visible = self.popover.is_visible();
         self.popover.popdown();
+        self.op.lock().unwrap().inhibit_escape = false;
 
         visible
     }
@@ -418,11 +419,11 @@ impl Autocomplete {
         let mut widget_list : HashMap<String, gtk::EventBox> = HashMap::new();
 
         if list.len() > 0 {
-            let guard = self.op.lock().unwrap();
             for m in list.iter() {
                 let alias = &m.alias.clone().unwrap_or_default().trim_right_matches(" (IRC)").to_owned();
                 let widget;
                 {
+                    let guard = self.op.lock().unwrap();
                     let mb = widgets::MemberBox::new(&m, &guard);
                     widget = mb.widget(true);
                 }
@@ -453,10 +454,12 @@ impl Autocomplete {
             }
 
             self.popover.popup();
+            self.op.lock().unwrap().inhibit_escape = true;
         }
         else {
             self.autocomplete_enter();
         }
+
         return widget_list;
     }
 

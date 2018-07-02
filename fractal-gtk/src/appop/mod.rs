@@ -80,10 +80,7 @@ pub struct AppOp {
     pub more_members_btn: gtk::Button,
     pub unsent_messages: HashMap<String, (String, i32)>,
 
-    pub highlighted_entry: Vec<String>,
-    pub popover_position: Option<i32>,
-    pub popover_search: Option<String>,
-    pub popover_closing: bool,
+    pub inhibit_escape: bool,
 
     pub state: AppState,
     pub since: Option<String>,
@@ -138,10 +135,7 @@ impl AppOp {
             member_limit: 50,
             unsent_messages: HashMap::new(),
 
-            highlighted_entry: vec![],
-            popover_position: None,
-            popover_search: None,
-            popover_closing: false,
+            inhibit_escape: false,
 
             logged_in: false,
             loading_more: false,

@@ -44,14 +44,13 @@ impl App {
         });
 
         let op = self.op.clone();
-        let chat: gtk::Widget = self.ui.builder
-            .get_object("room_view_stack")
-            .expect("Couldn't find room_view_stack in ui file.");
-        chat.connect_key_release_event(move |_, k| {
+        let main_window = self.ui.builder
+            .get_object::<gtk::ApplicationWindow>("main_window")
+            .expect("Cant find main_window in ui file.");
+        main_window.connect_key_press_event(move |w, k| {
             match k.get_keyval() {
                 gdk::enums::key::Escape => {
-                    op.lock().unwrap().escape();
-                    Inhibit(true)
+                    Inhibit(op.lock().unwrap().escape(w))
                 },
                 _ => Inhibit(false)
             }

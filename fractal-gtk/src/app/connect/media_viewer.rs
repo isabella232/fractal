@@ -198,25 +198,5 @@ impl App {
         next_media_button.connect_clicked(move |_| {
             op.lock().unwrap().next_media();
         });
-
-        // Connecting escape key to leave fullscreen mode
-        let main_window = self.ui.builder
-            .get_object::<gtk::ApplicationWindow>("main_window")
-            .expect("Cant find main_window in ui file.");
-        let op = self.op.clone();
-        main_window.connect_key_release_event(move |w, k| {
-            // leave full screen only if we're currently in fullscreen
-            if let Some(win) = w.get_window() {
-                if !win.get_state().contains(gdk::WindowState::FULLSCREEN) {
-                    return Inhibit(false);
-                }
-            }
-
-            if k.get_keyval() == gdk::enums::key::Escape {
-                op.lock().unwrap().leave_full_screen();
-            }
-
-            Inhibit(false)
-        });
     }
 }
