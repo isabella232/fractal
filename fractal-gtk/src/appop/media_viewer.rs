@@ -213,6 +213,34 @@ impl AppOp {
             .expect("Cant find main_window in ui file.");
         main_window.fullscreen();
 
+        let stack_header = self.ui.builder
+            .get_object::<gtk::Stack>("headerbar_stack")
+            .expect("Can't find headerbar_stack in ui file.");
+        let media_viewer_headerbar_box = self.ui.builder
+            .get_object::<gtk::Box>("media_viewer_headerbar_box")
+            .expect("Can't find media_viewer_headerbar_box in ui file.");
+        let headerbar_revealer = self.ui.builder
+            .get_object::<gtk::Revealer>("headerbar_revealer")
+            .expect("Can't find headerbar_revealer in ui file.");
+        // gdk::EventMask::ENTER_NOTIFY_MASK = 4096
+        headerbar_revealer.add_events(4096);
+        // gdk::EventMask::LEAVE_NOTIFY_MASK = 8192
+        headerbar_revealer.add_events(8192);
+
+        stack_header.remove(&media_viewer_headerbar_box);
+
+        let media_viewer_headerbar = self.ui.builder
+            .get_object::<gtk::HeaderBar>("media_viewer_headerbar")
+            .expect("Can't find media_viewer_headerbar in ui file.");
+        let media_viewer_back_button = self.ui.builder
+            .get_object::<gtk::Button>("media_viewer_back_button")
+            .expect("Can't find media_viewer_back_button in ui file.");
+
+        media_viewer_headerbar.remove(&media_viewer_back_button);
+        media_viewer_headerbar.set_show_close_button(false);
+
+        headerbar_revealer.add(&media_viewer_headerbar_box);
+
         self.update_media_viewport();
     }
 
@@ -221,6 +249,34 @@ impl AppOp {
             .get_object::<gtk::ApplicationWindow>("main_window")
             .expect("Cant find main_window in ui file.");
         main_window.unfullscreen();
+
+        let stack_header = self.ui.builder
+            .get_object::<gtk::Stack>("headerbar_stack")
+            .expect("Can't find headerbar_stack in ui file.");
+        let media_viewer_headerbar_box = self.ui.builder
+            .get_object::<gtk::Box>("media_viewer_headerbar_box")
+            .expect("Can't find media_viewer_headerbar_box in ui file.");
+        let headerbar_revealer = self.ui.builder
+            .get_object::<gtk::Revealer>("headerbar_revealer")
+            .expect("Can't find headerbar_revealer in ui file.");
+
+        if let Some(ch) = headerbar_revealer.get_child() {
+            headerbar_revealer.remove(&ch);
+        }
+
+        let media_viewer_headerbar = self.ui.builder
+            .get_object::<gtk::HeaderBar>("media_viewer_headerbar")
+            .expect("Can't find media_viewer_headerbar in ui file.");
+        let media_viewer_back_button = self.ui.builder
+            .get_object::<gtk::Button>("media_viewer_back_button")
+            .expect("Can't find media_viewer_back_button in ui file.");
+
+        media_viewer_headerbar.pack_start(&media_viewer_back_button);
+        media_viewer_headerbar.set_child_position(&media_viewer_back_button, 0);
+        media_viewer_headerbar.set_show_close_button(true);
+
+        stack_header.add_named(&media_viewer_headerbar_box, "media-viewer");
+        stack_header.set_visible_child_name("media-viewer");
 
         self.update_media_viewport();
     }
