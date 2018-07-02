@@ -33,12 +33,13 @@
           <object class="GtkOverlay" id="headerbar_overlay">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="halign">center</property>
+            <property name="halign">fill</property>
             <property name="valign">start</property>
             <child>
               <object class="GtkRevealer" id="headerbar_revealer">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="hexpand">True</property>
                 <child>
                   <placeholder/>
                 </child>
