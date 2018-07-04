@@ -44,6 +44,7 @@ pub enum BKCommand {
     GetRoomAvatar(String),
     GetThumbAsync(String, Sender<String>),
     GetMediaAsync(String, Sender<String>),
+    GetMediaListAsync(String, Option<String>, Option<String>, Sender<(Vec<Message>, String)>),
     GetFileAsync(String, Sender<String>),
     GetAvatarAsync(Option<Member>, Sender<String>),
     GetMedia(String),
