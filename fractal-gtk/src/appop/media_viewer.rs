@@ -307,6 +307,8 @@ impl AppOp {
                 .get_object::<gtk::Button>("zoom_in_button")
                 .expect("Cant find zoom_in_button in ui file.");
 
+            // FIXME: this is used for waiting for `min_lvl` and `max_lvl` to have their values updated
+            // it could be done in a proper way with signals
             gtk::timeout_add(10, clone!(mv => move || match *mv.image.zoom_level.lock().unwrap() {
                 None => Continue(true),
                 Some(zlvl) => {
