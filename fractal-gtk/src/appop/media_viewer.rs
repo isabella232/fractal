@@ -16,17 +16,21 @@ use types::Room;
 
 use backend::BKCommand;
 
+use std::sync::{Arc, RwLock};
 use std::sync::mpsc::channel;
 use std::sync::mpsc::{Sender, Receiver};
-use std::sync::mpsc::RecvError;
+use std::sync::mpsc::TryRecvError;
 
 const FLOATING_POINT_ERROR: f64 = 0.01;
 
 #[derive(Clone)]
 pub struct MediaViewer {
-    media_list: Vec<Message>,
-    prev_batch: Option<String>,
-    current_media_index: usize,
+    media_list: Arc<RwLock<Vec<Message>>>,
+    current_media_index: Arc<RwLock<usize>>,
+
+    prev_batch: Arc<RwLock<Option<String>>>,
+    loading_error: Arc<RwLock<bool>>,
+    no_more_media: Arc<RwLock<bool>>,
 
     image: image::Image,
     zoom_levels: Vec<f64>,
@@ -48,9 +52,11 @@ impl MediaViewer {
         }).unwrap_or_default();
 
         MediaViewer {
-            media_list,
-            prev_batch: None,
-            current_media_index,
+            media_list: Arc::new(RwLock::new(media_list)),
+            current_media_index: Arc::new(RwLock::new(current_media_index)),
+            prev_batch: Arc::new(RwLock::new(None)),
+            loading_error: Arc::new(RwLock::new(false)),
+            no_more_media: Arc::new(RwLock::new(false)),
             image,
             zoom_levels: vec![0.025, 0.05, 0.1, 0.25, 0.5, 0.75, 1.0],
         }
@@ -59,30 +65,6 @@ impl MediaViewer {
     pub fn set_zoom_level(&self, zlvl: f64) {
         *self.image.zoom_level.lock().unwrap() = Some(zlvl);
         self.image.widget.queue_draw();
-    }
-
-    pub fn load_more_media(&mut self, backend: Sender<BKCommand>) -> Result<(), RecvError> {
-        let msg = self.media_list[self.current_media_index].clone();
-        let roomid = msg.room.clone();
-        let first_media_id = msg.id.clone();
-        let prev_batch = self.prev_batch.clone();
-
-        let (tx, rx): (Sender<(Vec<Message>, String)>, Receiver<(Vec<Message>, String)>) = channel();
-        backend.send(BKCommand::GetMediaListAsync(roomid, first_media_id, prev_batch, tx)).unwrap();
-
-        let (msgs, prev_batch) = rx.recv()?;
-
-        let img_msgs: Vec<Message> = msgs.into_iter().filter(|msg| msg.mtype == "m.image").collect();
-        let img_msgs_count = img_msgs.len();
-        let new_media_list: Vec<Message> = img_msgs.into_iter()
-                                                   .chain(self.media_list.clone().into_iter())
-                                                   .collect();
-
-        self.media_list = new_media_list;
-        self.prev_batch = Some(prev_batch);
-        self.current_media_index += img_msgs_count;
-
-        Ok(())
     }
 }
 
@@ -146,46 +128,103 @@ impl AppOp {
     }
 
     pub fn previous_media(&mut self) {
+        if self.media_viewer.is_none() {
+            return;
+        }
+
+        let mv = self.media_viewer.clone().unwrap();
+
+        if *mv.no_more_media.read().unwrap() {
+            return;
+        }
+
+        if *mv.current_media_index.read().unwrap() == 0 {
+            self.load_more_media();
+
+            if *mv.loading_error.read().unwrap() {
+                let err = i18n("Error while loading previous media");
+                APPOP!(show_error, (err));
+            }
+        } else {
+            *mv.current_media_index.write().unwrap() -= 1;
+            let name = &(*mv.media_list.read().unwrap())[*mv.current_media_index.read().unwrap()].body;
+            set_header_title(&self.ui, name);
+
+            self.update_media_viewport();
+        }
+    }
+
+    pub fn next_media(&mut self) {
         if let Some(ref mut mv) = self.media_viewer {
-            if mv.current_media_index == 0 {
-                match mv.load_more_media(self.backend.clone()) {
-                    Err(_) => {
-                        let err = i18n("Error while loading previous media");
-                        APPOP!(show_error, (err));
-                    },
-                    Ok(_) if mv.current_media_index == 0 => {
-                        let next_media_button = self.ui.builder
-                            .get_object::<gtk::Button>("next_media_button")
-                            .expect("Cant find next_media_button in ui file.");
-
-                        next_media_button.set_sensitive(false);
-
-                        return;
-                    },
-                    _ => {},
-                }
+            if *mv.current_media_index.read().unwrap() >= mv.media_list.read().unwrap().len() - 1 {
+                return;
             }
 
-            mv.current_media_index -= 1;
-            let name = &mv.media_list[mv.current_media_index].body;
+            *mv.current_media_index.write().unwrap() += 1;
+            let name = &(*mv.media_list.read().unwrap())[*mv.current_media_index.read().unwrap()].body;
             set_header_title(&self.ui, name);
         }
 
         self.update_media_viewport();
     }
 
-    pub fn next_media(&mut self) {
+    pub fn load_more_media(&mut self) {
         if let Some(ref mut mv) = self.media_viewer {
-            if mv.current_media_index >= mv.media_list.len() - 1 {
-                return;
-            }
+            // TODO: Move out these instructions
+            let previous_media_button = self.ui.builder
+                .get_object::<gtk::Button>("previous_media_button")
+                .expect("Cant find previous_media_button in ui file.");
+            previous_media_button.set_sensitive(false);
+            let next_media_button = self.ui.builder
+                .get_object::<gtk::Button>("next_media_button")
+                .expect("Cant find next_media_button in ui file.");
+            next_media_button.set_sensitive(false);
 
-            mv.current_media_index += 1;
-            let name = &mv.media_list[mv.current_media_index].body;
-            set_header_title(&self.ui, name);
+            let msg = (*mv.media_list.read().unwrap())[*mv.current_media_index.read().unwrap()].clone();
+            let roomid = msg.room.clone();
+            let first_media_id = msg.id.clone();
+            let prev_batch = mv.prev_batch.clone();
+
+            let (tx, rx): (Sender<(Vec<Message>, String)>, Receiver<(Vec<Message>, String)>) = channel();
+            self.backend.send(BKCommand::GetMediaListAsync(roomid, first_media_id,
+                                                      prev_batch.read().unwrap().clone(), tx)).unwrap();
+
+            let ui = self.ui.clone();
+            let media_list_clone = mv.media_list.clone();
+            let current_media_index_clone = mv.current_media_index.clone();
+            let prev_batch_clone = mv.prev_batch.clone();
+            let loading_error_clone = mv.loading_error.clone();
+            let no_more_media_clone = mv.no_more_media.clone();
+            gtk::timeout_add(50, move || match rx.try_recv() {
+                Err(TryRecvError::Empty) => gtk::Continue(true),
+                Err(TryRecvError::Disconnected) => {
+                    *loading_error_clone.write().unwrap() = true;
+
+                    gtk::Continue(false)
+                },
+                Ok((msgs, prev_batch)) => {
+                    if msgs.len() == 0 {
+                        *no_more_media_clone.write().unwrap() = true;
+
+                        return gtk::Continue(false);
+                    }
+
+                    let img_msgs: Vec<Message> = msgs.into_iter().filter(|msg| msg.mtype == "m.image").collect();
+                    let img_msgs_count = img_msgs.len();
+                    let new_media_list: Vec<Message> = img_msgs.into_iter()
+                                                               .chain(media_list_clone.read().unwrap().clone().into_iter())
+                                                               .collect();
+
+                    *media_list_clone.write().unwrap() = new_media_list;
+                    *prev_batch_clone.write().unwrap() = Some(prev_batch);
+                    *current_media_index_clone.write().unwrap() += img_msgs_count;
+
+                    APPOP!(previous_media);
+
+                    gtk::Continue(false)
+                }
+            });
         }
-
-        self.update_media_viewport();
     }
 
     pub fn set_nav_btn_sensitivity(&self) {
@@ -198,11 +237,13 @@ impl AppOp {
                 .get_object::<gtk::Button>("next_media_button")
                 .expect("Cant find next_media_button in ui file.");
 
-            if mv.current_media_index > 0 {
+            if *mv.current_media_index.read().unwrap() == 0 && *mv.no_more_media.read().unwrap() {
+                previous_media_button.set_sensitive(false);
+            } else {
                 previous_media_button.set_sensitive(true);
             }
 
-            if mv.current_media_index >= mv.media_list.len() - 1 {
+            if *mv.current_media_index.read().unwrap() >= mv.media_list.read().unwrap().len() - 1 {
                 next_media_button.set_sensitive(false);
             } else {
                 next_media_button.set_sensitive(true);
@@ -348,7 +389,7 @@ impl AppOp {
     pub fn save_media(&self) {
         if let Some(ref mv) = self.media_viewer {
             self.save_file_as(mv.image.local_path.lock().unwrap().clone().unwrap_or_default(),
-                              mv.media_list[mv.current_media_index].body.clone());
+                              (*mv.media_list.read().unwrap())[*mv.current_media_index.read().unwrap()].body.clone());
         }
     }
 
@@ -414,7 +455,7 @@ impl AppOp {
             media_viewport.remove(&child);
         }
 
-        let url = mv.media_list[mv.current_media_index].url.clone().unwrap_or_default();
+        let url = (*mv.media_list.read().unwrap())[*mv.current_media_index.read().unwrap()].url.clone().unwrap_or_default();
 
         let image = image::Image::new(&self.backend, &url)
                         .fit_to_width(true)
