@@ -170,19 +170,7 @@ impl AppOp {
 
     pub fn load_more_media(&mut self) {
         if let Some(ref mut mv) = self.media_viewer {
-            // TODO: Move out these instructions
-            let inapp: gtk::Revealer = self.ui.builder
-                .get_object("media_viewer_notify_revealer")
-                .expect("Can't find media_viewer_notify_revealer in ui file.");
-            inapp.set_reveal_child(true);
-            let previous_media_button = self.ui.builder
-                .get_object::<gtk::Button>("previous_media_button")
-                .expect("Cant find previous_media_button in ui file.");
-            previous_media_button.set_sensitive(false);
-            let next_media_button = self.ui.builder
-                .get_object::<gtk::Button>("next_media_button")
-                .expect("Cant find next_media_button in ui file.");
-            next_media_button.set_sensitive(false);
+            loading_state(&self.ui, true);
 
             let msg = (*mv.media_list.read().unwrap())[*mv.current_media_index.read().unwrap()].clone();
             let roomid = msg.room.clone();
@@ -225,11 +213,7 @@ impl AppOp {
 
                     APPOP!(previous_media);
 
-                    // TODO: Move out these instructions
-                    let inapp: gtk::Revealer = ui.builder
-                        .get_object("media_viewer_notify_revealer")
-                        .expect("Can't find media_viewer_notify_revealer in ui file.");
-                    inapp.set_reveal_child(false);
+                    loading_state(&ui, false);
 
                     gtk::Continue(false)
                 }
@@ -504,4 +488,21 @@ fn set_header_title(ui: &uibuilder::UI, title: &str) {
         .get_object::<gtk::HeaderBar>("media_viewer_headerbar")
         .expect("Cant find media_viewer_headerbar in ui file.");
     media_viewer_headerbar.set_title(title);
+}
+
+fn loading_state(ui: &uibuilder::UI, val: bool) {
+    let notification: gtk::Revealer = ui.builder
+        .get_object("media_viewer_notify_revealer")
+        .expect("Can't find media_viewer_notify_revealer in ui file.");
+    notification.set_reveal_child(val);
+
+    let previous_media_button = ui.builder
+        .get_object::<gtk::Button>("previous_media_button")
+        .expect("Cant find previous_media_button in ui file.");
+    previous_media_button.set_sensitive(!val);
+
+    let next_media_button = ui.builder
+        .get_object::<gtk::Button>("next_media_button")
+        .expect("Cant find next_media_button in ui file.");
+    next_media_button.set_sensitive(!val);
 }
