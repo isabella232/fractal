@@ -171,6 +171,10 @@ impl AppOp {
     pub fn load_more_media(&mut self) {
         if let Some(ref mut mv) = self.media_viewer {
             // TODO: Move out these instructions
+            let inapp: gtk::Revealer = self.ui.builder
+                .get_object("media_viewer_notify_revealer")
+                .expect("Can't find media_viewer_notify_revealer in ui file.");
+            inapp.set_reveal_child(true);
             let previous_media_button = self.ui.builder
                 .get_object::<gtk::Button>("previous_media_button")
                 .expect("Cant find previous_media_button in ui file.");
@@ -220,6 +224,12 @@ impl AppOp {
                     *current_media_index_clone.write().unwrap() += img_msgs_count;
 
                     APPOP!(previous_media);
+
+                    // TODO: Move out these instructions
+                    let inapp: gtk::Revealer = ui.builder
+                        .get_object("media_viewer_notify_revealer")
+                        .expect("Can't find media_viewer_notify_revealer in ui file.");
+                    inapp.set_reveal_child(false);
 
                     gtk::Continue(false)
                 }
