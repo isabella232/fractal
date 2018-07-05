@@ -259,7 +259,6 @@ impl<'a> MessageBox<'a> {
     fn build_room_msg_image(&self) -> gtk::Box {
         let msg = self.msg;
         let bx = gtk::Box::new(gtk::Orientation::Horizontal, 0);
-        let url = msg.url.clone().unwrap_or_default();
 
         let backend = self.op.backend.clone();
         let img_path = match msg.thumb {
@@ -269,13 +268,12 @@ impl<'a> MessageBox<'a> {
         let image = widgets::image::Image::new(&backend, &img_path)
                         .size(Some((600, 400))).build();
 
-        let image_name = msg.body.clone();
+        let msg = msg.clone();
         let room_id = self.room.id.clone();
         image.widget.connect_button_press_event(move |_, _| {
-            let image_name = image_name.clone();
-            let image_url = url.clone();
+            let msg = msg.clone();
             let rid = room_id.clone();
-            APPOP!(display_media_viewer, (image_name, image_url, rid));
+            APPOP!(display_media_viewer, (msg, rid));
 
             Inhibit(true)
         });
