@@ -472,6 +472,60 @@ pub fn parse_sync_events(r: &JsonValue) -> Result<Vec<Event>, Error> {
     Ok(evs)
 }
 
+pub fn get_prev_batch_from(baseu: &Url, tk: String, roomid: String, evid: String) -> Result<String, Error> {
+    let params = vec![
+        ("access_token", tk.clone()),
+        ("limit", 0.to_string()),
+    ];
+
+    let path = format!("rooms/{}/context/{}", roomid, evid);
+    let url = client_url!(baseu, &path, params)?;
+
+    let r = json_q("get", &url, &json!(null), globals::TIMEOUT)?;
+    let prev_batch = r["start"].to_string().trim_matches('"').to_string();
+
+    Ok(prev_batch)
+}
+
+pub fn get_room_media_list(baseu: &Url,
+                           tk: String,
+                           roomid: String,
+                           limit: i32,
+                           first_media_id: Option<String>,
+                           prev_batch: Option<String>)
+                           -> Result<(Vec<Message>, String), Error> {
+    let mut params = vec![
+        ("dir", strn!("b")),
+        ("limit", format!("{}", limit)),
+        ("access_token", tk.clone()),
+        ("filter", "{\"filter_json\": { \"contains_url\": true, \"not_types\": [\"m.sticker\"] } }".to_string()),
+    ];
+
+    match prev_batch {
+        Some(ref pb) => { params.push(("from", pb.clone())) }
+        None => {
+            if let Some(id) = first_media_id {
+                params.push(("from", get_prev_batch_from(baseu, tk, roomid.clone(), id)?))
+            }
+        }
+    };
+
+    let path = format!("rooms/{}/messages", roomid);
+    let url = client_url!(baseu, &path, params)?;
+
+    let r = json_q("get", &url, &json!(null), globals::TIMEOUT)?;
+    let array = r["chunk"].as_array();
+    let prev_batch = r["end"].to_string().trim_matches('"').to_string();
+    if array.is_none() || array.unwrap().len() == 0 {
+        return Ok((vec![], prev_batch));
+    }
+
+    let evs = array.unwrap().iter().rev();
+    let media_list = Message::from_json_events_iter(roomid.clone(), evs);
+
+    Ok((media_list, prev_batch))
+}
+
 pub fn get_media(url: &str) -> Result<Vec<u8>, Error> {
     let client = reqwest::Client::new();
     let mut conn = client.get(url);

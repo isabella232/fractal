@@ -1,3 +1,4 @@
+use globals;
 use std::thread;
 use std::sync::mpsc::Sender;
 use error::Error;
@@ -7,7 +8,10 @@ use backend::types::Backend;
 use util::dw_media;
 use util::download_file;
 use util::cache_dir_path;
+use util::get_room_media_list;
 use util::resolve_media_url;
+
+use types::Message;
 
 pub fn get_thumb_async(bk: &Backend, media: String, tx: Sender<String>) -> Result<(), Error> {
     let baseu = bk.get_base_url()?;
@@ -38,6 +42,31 @@ pub fn get_media_async(bk: &Backend, media: String, tx: Sender<String>) -> Resul
                 tx.send(String::from("")).unwrap();
             }
         };
+    });
+
+    Ok(())
+}
+
+pub fn get_media_list_async(bk: &Backend,
+                            roomid: String,
+                            first_media_id: Option<String>,
+                            prev_batch: Option<String>,
+                            tx: Sender<(Vec<Message>, String)>)
+                            -> Result<(), Error> {
+    let baseu = bk.get_base_url()?;
+    let tk = bk.data.lock().unwrap().access_token.clone();
+
+    semaphore!(bk.limit_threads, {
+        match get_room_media_list(&baseu, tk, roomid.clone(),
+                                  globals::PAGE_LIMIT,
+                                  first_media_id, prev_batch) {
+            Ok(media_list) => {
+                tx.send(media_list).unwrap();
+            }
+            Err(_) => {
+                tx.send((Vec::new(), String::new())).unwrap();
+            }
+        }
     });
 
     Ok(())

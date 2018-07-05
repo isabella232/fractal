@@ -316,6 +316,10 @@ impl Backend {
                 let r = media::get_media_async(self, media, ctx);
                 bkerror!(r, tx, BKResponse::CommandError);
             }
+            Ok(BKCommand::GetMediaListAsync(roomid, first_media_id, prev_batch, ctx)) => {
+                let r = media::get_media_list_async(self, roomid, first_media_id, prev_batch, ctx);
+                bkerror!(r, tx, BKResponse::CommandError);
+            }
             Ok(BKCommand::GetMedia(media)) => {
                 let r = media::get_media(self, media);
                 bkerror!(r, tx, BKResponse::CommandError);
