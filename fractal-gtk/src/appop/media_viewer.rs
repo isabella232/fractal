@@ -110,7 +110,7 @@ impl AppOp {
             Inhibit(false)
         });
 
-        self.set_nav_btn_sensitivity();
+        self.set_nav_btn_visibility();
         self.set_zoom_btn_sensitivity();
     }
 
@@ -221,7 +221,7 @@ impl AppOp {
         }
     }
 
-    pub fn set_nav_btn_sensitivity(&self) {
+    pub fn set_nav_btn_visibility(&self) {
         if let Some(ref mv) = self.media_viewer {
             let previous_media_button = self.ui.builder
                 .get_object::<gtk::Button>("previous_media_button")
@@ -232,15 +232,15 @@ impl AppOp {
                 .expect("Cant find next_media_button in ui file.");
 
             if *mv.current_media_index.read().unwrap() == 0 && *mv.no_more_media.read().unwrap() {
-                previous_media_button.set_sensitive(false);
+                previous_media_button.set_visible(false);
             } else {
-                previous_media_button.set_sensitive(true);
+                previous_media_button.set_visible(true);
             }
 
             if *mv.current_media_index.read().unwrap() >= mv.media_list.read().unwrap().len() - 1 {
-                next_media_button.set_sensitive(false);
+                next_media_button.set_visible(false);
             } else {
-                next_media_button.set_sensitive(true);
+                next_media_button.set_visible(true);
             }
         }
     }
@@ -469,7 +469,7 @@ impl AppOp {
             Inhibit(false)
         });
 
-        self.set_nav_btn_sensitivity();
+        self.set_nav_btn_visibility();
         self.set_zoom_btn_sensitivity();
 
         image
