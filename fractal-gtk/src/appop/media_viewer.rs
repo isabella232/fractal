@@ -29,8 +29,9 @@ pub struct MediaViewer {
     current_media_index: Arc<RwLock<usize>>,
 
     prev_batch: Arc<RwLock<Option<String>>>,
+    pub loading_more_media: Arc<RwLock<bool>>,
     loading_error: Arc<RwLock<bool>>,
-    no_more_media: Arc<RwLock<bool>>,
+    pub no_more_media: Arc<RwLock<bool>>,
 
     image: image::Image,
     zoom_levels: Vec<f64>,
@@ -55,6 +56,7 @@ impl MediaViewer {
             media_list: Arc::new(RwLock::new(media_list)),
             current_media_index: Arc::new(RwLock::new(current_media_index)),
             prev_batch: Arc::new(RwLock::new(None)),
+            loading_more_media: Arc::new(RwLock::new(false)),
             loading_error: Arc::new(RwLock::new(false)),
             no_more_media: Arc::new(RwLock::new(false)),
             image,
@@ -170,7 +172,7 @@ impl AppOp {
 
     pub fn load_more_media(&mut self) {
         if let Some(ref mut mv) = self.media_viewer {
-            loading_state(&self.ui, true);
+            loading_state(&self.ui, mv.loading_more_media.clone(), true);
 
             let msg = (*mv.media_list.read().unwrap())[*mv.current_media_index.read().unwrap()].clone();
             let roomid = msg.room.clone();
@@ -185,6 +187,7 @@ impl AppOp {
             let media_list_clone = mv.media_list.clone();
             let current_media_index_clone = mv.current_media_index.clone();
             let prev_batch_clone = mv.prev_batch.clone();
+            let loading_more_media_clone = mv.loading_more_media.clone();
             let loading_error_clone = mv.loading_error.clone();
             let no_more_media_clone = mv.no_more_media.clone();
             gtk::timeout_add(50, move || match rx.try_recv() {
@@ -213,7 +216,7 @@ impl AppOp {
 
                     APPOP!(previous_media);
 
-                    loading_state(&ui, false);
+                    loading_state(&ui, loading_more_media_clone.clone(), false);
 
                     gtk::Continue(false)
                 }
@@ -490,7 +493,7 @@ fn set_header_title(ui: &uibuilder::UI, title: &str) {
     media_viewer_headerbar.set_title(title);
 }
 
-fn loading_state(ui: &uibuilder::UI, val: bool) {
+fn loading_state(ui: &uibuilder::UI, loading_indicator: Arc<RwLock<bool>>, val: bool) {
     let notification: gtk::Revealer = ui.builder
         .get_object("media_viewer_notify_revealer")
         .expect("Can't find media_viewer_notify_revealer in ui file.");
@@ -505,4 +508,6 @@ fn loading_state(ui: &uibuilder::UI, val: bool) {
         .get_object::<gtk::Button>("next_media_button")
         .expect("Cant find next_media_button in ui file.");
     next_media_button.set_sensitive(!val);
+
+    *loading_indicator.write().unwrap() = val;
 }

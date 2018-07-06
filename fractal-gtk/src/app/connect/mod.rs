@@ -52,6 +52,12 @@ impl App {
                 gdk::enums::key::Escape => {
                     Inhibit(op.lock().unwrap().escape(w))
                 },
+                gdk::enums::key::Left => {
+                    Inhibit(op.lock().unwrap().left())
+                },
+                gdk::enums::key::Right => {
+                    Inhibit(op.lock().unwrap().right())
+                },
                 _ => Inhibit(false)
             }
         });

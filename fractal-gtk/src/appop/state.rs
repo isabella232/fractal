@@ -101,4 +101,45 @@ impl AppOp {
             _ => { false }
         }
     }
+
+    pub fn left(&mut self) -> bool {
+        match self.state {
+            AppState::MediaViewer => {
+                if self.media_viewer.is_none() {
+                    return false;
+                }
+
+                let mv = self.media_viewer.clone().unwrap();
+                let loading_more_media = *mv.loading_more_media.read().unwrap();
+                let no_more_media = *mv.no_more_media.read().unwrap();
+                if loading_more_media || no_more_media {
+                    return false;
+                }
+
+                self.previous_media();
+                true
+            },
+            _ => { false }
+        }
+    }
+
+    pub fn right(&mut self) -> bool {
+        match self.state {
+            AppState::MediaViewer => {
+                if self.media_viewer.is_none() {
+                    return false;
+                }
+
+                let mv = self.media_viewer.clone().unwrap();
+                let loading_more_media = *mv.loading_more_media.read().unwrap();
+                if loading_more_media {
+                    return false;
+                }
+
+                self.next_media();
+                true
+            },
+            _ => { false }
+        }
+    }
 }
