@@ -49,6 +49,7 @@ pub enum BKCommand {
     GetMedia(String),
     GetMediaUrl(String, Sender<String>),
     GetUserInfoAsync(String, Option<Sender<(String, String)>>),
+    GetUserNameAsync(String, Sender<String>),
     SendMsg(Message),
     SetRoom(Room),
     ShutDown,

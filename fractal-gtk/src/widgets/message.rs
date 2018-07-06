@@ -160,7 +160,11 @@ impl<'a> MessageBox<'a> {
     fn build_room_msg_username(&self, sender: &str, member: Option<&Member>) -> gtk::Label {
         let uname = match member {
             Some(m) => m.get_alias(),
-            None => String::from(sender),
+            None => {
+                let backend = self.op.backend.clone();
+                set_username_async(backend, sender, self.username.clone());
+                String::from(sender)
+            }
         };
 
         self.username.set_text(&uname);
@@ -546,4 +550,17 @@ fn highlight_username(label: gtk::Label, alias: &String, input: String) -> Optio
     }
 
     Some(attr)
+}
+
+fn set_username_async(backend: Sender<BKCommand>, uid: &str, label: gtk::Label) {
+    let (tx, rx): (Sender<String>, Receiver<String>) = channel();
+    backend.send(BKCommand::GetUserNameAsync(uid.to_string(), tx)).unwrap();
+    gtk::timeout_add(50, move || match rx.try_recv() {
+        Err(TryRecvError::Empty) => gtk::Continue(true),
+        Err(TryRecvError::Disconnected) => gtk::Continue(false),
+        Ok(username) => {
+            label.set_text(&username);
+            gtk::Continue(false)
+        }
+    });
 }

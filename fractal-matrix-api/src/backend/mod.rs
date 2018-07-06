@@ -203,6 +203,10 @@ impl Backend {
                 let r = user::get_user_info_async(self, &sender, ctx);
                 bkerror!(r, tx, BKResponse::CommandError);
             }
+            Ok(BKCommand::GetUserNameAsync(sender, ctx)) => {
+                let r = user::get_username_async(self, sender, ctx);
+                bkerror!(r, tx, BKResponse::CommandError);
+            }
             Ok(BKCommand::UserSearch(term)) => {
                 let r = user::search(self, term);
                 bkerror!(r, tx, BKResponse::CommandError);

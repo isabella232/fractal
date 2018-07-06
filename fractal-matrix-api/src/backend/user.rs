@@ -345,6 +345,23 @@ pub fn get_user_info_async(bk: &mut Backend,
     Ok(())
 }
 
+pub fn get_username_async(bk: &Backend,
+                           uid: String,
+                           tx: Sender<String>)
+    -> Result<(), Error> {
+
+    let url = bk.url(&format!("profile/{}/displayname", uid.clone()), vec![])?;
+    get!(&url,
+        |r: JsonValue| {
+            let name = String::from(r["displayname"].as_str().unwrap_or(&uid));
+            tx.send(name).unwrap();
+        },
+        |err| { tx.send(uid.to_string()).unwrap() }
+    );
+
+    Ok(())
+}
+
 pub fn get_avatar_async(bk: &Backend, member: Option<Member>, tx: Sender<String>) -> Result<(), Error> {
     let baseu = bk.get_base_url()?;
 
