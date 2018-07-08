@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/World/fractal/issues\n"
-"POT-Creation-Date: 2018-06-27 19:52+0000\n"
-"PO-Revision-Date: 2018-07-01 18:58+0200\n"
+"POT-Creation-Date: 2018-07-08 14:36+0000\n"
+"PO-Revision-Date: 2018-07-08 16:37+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -135,7 +135,7 @@ msgid "Phone"
 msgstr "Telefon"
 
 #: fractal-gtk/res/ui/account_settings.ui:209
-#: fractal-gtk/res/ui/main_window.ui:678
+#: fractal-gtk/res/ui/main_window.ui:701
 msgid "Password"
 msgstr "Hasło"
 
@@ -191,9 +191,9 @@ msgid "Account Settings"
 msgstr "Ustawienia konta"
 
 #: fractal-gtk/res/ui/account_settings.ui:676
-#: fractal-gtk/res/ui/main_window.ui:1264
-#: fractal-gtk/res/ui/main_window.ui:1332
-#: fractal-gtk/res/ui/media_viewer.ui:161
+#: fractal-gtk/res/ui/main_window.ui:1287
+#: fractal-gtk/res/ui/main_window.ui:1355
+#: fractal-gtk/res/ui/media_viewer.ui:250
 msgid "Back"
 msgstr "Wstecz"
 
@@ -233,7 +233,7 @@ msgid "Play"
 msgstr "Odtwarza"
 
 #: fractal-gtk/res/ui/direct_chat.ui:64 fractal-gtk/res/ui/invite_user.ui:64
-#: fractal-gtk/res/ui/main_window.ui:645
+#: fractal-gtk/res/ui/main_window.ui:668
 msgid "Matrix username, email or phone number"
 msgstr "Nazwa użytkownika Matrix, adres e-mail lub numer telefonu"
 
@@ -270,7 +270,7 @@ msgstr "Zaproś"
 msgid "ID or Alias"
 msgstr "Identyfikator lub alias"
 
-#: fractal-gtk/res/ui/join_room.ui:101 fractal-gtk/src/widgets/room.rs:120
+#: fractal-gtk/res/ui/join_room.ui:101 fractal-gtk/src/widgets/room.rs:111
 msgid "Join"
 msgstr "Dołącz"
 
@@ -325,95 +325,98 @@ msgstr "To jest powiadomienie"
 msgid "Chat"
 msgstr "Rozmowa"
 
-#: fractal-gtk/res/ui/main_window.ui:559
+#: fractal-gtk/res/ui/main_window.ui:582
 msgid "Directory"
 msgstr "Katalog"
 
-#: fractal-gtk/res/ui/main_window.ui:583
+#: fractal-gtk/res/ui/main_window.ui:606
 msgid "Loading"
 msgstr "Wczytywanie"
 
-#: fractal-gtk/res/ui/main_window.ui:609
+#: fractal-gtk/res/ui/main_window.ui:632
 msgctxt "big label"
 msgid "Log In"
 msgstr "Logowanie"
 
-#: fractal-gtk/res/ui/main_window.ui:628
+#: fractal-gtk/res/ui/main_window.ui:651
 msgid "Username"
 msgstr "Nazwa użytkownika"
 
-#: fractal-gtk/res/ui/main_window.ui:658
+#: fractal-gtk/res/ui/main_window.ui:681
 msgctxt "login button"
 msgid "Log In"
 msgstr "Zaloguj się"
 
-#: fractal-gtk/res/ui/main_window.ui:723
+#: fractal-gtk/res/ui/main_window.ui:746
 msgid "Home server URL"
 msgstr "Adres serwera domowego"
 
-#: fractal-gtk/res/ui/main_window.ui:741
+#: fractal-gtk/res/ui/main_window.ui:764
 msgid "Identity server URL"
 msgstr "Adres serwera tożsamości"
 
-#: fractal-gtk/res/ui/main_window.ui:758
+#: fractal-gtk/res/ui/main_window.ui:781
 msgid "Matrix Server"
 msgstr "Serwer Matrix"
 
-#: fractal-gtk/res/ui/main_window.ui:777
+#: fractal-gtk/res/ui/main_window.ui:800
 msgid "Identity server"
 msgstr "Serwer tożsamości"
 
-#: fractal-gtk/res/ui/main_window.ui:814
+#: fractal-gtk/res/ui/main_window.ui:837
 msgid "Advanced"
 msgstr "Zaawansowane"
 
-#: fractal-gtk/res/ui/main_window.ui:829 fractal-gtk/src/appop/login.rs:113
+#: fractal-gtk/res/ui/main_window.ui:852 fractal-gtk/src/appop/login.rs:113
 msgid "Invalid username or password"
 msgstr "Nieprawidłowa nazwa użytkownika lub hasło"
 
-#: fractal-gtk/res/ui/main_window.ui:883
+#: fractal-gtk/res/ui/main_window.ui:906
 msgid "Reset Password"
 msgstr "Przywróć hasło"
 
-#: fractal-gtk/res/ui/main_window.ui:897
+#: fractal-gtk/res/ui/main_window.ui:920
 msgid "Create Account"
 msgstr "Utwórz konto"
 
-#: fractal-gtk/res/ui/main_window.ui:911
+#: fractal-gtk/res/ui/main_window.ui:934
 msgid "Log In as Guest"
 msgstr "Zaloguj jako gość"
 
-#: fractal-gtk/res/ui/main_window.ui:933
+#: fractal-gtk/res/ui/main_window.ui:956
 msgid "Login"
 msgstr "Zaloguj"
 
-#: fractal-gtk/res/ui/main_window.ui:970
+#: fractal-gtk/res/ui/main_window.ui:993
 msgid "User"
 msgstr "Użytkownik"
 
-#: fractal-gtk/res/ui/main_window.ui:993 fractal-gtk/res/ui/sticker_group.ui:74
+#: fractal-gtk/res/ui/main_window.ui:1016
+#: fractal-gtk/res/ui/sticker_group.ui:74
 msgid "Add"
 msgstr "Dodaj"
 
-#: fractal-gtk/res/ui/main_window.ui:1024
+#: fractal-gtk/res/ui/main_window.ui:1047
 msgid "Room search"
 msgstr "Wyszukiwanie pokoju"
 
-#: fractal-gtk/res/ui/main_window.ui:1093 fractal-gtk/res/ui/new_room.ui:108
+#: fractal-gtk/res/ui/main_window.ui:1116 fractal-gtk/res/ui/new_room.ui:108
 msgid "Room name"
 msgstr "Nazwa pokoju"
 
-#: fractal-gtk/res/ui/main_window.ui:1122
+#: fractal-gtk/res/ui/main_window.ui:1145
 msgid "Room topic"
 msgstr "Temat pokoju"
 
-#: fractal-gtk/res/ui/main_window.ui:1195
+#: fractal-gtk/res/ui/main_window.ui:1218
 msgid "Members"
 msgstr "Członkowie"
 
-#: fractal-gtk/res/ui/main_window.ui:1294
-msgid "Default Servers"
-msgstr "Domyślne serwery"
+#: fractal-gtk/res/ui/main_window.ui:1317
+#: fractal-gtk/res/ui/server_chooser_menu.ui:65
+#: fractal-gtk/src/app/connect/directory.rs:65
+msgid "Default Matrix Server"
+msgstr "Domyślny serwer Matrix"
 
 #: fractal-gtk/res/ui/markdown_popover.ui:28
 msgid "Markdown"
@@ -435,7 +438,11 @@ msgstr "`kod`"
 msgid "*italic*"
 msgstr "*pochylenie*"
 
-#: fractal-gtk/res/ui/media_viewer.ui:145
+#: fractal-gtk/res/ui/media_viewer.ui:186
+msgid "Loading more media"
+msgstr "Wczytywanie więcej multimediów"
+
+#: fractal-gtk/res/ui/media_viewer.ui:234
 msgid "Media viewer"
 msgstr "Przeglądarka multimediów"
 
@@ -518,11 +525,6 @@ msgstr "Zaproś do tego pokoju"
 #: fractal-gtk/res/ui/server_chooser_menu.ui:34
 msgid "Show rooms from:"
 msgstr "Wyświetlanie pokoi z:"
-
-#: fractal-gtk/res/ui/server_chooser_menu.ui:65
-#: fractal-gtk/src/app/connect/directory.rs:65
-msgid "Default Matrix Server"
-msgstr "Domyślny serwer Matrix"
 
 #: fractal-gtk/res/ui/server_chooser_menu.ui:90
 msgid "Your homeserver"
@@ -666,6 +668,10 @@ msgstr "Nieznany błąd"
 msgid "Passwords didn’t match, try again"
 msgstr "Hasła się nie zgadzają. Proszę spróbować ponownie."
 
+#: fractal-gtk/src/appop/media_viewer.rs:147
+msgid "Error while loading previous media"
+msgstr "Błąd podczas wczytywania poprzednich multimediów"
+
 #: fractal-gtk/src/appop/member.rs:88
 msgid "and one more"
 msgid_plural "and {member_count} more"
@@ -681,11 +687,11 @@ msgstr "Nowe wiadomości"
 msgid "Select"
 msgstr "Wybierz"
 
-#: fractal-gtk/src/appop/mod.rs:119
+#: fractal-gtk/src/appop/mod.rs:116
 msgid "Load more members"
 msgstr "Wczytaj więcej członków"
 
-#: fractal-gtk/src/appop/room.rs:254
+#: fractal-gtk/src/appop/room.rs:251
 msgid "Leave {room_name}?"
 msgstr "Opuścić pokój „{room_name}”?"
 
@@ -705,24 +711,24 @@ msgstr "{m1} i inni"
 msgid "Syncing, this could take a while"
 msgstr "Synchronizowanie. Może to chwilę zająć."
 
-#: fractal-gtk/src/widgets/message.rs:323
+#: fractal-gtk/src/widgets/message.rs:315
 msgid "Could not retrieve file URI"
 msgstr "Nie można odebrać adresu URI pliku"
 
-#: fractal-gtk/src/widgets/message.rs:339
+#: fractal-gtk/src/widgets/message.rs:331
 msgid "Save"
 msgstr "Zapisuje"
 
-#: fractal-gtk/src/widgets/message.rs:349
-#: fractal-gtk/src/widgets/message.rs:392
+#: fractal-gtk/src/widgets/message.rs:341
+#: fractal-gtk/src/widgets/message.rs:384
 msgid "Could not download the file"
 msgstr "Nie można pobrać pliku"
 
-#: fractal-gtk/src/widgets/message.rs:382
+#: fractal-gtk/src/widgets/message.rs:374
 msgid "Download"
 msgstr "Pobierz"
 
-#: fractal-gtk/src/widgets/message.rs:409
+#: fractal-gtk/src/widgets/message.rs:401
 msgid "Open"
 msgstr "Otwórz"
 
