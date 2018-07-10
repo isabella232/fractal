@@ -1,6 +1,5 @@
 extern crate gtk;
 extern crate gdk;
-extern crate glib;
 extern crate gdk_pixbuf;
 extern crate cairo;
 extern crate letter_avatar;
@@ -17,11 +16,40 @@ use fractal_api::util::cache_path;
 
 pub type Avatar = gtk::Box;
 
+pub struct AvatarData {
+    uid: String,
+    username: Option<String>,
+    size: i32,
+    cache: Option<Pixbuf>,
+    pub widget: gtk::DrawingArea,
+    fallback: cairo::ImageSurface,
+}
+
+impl AvatarData {
+    pub fn redraw_fallback(&mut self, username: Option<String>) {
+        self.username = username.clone();
+        /* This function should never fail */
+        self.fallback = letter_avatar::generate::new(self.uid.clone(),
+                                                     username,
+                                                     self.size as f64)
+                        .expect("this function should never fail");
+        self.widget.queue_draw();
+    }
+
+    pub fn redraw_pixbuf(&mut self) {
+        let path = cache_path(&self.uid).unwrap_or(String::from(""));
+        let new_avatar = Pixbuf::new_from_file_at_scale(&path, self.size, -1, true);
+        self.cache = new_avatar.ok();
+        self.widget.queue_draw();
+    }
+}
+
 pub trait AvatarExt {
     fn avatar_new(size: Option<i32>) -> gtk::Box;
     fn clean(&self);
     fn create_da(&self, size: Option<i32>) -> DrawingArea;
-    fn circle(&self, uid: String, username: Option<String>, size: i32);
+    fn circle(&self, uid: String, username: Option<String>, size: i32)
+        -> Rc<RefCell<AvatarData>>;
 }
 
 impl AvatarExt for gtk::Box {
@@ -53,28 +81,35 @@ impl AvatarExt for gtk::Box {
         b
     }
 
-    fn circle(&self, uid: String, username: Option<String>, size: i32) {
-        struct Data {
-            cache : Result<Pixbuf, glib::Error>,
-            fallback: cairo::ImageSurface
-        }
+    fn circle(&self, uid: String, username: Option<String>, size: i32)
+        -> Rc<RefCell<AvatarData>> {
 
         self.clean();
         let da = self.create_da(Some(size));
         let path = cache_path(&uid).unwrap_or(String::from(""));
         let user_avatar = Pixbuf::new_from_file_at_scale(&path, size, -1, true);
+        let uname = username.clone();
         /* remove IRC postfix from the username */
-        let username =  if let Some(u) = username {
+        let username = if let Some(u) = username {
             Some(u.trim_right_matches(" (IRC)").to_owned())
         }else {
             None
         };
         /* This function should never fail */
-        let fallback = letter_avatar::generate::new(uid, username, size as f64).unwrap();
+        let fallback = letter_avatar::generate::new(uid.clone(), username, size as f64)
+                        .expect("this function should never fail");
 
-        let user_cache: Rc<RefCell<Data>> = Rc::new(RefCell::new(Data {cache: user_avatar, fallback: fallback}));
+        let data = AvatarData {
+            uid: uid.clone(),
+            username: uname,
+            size: size,
+            cache: user_avatar.ok(),
+            fallback: fallback,
+            widget: da.clone(),
+        };
+        let avatar_cache: Rc<RefCell<AvatarData>> = Rc::new(RefCell::new(data));
 
-        let user_cache = user_cache.clone();
+        let user_cache = avatar_cache.clone();
         da.connect_draw(move |da, g| {
             use std::f64::consts::PI;
             let width = size as f64;
@@ -84,7 +119,7 @@ impl AvatarExt for gtk::Box {
 
             {
                 let data = user_cache.borrow();
-                if let Ok(ref pb) = data.cache {
+                if let Some(ref pb) = data.cache {
                     let context = da.get_style_context().unwrap();
                     gtk::render_background(&context, g, 0.0, 0.0, width, height);
 
@@ -98,19 +133,14 @@ impl AvatarExt for gtk::Box {
                     g.set_source_surface(&data.fallback, 0f64, 0f64);
                 }
             }
-            /* we should look into the cache only if the cache has changed, but this information is
-             * not yet available, we could also create our own signal and not use the draw signal*/
-            {
-                let mut data = user_cache.borrow_mut();
-                let new_avatar = Pixbuf::new_from_file_at_scale(&path, size, -1, true);
-                data.cache = new_avatar; 
-            }
 
             g.rectangle(0.0, 0.0, width, height);
             g.fill();
 
             Inhibit(false)
         });
+
+        avatar_cache
     }
 }
 

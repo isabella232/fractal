@@ -54,10 +54,11 @@ impl<'a> MemberBox<'a> {
             style.add_class("member");
         }
 
-        download_to_cache(backend.clone(), self.member.uid.clone());
         let avatar = widgets::Avatar::avatar_new(Some(globals::USERLIST_ICON_SIZE));
-        avatar.circle(self.member.uid.clone(), Some(alias.clone()), globals::USERLIST_ICON_SIZE);
-        //get_member_info(backend.clone(), avatar.clone(), username.clone(), self.member.uid.clone(), globals::USERLIST_ICON_SIZE, 10);
+        let data = avatar.circle(self.member.uid.clone(), Some(alias.clone()), globals::USERLIST_ICON_SIZE);
+        let member_id = self.member.uid.clone();
+        download_to_cache(backend.clone(), member_id.clone(), data.clone());
+
         avatar.set_margin_start(3);
         avatar.set_valign(gtk::Align::Center);
 

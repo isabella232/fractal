@@ -359,10 +359,12 @@ impl AppOp {
             }
         }
 
-        download_to_cache(self.backend.clone(), self.uid.clone().unwrap_or_default());
         let w = widgets::Avatar::avatar_new(Some(100));
-        w.circle(self.uid.clone().unwrap_or_default(), self.username.clone(), 100);
         avatar.add(&w);
+
+        let uid = self.uid.clone().unwrap_or_default();
+        let data = w.circle(uid.clone(), self.username.clone(), 100);
+        download_to_cache(self.backend.clone(), uid.clone(), data.clone());
 
         /* FIXME: hack to make the avatar drawing area clickable*/
         let current = stack.get_visible_child_name();

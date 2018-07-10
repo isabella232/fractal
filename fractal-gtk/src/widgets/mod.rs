@@ -20,6 +20,7 @@ pub use self::roomrow::RoomRow;
 pub use self::roomlist::RoomList;
 pub use self::avatar::Avatar;
 pub use self::avatar::AvatarExt;
+pub use self::avatar::AvatarData;
 pub use self::avatar::admin_badge;
 pub use self::avatar::AdminColor;
 pub use self::inline_player::AudioPlayerWidget;

@@ -3,6 +3,7 @@ extern crate serde_json;
 use std::fs::File;
 use std::fs::remove_dir_all;
 use std::io::prelude::*;
+use gtk;
 
 use types::RoomList;
 use error::Error;
@@ -13,6 +14,12 @@ use globals;
 /* includes for avatar download */
 use backend::BKCommand;
 use std::sync::mpsc::Sender;
+use std::sync::mpsc::channel;
+use std::sync::mpsc::TryRecvError;
+
+use std::cell::RefCell;
+use std::rc::Rc;
+use widgets::AvatarData;
 
 #[derive(Serialize, Deserialize)]
 pub struct CacheData {
@@ -70,7 +77,19 @@ pub fn destroy() -> Result<(), Error> {
     remove_dir_all(fname).or_else(|_| Err(Error::CacheError))
 }
 
-/* this downloads a avatar and stores it in the cache folder */
-pub fn download_to_cache(backend: Sender<BKCommand>, name: String) {
-    let _ = backend.send(BKCommand::GetUserInfoAsync(name.clone(), None));
+/// this downloads a avatar and stores it in the cache folder
+pub fn download_to_cache(backend: Sender<BKCommand>,
+                         name: String,
+                         data: Rc<RefCell<AvatarData>>) {
+    let (tx, rx) = channel::<(String, String)>();
+    let _ = backend.send(BKCommand::GetUserInfoAsync(name.clone(), Some(tx)));
+
+    gtk::timeout_add(50, move || match rx.try_recv() {
+        Err(TryRecvError::Empty) => gtk::Continue(true),
+        Err(TryRecvError::Disconnected) => gtk::Continue(false),
+        Ok(_resp) => {
+            data.borrow_mut().redraw_pixbuf();
+            gtk::Continue(false)
+        }
+    });
 }

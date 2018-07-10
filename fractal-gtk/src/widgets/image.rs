@@ -106,6 +106,7 @@ impl Image {
         self
     }
 
+    #[allow(dead_code)]
     pub fn circle(mut self, c: bool) -> Image {
         self.circle = c;
         self
