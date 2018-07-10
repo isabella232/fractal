@@ -6,6 +6,9 @@ extern crate glib;
 use app::App;
 use i18n::i18n;
 
+use std::cell::RefCell;
+use std::rc::Rc;
+
 use self::gtk::prelude::*;
 
 use types::Message;
@@ -28,6 +31,7 @@ use appop::AppOp;
 use globals;
 use widgets;
 use widgets::AvatarExt;
+use widgets::AvatarData;
 
 // Room Message item
 pub struct MessageBox<'a> {
@@ -114,7 +118,7 @@ impl<'a> MessageBox<'a> {
         let msg = self.msg;
 
         if !small {
-            let info = self.build_room_msg_info(self.msg);
+            let info = self.build_room_msg_info(self.msg, small);
             info.set_margin_top(2);
             info.set_margin_bottom(3);
             content.pack_start(&info, false, false, 0);
@@ -140,29 +144,37 @@ impl<'a> MessageBox<'a> {
 
         let m = self.room.members.get(&uid);
 
-        let username = match m {
+        let data = match m {
             Some(member) => {
                 self.username.set_text(&member.get_alias());
-                Some(member.get_alias())
+                let username = Some(member.get_alias());
+                avatar.circle(uid.clone(), username, globals::MSG_ICON_SIZE)
             }
             None => {
-                self.username.set_text(&uid);
-                None
+                let backend = self.op.backend.clone();
+                let data = avatar.circle(uid.clone(), None, globals::MSG_ICON_SIZE);
+                set_username_async(backend, &uid, self.username.clone(),
+                                   Some(data.clone()));
+                data
             }
         };
 
-        download_to_cache(self.op.backend.clone(), uid.clone());
-        avatar.circle(uid, username, globals::MSG_ICON_SIZE);
+        download_to_cache(self.op.backend.clone(), uid.clone(),
+                          data.clone());
 
         avatar
     }
 
-    fn build_room_msg_username(&self, sender: &str, member: Option<&Member>) -> gtk::Label {
+    fn build_room_msg_username(&self, sender: &str, member: Option<&Member>, small: bool) -> gtk::Label {
         let uname = match member {
             Some(m) => m.get_alias(),
             None => {
-                let backend = self.op.backend.clone();
-                set_username_async(backend, sender, self.username.clone());
+                // in small widget, the avatar doesn't download the username
+                // so we need to download here
+                if small {
+                    let backend = self.op.backend.clone();
+                    set_username_async(backend, sender, self.username.clone(), None);
+                }
                 String::from(sender)
             }
         };
@@ -441,7 +453,7 @@ impl<'a> MessageBox<'a> {
         date
     }
 
-    fn build_room_msg_info(&self, msg: &Message) -> gtk::Box {
+    fn build_room_msg_info(&self, msg: &Message, small: bool) -> gtk::Box {
         // info
         // +----------+------+
         // | username | date |
@@ -449,7 +461,7 @@ impl<'a> MessageBox<'a> {
         let info = gtk::Box::new(gtk::Orientation::Horizontal, 0);
 
         let member = self.room.members.get(&msg.sender);
-        let username = self.build_room_msg_username(&msg.sender, member);
+        let username = self.build_room_msg_username(&msg.sender, member, small);
         let date = self.build_room_msg_date(&msg.date);
 
         self.username_event_box.add(&username);
@@ -550,7 +562,10 @@ fn highlight_username(label: gtk::Label, alias: &String, input: String) -> Optio
     Some(attr)
 }
 
-fn set_username_async(backend: Sender<BKCommand>, uid: &str, label: gtk::Label) {
+fn set_username_async(backend: Sender<BKCommand>,
+                      uid: &str,
+                      label: gtk::Label,
+                      avatar: Option<Rc<RefCell<AvatarData>>>) {
     let (tx, rx): (Sender<String>, Receiver<String>) = channel();
     backend.send(BKCommand::GetUserNameAsync(uid.to_string(), tx)).unwrap();
     gtk::timeout_add(50, move || match rx.try_recv() {
@@ -558,6 +573,11 @@ fn set_username_async(backend: Sender<BKCommand>, uid: &str, label: gtk::Label) 
         Err(TryRecvError::Disconnected) => gtk::Continue(false),
         Ok(username) => {
             label.set_text(&username);
+            if let Some(ref rc_data) = avatar {
+                let mut data = rc_data.borrow_mut();
+                data.redraw_fallback(Some(username));
+            }
+
             gtk::Continue(false)
         }
     });

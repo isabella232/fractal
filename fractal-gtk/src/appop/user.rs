@@ -43,9 +43,11 @@ impl AppOp {
                 avatar.remove(w);
             }
 
-            download_to_cache(self.backend.clone(), self.uid.clone().unwrap_or_default());
             let w = widgets::Avatar::avatar_new(Some(40));
-            w.circle(self.uid.clone().unwrap_or_default(), self.username.clone(), 40);
+            let uid = self.uid.clone().unwrap_or_default();
+            let data = w.circle(uid.clone(), self.username.clone(), 40);
+            download_to_cache(self.backend.clone(), uid.clone(), data.clone());
+
             avatar.add(&w);
             stack.set_visible_child_name("info");
         }
@@ -61,9 +63,11 @@ impl AppOp {
         let eb = gtk::EventBox::new();
         match self.avatar.clone() {
             Some(_) => {
-                download_to_cache(self.backend.clone(), self.uid.clone().unwrap_or_default());
                 let w = widgets::Avatar::avatar_new(Some(24));
-                w.circle(self.uid.clone().unwrap_or_default(), self.username.clone(), 24);
+                let uid = self.uid.clone().unwrap_or_default();
+                let data = w.circle(uid.clone(), self.username.clone(), 24);
+                download_to_cache(self.backend.clone(), uid.clone(), data.clone());
+
                 eb.add(&w);
             }
             None => {

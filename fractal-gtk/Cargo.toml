@@ -26,12 +26,12 @@ rand = "0.4.2"
 html2pango = { git = "https://gitlab.gnome.org/World/html2pango" }
 comrak = "0.2.9"
 gettext-rs = { git = "https://github.com/danigm/gettext-rs", branch = "no-gettext", features = ["gettext-system"] }
-letter-avatar = { git = "https://gitlab.gnome.org/jsparber/letter-avatar" }
 unicode-segmentation = "1.2.0"
 regex = "1.0.0"
 tree_magic = "0.2.0"
 log = "0.4.2"
 fragile = "0.2.1"
+letter-avatar = "0.1.1"
 
 [dependencies.cairo-rs]
 features = ["png"]
