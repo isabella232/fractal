@@ -110,6 +110,27 @@ impl AppOp {
         }
     }
 
+    pub fn get_first_new_from_last(&self, last_msg: &Message) -> Option<Message> {
+        match self.is_last_viewed(last_msg) {
+            LastViewed::Last | LastViewed::No => None,
+            LastViewed::Inline => {
+                self.rooms.get(&last_msg.room).and_then(|r| {
+                    r.messages.clone().into_iter()
+                              .filter(|msg| *msg > *last_msg && msg.sender !=
+                                      self.uid.clone().unwrap_or_default()).next()
+                })
+            }
+        }
+    }
+
+    pub fn get_msg_from_id(&self, roomid: &str, msg_id: &str) -> Option<Message> {
+        let room = self.rooms.get(roomid);
+
+        room.and_then(|r| r.messages.clone().into_iter()
+                                    .filter(|msg| msg.id.clone().unwrap_or_default() == msg_id)
+                                    .next())
+    }
+
     pub fn add_room_message(&mut self,
                             msg: Message,
                             msgpos: MsgPos,
