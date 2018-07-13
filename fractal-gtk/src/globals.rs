@@ -7,5 +7,7 @@ pub static APP_ID: &'static str = "org.gnome.Fractal";
 pub static DEFAULT_HOMESERVER: &'static str = "https://matrix.org";
 pub static DEFAULT_IDENTITYSERVER: &'static str = "https://vector.im";
 
+pub static MAX_IMAGE_SIZE: (i32, i32) = (600, 400);
+pub static MAX_STICKER_SIZE: (i32, i32) = (200, 130);
 
 include!(concat!(env!("OUT_DIR"), "/build_globals.rs"));

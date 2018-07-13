@@ -272,7 +272,7 @@ impl<'a> MessageBox<'a> {
             None => msg.url.clone().unwrap_or_default(),
         };
         let image = widgets::image::Image::new(&backend, &img_path)
-                        .size(Some((600, 400))).build();
+                        .size(Some(globals::MAX_IMAGE_SIZE)).build();
 
         let msg = msg.clone();
         let room_id = self.room.id.clone();
@@ -299,7 +299,7 @@ impl<'a> MessageBox<'a> {
         let backend = self.op.backend.clone();
         let image = widgets::image::Image::new(&backend,
                         &msg.url.clone().unwrap_or_default())
-                        .size(Some((600, 400))).build();
+                        .size(Some(globals::MAX_STICKER_SIZE)).build();
         let w = image.widget.clone();
         w.set_tooltip_text(&self.msg.body[..]);
 
