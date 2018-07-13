@@ -154,6 +154,13 @@ impl AppOp {
     }
 
     pub fn set_active_room(&mut self, room: &Room) {
+        if let Some(lvm_id) = self.last_viewed_messages.clone().get(&room.id) {
+            if let Some(lvm) = self.get_msg_from_id(&room.id, &lvm_id) {
+                let new_msg = self.get_first_new_from_last(&lvm);
+                self.first_new_messages.insert(room.id.clone(), new_msg);
+            }
+        }
+
         self.member_limit = 50;
         self.room_panel(RoomPanel::Loading);
 
@@ -186,7 +193,7 @@ impl AppOp {
                                                           MsgPos::Top,
                                                           None,
                                                           i == msgs.len() - 1,
-                                                          self.is_last_viewed(&msg));
+                                                          self.is_first_new(&msg));
             self.internal.send(command).unwrap();
         }
         self.internal.send(InternalCommand::AppendTmpMessages).unwrap();

@@ -13,6 +13,7 @@ use backend::BKCommand;
 use backend;
 
 use types::Member;
+use types::Message;
 use types::Room;
 use types::RoomList;
 use types::StickerGroup;
@@ -64,6 +65,7 @@ pub struct AppOp {
     pub sending_message: bool,
     shown_messages: usize,
     pub last_viewed_messages: HashMap<String, String>,
+    pub first_new_messages: HashMap<String, Option<Message>>,
 
     pub username: Option<String>,
     pub uid: Option<String>,
@@ -128,6 +130,7 @@ impl AppOp {
             sending_message: false,
             shown_messages: 0,
             last_viewed_messages: HashMap::new(),
+            first_new_messages: HashMap::new(),
             state: AppState::Login,
             roomlist: widgets::RoomList::new(None),
             since: None,
