@@ -356,7 +356,7 @@ pub fn get_username_async(bk: &Backend,
             let name = String::from(r["displayname"].as_str().unwrap_or(&uid));
             tx.send(name).unwrap();
         },
-        |err| { tx.send(uid.to_string()).unwrap() }
+        |_err| { tx.send(uid.to_string()).unwrap() }
     );
 
     Ok(())
