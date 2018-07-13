@@ -5,9 +5,6 @@ use appop::AppState;
 
 use app::App;
 
-#[macro_use]
-use fractal_api::util;
-
 impl App {
     pub fn connect_headerbars(&self) {
         let op = self.op.clone();
