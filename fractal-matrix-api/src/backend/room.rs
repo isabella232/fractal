@@ -117,8 +117,8 @@ pub fn get_room_members(bk: &Backend, roomid: String) -> Result<(), Error> {
                 let avatar = &joined[memberid]["avatar_url"];
 
                 let m = Member {
-                    alias: match alias.as_str() { None => None, Some(a) => Some(strn!(a)) },
-                    avatar: match avatar.as_str() { None => None, Some(a) => Some(strn!(a)) },
+                    alias: match alias.as_str() { None => None, Some(a) => Some(String::from(a)) },
+                    avatar: match avatar.as_str() { None => None, Some(a) => Some(String::from(a)) },
                     uid: memberid.to_string(),
                 };
                 ms.push(m);
@@ -408,7 +408,7 @@ pub fn new_room(bk: &Backend, name: String, privacy: RoomType, internal_id: Stri
     let tx = bk.tx.clone();
     post!(&url, &attrs,
         move |r: JsonValue| {
-            let id = strn!(r["room_id"].as_str().unwrap_or(""));
+            let id = String::from(r["room_id"].as_str().unwrap_or(""));
             let name = n;
             let r = Room::new(id, Some(name));
             tx.send(BKResponse::NewRoom(r, internal_id)).unwrap();
@@ -435,7 +435,7 @@ pub fn direct_chat(bk: &Backend, user: Member, internal_id: String) -> Result<()
     let tx = bk.tx.clone();
     post!(&url, &attrs,
         move |r: JsonValue| {
-            let id = strn!(r["room_id"].as_str().unwrap_or(""));
+            let id = String::from(r["room_id"].as_str().unwrap_or(""));
             let mut r = Room::new(id.clone(), m.alias);
             r.direct = true;
             tx.send(BKResponse::NewRoom(r, internal_id)).unwrap();

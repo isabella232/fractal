@@ -20,7 +20,7 @@ pub fn sync(bk: &Backend) -> Result<(), Error> {
     let userid = bk.data.lock().unwrap().user_id.clone();
 
     let mut params: Vec<(&str, String)> = vec![];
-    params.push(("full_state", strn!("false")));
+    params.push(("full_state", String::from("false")));
 
     let timeout;
 
@@ -42,12 +42,12 @@ pub fn sync(bk: &Backend) -> Result<(), Error> {
             \"event_fields\": [\"type\", \"content\", \"sender\", \"event_id\", \"age\", \"unsigned\"]
         }}", globals::PAGE_LIMIT);
 
-        params.push(("filter", strn!(filter)));
-        params.push(("timeout", strn!("0")));
+        params.push(("filter", String::from(filter)));
+        params.push(("timeout", String::from("0")));
         timeout = 0;
     } else {
         params.push(("since", since.clone()));
-        params.push(("timeout", strn!("30000")));
+        params.push(("timeout", String::from("30000")));
         timeout = 30;
     }
 
@@ -108,11 +108,11 @@ pub fn sync(bk: &Backend) -> Result<(), Error> {
                             for ev in events {
                                 match ev.stype.as_ref() {
                                     "m.room.name" => {
-                                        let name = strn!(ev.content["name"].as_str().unwrap_or(""));
+                                        let name = String::from(ev.content["name"].as_str().unwrap_or(""));
                                         tx.send(BKResponse::RoomName(ev.room.clone(), name)).unwrap();
                                     }
                                     "m.room.topic" => {
-                                        let t = strn!(ev.content["topic"].as_str().unwrap_or(""));
+                                        let t = String::from(ev.content["topic"].as_str().unwrap_or(""));
                                         tx.send(BKResponse::RoomTopic(ev.room.clone(), t)).unwrap();
                                     }
                                     "m.room.avatar" => {

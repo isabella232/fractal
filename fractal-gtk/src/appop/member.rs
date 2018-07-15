@@ -160,8 +160,8 @@ impl AppOp {
             }
             Some("join") => {
                 let m = Member {
-                    avatar: Some(strn!(ev.content["avatar_url"].as_str().unwrap_or(""))),
-                    alias: Some(strn!(ev.content["displayname"].as_str().unwrap_or(""))),
+                    avatar: Some(String::from(ev.content["avatar_url"].as_str().unwrap_or(""))),
+                    alias: Some(String::from(ev.content["displayname"].as_str().unwrap_or(""))),
                     uid: sender.clone(),
                 };
                 if let Some(r) = self.rooms.get_mut(&ev.room.clone()) {

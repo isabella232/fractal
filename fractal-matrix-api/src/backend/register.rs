@@ -130,7 +130,7 @@ pub fn logout(bk: &Backend) -> Result<(), Error> {
 pub fn register(bk: &Backend, user: String, password: String, server: String) -> Result<(), Error> {
     let s = server.clone();
     bk.data.lock().unwrap().server_url = s;
-    let url = bk.url("register", vec![("kind", strn!("user"))])?;
+    let url = bk.url("register", vec![("kind", String::from("user"))])?;
 
     let attrs = json!({
         "auth": {"type": "m.login.password"},

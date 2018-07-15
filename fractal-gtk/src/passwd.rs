@@ -183,7 +183,7 @@ mod ss_storage {
         // old name password
         let passwd = allpass
             .iter()
-            .find(|x| x.get_label().unwrap_or(strn!("")) == "guillotine");
+            .find(|x| x.get_label().unwrap_or_default() == "guillotine");
 
         if passwd.is_none() {
             return Ok(());
