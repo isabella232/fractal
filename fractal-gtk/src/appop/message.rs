@@ -358,7 +358,7 @@ impl AppOp {
         let room = self.active_room.clone();
         let now = Local::now();
 
-        let mtype = strn!("m.text");
+        let mtype = String::from("m.text");
 
         let mut m = Message {
             sender: self.uid.clone().unwrap_or_default(),
@@ -376,7 +376,7 @@ impl AppOp {
 
         if msg.starts_with("/me ") {
             m.body = msg.trim_left_matches("/me ").to_owned();
-            m.mtype = strn!("m.emote");
+            m.mtype = String::from("m.emote");
         }
 
         /* reenable autoscroll to jump to new message in history */
@@ -424,7 +424,7 @@ impl AppOp {
             "image/jpg" => "m.image",
             _ => "m.file"
         };
-        let body = strn!(file.split("/").last().unwrap_or(&file));
+        let body = String::from(file.split("/").last().unwrap_or(&file));
 
         let mut m = Message {
             sender: self.uid.clone().unwrap_or_default(),
@@ -474,7 +474,7 @@ impl AppOp {
         dialog.connect_response(move |dialog, resp| {
             if resp == 1 {
                 if let Some(fname) = dialog.get_filename() {
-                    let f = strn!(fname.to_str().unwrap_or(""));
+                    let f = String::from(fname.to_str().unwrap_or(""));
                     internal.send(InternalCommand::AttachMessage(f)).unwrap();
                 }
             }
@@ -484,7 +484,7 @@ impl AppOp {
         let internal = self.internal.clone();
         dialog.connect_file_activated(move |dialog| {
             if let Some(fname) = dialog.get_filename() {
-                let f = strn!(fname.to_str().unwrap_or(""));
+                let f = String::from(fname.to_str().unwrap_or(""));
                 internal.send(InternalCommand::AttachMessage(f)).unwrap();
             }
             dialog.destroy();

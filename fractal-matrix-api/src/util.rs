@@ -84,13 +84,6 @@ macro_rules! clone {
 }
 
 #[macro_export]
-macro_rules! strn {
-    ($p: expr) => (
-        String::from($p)
-    );
-}
-
-#[macro_export]
 macro_rules! client_url {
     ($b: expr, $path: expr, $params: expr) => (
         build_url($b, &format!("/_matrix/client/r0/{}", $path), $params)
@@ -325,7 +318,7 @@ pub fn get_rooms_from_json(r: &JsonValue, userid: &str, baseu: &Url) -> Result<V
                         Member {
                             alias: Some(alias),
                             avatar: Some(avatar),
-                            uid: strn!(userid),
+                            uid: String::from(userid),
                         }
                     );
                 }
@@ -435,10 +428,10 @@ pub fn parse_sync_events(r: &JsonValue) -> Result<Vec<Event>, Error> {
             //println!("ev: {:#?}", ev);
             evs.push(Event {
                 room: k.clone(),
-                sender: strn!(ev["sender"].as_str().unwrap_or("")),
+                sender: String::from(ev["sender"].as_str().unwrap_or("")),
                 content: ev["content"].clone(),
-                stype: strn!(ev["type"].as_str().unwrap_or("")),
-                id: strn!(ev["id"].as_str().unwrap_or("")),
+                stype: String::from(ev["type"].as_str().unwrap_or("")),
+                id: String::from(ev["id"].as_str().unwrap_or("")),
             });
         }
     }
@@ -469,7 +462,7 @@ pub fn get_room_media_list(baseu: &Url,
                            prev_batch: Option<String>)
                            -> Result<(Vec<Message>, String), Error> {
     let mut params = vec![
-        ("dir", strn!("b")),
+        ("dir", String::from("b")),
         ("limit", format!("{}", limit)),
         ("access_token", tk.clone()),
         ("filter", "{\"filter_json\": { \"contains_url\": true, \"not_types\": [\"m.sticker\"] } }".to_string()),
@@ -546,7 +539,7 @@ pub fn resolve_media_url(
     if thumb {
         params.push(("width", format!("{}", w)));
         params.push(("height", format!("{}", h)));
-        params.push(("method", strn!("scale")));
+        params.push(("method", String::from("scale")));
         path = format!("thumbnail/{}/{}", server, media);
     } else {
         path = format!("download/{}/{}", server, media);
@@ -573,7 +566,7 @@ pub fn dw_media(base: &Url,
     if thumb {
         params.push(("width", format!("{}", w)));
         params.push(("height", format!("{}", h)));
-        params.push(("method", strn!("scale")));
+        params.push(("method", String::from("scale")));
         path = format!("thumbnail/{}/{}", server, media);
     } else {
         path = format!("download/{}/{}", server, media);
@@ -685,7 +678,7 @@ pub fn get_user_avatar(baseu: &Url, userid: &str) -> Result<(String, String), Er
 }
 
 pub fn get_room_st(base: &Url, tk: &str, roomid: &str) -> Result<JsonValue, Error> {
-    let url = client_url!(base, &format!("rooms/{}/state", roomid), vec![("access_token", strn!(tk))])?;
+    let url = client_url!(base, &format!("rooms/{}/state", roomid), vec![("access_token", String::from(tk))])?;
 
     let attrs = json!(null);
     let st = json_q("get", &url, &attrs, globals::TIMEOUT)?;
@@ -807,7 +800,7 @@ pub fn get_initial_room_messages(baseu: &Url,
     let mut nend;
 
     let mut params = vec![
-        ("dir", strn!("b")),
+        ("dir", String::from("b")),
         ("limit", format!("{}", limit)),
         ("access_token", tk.clone()),
     ];
@@ -859,7 +852,7 @@ pub fn fill_room_gap(baseu: &Url,
     let nend;
 
     let mut params = vec![
-        ("dir", strn!("f")),
+        ("dir", String::from("f")),
         ("limit", format!("{}", globals::PAGE_LIMIT)),
         ("access_token", tk.clone()),
     ];
@@ -965,15 +958,15 @@ pub fn parse_room_member(msg: &JsonValue) -> Option<Member> {
 
     let displayname = match c["displayname"].as_str() {
         None => None,
-        Some(s) => Some(strn!(s))
+        Some(s) => Some(String::from(s))
     };
     let avatar_url = match c["avatar_url"].as_str() {
         None => None,
-        Some(s) => Some(strn!(s))
+        Some(s) => Some(String::from(s))
     };
 
     Some(Member {
-        uid: strn!(sender),
+        uid: String::from(sender),
         alias: displayname,
         avatar: avatar_url,
     })
