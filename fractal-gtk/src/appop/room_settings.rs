@@ -7,15 +7,6 @@ use appop::AppState;
 
 use app::InternalCommand;
 
-/* needed to request members list */
-/*
-   use backend::BKCommand;
-   use fractal_api::types::Member;
-   use std::sync::mpsc::channel;
-   use std::sync::mpsc::TryRecvError;
-   use std::sync::mpsc::{Receiver, Sender};
-   */
-
 use widgets;
 
 impl AppOp {
@@ -104,48 +95,4 @@ impl AppOp {
         panel.show_new_room_topic();
         None
     }
-
-    /*
-       pub fn update_members_list(&self, uid: String) -> Option<()> {
-       self.room_settings.clone()?.update_members_list(uid);
-       None
-       }
-       */
-
-    /*
-       pub fn request_members_list(&self) -> Option<()> {
-       let room = self.rooms.get(&self.active_room.clone()?)?;
-       let members: Vec<Member> = room.members.values().cloned().collect();
-       for member in members.iter() {
-       account_settings_get_member_info(
-       self.backend.clone(),
-       member.uid.clone());
-       }
-
-       None
-
-*/
 }
-
-/* this funtion should be moved to the backend */
-/*
-   pub fn account_settings_get_member_info(
-   backend: Sender<BKCommand>,
-   sender: String,
-   ) {
-   let (tx, rx): (Sender<(String, String)>, Receiver<(String, String)>) = channel();
-   backend
-   .send(BKCommand::GetUserInfoAsync(sender.clone(), Some(tx)))
-   .unwrap();
-   gtk::timeout_add(100, move || match rx.try_recv() {
-   Err(TryRecvError::Empty) => gtk::Continue(true),
-   Err(TryRecvError::Disconnected) => gtk::Continue(false),
-   Ok((_name, _avatar)) => {
-/* update UI */
-//view.update_members_list(index);
-//APPOP!(update_members_list, (sender));
-gtk::Continue(false)
-    }
-});
-}
-*/

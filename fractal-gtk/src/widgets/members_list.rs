@@ -47,6 +47,7 @@ impl MembersList {
     }
 
     /* removes the content of the row with index i */
+    #[allow(dead_code)]
     pub fn update(&self, uid: String) -> Option<()> {
         let mut index = None;
         for (i, member) in self.members.iter().enumerate() {

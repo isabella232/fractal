@@ -66,12 +66,7 @@ impl RoomSettings {
         Some((body, header))
     }
 
-    /*
-    pub fn update(&self, i: usize) -> Option<()> {
-        None
-    }
-    */
-
+    #[allow(dead_code)]
     pub fn update_members_list(&self, uid: String) -> Option<()> {
         self.members_list.clone()?.update(uid);
         None
