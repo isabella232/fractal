@@ -1,7 +1,5 @@
 extern crate gtk;
 
-use i18n::i18n;
-
 use std::sync::mpsc::Sender;
 use std::collections::HashMap;
 
@@ -30,6 +28,7 @@ mod login;
 mod sync;
 mod user;
 mod account;
+mod room_settings;
 mod notifications;
 mod state;
 mod room;
@@ -76,9 +75,9 @@ pub struct AppOp {
     pub autoscroll: bool,
     pub active_room: Option<String>,
     pub rooms: RoomList,
+    pub room_settings: Option<widgets::RoomSettings>,
     pub roomlist: widgets::RoomList,
     pub load_more_spn: gtk::Spinner,
-    pub more_members_btn: gtk::Button,
     pub unsent_messages: HashMap<String, (String, i32)>,
 
     pub inhibit_escape: bool,
@@ -114,12 +113,12 @@ impl AppOp {
             ui: ui,
             gtk_app: app,
             load_more_spn: gtk::Spinner::new(),
-            more_members_btn: gtk::Button::new_with_label(i18n("Load more members").as_str()),
             backend: tx,
             internal: itx,
             autoscroll: true,
             active_room: None,
             rooms: HashMap::new(),
+            room_settings: None,
             username: None,
             uid: None,
             avatar: None,

@@ -8,13 +8,14 @@ use appop::AppOp;
 use appop::room::RoomPanel;
 
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum AppState {
     Login,
     Chat,
     Directory,
     Loading,
     AccountSettings,
+    RoomSettings,
     MediaViewer,
 }
 
@@ -32,6 +33,7 @@ impl AppOp {
             AppState::Directory => "directory",
             AppState::Loading => "loading",
             AppState::AccountSettings => "account-settings",
+            AppState::RoomSettings => "room-settings",
             AppState::MediaViewer => "media-viewer",
         };
 
@@ -46,6 +48,7 @@ impl AppOp {
             AppState::Directory => "back",
             AppState::Loading => "login",
             AppState::AccountSettings => "account-settings",
+            AppState::RoomSettings => "room-settings",
             AppState::MediaViewer => "media-viewer",
             _ => "normal",
         };
@@ -71,6 +74,11 @@ impl AppOp {
 
         if let AppState::Directory = self.state {
             self.search_rooms(false);
+        }
+
+        /* FIXME: Find better solution to remove reference to widget */
+        if self.state != AppState::RoomSettings && self.room_settings.is_some() {
+            self.close_room_settings();
         }
     }
 
