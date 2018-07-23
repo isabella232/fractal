@@ -344,7 +344,7 @@
                                     <child>
                                       <object class="GtkSourceView" id="msg_entry">
                                         <property name="can_focus">True</property>
-                                        <property name="wrap_mode">word</property>
+                                        <property name="wrap_mode">word-char</property>
                                         <property name="indent_on_tab">False</property>
                                         <property name="buffer">msg_entry_buffer</property>
                                       </object>
