@@ -13,6 +13,9 @@ case $1 in
 "minor")
     next=$(echo $mayor.$(($minor + 1)).0)
     ;;
+"version")
+    next=$2
+    ;;
 *)
     next=$(echo $mayor.$minor.$(($rev + 1)))
     ;;
