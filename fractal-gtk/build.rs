@@ -6,11 +6,12 @@ use std::io::Write;
 
 fn main() {
     // Compile Gresource
-    Command::new("glib-compile-resources")
+    let out = Command::new("glib-compile-resources")
         .args(&["--generate", "resources.xml"])
         .current_dir("res")
         .status()
-        .unwrap();
+        .expect("failed to generate resources");
+    assert!(out.success());
 
     // Generating build globals
     let default_locales = "./fractal-gtk/po".to_string();
