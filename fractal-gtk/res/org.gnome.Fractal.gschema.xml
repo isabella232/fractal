@@ -16,6 +16,14 @@
       </description>
     </key>
 
+    <key name="markdown-active" type="b">
+      <default>false</default>
+      <summary>If markdown sending is active</summary>
+      <description>
+        Whether support for sending markdown messages is on
+      </description>
+    </key>
+
   </schema>
 
 </schemalist>

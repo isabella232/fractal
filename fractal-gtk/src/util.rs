@@ -6,6 +6,7 @@ use self::gdk_pixbuf::Pixbuf;
 use self::gdk_pixbuf::PixbufExt;
 use failure::Error;
 use self::gdk::ContextExt;
+use gio::{SettingsExt, Settings, SettingsSchemaSource};
 
 use html2pango::{html_escape, markup_links};
 
@@ -58,4 +59,29 @@ pub fn get_pixbuf_data(pb: &Pixbuf) -> Result<Vec<u8>, Error> {
 
 pub fn markup_text(s: &str) -> String {
     markup_links(&html_escape(s))
+}
+
+
+pub fn get_markdown_schema() -> bool {
+    if let Some(source) = SettingsSchemaSource::get_default() {
+        if let Some(_schema) = source.lookup("org.gnome.Fractal", true) {
+            let settings: Settings = Settings::new("org.gnome.Fractal");
+
+            settings.get_boolean("markdown-active")
+        } else {
+            false
+        }
+    } else {
+        false
+    }
+}
+
+pub fn set_markdown_schema(md: bool) {
+    if let Some(source) = SettingsSchemaSource::get_default() {
+        if let Some(_schema) = source.lookup("org.gnome.Fractal", true) {
+            let settings: Settings = Settings::new("org.gnome.Fractal");
+
+            settings.set_boolean("markdown-active", md);
+        }
+    }
 }
