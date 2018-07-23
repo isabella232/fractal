@@ -12,26 +12,27 @@ gdk-pixbuf = "0.4.0"
 gdk-pixbuf-sys = "0.6.0"
 gio = "0.4.1"
 glib = "0.5.0"
-gstreamer = "0.11.3"
+gstreamer = "0.11.4"
 gstreamer-player = "0.11.3"
 notify-rust = "3.4.2"
 pango = "0.4.0"
 pangocairo = "0.5.0"
 secret-service = "0.4.0"
-serde = "1.0.43"
-serde_derive = "1.0.43"
-serde_json = "1.0.16"
-url = "1.7.0"
-rand = "0.4.2"
+serde = "1.0.70"
+serde_derive = "1.0.70"
+serde_json = "1.0.24"
+url = "1.7.1"
+rand = "0.5.4"
 html2pango = { git = "https://gitlab.gnome.org/World/html2pango" }
-comrak = "0.2.9"
+comrak = "0.2.14"
 gettext-rs = { git = "https://github.com/danigm/gettext-rs", branch = "no-gettext", features = ["gettext-system"] }
-unicode-segmentation = "1.2.0"
-regex = "1.0.0"
+unicode-segmentation = "1.2.1"
+regex = "1.0.2"
 tree_magic = "0.2.0"
-log = "0.4.2"
+log = "0.4.3"
 fragile = "0.2.1"
 letter-avatar = "0.1.1"
+sourceview = "0.4.0"
 
 [dependencies.cairo-rs]
 features = ["png"]
@@ -39,7 +40,7 @@ version = "0.4.1"
 
 [dependencies.chrono]
 features = ["serde"]
-version = "0.4.2"
+version = "0.4.4"
 
 [dependencies.fractal-matrix-api]
 path = "../fractal-matrix-api"
@@ -49,7 +50,4 @@ git = "https://gitlab.gnome.org/jsparber/gspell-rs"
 
 [dependencies.gtk]
 features = ["v3_22"]
-version = "0.4.0"
-
-[dependencies.sourceview]
-version = "0.4.0"
+version = "0.4.1"

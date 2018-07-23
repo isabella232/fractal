@@ -1,4 +1,3 @@
-extern crate rand;
 extern crate gtk;
 
 use self::gtk::prelude::*;
@@ -10,7 +9,8 @@ use appop::SearchType;
 use backend::BKCommand;
 use types::Room;
 
-use self::rand::{thread_rng, Rng};
+use rand::{thread_rng, Rng};
+use rand::distributions::Alphanumeric;
 
 
 impl AppOp {
@@ -21,7 +21,7 @@ impl AppOp {
 
         let user = self.invite_list[0].clone();
 
-        let internal_id: String = thread_rng().gen_ascii_chars().take(10).collect();
+        let internal_id: String = thread_rng().sample_iter(&Alphanumeric).take(10).collect();
         self.backend.send(BKCommand::DirectChat(user.clone(), internal_id.clone())).unwrap();
         self.close_direct_chat_dialog();
 

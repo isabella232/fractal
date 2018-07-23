@@ -1,8 +1,8 @@
 extern crate gtk;
-extern crate rand;
 
 use self::gtk::prelude::*;
-use self::rand::{thread_rng, Rng};
+use rand::{thread_rng, Rng};
+use rand::distributions::Alphanumeric;
 use glib::signal;
 use std::sync::mpsc::Sender;
 
@@ -205,7 +205,7 @@ fn add_address(
     id_server: String,
     address: Option<String>,
 ) -> Option<String> {
-    let secret: String = thread_rng().gen_ascii_chars().take(36).collect();
+    let secret: String = thread_rng().sample_iter(&Alphanumeric).take(36).collect();
     if medium == "msisdn" {
         backend
             .send(BKCommand::GetTokenPhone(id_server, address?, secret))

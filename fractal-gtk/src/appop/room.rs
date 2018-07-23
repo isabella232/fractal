@@ -1,5 +1,4 @@
 extern crate gtk;
-extern crate rand;
 extern crate sourceview;
 
 use i18n::{i18n, i18n_k};
@@ -23,8 +22,8 @@ use types::Message;
 
 use util::markup_text;
 
-use self::rand::{thread_rng, Rng};
-
+use rand::{thread_rng, Rng};
+use rand::distributions::Alphanumeric;
 
 pub struct Force(pub bool);
 
@@ -283,7 +282,7 @@ impl AppOp {
             false => backend::RoomType::Public,
         };
 
-        let internal_id: String = thread_rng().gen_ascii_chars().take(10).collect();
+        let internal_id: String = thread_rng().sample_iter(&Alphanumeric).take(10).collect();
         self.backend.send(BKCommand::NewRoom(n.clone(), p, internal_id.clone())).unwrap();
 
         let fakeroom = Room::new(internal_id.clone(), Some(n));
