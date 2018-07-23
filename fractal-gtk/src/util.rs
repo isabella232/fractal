@@ -63,25 +63,20 @@ pub fn markup_text(s: &str) -> String {
 
 
 pub fn get_markdown_schema() -> bool {
-    if let Some(source) = SettingsSchemaSource::get_default() {
-        if let Some(_schema) = source.lookup("org.gnome.Fractal", true) {
+    SettingsSchemaSource::get_default()
+        .and_then(|s| s.lookup("org.gnome.Fractal", true))
+        .and_then(|_| {
             let settings: Settings = Settings::new("org.gnome.Fractal");
-
-            settings.get_boolean("markdown-active")
-        } else {
-            false
-        }
-    } else {
-        false
-    }
+            Some(settings.get_boolean("markdown-active"))
+        })
+        .unwrap_or(false)
 }
 
 pub fn set_markdown_schema(md: bool) {
-    if let Some(source) = SettingsSchemaSource::get_default() {
-        if let Some(_schema) = source.lookup("org.gnome.Fractal", true) {
+    SettingsSchemaSource::get_default()
+        .and_then(|s| s.lookup("org.gnome.Fractal", true))
+        .map(|_| {
             let settings: Settings = Settings::new("org.gnome.Fractal");
-
             settings.set_boolean("markdown-active", md);
-        }
-    }
+        });
 }

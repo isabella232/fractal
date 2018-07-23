@@ -24,20 +24,16 @@ enum PWDConf {
 
 
 fn pwd_conf() -> PWDConf {
-    if let Some(source) = SettingsSchemaSource::get_default() {
-        if let Some(_schema) = source.lookup("org.gnome.Fractal", true) {
+    SettingsSchemaSource::get_default()
+        .and_then(|s| s.lookup("org.gnome.Fractal", true))
+        .map(|_| {
             let settings: Settings = Settings::new("org.gnome.Fractal");
-
             match settings.get_enum("password-storage") {
                 1 => PWDConf::PlainText,
                 _ => PWDConf::SecretService,
             }
-        } else {
-            PWDConf::SecretService
-        }
-    } else {
-        PWDConf::SecretService
-    }
+        })
+        .unwrap_or(PWDConf::SecretService)
 }
 
 
