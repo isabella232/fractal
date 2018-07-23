@@ -4,6 +4,8 @@ extern crate sourceview;
 use self::gtk::prelude::*;
 use self::sourceview::prelude::*;
 
+use util;
+
 use app::App;
 
 impl App {
@@ -33,13 +35,23 @@ impl App {
 
         md_popover_btn.set_popover(Some(&popover));
 
+        let md_active = util::get_markdown_schema();
         let op = self.op.clone();
+        if md_active {
+            op.lock().unwrap().md_enabled = true;
+            markdown_switch.set_active(true);
+            md_img.set_from_icon_name("format-indent-more-symbolic",1);
+            txt.get_style_context().unwrap().remove_class("dim-label");
+        }
+
+        let op = op.clone();
         let ui = self.ui.clone();
         markdown_switch.clone().connect_property_active_notify(move |_| {
             op.lock().unwrap().md_enabled = markdown_switch.get_active();
             if !markdown_switch.get_active() {
                 md_img.set_from_icon_name("format-justify-left-symbolic",1);
                 txt.get_style_context().unwrap().add_class("dim-label");
+                util::set_markdown_schema(false);
 
                 let buffer: sourceview::Buffer = ui.builder
                     .get_object("msg_entry_buffer")
@@ -50,6 +62,7 @@ impl App {
             } else {
                 md_img.set_from_icon_name("format-indent-more-symbolic",1);
                 txt.get_style_context().unwrap().remove_class("dim-label");
+                util::set_markdown_schema(true);
 
                 if let Some(md_lang) = md_lang.clone() {
                     let buffer: sourceview::Buffer = ui.builder
