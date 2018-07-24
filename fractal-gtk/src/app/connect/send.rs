@@ -7,6 +7,8 @@ use self::sourceview::BufferExt;
 
 use app::App;
 
+const MAX_INPUT_HEIGHT: i32 = 100;
+
 impl App {
     pub fn connect_send(&self) {
         let room_message_box = self.ui.builder
@@ -22,6 +24,17 @@ impl App {
         let msg_entry: sourceview::View = self.ui.builder
             .get_object("msg_entry")
             .expect("Couldn't find msg_entry in ui file.");
+
+        let input_scroll = self.ui.builder
+            .get_object::<gtk::ScrolledWindow>("input_scroll")
+            .expect("Can't find input_scroll in ui file.");
+        if let Some(adjustment) = input_scroll.get_vadjustment() {
+            adjustment.connect_value_changed(clone!(msg_entry => move |adj| {
+                if msg_entry.get_allocated_height() < MAX_INPUT_HEIGHT {
+                    adj.set_value(0.0);
+                }
+            }));
+        }
 
         let buffer: sourceview::Buffer = self.ui.builder
             .get_object("msg_entry_buffer")
