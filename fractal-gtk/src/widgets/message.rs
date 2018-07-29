@@ -3,6 +3,7 @@ extern crate chrono;
 extern crate pango;
 extern crate glib;
 
+use itertools::Itertools;
 use app::App;
 use i18n::i18n;
 
@@ -285,61 +286,17 @@ impl<'a> MessageBox<'a> {
     fn calculate_msg_parts(&self, body: &str) -> Vec<gtk::Label> {
         let mut parts_labels: Vec<gtk::Label> = vec![];
 
-        let lines: Vec<&str> = body.lines().map(|l| l.trim()).collect();
-        let mut lines_read: usize = 0;
-        let mut parts_lines: Vec<(Vec<&str>, bool)> = vec![];
-
-        while lines_read < lines.len() {
-            if let Some(line) = lines.get(lines_read) {
-                let is_quote = line.starts_with(">");
-
-                let part_lines: Vec<&str> = if is_quote {
-                    lines.iter().skip(lines_read).take_while(|line| {
-                        if line.starts_with(">") {
-                            lines_read += 1;
-                            true
-                        } else {
-                            false
-                        }
-                    }).map(|line| *line).collect()
-                } else {
-                    lines.iter().skip(lines_read).take_while(|line| {
-                        if !line.starts_with(">") {
-                            lines_read += 1;
-                            true
-                        } else {
-                            false
-                        }
-                    }).map(|line| *line).collect()
-                };
-
-                parts_lines.push((part_lines, is_quote));
-            }
-        }
-
-        for (lines, is_quote) in parts_lines.iter_mut() {
-            for line in lines {
-                if *is_quote {
-                    *line = line.trim_left_matches(">").trim_left();
-                }
-            }
-        }
-
-        let parts: Vec<(String, bool)> = parts_lines.iter()
-                                         .map(|(part_lines, is_quote)|
-                                              (part_lines.join("\n").trim().to_string(), *is_quote)
-                                         ).collect();
-
-        for (part, is_quote) in parts {
+        for (part, kind) in split_msg(body) {
             let msg_part = gtk::Label::new("");
             self.connect_right_click_menu(msg_part.clone().upcast::<gtk::Widget>());
             msg_part.set_markup(&markup_text(&part));
             self.set_label_styles(&msg_part);
 
-            if is_quote {
-                if let Some(style) = msg_part.get_style_context() {
-                    style.add_class("quote");
+            match kind {
+                MsgPartType::Quote => {
+                    msg_part.get_style_context().map(|s| s.add_class("quote"));
                 }
+                _ => {}
             }
 
             parts_labels.push(msg_part);
@@ -690,4 +647,37 @@ fn set_username_async(backend: Sender<BKCommand>,
             gtk::Continue(false)
         }
     });
+}
+
+#[derive(PartialEq)]
+enum MsgPartType {
+    Normal,
+    Quote,
+}
+
+fn kind_of_line(line: &&str) -> MsgPartType {
+    match line {
+        l if l.starts_with(">") => MsgPartType::Quote,
+        _ => MsgPartType::Normal,
+    }
+}
+
+/// Split a message into parts depending on the kind
+/// Currently supported types:
+///  * Normal
+///  * Quote
+fn split_msg(body: &str) -> Vec<(String, MsgPartType)> {
+    let mut parts: Vec<(String, MsgPartType)> = vec![];
+
+    for (k, group) in body.lines()
+                          .map(|l| l.trim())
+                          .group_by(kind_of_line).into_iter() {
+        let v: Vec<&str> = group
+            .map(|l| l.trim_left_matches(">").trim_left())
+            .collect();
+        let s = v.join("\n").to_string();
+        parts.push((s, k));
+    }
+
+    parts
 }
