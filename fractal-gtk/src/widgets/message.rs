@@ -3,6 +3,7 @@ extern crate chrono;
 extern crate pango;
 extern crate glib;
 
+use itertools::Itertools;
 use app::App;
 use i18n::i18n;
 
@@ -242,44 +243,66 @@ impl<'a> MessageBox<'a> {
     }
 
     fn build_room_msg_body(&self, body: &str) -> gtk::Box {
-        let bx = gtk::Box::new(gtk::Orientation::Horizontal, 0);
-        let msg = gtk::Label::new("");
+        let bx = gtk::Box::new(gtk::Orientation::Vertical, 6);
         let uname = self.op.username.clone().unwrap_or_default();
 
-        self.connect_right_click_menu(msg.clone().upcast::<gtk::Widget>());
-        msg.set_markup(&markup_text(body));
-        self.set_label_styles(&msg);
+        let msg_parts = self.calculate_msg_parts(body);
 
         if self.msg.sender != self.op.uid.clone().unwrap_or_default()
             && String::from(body).contains(&uname) {
-
-            let name = uname.clone();
-            msg.connect_property_cursor_position_notify(move |w| {
-                if let Some(text) = w.get_text() {
-                    if let Some(attr) = highlight_username(w.clone(), &name, text) {
-                        w.set_attributes(&attr);
+            for msg in msg_parts.iter() {
+                let name = uname.clone();
+                msg.connect_property_cursor_position_notify(move |w| {
+                    if let Some(text) = w.get_text() {
+                        if let Some(attr) = highlight_username(w.clone(), &name, text) {
+                            w.set_attributes(&attr);
+                        }
                     }
-                }
-            });
+                });
 
-            let name = uname.clone();
-            msg.connect_property_selection_bound_notify(move |w| {
-                if let Some(text) = w.get_text() {
-                    if let Some(attr) = highlight_username(w.clone(), &name, text) {
-                        w.set_attributes(&attr);
+                let name = uname.clone();
+                msg.connect_property_selection_bound_notify(move |w| {
+                    if let Some(text) = w.get_text() {
+                        if let Some(attr) = highlight_username(w.clone(), &name, text) {
+                            w.set_attributes(&attr);
+                        }
                     }
-                }
-            });
+                });
 
-            if let Some(text) = msg.get_text() {
-                if let Some(attr) = highlight_username(msg.clone(), &uname, text) {
-                    msg.set_attributes(&attr);
+                if let Some(text) = msg.get_text() {
+                    if let Some(attr) = highlight_username(msg.clone(), &uname, text) {
+                        msg.set_attributes(&attr);
+                    }
                 }
             }
         }
 
-        bx.add(&msg);
+        for part in msg_parts {
+            bx.add(&part);
+        }
         bx
+    }
+
+    fn calculate_msg_parts(&self, body: &str) -> Vec<gtk::Label> {
+        let mut parts_labels: Vec<gtk::Label> = vec![];
+
+        for (part, kind) in split_msg(body) {
+            let msg_part = gtk::Label::new("");
+            self.connect_right_click_menu(msg_part.clone().upcast::<gtk::Widget>());
+            msg_part.set_markup(&markup_text(&part));
+            self.set_label_styles(&msg_part);
+
+            match kind {
+                MsgPartType::Quote => {
+                    msg_part.get_style_context().map(|s| s.add_class("quote"));
+                }
+                _ => {}
+            }
+
+            parts_labels.push(msg_part);
+        }
+
+        parts_labels
     }
 
     fn build_room_msg_image(&self) -> gtk::Box {
@@ -624,4 +647,37 @@ fn set_username_async(backend: Sender<BKCommand>,
             gtk::Continue(false)
         }
     });
+}
+
+#[derive(PartialEq)]
+enum MsgPartType {
+    Normal,
+    Quote,
+}
+
+fn kind_of_line(line: &&str) -> MsgPartType {
+    match line {
+        l if l.starts_with(">") => MsgPartType::Quote,
+        _ => MsgPartType::Normal,
+    }
+}
+
+/// Split a message into parts depending on the kind
+/// Currently supported types:
+///  * Normal
+///  * Quote
+fn split_msg(body: &str) -> Vec<(String, MsgPartType)> {
+    let mut parts: Vec<(String, MsgPartType)> = vec![];
+
+    for (k, group) in body.lines()
+                          .map(|l| l.trim())
+                          .group_by(kind_of_line).into_iter() {
+        let v: Vec<&str> = group
+            .map(|l| l.trim_left_matches(">").trim_left())
+            .collect();
+        let s = v.join("\n").to_string();
+        parts.push((s, k));
+    }
+
+    parts
 }
