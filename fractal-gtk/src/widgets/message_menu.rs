@@ -3,6 +3,7 @@ extern crate gtk;
 extern crate sourceview;
 
 use self::gtk::prelude::*;
+use self::sourceview::prelude::*;
 
 use types::Message;
 
@@ -59,16 +60,31 @@ impl MessageMenu {
             .get_object("source_dialog")
             .expect("Can't find source_dialog in ui file.");
 
-        dialog.set_property_secondary_text(Some(
-            self.msg.source.clone().unwrap_or("This message has no source.".to_string()).as_str()
-        ));
+        let json_lang = sourceview::LanguageManager::get_default()
+                                                   .map_or(None, |lm| lm.get_language("json"));
+
+        let buffer: sourceview::Buffer = self.ui.builder
+            .get_object("msg_source_buffer")
+            .expect("Can't find msg_source_buffer in ui file.");
+        buffer.set_highlight_matching_brackets(false);
+        if let Some(json_lang) = json_lang.clone() {
+            buffer.set_language(&json_lang);
+            buffer.set_highlight_syntax(true);
+        }
+
+        buffer.set_text(self.msg.source.clone()
+                                       .unwrap_or("This message has no source.".to_string())
+                                       .as_str());
 
         dialog.connect_response(move |d, res| {
             if gtk::ResponseType::from(res) == gtk::ResponseType::Accept {
                 let atom = gdk::Atom::intern("CLIPBOARD");
                 let clipboard = gtk::Clipboard::get(&atom);
 
-                if let Some(src) = d.get_property_secondary_text() {
+                let start_iter = buffer.get_start_iter();
+                let end_iter = buffer.get_end_iter();
+
+                if let Some(src) = buffer.get_text(&start_iter, &end_iter, false) {
                     clipboard.set_text(&src);
                 }
             } else {
