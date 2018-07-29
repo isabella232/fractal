@@ -285,7 +285,7 @@ impl<'a> MessageBox<'a> {
     fn calculate_msg_parts(&self, body: &str) -> Vec<gtk::Label> {
         let mut parts_labels: Vec<gtk::Label> = vec![];
 
-        let lines: Vec<&str> = body.lines().collect();
+        let lines: Vec<&str> = body.lines().map(|l| l.trim()).collect();
         let mut lines_read: usize = 0;
         let mut parts_lines: Vec<(Vec<&str>, bool)> = vec![];
 
