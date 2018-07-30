@@ -9,9 +9,6 @@ use itertools::Itertools;
 use app::App;
 use i18n::i18n;
 
-use std::cell::RefCell;
-use std::rc::Rc;
-
 use self::gtk::prelude::*;
 
 use types::Message;
@@ -34,7 +31,6 @@ use appop::AppOp;
 use globals;
 use widgets;
 use widgets::AvatarExt;
-use widgets::AvatarData;
 use widgets::message_menu::MessageMenu;
 
 // Room Message item
@@ -175,8 +171,13 @@ impl<'a> MessageBox<'a> {
             None => {
                 let backend = self.op.backend.clone();
                 let data = avatar.circle(uid.clone(), None, globals::MSG_ICON_SIZE);
-                set_username_async(backend, &uid, self.username.clone(),
-                                   Some(data.clone()));
+                let l = self.username.clone();
+                let d = data.clone();
+                set_username_async(backend, &uid, move |uname| {
+                    l.set_text(&uname);
+                    let mut data = d.borrow_mut();
+                    data.redraw_fallback(Some(uname));
+                });
                 data
             }
         };
@@ -195,7 +196,10 @@ impl<'a> MessageBox<'a> {
                 // so we need to download here
                 if small {
                     let backend = self.op.backend.clone();
-                    set_username_async(backend, sender, self.username.clone(), None);
+                    let l = self.username.clone();
+                    set_username_async(backend, sender, move |uname| {
+                        l.set_text(&uname);
+                    });
                 }
                 String::from(sender)
             }
@@ -526,17 +530,25 @@ impl<'a> MessageBox<'a> {
         let member = self.room.members.get(&msg.sender);
         let sender: &str = &msg.sender;
 
-        let sname = match member {
-            Some(m) => m.get_alias(),
-            None => String::from(sender),
-        };
-
         let msg_label = gtk::Label::new("");
         let body: &str = &msg.body;
+        let markup = markup_text(body);
+
+        let m = markup.clone();
+        let sname = match member {
+            Some(m) => m.get_alias(),
+            None => {
+                let backend = self.op.backend.clone();
+                let label = msg_label.clone();
+                set_username_async(backend, sender, move |n| {
+                    label.set_markup(&format!("<b>{}</b> {}", n, m));
+                });
+                String::from(sender)
+            }
+        };
 
         self.connect_right_click_menu(msg_label.clone().upcast::<gtk::Widget>());
-        msg_label.set_markup(&format!("<b>{}</b> {}", sname, markup_text(body)));
-
+        msg_label.set_markup(&format!("<b>{}</b> {}", sname, markup));
         self.set_label_styles(&msg_label);
 
         bx.add(&msg_label);
@@ -630,22 +642,17 @@ fn highlight_username(label: gtk::Label, alias: &String, input: String) -> Optio
     Some(attr)
 }
 
-fn set_username_async(backend: Sender<BKCommand>,
-                      uid: &str,
-                      label: gtk::Label,
-                      avatar: Option<Rc<RefCell<AvatarData>>>) {
+fn set_username_async<F>(backend: Sender<BKCommand>,
+                         uid: &str,
+                         cb: F)
+                         where F: Fn(String) + 'static {
     let (tx, rx): (Sender<String>, Receiver<String>) = channel();
     backend.send(BKCommand::GetUserNameAsync(uid.to_string(), tx)).unwrap();
     gtk::timeout_add(50, move || match rx.try_recv() {
         Err(TryRecvError::Empty) => gtk::Continue(true),
         Err(TryRecvError::Disconnected) => gtk::Continue(false),
         Ok(username) => {
-            label.set_text(&username);
-            if let Some(ref rc_data) = avatar {
-                let mut data = rc_data.borrow_mut();
-                data.redraw_fallback(Some(username));
-            }
-
+            cb(username);
             gtk::Continue(false)
         }
     });
