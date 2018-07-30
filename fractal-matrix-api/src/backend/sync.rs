@@ -35,7 +35,7 @@ pub fn sync(bk: &Backend) -> Result<(), Error> {
                     \"types\": [\"m.room.message\", \"m.sticker\"],
                     \"limit\": {}
                 }},
-                \"ephemeral\": {{ \"types\": [\"m.receipt\"] }}
+                \"ephemeral\": {{ \"types\": [] }}
             }},
             \"presence\": {{ \"types\": [] }},
             \"event_format\": \"client\",
@@ -125,7 +125,7 @@ pub fn sync(bk: &Backend) -> Result<(), Error> {
                                         // This event is managed in the room list
                                     }
                                     _ => {
-                                        println!("EVENT NOT MANAGED: {:?}", ev);
+                                        eprintln!("EVENT NOT MANAGED: {:?}", ev);
                                     }
                                 }
                             }

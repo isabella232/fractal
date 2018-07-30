@@ -272,6 +272,13 @@ pub fn get_rooms_from_json(r: &JsonValue, userid: &str, baseu: &Url) -> Result<V
         if let Some(evs) = ephemeral["events"].as_array() {
             r.add_receipt_from_json(evs.into_iter().filter(|ev| ev["type"] == "m.receipt").collect::<Vec<&JsonValue>>());
         }
+        // Adding fully read to the receipts events
+        if let Some(evs) = dataevs.as_array() {
+            if let Some(fread) = evs.into_iter().filter(|x| x["type"] == "m.fully_read").next() {
+                fread["content"]["event_id"].as_str()
+                    .map(|ev| r.add_receipt_from_fully_read(userid, ev));
+            }
+        }
 
         let mevents = stevents.as_array().unwrap()
             .iter()

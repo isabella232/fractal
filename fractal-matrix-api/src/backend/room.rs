@@ -300,6 +300,18 @@ pub fn mark_as_read(bk: &Backend, roomid: String, eventid: String) -> Result<(),
         |err| { tx.send(BKResponse::MarkAsReadError(err)).unwrap(); }
     );
 
+    // send fully_read event
+    // This event API call isn't in the current doc but I found this in the
+    // matrix-js-sdk
+    // https://github.com/matrix-org/matrix-js-sdk/blob/master/src/base-apis.js#L851
+    let url = bk.url(&format!("rooms/{}/read_markers", roomid), vec![])?;
+    let attrs = json!({
+        "m.fully_read": eventid,
+        "m.read": json!(null),
+    });
+    let e = eventid.clone();
+    post!(&url, &attrs, |_| { println!("FULLY READ: {}", e); }, |e| { println!("FULLY READ Err: {:?}", e) } );
+
     Ok(())
 }
 

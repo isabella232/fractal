@@ -143,7 +143,6 @@ pub fn register(bk: &Backend, user: String, password: String, server: String) ->
     let tx = bk.tx.clone();
     post!(&url, &attrs,
         |r: JsonValue| {
-            println!("RESPONSE: {:#?}", r);
             let uid = String::from(r["user_id"].as_str().unwrap_or(""));
             let tk = String::from(r["access_token"].as_str().unwrap_or(""));
 

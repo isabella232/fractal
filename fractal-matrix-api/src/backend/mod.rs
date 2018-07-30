@@ -1,17 +1,14 @@
-extern crate url;
-
-use globals;
 use std::sync::{Arc, Mutex, Condvar};
 use std::thread;
-use self::url::Url;
+use url::Url;
 use std::sync::mpsc::{Sender, Receiver};
 use std::sync::mpsc::channel;
 use std::sync::mpsc::RecvError;
 
+use util::build_url;
+
 use error::Error;
 
-use util::build_url;
-use util::json_q;
 use cache::CacheMap;
 
 mod types;
@@ -68,40 +65,6 @@ impl Backend {
         params2.push(("access_token", tk.clone()));
 
         client_url!(&base, path, params2)
-    }
-
-    fn get_scalar_token(&self) -> Result<String, Error> {
-        let s = self.data.lock().unwrap().scalar_url.clone();
-        let uid = self.data.lock().unwrap().user_id.clone();
-
-        let url = self.url(&format!("user/{}/openid/request_token", uid), vec![])?;
-        let js = json_q("post", &url, &json!({}), globals::TIMEOUT)?;
-
-        let vurl = Url::parse(&format!("{}/api/register", s))?;
-        let js = json_q("post", &vurl, &js, globals::TIMEOUT)?;
-
-        match js["scalar_token"].as_str() {
-            Some(st) => {
-                self.data.lock().unwrap().scalar_token = Some(st.to_string());
-                Ok(st.to_string())
-            }
-            None => Err(Error::BackendError),
-        }
-    }
-
-    fn vurl(&self, path: &str, params: Vec<(&str, String)>) -> Result<Url, Error> {
-        let s = self.data.lock().unwrap().scalar_url.clone();
-        let base = Url::parse(&s)?;
-        let token = self.data.lock().unwrap().scalar_token.clone();
-        let tk = match token {
-            None => self.get_scalar_token()?,
-            Some(t) => t.clone(),
-        };
-
-        let mut params2 = params.to_vec();
-        params2.push(("scalar_token", tk));
-
-        scalar_url!(&base, path, params2)
     }
 
     pub fn run(mut self) -> Sender<BKCommand> {

@@ -206,6 +206,12 @@ impl AppOp {
                                                           self.is_first_new(&msg));
             self.internal.send(command).unwrap();
         }
+
+        let l = room.messages.len();
+        if l > 0 && l < globals::INITIAL_MESSAGES {
+            self.internal.send(InternalCommand::LoadMore).unwrap();
+        }
+
         self.internal.send(InternalCommand::AppendTmpMessages).unwrap();
         self.internal.send(InternalCommand::SetPanel(RoomPanel::Room)).unwrap();
 

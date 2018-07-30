@@ -83,6 +83,12 @@ impl Room {
             }
         }
     }
+
+    pub fn add_receipt_from_fully_read(&mut self, uid: &str, evid: &str) {
+        for msg in self.messages.iter_mut().filter(|m| m.id == Some(evid.to_string())) {
+            msg.receipt.insert(uid.to_string(), 0);
+        }
+    }
 }
 
 impl Clone for Room {

@@ -22,6 +22,7 @@ pub enum InternalCommand {
     SetView(AppState),
     NotifyClicked(Message),
     SelectRoom(Room),
+    LoadMore,
     LoadMoreNormal,
     RemoveInv(String),
     AppendTmpMessages,
@@ -63,6 +64,9 @@ pub fn appop_loop(rx: Receiver<InternalCommand>) {
                 Ok(InternalCommand::SelectRoom(r)) => {
                     let id = r.id;
                     APPOP!(set_active_room_by_id, (id));
+                }
+                Ok(InternalCommand::LoadMore) => {
+                    APPOP!(load_more_messages);
                 }
                 Ok(InternalCommand::LoadMoreNormal) => {
                     APPOP!(load_more_normal);
