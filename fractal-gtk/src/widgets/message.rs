@@ -675,7 +675,7 @@ fn split_msg(body: &str) -> Vec<(String, MsgPartType)> {
         let v: Vec<&str> = group
             .map(|l| l.trim_left_matches(">").trim_left())
             .collect();
-        let s = v.join("\n").to_string();
+        let s = v.join("\n").trim().to_string();
         parts.push((s, k));
     }
 
