@@ -2,6 +2,7 @@ extern crate gdk;
 extern crate gtk;
 extern crate sourceview;
 
+use self::gdk::prelude::*;
 use self::gtk::prelude::*;
 use self::sourceview::prelude::*;
 
@@ -23,22 +24,32 @@ impl MessageMenu {
         }
     }
 
-    pub fn show_menu_popover(&self, w: gtk::Widget, (x, y): (f64, f64)) {
-        let menu_popover: gtk::Popover = self.ui.builder
-            .get_object("message_menu_popover")
-            .expect("Can't find message_menu_popover in ui file.");
-        let rect = gtk::Rectangle {
-            x: x as i32,
-            y: y as i32,
-            width: 0,
-            height: 0,
-        };
+    pub fn show_menu_popover(&self, w: gtk::Widget) {
+        gdk::Display::get_default()
+            .and_then(|disp| disp.get_default_seat())
+            .and_then(|seat| seat.get_pointer())
+            .map(|ptr| {
+                let win = w.get_window()?;
+                let (_, x, y, _) = win.get_device_position(&ptr);
 
-        menu_popover.set_relative_to(&w);
-        menu_popover.set_pointing_to(&rect);
-        menu_popover.set_position(gtk::PositionType::Bottom);
+                let menu_popover: gtk::Popover = self.ui.builder
+                    .get_object("message_menu_popover")
+                    .expect("Can't find message_menu_popover in ui file.");
+                let rect = gtk::Rectangle {
+                    x,
+                    y,
+                    width: 0,
+                    height: 0,
+                };
 
-        menu_popover.popup();
+                menu_popover.set_relative_to(&w);
+                menu_popover.set_pointing_to(&rect);
+                menu_popover.set_position(gtk::PositionType::Bottom);
+
+                menu_popover.popup();
+
+                Some(true)
+            });
     }
 
     pub fn insert_quote(&self) {
