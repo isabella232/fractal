@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/World/fractal/issues\n"
-"POT-Creation-Date: 2018-08-01 06:16+0000\n"
-"PO-Revision-Date: 2018-08-01 09:37+0200\n"
+"POT-Creation-Date: 2018-08-01 10:54+0000\n"
+"PO-Revision-Date: 2018-08-02 08:37+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: es <gnome-es-list@gnome.org>\n"
 "Language: es\n"
@@ -466,21 +466,19 @@ msgstr "Buscar miembros en la sala"
 
 #: fractal-gtk/res/ui/message_menu.ui:21
 msgid "Reply"
-msgstr ""
+msgstr "Responder"
 
 #: fractal-gtk/res/ui/message_menu.ui:34
 msgid "Copy Text"
-msgstr ""
+msgstr "Copiar texto"
 
 #: fractal-gtk/res/ui/message_menu.ui:47
 msgid "View Source"
-msgstr ""
+msgstr "Ver origen"
 
 #: fractal-gtk/res/ui/message_menu.ui:71
-#, fuzzy
-#| msgid "New Messages"
 msgid "Delete Message"
-msgstr "Mensajes nuevos"
+msgstr "Eliminar mensaje"
 
 #: fractal-gtk/res/ui/new_room.ui:14
 msgid "Private Chat"
@@ -652,17 +650,15 @@ msgstr "URL de servidor"
 
 #: fractal-gtk/res/ui/source_dialog.ui:20
 msgid "Message Source"
-msgstr ""
+msgstr "Origen del mensaje"
 
 #: fractal-gtk/res/ui/source_dialog.ui:33
-#, fuzzy
-#| msgid "Image from Clipboard"
 msgid "Copy To Clipboard"
-msgstr "Imagen del portapapeles"
+msgstr "Copiar al portapapeles"
 
 #: fractal-gtk/res/ui/source_dialog.ui:46
 msgid "Close"
-msgstr ""
+msgstr "Cerrar"
 
 #: fractal-gtk/res/ui/stickers_popover.ui:22
 msgid "Stickers"
@@ -713,10 +709,8 @@ msgid "Error sending message"
 msgstr "Error al enviar mensaje"
 
 #: fractal-gtk/src/app/backend_loop.rs:265
-#, fuzzy
-#| msgid "Error sending message"
 msgid "Error deleting message"
-msgstr "Error al enviar mensaje"
+msgstr "Error al eliminar el mensaje"
 
 #: fractal-gtk/src/app/backend_loop.rs:269
 msgid "Error searching for rooms"
@@ -832,24 +826,24 @@ msgstr "Sincronizando, esto puede tardar un tiempo"
 msgid "No matching members found"
 msgstr "No se encontraron miembros coincidentes"
 
-#: fractal-gtk/src/widgets/message.rs:382
+#: fractal-gtk/src/widgets/message.rs:380
 msgid "Could not retrieve file URI"
 msgstr "No se pudo obtener el URI del archivo"
 
-#: fractal-gtk/src/widgets/message.rs:398
+#: fractal-gtk/src/widgets/message.rs:396
 msgid "Save"
 msgstr "Guardar"
 
-#: fractal-gtk/src/widgets/message.rs:408
-#: fractal-gtk/src/widgets/message.rs:451
+#: fractal-gtk/src/widgets/message.rs:406
+#: fractal-gtk/src/widgets/message.rs:449
 msgid "Could not download the file"
 msgstr "No se puede descargar el archivo"
 
-#: fractal-gtk/src/widgets/message.rs:441
+#: fractal-gtk/src/widgets/message.rs:439
 msgid "Download"
 msgstr "Descargar"
 
-#: fractal-gtk/src/widgets/message.rs:468
+#: fractal-gtk/src/widgets/message.rs:466
 msgid "Open"
 msgstr "Abrir"
 
@@ -864,16 +858,14 @@ msgstr "Seleccione una nueva imagen de sala"
 #: fractal-gtk/src/widgets/room_settings.rs:183
 msgid "Room · {} member"
 msgid_plural "Room · {} members"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Sala · {} miembro"
+msgstr[1] "Sala · {} miembros"
 
 #: fractal-gtk/src/widgets/room_settings.rs:581
-#, fuzzy
-#| msgid "Members"
 msgid "{} member"
 msgid_plural "{} members"
-msgstr[0] "Miembros"
-msgstr[1] "Miembros"
+msgstr[0] "{} miembro"
+msgstr[1] "{} miembros"
 
 #: fractal-gtk/src/widgets/roomlist.rs:434
 msgid "Invites"
