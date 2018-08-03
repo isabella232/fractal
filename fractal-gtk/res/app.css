@@ -162,6 +162,10 @@ row.msg-emote {
   padding: 12px 0px;
 }
 
+.msg-redacted {
+    color: @theme_selected_bg_color;
+}
+
 row .username {
   font-weight: bold;
   font-size: small;
