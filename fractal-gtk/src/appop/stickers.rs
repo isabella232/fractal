@@ -201,6 +201,7 @@ impl AppOp {
             format: None,
             source: None,
             receipt: HashMap::new(),
+            redacted: false,
         };
 
         self.add_tmp_room_message(msg);

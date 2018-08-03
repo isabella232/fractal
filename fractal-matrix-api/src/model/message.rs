@@ -23,6 +23,7 @@ pub struct Message {
     pub format: Option<String>,
     pub source: Option<String>,
     pub receipt: HashMap<String, i64>, // This `HashMap` associates the user ID with a timestamp
+    pub redacted: bool,
 }
 
 impl Clone for Message {
@@ -40,6 +41,7 @@ impl Clone for Message {
             format: self.format.clone(),
             source: self.source.clone(),
             receipt: self.receipt.clone(),
+            redacted: self.redacted,
         }
     }
 }
@@ -59,6 +61,7 @@ impl Default for Message {
             format: None,
             source: None,
             receipt: HashMap::new(),
+            redacted: false,
         }
     }
 }
@@ -134,6 +137,8 @@ impl Message {
         let id = msg["event_id"].as_str().unwrap_or("");
         let type_ = msg["type"].as_str().unwrap_or("");
 
+        let redacted = msg["unsigned"].get("redacted_because") != None;
+
         let mut message = Message {
             sender: sender.to_string(),
             date: Message::age_to_datetime(age),
@@ -147,6 +152,7 @@ impl Message {
             format: None,
             source: serde_json::to_string_pretty(&msg).ok(),
             receipt: HashMap::new(),
+            redacted,
         };
 
         let c = &msg["content"];
