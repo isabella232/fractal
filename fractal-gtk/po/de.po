@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/World/fractal/issues\n"
-"POT-Creation-Date: 2018-07-24 08:33+0000\n"
-"PO-Revision-Date: 2018-07-20 22:23+0200\n"
+"POT-Creation-Date: 2018-07-29 12:18+0000\n"
+"PO-Revision-Date: 2018-08-04 21:58+0200\n"
 "Last-Translator: Mario Blättermann <mario.blaettermann@gmail.com>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "Language: de\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.8\n"
+"X-Generator: Poedit 2.1\n"
 
 #: fractal-gtk/res/gtk/help-overlay.ui:13
 msgctxt "shortcut window"
@@ -70,7 +70,7 @@ msgstr "Daniel García Moreno"
 msgid "Matrix group messaging app"
 msgstr "Matrix-Gruppenkommunikations-Anwendung"
 
-# Ich musste hier mal etwas weiter ausholen, denn die Sequenz »GNOME in Rust« sagt den meisten Leuten sicherlich gar nichts. 
+# Ich musste hier mal etwas weiter ausholen, denn die Sequenz »GNOME in Rust« sagt den meisten Leuten sicherlich gar nichts.
 # Wobei noch anzuweifeln wäre, ob diese Zusatzinfo für den typischen Benutzer einer neumodischen Softwareverwaltung (für die die Appdata-Strings verwendet werden) überhaupt in irgendeiner Form relevant ist.
 #: fractal-gtk/res/org.gnome.Fractal.appdata.xml:11
 msgid ""
@@ -116,11 +116,13 @@ msgstr ""
 
 #: fractal-gtk/res/org.gnome.Fractal.gschema.xml:21
 msgid "If markdown sending is active"
-msgstr ""
+msgstr "Markdown aktiviert"
 
 #: fractal-gtk/res/org.gnome.Fractal.gschema.xml:22
 msgid "Whether support for sending markdown messages is on"
 msgstr ""
+"Gibt an, ob die Unterstützung für das Senden Markdown-formatierter "
+"Nachrichten aktiviert ist"
 
 #: fractal-gtk/res/ui/account_settings.ui:71
 msgid "Other people can find you by searching for any of these identifiers."
@@ -453,6 +455,10 @@ msgstr "`code`"
 msgid "*italic*"
 msgstr "*kursiv*"
 
+#: fractal-gtk/res/ui/media_viewer_menu.ui:26
+msgid "Save as"
+msgstr "Speichern unter"
+
 #: fractal-gtk/res/ui/media_viewer.ui:186
 msgid "Loading more media"
 msgstr "Mehr Medien werden geladen"
@@ -461,13 +467,25 @@ msgstr "Mehr Medien werden geladen"
 msgid "Media viewer"
 msgstr "Medien-Betrachter"
 
-#: fractal-gtk/res/ui/media_viewer_menu.ui:26
-msgid "Save as"
-msgstr "Speichern unter"
-
 #: fractal-gtk/res/ui/members.ui:25 fractal-gtk/res/ui/room_settings.ui:937
 msgid "Search for room members"
 msgstr "Nach Raumteilnehmern suchen"
+
+#: fractal-gtk/res/ui/message_menu.ui:21
+msgid "Reply"
+msgstr "Antworten"
+
+#: fractal-gtk/res/ui/message_menu.ui:34
+msgid "Copy Text"
+msgstr "Text kopieren"
+
+#: fractal-gtk/res/ui/message_menu.ui:58
+msgid "Delete Message"
+msgstr "Nachricht löschen"
+
+#: fractal-gtk/res/ui/message_menu.ui:71
+msgid "View Source"
+msgstr "Quelle zeigen"
 
 #: fractal-gtk/res/ui/new_room.ui:14
 msgid "Private Chat"
@@ -516,6 +534,14 @@ msgstr "_Neues Passwort"
 #: fractal-gtk/res/ui/password_dialog.ui:213
 msgid "Current _Password"
 msgstr "A_ktuelles Passwort"
+
+#: fractal-gtk/res/ui/room_menu.ui:23
+msgid "Invite to this room"
+msgstr "In diesen Raum einladen"
+
+#: fractal-gtk/res/ui/room_menu.ui:37
+msgid "Room details"
+msgstr "Raumdetails"
 
 #: fractal-gtk/res/ui/room_settings.ui:89
 msgid "Unknown"
@@ -609,14 +635,6 @@ msgstr "Neuen Teilnehmer einladen"
 msgid "Details"
 msgstr "Details"
 
-#: fractal-gtk/res/ui/room_menu.ui:23
-msgid "Invite to this room"
-msgstr "In diesen Raum einladen"
-
-#: fractal-gtk/res/ui/room_menu.ui:37
-msgid "Room details"
-msgstr "Raumdetails"
-
 #: fractal-gtk/res/ui/server_chooser_menu.ui:34
 msgid "Show rooms from:"
 msgstr "Räume anzeigen aus:"
@@ -636,6 +654,18 @@ msgstr "Anderer Heimserver"
 #: fractal-gtk/res/ui/server_chooser_menu.ui:235
 msgid "Homeserver URL"
 msgstr "Adresse des Heimservers"
+
+#: fractal-gtk/res/ui/source_dialog.ui:15
+msgid "Message Source"
+msgstr "Quelltext der Nachricht"
+
+#: fractal-gtk/res/ui/source_dialog.ui:28
+msgid "Copy To Clipboard"
+msgstr "In die Zwischenablage kopieren"
+
+#: fractal-gtk/res/ui/source_dialog.ui:41
+msgid "Close"
+msgstr "Schließen"
 
 #: fractal-gtk/res/ui/stickers_popover.ui:22
 msgid "Stickers"
@@ -686,6 +716,10 @@ msgid "Error sending message"
 msgstr "Fehler beim Senden der Nachricht"
 
 #: fractal-gtk/src/app/backend_loop.rs:265
+msgid "Error deleting message"
+msgstr "Fehler beim Löschen der Nachricht"
+
+#: fractal-gtk/src/app/backend_loop.rs:269
 msgid "Error searching for rooms"
 msgstr "Fehler bei der Suche nach Räumen"
 
@@ -765,11 +799,11 @@ msgstr "Die Passwörter stimmen nicht überein, erneut versuchen"
 msgid "Error while loading previous media"
 msgstr "Fehler beim Laden vorheriger Medien"
 
-#: fractal-gtk/src/appop/message.rs:204 fractal-gtk/src/appop/message.rs:212
+#: fractal-gtk/src/appop/message.rs:207 fractal-gtk/src/appop/message.rs:215
 msgid "New Messages"
 msgstr "Neue Nachrichten"
 
-#: fractal-gtk/src/appop/message.rs:470
+#: fractal-gtk/src/appop/message.rs:475
 msgid "Select"
 msgstr "Auswählen"
 
@@ -797,26 +831,46 @@ msgstr "Wird synchronisiert, dies kann einen Moment dauern"
 msgid "No matching members found"
 msgstr "Keine passenden Teilnehmer gefunden"
 
-#: fractal-gtk/src/widgets/message.rs:327
+#: fractal-gtk/src/widgets/message.rs:351
 msgid "Could not retrieve file URI"
 msgstr "Datei-Adresse konnte nicht empfangen werden"
 
-#: fractal-gtk/src/widgets/message.rs:343
+#: fractal-gtk/src/widgets/message.rs:367
 msgid "Save"
 msgstr "Speichern"
 
-#: fractal-gtk/src/widgets/message.rs:353
-#: fractal-gtk/src/widgets/message.rs:396
+#: fractal-gtk/src/widgets/message.rs:377
+#: fractal-gtk/src/widgets/message.rs:420
 msgid "Could not download the file"
 msgstr "Datei konnte nicht heruntergeladen werden"
 
-#: fractal-gtk/src/widgets/message.rs:386
+#: fractal-gtk/src/widgets/message.rs:410
 msgid "Download"
 msgstr "Herunterladen"
 
-#: fractal-gtk/src/widgets/message.rs:413
+#: fractal-gtk/src/widgets/message.rs:437
 msgid "Open"
 msgstr "Öffnen"
+
+#: fractal-gtk/src/widgets/room_settings.rs:144
+msgid "Pick a new room avatar"
+msgstr "Neuen Raum-Avatar auswählen"
+
+#. we don't have private groups yet
+#. let description = Some(format!("Private Group · {} members", members.len()));
+#.
+#. Some(format!("Public Room · {} members", members.len()))
+#: fractal-gtk/src/widgets/room_settings.rs:183
+msgid "Room · {} member"
+msgid_plural "Room · {} members"
+msgstr[0] "Raum · {} Teilnehmer"
+msgstr[1] "Raum · {} Teilnehmer"
+
+#: fractal-gtk/src/widgets/room_settings.rs:581
+msgid "{} member"
+msgid_plural "{} members"
+msgstr[0] "{} Teilnehmer"
+msgstr[1] "{} Teilnehmer"
 
 #: fractal-gtk/src/widgets/roomlist.rs:434
 msgid "Invites"
@@ -842,37 +896,3 @@ msgstr "Räume"
 #: fractal-gtk/src/widgets/roomlist.rs:439
 msgid "You don’t have any rooms yet"
 msgstr "Sie haben noch keine Räume"
-
-#: fractal-gtk/src/widgets/room_settings.rs:144
-msgid "Pick a new room avatar"
-msgstr "Neuen Raum-Avatar auswählen"
-
-#. we don't have private groups yet
-#. let description = Some(format!("Private Group · {} members", members.len()));
-#.
-#. Some(format!("Public Room · {} members", members.len()))
-#: fractal-gtk/src/widgets/room_settings.rs:183
-msgid "Room · {} member"
-msgid_plural "Room · {} members"
-msgstr[0] "Raum · {} Teilnehmer"
-msgstr[1] "Raum · {} Teilnehmer"
-
-#: fractal-gtk/src/widgets/room_settings.rs:581
-msgid "{} member"
-msgid_plural "{} members"
-msgstr[0] "{} Teilnehmer"
-msgstr[1] "{} Teilnehmer"
-
-#~ msgid "ID"
-#~ msgstr "Kennung"
-
-#~ msgid "Topic"
-#~ msgstr "Thema"
-
-#~ msgid "and one more"
-#~ msgid_plural "and {member_count} more"
-#~ msgstr[0] "und eine weitere"
-#~ msgstr[1] "und {member_count} weitere"
-
-#~ msgid "Load more members"
-#~ msgstr "Weitere Teilnehmer laden"
