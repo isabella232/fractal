@@ -186,6 +186,10 @@ impl MessageMenu {
         if let Some(json_lang) = json_lang.clone() {
             source_buffer.set_language(&json_lang);
             source_buffer.set_highlight_syntax(true);
+
+            if let Some(scheme) = sourceview::StyleSchemeManager::get_default().map_or(None, |scm| scm.get_scheme("kate")) {
+                source_buffer.set_style_scheme(&scheme);
+            }
         }
     }
 }
