@@ -4,41 +4,39 @@ extern crate sourceview;
 
 use std::cell::RefCell;
 use std::rc::Rc;
+use std::sync::mpsc::Sender;
 
 use self::gtk::prelude::*;
 use self::gdk::prelude::*;
 use self::sourceview::prelude::*;
-use backend::BKCommand;
-use std::sync::mpsc::Sender;
 
+use backend::BKCommand;
+
+use uibuilder::UI;
 use types::Message;
 
 #[derive(Clone)]
 pub struct MessageMenu {
     builder: gtk::Builder,
+    ui: UI,
     backend: Sender<BKCommand>,
-    source_dialog: gtk::MessageDialog,
-    source_buffer: sourceview::Buffer,
-    msg_entry: sourceview::View,
     pub msg: Message,
 }
 
 impl MessageMenu {
-    /* FIXME: Remove widget references, but I'm not sure how we can do that */
-    pub fn new_message_menu(source_dialog: gtk::MessageDialog, source_buffer: sourceview::Buffer, msg_entry: sourceview::View, backend: Sender<BKCommand>, msg: Message) -> MessageMenu {
+    pub fn new_message_menu(ui: UI, backend: Sender<BKCommand>, msg: Message) -> MessageMenu {
         let builder = gtk::Builder::new();
         builder.add_from_resource("/org/gnome/Fractal/ui/message_menu.ui")
             .expect("Can't load ui file: message_menu.ui");
 
         let menu = MessageMenu {
             builder,
+            ui,
             backend,
-            source_dialog,
-            source_buffer,
-            msg_entry,
             msg,
         };
         menu.connect_message_menu();
+        menu.connect_msg_src_window();
         menu
     }
 
@@ -71,14 +69,18 @@ impl MessageMenu {
     }
 
     pub fn insert_quote(&self) {
-        if let Some(buffer) = self.msg_entry.get_buffer() {
+        let msg_entry: sourceview::View = self.ui.builder
+            .get_object("msg_entry")
+            .expect("Can't find msg_entry in ui file.");
+
+        if let Some(buffer) = msg_entry.get_buffer() {
             let quote = self.msg.body.lines().map(|l| "> ".to_owned() + l + "\n")
                                 .collect::<Vec<String>>().join("\n") + "\n";
 
             let mut start = buffer.get_start_iter();
             buffer.insert(&mut start, &quote);
 
-            self.msg_entry.grab_focus();
+            msg_entry.grab_focus();
         }
     }
 
@@ -89,38 +91,20 @@ impl MessageMenu {
         clipboard.set_text(&self.msg.body);
     }
 
-    pub fn display_source_dialog(&self) {
-        let json_lang = sourceview::LanguageManager::get_default()
-                                                   .map_or(None, |lm| lm.get_language("json"));
+    pub fn display_msg_src_window(&self) {
+        let source_buffer: sourceview::Buffer = self.ui.builder
+            .get_object("source_buffer")
+            .expect("Can't source_buffer in ui file.");
 
-        self.source_buffer.set_highlight_matching_brackets(false);
-        if let Some(json_lang) = json_lang.clone() {
-            self.source_buffer.set_language(&json_lang);
-            self.source_buffer.set_highlight_syntax(true);
-        }
+        let msg_src_window: gtk::Window = self.ui.builder
+            .get_object("msg_src_window")
+            .expect("Can't find msg_src_window in ui file.");
 
-        self.source_buffer.set_text(self.msg.source.clone()
+        source_buffer.set_text(self.msg.source.clone()
                                        .unwrap_or("This message has no source.".to_string())
                                        .as_str());
 
-        let source_buffer = self.source_buffer.clone();
-        self.source_dialog.connect_response(move |d, res| {
-            if gtk::ResponseType::from(res) == gtk::ResponseType::Accept {
-                let atom = gdk::Atom::intern("CLIPBOARD");
-                let clipboard = gtk::Clipboard::get(&atom);
-
-                let start_iter = source_buffer.get_start_iter();
-                let end_iter = source_buffer.get_end_iter();
-
-                if let Some(src) = source_buffer.get_text(&start_iter, &end_iter, false) {
-                    clipboard.set_text(&src);
-                }
-            } else {
-                d.hide();
-            }
-        });
-
-        self.source_dialog.show();
+        msg_src_window.show();
     }
 
     pub fn connect_message_menu(&self) {
@@ -157,7 +141,51 @@ impl MessageMenu {
         }));
 
         view_source_button.connect_clicked(clone!(this => move |_| {
-            this.borrow().display_source_dialog();
+            this.borrow().display_msg_src_window();
         }));
+    }
+
+    pub fn connect_msg_src_window(&self) {
+        let msg_src_window: gtk::Window = self.ui.builder
+            .get_object("msg_src_window")
+            .expect("Can't find msg_src_window in ui file.");
+
+        let copy_src_button: gtk::Button = self.ui.builder
+            .get_object("copy_src_button")
+            .expect("Can't find copy_src_button in ui file.");
+
+        let close_src_button: gtk::Button = self.ui.builder
+            .get_object("close_src_button")
+            .expect("Can't find close_src_button in ui file.");
+
+        let source_buffer: sourceview::Buffer = self.ui.builder
+            .get_object("source_buffer")
+            .expect("Can't find source_buffer in ui file.");
+
+        copy_src_button.connect_clicked(clone!(source_buffer => move |_| {
+            let atom = gdk::Atom::intern("CLIPBOARD");
+            let clipboard = gtk::Clipboard::get(&atom);
+
+            let start_iter = source_buffer.get_start_iter();
+            let end_iter = source_buffer.get_end_iter();
+
+            if let Some(src) = source_buffer.get_text(&start_iter, &end_iter, false) {
+                clipboard.set_text(&src);
+            }
+        }));
+
+        let msg_src_window = msg_src_window.clone();
+        close_src_button.connect_clicked(move |_| {
+            msg_src_window.hide();
+        });
+
+        let json_lang = sourceview::LanguageManager::get_default()
+                                                   .map_or(None, |lm| lm.get_language("json"));
+
+        source_buffer.set_highlight_matching_brackets(false);
+        if let Some(json_lang) = json_lang.clone() {
+            source_buffer.set_language(&json_lang);
+            source_buffer.set_highlight_syntax(true);
+        }
     }
 }
