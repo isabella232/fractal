@@ -22,12 +22,12 @@ fractal-gtk/res/ui/media_viewer_menu.ui
 fractal-gtk/res/ui/media_viewer.ui
 fractal-gtk/res/ui/members.ui
 fractal-gtk/res/ui/message_menu.ui
+fractal-gtk/res/ui/msg_src_window.ui
 fractal-gtk/res/ui/new_room.ui
 fractal-gtk/res/ui/password_dialog.ui
 fractal-gtk/res/ui/room_menu.ui
 fractal-gtk/res/ui/room_settings.ui
 fractal-gtk/res/ui/server_chooser_menu.ui
-fractal-gtk/res/ui/source_dialog.ui
 fractal-gtk/res/ui/sticker_group.ui
 fractal-gtk/res/ui/stickers_popover.ui
 fractal-gtk/res/ui/user_menu.ui
