@@ -58,8 +58,6 @@ impl UI {
                .expect("Can't load ui file: account_settings.ui");
         builder.add_from_resource("/org/gnome/Fractal/ui/media_viewer.ui")
                .expect("Can't load ui file: media_viewer.ui");
-       builder.add_from_resource("/org/gnome/Fractal/ui/source_dialog.ui")
-              .expect("Can't load ui file: source_dialog.ui");
         builder.add_from_resource("/org/gnome/Fractal/ui/msg_src_window.ui")
                .expect("Can't load ui file: msg_src_window.ui");
 
