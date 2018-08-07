@@ -26,7 +26,6 @@ rand = "0.5.4"
 html2pango = { git = "https://gitlab.gnome.org/World/html2pango" }
 comrak = "0.2.14"
 gettext-rs = { git = "https://github.com/danigm/gettext-rs", branch = "no-gettext", features = ["gettext-system"] }
-unicode-segmentation = "1.2.1"
 regex = "1.0.2"
 tree_magic = "0.2.0"
 log = "0.4.3"
