@@ -174,6 +174,10 @@ impl MessageMenu {
             }
         }));
 
+        msg_src_window.connect_delete_event(|w, _| {
+            Inhibit(w.hide_on_delete())
+        });
+
         let msg_src_window = msg_src_window.clone();
         close_src_button.connect_clicked(move |_| {
             msg_src_window.hide();
