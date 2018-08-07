@@ -470,34 +470,27 @@ impl AppOp {
         let window: gtk::ApplicationWindow = self.ui.builder
             .get_object("main_window")
             .expect("Can't find main_window in ui file.");
-        let dialog = gtk::FileChooserDialog::new(None,
-                                                 Some(&window),
-                                                 gtk::FileChooserAction::Open);
 
-        let btn = dialog.add_button(i18n("Select").as_str(), 1);
-        btn.get_style_context().unwrap().add_class("suggested-action");
+        let file_chooser = gtk::FileChooserNative::new(
+            None,
+            Some(&window),
+            gtk::FileChooserAction::Open,
+            None,
+            None,
+        );
 
         let internal = self.internal.clone();
-        dialog.connect_response(move |dialog, resp| {
-            if resp == 1 {
-                if let Some(fname) = dialog.get_filename() {
+        // Running in a *thread* to free self lock
+        gtk::idle_add(move || {
+            let result = file_chooser.run();
+            if gtk::ResponseType::from(result) == gtk::ResponseType::Accept {
+                if let Some(fname) = file_chooser.get_filename() {
                     let f = String::from(fname.to_str().unwrap_or(""));
                     internal.send(InternalCommand::AttachMessage(f)).unwrap();
                 }
             }
-            dialog.destroy();
+            gtk::Continue(false)
         });
-
-        let internal = self.internal.clone();
-        dialog.connect_file_activated(move |dialog| {
-            if let Some(fname) = dialog.get_filename() {
-                let f = String::from(fname.to_str().unwrap_or(""));
-                internal.send(InternalCommand::AttachMessage(f)).unwrap();
-            }
-            dialog.destroy();
-        });
-
-        dialog.show();
     }
 
     pub fn load_more_messages(&mut self) {
