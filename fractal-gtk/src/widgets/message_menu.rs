@@ -16,23 +16,38 @@ use uibuilder::UI;
 use types::Message;
 
 #[derive(Clone)]
+struct SelectedText {
+    pub widget: gtk::Label,
+    pub text: String,
+    pub start: i32,
+    pub end: i32,
+}
+
+#[derive(Clone)]
 pub struct MessageMenu {
     builder: gtk::Builder,
     ui: UI,
     backend: Sender<BKCommand>,
+    selected_text: Option<SelectedText>,
     pub msg: Message,
 }
 
 impl MessageMenu {
-    pub fn new_message_menu(ui: UI, backend: Sender<BKCommand>, msg: Message) -> MessageMenu {
+    pub fn new_message_menu(ui: UI,
+                            backend: Sender<BKCommand>,
+                            msg: Message,
+                            event_widget: Option<&gtk::Widget>) -> MessageMenu {
         let builder = gtk::Builder::new();
         builder.add_from_resource("/org/gnome/Fractal/ui/message_menu.ui")
             .expect("Can't load ui file: message_menu.ui");
+
+        let selected_text = get_selected_text(event_widget);
 
         let menu = MessageMenu {
             builder,
             ui,
             backend,
+            selected_text,
             msg,
         };
         menu.connect_message_menu();
@@ -41,6 +56,11 @@ impl MessageMenu {
     }
 
     pub fn show_menu_popover(&self, w: gtk::Widget) {
+        let button: gtk::Widget = self.builder
+                                      .get_object("copy_selected_text_button")
+                                      .expect("Can't find copy_selected_text_button");
+        button.set_visible(self.selected_text.is_some());
+
         gdk::Display::get_default()
             .and_then(|disp| disp.get_default_seat())
             .and_then(|seat| seat.get_pointer())
@@ -91,6 +111,16 @@ impl MessageMenu {
         clipboard.set_text(&self.msg.body);
     }
 
+    pub fn copy_selected_text(&self) {
+        let atom = gdk::Atom::intern("CLIPBOARD");
+        let clipboard = gtk::Clipboard::get(&atom);
+
+        if let Some(ref s) = self.selected_text {
+            clipboard.set_text(&s.text);
+            s.widget.select_region(s.start, s.end);
+        }
+    }
+
     pub fn display_msg_src_window(&self) {
         let source_buffer: sourceview::Buffer = self.ui.builder
             .get_object("source_buffer")
@@ -124,6 +154,10 @@ impl MessageMenu {
             .get_object("view_source_button")
             .expect("Can't find view_source_button in ui file.");
 
+        let copy_selected_button: gtk::ModelButton = self.builder
+            .get_object("copy_selected_text_button")
+            .expect("Can't find copy_selected_text_button in ui file.");
+
         /* since this is used only by the main thread we can just use a simple Rc<RefCell> */
         let this: Rc<RefCell<MessageMenu>> = Rc::new(RefCell::new(self.clone()));
 
@@ -133,6 +167,10 @@ impl MessageMenu {
 
         copy_text_button.connect_clicked(clone!(this => move |_| {
             this.borrow().copy_text();
+        }));
+
+        copy_selected_button.connect_clicked(clone!(this => move |_| {
+            this.borrow().copy_selected_text();
         }));
 
         let backend = self.backend.clone();
@@ -195,5 +233,19 @@ impl MessageMenu {
                 source_buffer.set_style_scheme(&scheme);
             }
         }
+    }
+}
+
+
+fn get_selected_text(event_widget: Option<&gtk::Widget>) -> Option<SelectedText> {
+    let w = event_widget?;
+    let w = w.clone().downcast::<gtk::Label>().ok()?;
+    match w.get_selection_bounds() {
+        Some((s, e)) => {
+            let text = w.get_text()?;
+            let slice = text.get(s as usize..e as usize)?;
+            Some(SelectedText{ widget: w.clone(), text: slice.to_string(), start: s, end: e })
+        }
+        _ => None
     }
 }

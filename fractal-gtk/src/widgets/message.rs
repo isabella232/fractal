@@ -54,7 +54,8 @@ impl<'a> MessageBox<'a> {
 
         row_eb.connect_button_press_event(clone!(msg => move |eb, btn| {
             if btn.get_button() == 3 {
-                let menu = MessageMenu::new_message_menu(ui.clone(), backend.clone(), msg.clone());
+                let menu = MessageMenu::new_message_menu(ui.clone(), backend.clone(),
+                                                         msg.clone(), None);
                 menu.show_menu_popover(eb.clone().upcast::<gtk::Widget>());
             }
 
@@ -578,9 +579,10 @@ impl<'a> MessageBox<'a> {
         let backend = self.op.backend.clone();
         let ui = self.op.ui.clone();
 
-        w.connect_button_press_event(move |_, btn| {
+        w.connect_button_press_event(move |w, btn| {
             if btn.get_button() == 3 {
-                let menu = MessageMenu::new_message_menu(ui.clone(), backend.clone(), msg.clone());
+                let menu = MessageMenu::new_message_menu(ui.clone(), backend.clone(),
+                                                         msg.clone(), Some(w));
                 menu.show_menu_popover(eb.clone().upcast::<gtk::Widget>());
                 Inhibit(true)
             } else {
