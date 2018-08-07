@@ -3,6 +3,7 @@ use self::gtk::prelude::*;
 
 use glib;
 
+use i18n::i18n;
 use app::App;
 
 impl App {
@@ -71,9 +72,15 @@ impl App {
             let window = builder
                 .get_object::<gtk::Window>("main_window")
                 .expect("Can't find main_window in ui file.");
-            let file_chooser = gtk::FileChooserNative::new("Pick a new avatar", Some(&window), gtk::FileChooserAction::Open, Some("Select"), None);
+            let file_chooser = gtk::FileChooserNative::new(
+                i18n("Pick a new avatar").as_str(),
+                Some(&window),
+                gtk::FileChooserAction::Open,
+                Some(i18n("Select").as_str()),
+                None
+            );
             /* http://gtk-rs.org/docs/gtk/struct.FileChooser.html */
-            let result = gtk::NativeDialog::run(&file_chooser.clone().upcast::<gtk::NativeDialog>());
+            let result = file_chooser.run();
             if gtk::ResponseType::from(result) == gtk::ResponseType::Accept {
                 if let Some(file) = file_chooser.get_filename() {
                     if let Some(path) = file.to_str() {

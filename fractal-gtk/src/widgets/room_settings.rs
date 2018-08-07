@@ -144,11 +144,10 @@ impl RoomSettings {
                 i18n("Pick a new room avatar").as_str(),
                 Some(&window),
                 gtk::FileChooserAction::Open,
-                Some("Select"),
+                Some(i18n("Select").as_str()),
                 None,
             );
-            let result =
-                gtk::NativeDialog::run(&file_chooser.clone().upcast::<gtk::NativeDialog>());
+            let result = file_chooser.run();
             if gtk::ResponseType::from(result) == gtk::ResponseType::Accept {
                 if let Some(file) = file_chooser.get_filename() {
                     if let Some(path) = file.to_str() {
