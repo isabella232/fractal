@@ -33,7 +33,8 @@
         ],
         "env" : {
             "CARGO_HOME" : "/run/build/Fractal/cargo",
-            "DEBUG" : "true"
+            "DEBUG" : "true",
+            "RUST_BACKTRACE" : "1"
         }
     },
     "modules" : [
