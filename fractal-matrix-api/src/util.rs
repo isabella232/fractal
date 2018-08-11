@@ -175,7 +175,6 @@ macro_rules! query {
     };
 }
 
-#[allow(unused_macros)]
 #[macro_export]
 macro_rules! media {
     ($base: expr, $url: expr, $dest: expr) => {
