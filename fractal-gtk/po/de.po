@@ -8,16 +8,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/World/fractal/issues\n"
-"POT-Creation-Date: 2018-07-29 12:18+0000\n"
-"PO-Revision-Date: 2018-08-04 21:58+0200\n"
-"Last-Translator: Mario Blättermann <mario.blaettermann@gmail.com>\n"
+"POT-Creation-Date: 2018-08-07 10:30+0000\n"
+"PO-Revision-Date: 2018-08-12 14:51+0200\n"
+"Last-Translator: Tim Sabsch <tim@sabsch.com>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.1\n"
+"X-Generator: Poedit 2.0.9\n"
 
 #: fractal-gtk/res/gtk/help-overlay.ui:13
 msgctxt "shortcut window"
@@ -476,16 +476,32 @@ msgid "Reply"
 msgstr "Antworten"
 
 #: fractal-gtk/res/ui/message_menu.ui:34
+msgid "Copy selected text"
+msgstr "Ausgewählten Text kopieren"
+
+#: fractal-gtk/res/ui/message_menu.ui:47
 msgid "Copy Text"
 msgstr "Text kopieren"
 
-#: fractal-gtk/res/ui/message_menu.ui:58
+#: fractal-gtk/res/ui/message_menu.ui:60
+msgid "View Source"
+msgstr "Quelle zeigen"
+
+#: fractal-gtk/res/ui/message_menu.ui:84
 msgid "Delete Message"
 msgstr "Nachricht löschen"
 
-#: fractal-gtk/res/ui/message_menu.ui:71
-msgid "View Source"
-msgstr "Quelle zeigen"
+#: fractal-gtk/res/ui/msg_src_window.ui:25
+msgid "Copy To Clipboard"
+msgstr "In die Zwischenablage kopieren"
+
+#: fractal-gtk/res/ui/msg_src_window.ui:36
+msgid "Message Source"
+msgstr "Quelltext der Nachricht"
+
+#: fractal-gtk/res/ui/msg_src_window.ui:44
+msgid "Close"
+msgstr "Schließen"
 
 #: fractal-gtk/res/ui/new_room.ui:14
 msgid "Private Chat"
@@ -655,18 +671,6 @@ msgstr "Anderer Heimserver"
 msgid "Homeserver URL"
 msgstr "Adresse des Heimservers"
 
-#: fractal-gtk/res/ui/source_dialog.ui:15
-msgid "Message Source"
-msgstr "Quelltext der Nachricht"
-
-#: fractal-gtk/res/ui/source_dialog.ui:28
-msgid "Copy To Clipboard"
-msgstr "In die Zwischenablage kopieren"
-
-#: fractal-gtk/res/ui/source_dialog.ui:41
-msgid "Close"
-msgstr "Schließen"
-
 #: fractal-gtk/res/ui/stickers_popover.ui:22
 msgid "Stickers"
 msgstr "Sticker"
@@ -722,6 +726,15 @@ msgstr "Fehler beim Löschen der Nachricht"
 #: fractal-gtk/src/app/backend_loop.rs:269
 msgid "Error searching for rooms"
 msgstr "Fehler bei der Suche nach Räumen"
+
+#: fractal-gtk/src/app/connect/account.rs:76
+msgid "Pick a new avatar"
+msgstr "Neuen Avatar auswählen"
+
+#: fractal-gtk/src/app/connect/account.rs:79
+#: fractal-gtk/src/widgets/room_settings.rs:147
+msgid "Select"
+msgstr "Auswählen"
 
 #: fractal-gtk/src/appop/about.rs:19
 msgid "A Matrix.org client for GNOME"
@@ -803,23 +816,19 @@ msgstr "Fehler beim Laden vorheriger Medien"
 msgid "New Messages"
 msgstr "Neue Nachrichten"
 
-#: fractal-gtk/src/appop/message.rs:475
-msgid "Select"
-msgstr "Auswählen"
-
-#: fractal-gtk/src/appop/room.rs:263
+#: fractal-gtk/src/appop/room.rs:269
 msgid "Leave {room_name}?"
 msgstr "{room_name} verlassen?"
 
-#: fractal-gtk/src/appop/room.rs:521
+#: fractal-gtk/src/appop/room.rs:527
 msgid "EMPTY ROOM"
 msgstr "LEERER RAUM"
 
-#: fractal-gtk/src/appop/room.rs:523
+#: fractal-gtk/src/appop/room.rs:529
 msgid "{m1} and {m2}"
 msgstr "{m1} und {m2}"
 
-#: fractal-gtk/src/appop/room.rs:524
+#: fractal-gtk/src/appop/room.rs:530
 msgid "{m1} and Others"
 msgstr "{m1} und andere"
 
@@ -831,24 +840,24 @@ msgstr "Wird synchronisiert, dies kann einen Moment dauern"
 msgid "No matching members found"
 msgstr "Keine passenden Teilnehmer gefunden"
 
-#: fractal-gtk/src/widgets/message.rs:351
+#: fractal-gtk/src/widgets/message.rs:398
 msgid "Could not retrieve file URI"
 msgstr "Datei-Adresse konnte nicht empfangen werden"
 
-#: fractal-gtk/src/widgets/message.rs:367
+#: fractal-gtk/src/widgets/message.rs:414
 msgid "Save"
 msgstr "Speichern"
 
-#: fractal-gtk/src/widgets/message.rs:377
-#: fractal-gtk/src/widgets/message.rs:420
+#: fractal-gtk/src/widgets/message.rs:424
+#: fractal-gtk/src/widgets/message.rs:467
 msgid "Could not download the file"
 msgstr "Datei konnte nicht heruntergeladen werden"
 
-#: fractal-gtk/src/widgets/message.rs:410
+#: fractal-gtk/src/widgets/message.rs:457
 msgid "Download"
 msgstr "Herunterladen"
 
-#: fractal-gtk/src/widgets/message.rs:437
+#: fractal-gtk/src/widgets/message.rs:484
 msgid "Open"
 msgstr "Öffnen"
 
@@ -860,13 +869,13 @@ msgstr "Neuen Raum-Avatar auswählen"
 #. let description = Some(format!("Private Group · {} members", members.len()));
 #.
 #. Some(format!("Public Room · {} members", members.len()))
-#: fractal-gtk/src/widgets/room_settings.rs:183
+#: fractal-gtk/src/widgets/room_settings.rs:182
 msgid "Room · {} member"
 msgid_plural "Room · {} members"
 msgstr[0] "Raum · {} Teilnehmer"
 msgstr[1] "Raum · {} Teilnehmer"
 
-#: fractal-gtk/src/widgets/room_settings.rs:581
+#: fractal-gtk/src/widgets/room_settings.rs:580
 msgid "{} member"
 msgid_plural "{} members"
 msgstr[0] "{} Teilnehmer"
