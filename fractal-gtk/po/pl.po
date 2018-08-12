@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/World/fractal/issues\n"
-"POT-Creation-Date: 2018-07-29 12:18+0000\n"
-"PO-Revision-Date: 2018-07-29 19:44+0200\n"
+"POT-Creation-Date: 2018-08-07 10:30+0000\n"
+"PO-Revision-Date: 2018-08-12 19:42+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -468,16 +468,32 @@ msgid "Reply"
 msgstr "Odpowiedz"
 
 #: fractal-gtk/res/ui/message_menu.ui:34
+msgid "Copy selected text"
+msgstr "Skopiuj zaznaczony tekst"
+
+#: fractal-gtk/res/ui/message_menu.ui:47
 msgid "Copy Text"
 msgstr "Skopiuj tekst"
 
-#: fractal-gtk/res/ui/message_menu.ui:58
+#: fractal-gtk/res/ui/message_menu.ui:60
+msgid "View Source"
+msgstr "Wyświetl źródło"
+
+#: fractal-gtk/res/ui/message_menu.ui:84
 msgid "Delete Message"
 msgstr "Usuń wiadomość"
 
-#: fractal-gtk/res/ui/message_menu.ui:71
-msgid "View Source"
-msgstr "Wyświetl źródło"
+#: fractal-gtk/res/ui/msg_src_window.ui:25
+msgid "Copy To Clipboard"
+msgstr "Skopiuj do schowka"
+
+#: fractal-gtk/res/ui/msg_src_window.ui:36
+msgid "Message Source"
+msgstr "Źródło wiadomości"
+
+#: fractal-gtk/res/ui/msg_src_window.ui:44
+msgid "Close"
+msgstr "Zamknij"
 
 #: fractal-gtk/res/ui/new_room.ui:14
 msgid "Private Chat"
@@ -647,18 +663,6 @@ msgstr "Inny serwer domowy"
 msgid "Homeserver URL"
 msgstr "Adres serwera domowego"
 
-#: fractal-gtk/res/ui/source_dialog.ui:15
-msgid "Message Source"
-msgstr "Źródło wiadomości"
-
-#: fractal-gtk/res/ui/source_dialog.ui:28
-msgid "Copy To Clipboard"
-msgstr "Skopiuj do schowka"
-
-#: fractal-gtk/res/ui/source_dialog.ui:41
-msgid "Close"
-msgstr "Zamknij"
-
 #: fractal-gtk/res/ui/stickers_popover.ui:22
 msgid "Stickers"
 msgstr "Naklejki"
@@ -714,6 +718,15 @@ msgstr "Błąd podczas usuwania wiadomości"
 #: fractal-gtk/src/app/backend_loop.rs:269
 msgid "Error searching for rooms"
 msgstr "Błąd podczas wyszukiwania pokoi"
+
+#: fractal-gtk/src/app/connect/account.rs:76
+msgid "Pick a new avatar"
+msgstr "Wybór nowego awatara"
+
+#: fractal-gtk/src/app/connect/account.rs:79
+#: fractal-gtk/src/widgets/room_settings.rs:147
+msgid "Select"
+msgstr "Wybierz"
 
 #: fractal-gtk/src/appop/about.rs:19
 msgid "A Matrix.org client for GNOME"
@@ -797,23 +810,19 @@ msgstr "Błąd podczas wczytywania poprzednich multimediów"
 msgid "New Messages"
 msgstr "Nowe wiadomości"
 
-#: fractal-gtk/src/appop/message.rs:475
-msgid "Select"
-msgstr "Wybierz"
-
-#: fractal-gtk/src/appop/room.rs:263
+#: fractal-gtk/src/appop/room.rs:269
 msgid "Leave {room_name}?"
 msgstr "Opuścić pokój „{room_name}”?"
 
-#: fractal-gtk/src/appop/room.rs:521
+#: fractal-gtk/src/appop/room.rs:527
 msgid "EMPTY ROOM"
 msgstr "PUSTY POKÓJ"
 
-#: fractal-gtk/src/appop/room.rs:523
+#: fractal-gtk/src/appop/room.rs:529
 msgid "{m1} and {m2}"
 msgstr "{m1} i {m2}"
 
-#: fractal-gtk/src/appop/room.rs:524
+#: fractal-gtk/src/appop/room.rs:530
 msgid "{m1} and Others"
 msgstr "{m1} i inni"
 
@@ -825,24 +834,24 @@ msgstr "Synchronizowanie. Może to chwilę zająć."
 msgid "No matching members found"
 msgstr "Nie odnaleziono pasujących członków"
 
-#: fractal-gtk/src/widgets/message.rs:351
+#: fractal-gtk/src/widgets/message.rs:398
 msgid "Could not retrieve file URI"
 msgstr "Nie można odebrać adresu URI pliku"
 
-#: fractal-gtk/src/widgets/message.rs:367
+#: fractal-gtk/src/widgets/message.rs:414
 msgid "Save"
 msgstr "Zapisuje"
 
-#: fractal-gtk/src/widgets/message.rs:377
-#: fractal-gtk/src/widgets/message.rs:420
+#: fractal-gtk/src/widgets/message.rs:424
+#: fractal-gtk/src/widgets/message.rs:467
 msgid "Could not download the file"
 msgstr "Nie można pobrać pliku"
 
-#: fractal-gtk/src/widgets/message.rs:410
+#: fractal-gtk/src/widgets/message.rs:457
 msgid "Download"
 msgstr "Pobierz"
 
-#: fractal-gtk/src/widgets/message.rs:437
+#: fractal-gtk/src/widgets/message.rs:484
 msgid "Open"
 msgstr "Otwórz"
 
@@ -854,14 +863,14 @@ msgstr "Wybór nowego awatara pokoju"
 #. let description = Some(format!("Private Group · {} members", members.len()));
 #.
 #. Some(format!("Public Room · {} members", members.len()))
-#: fractal-gtk/src/widgets/room_settings.rs:183
+#: fractal-gtk/src/widgets/room_settings.rs:182
 msgid "Room · {} member"
 msgid_plural "Room · {} members"
 msgstr[0] "Pokój · {} członek"
 msgstr[1] "Pokój · {} członków"
 msgstr[2] "Pokój · {} członków"
 
-#: fractal-gtk/src/widgets/room_settings.rs:581
+#: fractal-gtk/src/widgets/room_settings.rs:580
 msgid "{} member"
 msgid_plural "{} members"
 msgstr[0] "{} członek"
