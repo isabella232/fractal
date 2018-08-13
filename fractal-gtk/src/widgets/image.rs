@@ -238,12 +238,12 @@ impl Image {
                     }
 
                     let x = if centered {
-                        (width / 2.0) - (pw as f64 / 2.0)
+                        ((width / 2.0) - (pw as f64 / 2.0)).round()
                     } else {
                         0.0
                     };
                     let y = if centered {
-                        (height / 2.0) - (ph as f64 / 2.0)
+                        ((height / 2.0) - (ph as f64 / 2.0)).round()
                     } else {
                         0.0
                     };
