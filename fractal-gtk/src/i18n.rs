@@ -2,6 +2,8 @@ extern crate gettextrs;
 extern crate regex;
 use self::gettextrs::gettext;
 use self::gettextrs::ngettext;
+use self::gettextrs::pgettext;
+use self::gettextrs::npgettext;
 use self::regex::Captures;
 use self::regex::Regex;
 
@@ -28,6 +30,8 @@ fn kreplace(input: String, kwargs: &[(&str, &str)]) -> String {
     s
 }
 
+// Simple translations functions
+
 #[allow(dead_code)]
 pub fn i18n(format: &str) -> String {
     gettext(format)
@@ -45,6 +49,8 @@ pub fn i18n_k(format: &str, kwargs: &[(&str, &str)]) -> String {
     kreplace(s, kwargs)
 }
 
+// Singular and plural translations functions
+
 #[allow(dead_code)]
 pub fn ni18n(single: &str, multiple: &str, number: u32) -> String {
     ngettext(single, multiple, number)
@@ -61,6 +67,45 @@ pub fn ni18n_k(single: &str, multiple: &str, number: u32, kwargs: &[(&str, &str)
     let s = ngettext(single, multiple, number);
     kreplace(s, kwargs)
 }
+
+// Translations with context functions
+
+#[allow(dead_code)]
+pub fn pi18n(ctx: &str, format: &str) -> String {
+    pgettext(ctx, format)
+}
+
+#[allow(dead_code)]
+pub fn pi18n_f(ctx: &str, format: &str, args: &[&str]) -> String {
+    let s = pgettext(ctx, format);
+    freplace(s, args)
+}
+
+#[allow(dead_code)]
+pub fn pi18n_k(ctx: &str, format: &str, kwargs: &[(&str, &str)]) -> String {
+    let s = pgettext(ctx, format);
+    kreplace(s, kwargs)
+}
+
+// Singular and plural with context
+
+#[allow(dead_code)]
+pub fn pni18n(ctx: &str, single: &str, multiple: &str, number: u32) -> String {
+    npgettext(ctx, single, multiple, number)
+}
+
+#[allow(dead_code)]
+pub fn pni18n_f(ctx: &str, single: &str, multiple: &str, number: u32, args: &[&str]) -> String {
+    let s = npgettext(ctx, single, multiple, number);
+    freplace(s, args)
+}
+
+#[allow(dead_code)]
+pub fn pni18n_k(ctx: &str, single: &str, multiple: &str, number: u32, kwargs: &[(&str, &str)]) -> String {
+    let s = npgettext(ctx, single, multiple, number);
+    kreplace(s, kwargs)
+}
+
 
 #[cfg(test)]
 mod tests {
@@ -120,5 +165,22 @@ mod tests {
         assert_eq!(out, "singular 1 and two");
         let out = ni18n_k("singular {one} and {two}", "plural {one} and {two}", 2, &[("one", "1"), ("two", "two")]);
         assert_eq!(out, "plural 1 and two");
+    }
+
+    #[test]
+    fn test_pi18n() {
+        let out = pi18n("This is the context", "translate1");
+        assert_eq!(out, "translate1");
+
+        let out = pni18n("context", "translate1", "translate multi", 1);
+        assert_eq!(out, "translate1");
+        let out = pni18n("The context string", "translate1", "translate multi", 2);
+        assert_eq!(out, "translate multi");
+
+        let out = pi18n_f("Context for translation", "{} param", &["one"]);
+        assert_eq!(out, "one param");
+
+        let out = pi18n_k("context", "{one} param", &[("one", "one")]);
+        assert_eq!(out, "one param");
     }
 }
