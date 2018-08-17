@@ -664,7 +664,7 @@
                         <property name="margin_bottom">40</property>
                         <property name="label" translatable="yes" context="big label">Log In</property>
                         <attributes>
-                          <attribute name="font-desc" value="&lt;Introducir valor&gt; 50"/>
+                          <attribute name="scale" value="4"/>
                           <attribute name="foreground" value="#88888a8a8585"/>
                         </attributes>
                       </object>
@@ -1131,9 +1131,6 @@
                         <property name="label" translatable="yes">Room topic</property>
                         <property name="justify">center</property>
                         <property name="ellipsize">end</property>
-                        <attributes>
-                          <attribute name="font-desc" value="&lt;Introducir valor&gt; 8"/>
-                        </attributes>
                       </object>
                       <packing>
                         <property name="expand">False</property>
