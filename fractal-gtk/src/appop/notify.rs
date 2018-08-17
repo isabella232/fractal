@@ -51,7 +51,7 @@ impl AppOp {
             Err(TryRecvError::Empty) => gtk::Continue(true),
             Err(TryRecvError::Disconnected) => gtk::Continue(false),
             Ok((name, avatar)) => {
-                let summary = format!("@{} / {}", name, roomname);
+                let summary = format!("{} ({})", name, roomname);
 
                 let bk = bk.clone();
                 let m = m.clone();
