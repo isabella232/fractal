@@ -309,7 +309,6 @@ pub fn mark_as_read(bk: &Backend, roomid: String, eventid: String) -> Result<(),
         "m.fully_read": eventid,
         "m.read": json!(null),
     });
-    let e = eventid.clone();
     post!(&url, &attrs, |_| { }, |_| { } );
 
     Ok(())
