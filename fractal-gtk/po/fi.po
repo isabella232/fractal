@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/World/fractal/issues\n"
-"POT-Creation-Date: 2018-08-05 10:46+0000\n"
-"PO-Revision-Date: 2018-08-06 10:17+0300\n"
+"POT-Creation-Date: 2018-08-07 10:30+0000\n"
+"PO-Revision-Date: 2018-08-18 16:20+0300\n"
+"Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: Finnish <lokalisointi-lista@googlegroups.com>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
-"X-Generator: Poedit 2.0.9\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #: fractal-gtk/res/gtk/help-overlay.ui:13
 msgctxt "shortcut window"
@@ -110,7 +110,7 @@ msgstr ""
 
 #: fractal-gtk/res/org.gnome.Fractal.gschema.xml:21
 msgid "If markdown sending is active"
-msgstr ""
+msgstr "Onko markdown-lähettäminen aktiivisena"
 
 #: fractal-gtk/res/org.gnome.Fractal.gschema.xml:22
 msgid "Whether support for sending markdown messages is on"
@@ -368,7 +368,7 @@ msgstr "Identiteettipalvelin"
 
 #: fractal-gtk/res/ui/main_window.ui:870
 msgid "Advanced"
-msgstr ""
+msgstr "Lisäasetukset"
 
 #: fractal-gtk/res/ui/main_window.ui:885 fractal-gtk/src/appop/login.rs:113
 msgid "Invalid username or password"
@@ -423,7 +423,7 @@ msgstr "Oletusarvoinen Matrix-palvelin"
 
 #: fractal-gtk/res/ui/markdown_popover.ui:28
 msgid "Markdown"
-msgstr ""
+msgstr "Markdown"
 
 #: fractal-gtk/res/ui/markdown_popover.ui:76
 msgid "> quote"
@@ -447,7 +447,7 @@ msgstr "Tallenna nimellä"
 
 #: fractal-gtk/res/ui/media_viewer.ui:186
 msgid "Loading more media"
-msgstr ""
+msgstr "Ladataan lisää mediaa"
 
 #: fractal-gtk/res/ui/media_viewer.ui:234
 msgid "Media viewer"
@@ -462,14 +462,18 @@ msgid "Reply"
 msgstr "Vastaa"
 
 #: fractal-gtk/res/ui/message_menu.ui:34
+msgid "Copy selected text"
+msgstr "Kopioi valittu teksti"
+
+#: fractal-gtk/res/ui/message_menu.ui:47
 msgid "Copy Text"
 msgstr "Kopioi teksti"
 
-#: fractal-gtk/res/ui/message_menu.ui:47
+#: fractal-gtk/res/ui/message_menu.ui:60
 msgid "View Source"
 msgstr "Näytä lähde"
 
-#: fractal-gtk/res/ui/message_menu.ui:71
+#: fractal-gtk/res/ui/message_menu.ui:84
 msgid "Delete Message"
 msgstr "Poista viesti"
 
@@ -619,7 +623,7 @@ msgstr "Julkaise huonehakemistossa"
 
 #: fractal-gtk/res/ui/room_settings.ui:827
 msgid "Join addresses"
-msgstr ""
+msgstr "Liittymisosoitteet"
 
 #: fractal-gtk/res/ui/room_settings.ui:886
 msgid "members"
@@ -709,6 +713,15 @@ msgstr "Virhe viestiä poistaessa"
 msgid "Error searching for rooms"
 msgstr "Virhe huoneita etsiessä"
 
+#: fractal-gtk/src/app/connect/account.rs:76
+msgid "Pick a new avatar"
+msgstr "Valitse uusi avatar"
+
+#: fractal-gtk/src/app/connect/account.rs:79
+#: fractal-gtk/src/widgets/room_settings.rs:147
+msgid "Select"
+msgstr "Valitse"
+
 #: fractal-gtk/src/appop/about.rs:19
 msgid "A Matrix.org client for GNOME"
 msgstr "Matrix-sovellus Gnomelle"
@@ -766,6 +779,8 @@ msgid ""
 "You’ve been invited to join to <b>{room_name}</b> room by <b>{sender_name}</"
 "b>"
 msgstr ""
+"Sinut on kutsuttu huoneeseen <b>{room_name}</b> henkilön <b>{sender_name}</"
+"b> toimesta"
 
 #: fractal-gtk/src/appop/invite.rs:215
 msgid "You’ve been invited to join to <b>{room_name}</b>"
@@ -786,10 +801,6 @@ msgstr ""
 #: fractal-gtk/src/appop/message.rs:207 fractal-gtk/src/appop/message.rs:215
 msgid "New Messages"
 msgstr "Uudet viestit"
-
-#: fractal-gtk/src/appop/message.rs:477
-msgid "Select"
-msgstr "Valitse"
 
 #: fractal-gtk/src/appop/room.rs:269
 msgid "Leave {room_name}?"
@@ -815,42 +826,42 @@ msgstr "Synkronoidaan, tässä voi kestää hetki"
 msgid "No matching members found"
 msgstr "Vastaavia jäseniä ei löytynyt"
 
-#: fractal-gtk/src/widgets/message.rs:397
+#: fractal-gtk/src/widgets/message.rs:398
 msgid "Could not retrieve file URI"
 msgstr ""
 
-#: fractal-gtk/src/widgets/message.rs:413
+#: fractal-gtk/src/widgets/message.rs:414
 msgid "Save"
 msgstr "Tallenna"
 
-#: fractal-gtk/src/widgets/message.rs:423
-#: fractal-gtk/src/widgets/message.rs:466
+#: fractal-gtk/src/widgets/message.rs:424
+#: fractal-gtk/src/widgets/message.rs:467
 msgid "Could not download the file"
 msgstr "Tiedostoa ei voitu ladata"
 
-#: fractal-gtk/src/widgets/message.rs:456
+#: fractal-gtk/src/widgets/message.rs:457
 msgid "Download"
 msgstr "Lataa"
 
-#: fractal-gtk/src/widgets/message.rs:483
+#: fractal-gtk/src/widgets/message.rs:484
 msgid "Open"
 msgstr "Avaa"
 
 #: fractal-gtk/src/widgets/room_settings.rs:144
 msgid "Pick a new room avatar"
-msgstr ""
+msgstr "Valitse uusi huoneavatar"
 
 #. we don't have private groups yet
 #. let description = Some(format!("Private Group · {} members", members.len()));
 #.
 #. Some(format!("Public Room · {} members", members.len()))
-#: fractal-gtk/src/widgets/room_settings.rs:183
+#: fractal-gtk/src/widgets/room_settings.rs:182
 msgid "Room · {} member"
 msgid_plural "Room · {} members"
 msgstr[0] "Huone · {} jäsen"
 msgstr[1] "Huone · {} jäsentä"
 
-#: fractal-gtk/src/widgets/room_settings.rs:581
+#: fractal-gtk/src/widgets/room_settings.rs:580
 msgid "{} member"
 msgid_plural "{} members"
 msgstr[0] "{} jäsen"
