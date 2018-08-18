@@ -10,7 +10,7 @@ variables:
     FLATPAK_MODULE: "fractal"
     DBUS_ID: "org.gnome.Fractal"
 
-flatpak_cache_template: &flatpak_cache
+.flatpak_cache_template: &flatpak_cache
     cache:
         key: "flatpak"
         paths:
