@@ -63,7 +63,6 @@ impl App {
         room.connect_activate(clone!(op => move |_, _| op.lock().unwrap().show_room_settings() ));
         inv.connect_activate(clone!(op => move |_, _| op.lock().unwrap().show_invite_user_dialog() ));
         chat.connect_activate(clone!(op => move |_, _| op.lock().unwrap().show_direct_chat_dialog() ));
-        search.connect_activate(clone!(op => move |_, _| op.lock().unwrap().toggle_search() ));
         leave.connect_activate(clone!(op => move |_, _| op.lock().unwrap().leave_active_room() ));
         newr.connect_activate(clone!(op => move |_, _| op.lock().unwrap().new_room_dialog() ));
         joinr.connect_activate(clone!(op => move |_, _| op.lock().unwrap().join_to_room_dialog() ));

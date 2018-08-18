@@ -18,7 +18,6 @@ mod media_viewer;
 mod new_room;
 mod roomlist_search;
 mod scroll;
-mod search;
 mod send;
 mod spellcheck;
 mod stickers;
@@ -89,8 +88,6 @@ impl App {
         self.connect_new_room_dialog();
         self.connect_join_room_dialog();
         self.connect_account_settings();
-
-        self.connect_search();
 
         self.connect_invite_dialog();
         self.connect_invite_user();

@@ -185,9 +185,6 @@ pub fn backend_loop(rx: Receiver<BKResponse>) {
                 Ok(BKResponse::AttachedFile(msg)) => {
                     APPOP!(attached_file, (msg));
                 }
-                Ok(BKResponse::SearchEnd) => {
-                    APPOP!(search_end);
-                }
                 Ok(BKResponse::NewRoom(r, internal_id)) => {
                     let id = Some(internal_id);
                     APPOP!(new_room, (r, id));
