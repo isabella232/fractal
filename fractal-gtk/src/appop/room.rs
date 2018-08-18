@@ -414,31 +414,6 @@ impl AppOp {
         self.roomlist.filter_rooms(term);
     }
 
-    pub fn toggle_search(&self) {
-        let r: gtk::Revealer = self.ui.builder
-            .get_object("search_revealer")
-            .expect("Couldn't find search_revealer in ui file.");
-        r.set_reveal_child(!r.get_child_revealed());
-    }
-
-    pub fn search(&mut self, term: Option<String>) {
-        let r = self.active_room.clone().unwrap_or_default();
-        self.remove_messages();
-        self.backend.send(BKCommand::Search(r, term)).unwrap();
-
-        self.ui.builder
-            .get_object::<gtk::Stack>("search_button_stack")
-            .expect("Can't find search_button_stack in ui file.")
-            .set_visible_child_name("searching");
-    }
-
-    pub fn search_end(&self) {
-        self.ui.builder
-            .get_object::<gtk::Stack>("search_button_stack")
-            .expect("Can't find search_button_stack in ui file.")
-            .set_visible_child_name("normal");
-    }
-
     pub fn new_room_dialog(&self) {
         let dialog = self.ui.builder
             .get_object::<gtk::Dialog>("new_room_dialog")
