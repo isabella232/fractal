@@ -1035,14 +1035,13 @@
                     <property name="hexpand">True</property>
                     <property name="orientation">vertical</property>
                     <child>
-                        <object class="GtkLabel" id="room_name">
+                      <object class="GtkLabel" id="room_name">
                         <property name="can_focus">False</property>
-                        <property name="halign">center</property>
                         <property name="label" translatable="yes">Room name</property>
                         <property name="ellipsize">end</property>
-                        <attributes>
-                          <attribute name="weight" value="bold"/>
-                        </attributes>
+                        <style>
+                          <class name="title"/>
+                        </style>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -1053,11 +1052,11 @@
                     <child>
                       <object class="GtkLabel" id="room_topic">
                         <property name="can_focus">False</property>
-                        <property name="halign">center</property>
-                        <property name="margin_bottom">4</property>
                         <property name="label" translatable="yes">Room topic</property>
-                        <property name="justify">center</property>
                         <property name="ellipsize">end</property>
+                        <style>
+                          <class name="subtitle"/>
+                        </style>
                       </object>
                       <packing>
                         <property name="expand">False</property>
