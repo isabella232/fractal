@@ -8,7 +8,7 @@ use std::thread;
 use std::sync::mpsc::{Sender, Receiver};
 use std::sync::mpsc::channel;
 
-use i18n::i18n_f;
+use i18n::i18n;
 
 use appop::AppOp;
 use app::InternalCommand;
@@ -44,25 +44,25 @@ impl AppOp {
         self.backend.send(BKCommand::GetUserInfoAsync(msg.sender.clone(), Some(tx))).unwrap();
         let bk = self.internal.clone();
         let m = msg.clone();
-        let rooms = self.rooms.clone();
+
+        let notify_msg = match self.rooms.get(&m.room) {
+            None => m.room.clone(),
+            Some(ref r) => {
+                match r.direct {
+                    true => i18n("{name} (direct message)"),
+                    false => format!("{{name}} ({})", r.name.clone().unwrap_or_default()),
+                }
+            }
+        };
+
         gtk::timeout_add(50, move || match rx.try_recv() {
             Err(TryRecvError::Empty) => gtk::Continue(true),
             Err(TryRecvError::Disconnected) => gtk::Continue(false),
             Ok((name, avatar)) => {
-                let summary = rooms.get(&m.room)
-                    .map_or_else(
-                        || m.room.clone(),
-                        |r| if r.direct {
-                            i18n_f("{} (direct message)", &[name.as_str()])
-                        } else {
-                            format!("{} ({})", name, r.name.clone().unwrap_or_default())
-                        }
-                    );
-
                 let bk = bk.clone();
                 let m = m.clone();
                 let body = body.clone();
-                let summary = summary.clone();
+                let summary = notify_msg.replace("{name}", &name);
                 let avatar = avatar.clone();
                 thread::spawn(move || {
                     let mut notification = Notification::new();
