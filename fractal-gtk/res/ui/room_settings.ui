@@ -168,7 +168,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="hexpand">True</property>
-                            <property name="placeholder-text" translatable="yes">Type your name</property>
+                            <property name="placeholder-text" translatable="yes">Type in your room topic</property>
                           </object>
                         </child>
                         <child>
