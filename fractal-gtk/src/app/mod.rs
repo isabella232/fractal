@@ -91,6 +91,10 @@ impl App {
                 .expect("Couldn't find main_window in ui file.");
             window.set_application(gtk_app);
 
+            if appid.ends_with("Devel") {
+                window.get_style_context().map(|c| c.add_class("devel"));
+            }
+
             let stack = ui.builder
                 .get_object::<gtk::Stack>("main_content_stack")
                 .expect("Can't find main_content_stack in ui file.");
