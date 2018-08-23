@@ -4,6 +4,23 @@ project(
   license: 'GPLv3',
 )
 
+if get_option('profile') == 'development'
+  profile = 'Devel'
+  name_suffix = ' (Development)'
+  vcs_tag = run_command('git', 'rev-parse', '--short', 'HEAD').stdout().strip()
+  if vcs_tag == ''
+    version_suffix = '-devel'
+  else
+    version_suffix = '-@0@'.format (vcs_tag)
+  endif
+else
+  profile = ''
+  name_suffix = ''
+  version_suffix = ''
+endif
+
+application_id = 'org.gnome.Fractal@0@'.format(profile)
+
 fractal_version = meson.project_version()
 version_array = fractal_version.split('.')
 fractal_major_version = version_array[0].to_int()
@@ -15,7 +32,6 @@ fractal_bindir = join_paths(fractal_prefix, get_option('bindir'))
 fractal_localedir = join_paths(fractal_prefix, get_option('localedir'))
 
 datadir = get_option('datadir')
-icondir = join_paths(datadir, 'icons')
 
 i18n = import('i18n')
 
@@ -40,7 +56,15 @@ cargo_release = custom_target('cargo-build',
                         output: ['fractal'],
                         install: true,
                         install_dir: fractal_bindir,
-                        command: [cargo_script, '@CURRENT_SOURCE_DIR@', '@OUTPUT@', fractal_localedir])
+                        command: [cargo_script,
+                                  '@CURRENT_SOURCE_DIR@',
+                                  '@OUTPUT@',
+                                  fractal_localedir,
+                                  application_id,
+                                  name_suffix,
+                                  fractal_version + version_suffix,
+                                  profile
+                                 ])
 
 run_target('release', command: ['scripts/release.sh',
                                 meson.project_name() + '-' + fractal_version

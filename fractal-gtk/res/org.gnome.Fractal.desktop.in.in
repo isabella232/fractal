@@ -4,7 +4,7 @@ Comment=Fractal is a decentralized, secure messaging client for collaborative gr
 GenericName=Fractal group messaging
 Exec=fractal
 # Translators: Do NOT translate or transliterate this text (this is an icon file name)!
-Icon=org.gnome.Fractal
+Icon=@icon@
 Type=Application
 StartupNotify=true
 X-GNOME-UsesNotifications=true
