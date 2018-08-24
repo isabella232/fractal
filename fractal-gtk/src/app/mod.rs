@@ -2,7 +2,6 @@ use gtk;
 use gtk::prelude::*;
 use gdk;
 use gettextrs::{setlocale, LocaleCategory, bindtextdomain, textdomain};
-use std::env;
 use std::sync::{Arc, Mutex};
 use std::sync::mpsc::channel;
 use std::sync::mpsc::{Sender, Receiver};
