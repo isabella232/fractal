@@ -62,15 +62,15 @@ pub struct App {
 impl App {
     /// Create an App instance
     pub fn new() {
-        let appid = match env::var("FRACTAL_ID") {
-            Ok(id) => id,
-            Err(_) => globals::APP_ID.to_string(),
-        };
+        let appid = globals::APP_ID.to_string();
 
         let gtk_app = gtk::Application::new(Some(&appid[..]), gio::ApplicationFlags::empty())
             .expect("Failed to initialize GtkApplication");
 
         gtk_app.set_accels_for_action("app.quit", &["<Ctrl>Q"]);
+
+        let path = "/org/gnome/Fractal".to_string();
+        gtk_app.set_property_resource_base_path(Some(&path));
 
         gtk_app.connect_startup(move |gtk_app| {
             let (tx, rx): (Sender<BKResponse>, Receiver<BKResponse>) = channel();
@@ -90,6 +90,10 @@ impl App {
                 .get_object("main_window")
                 .expect("Couldn't find main_window in ui file.");
             window.set_application(gtk_app);
+
+            if appid.ends_with("Devel") {
+                window.get_style_context().map(|c| c.add_class("devel"));
+            }
 
             let stack = ui.builder
                 .get_object::<gtk::Stack>("main_content_stack")

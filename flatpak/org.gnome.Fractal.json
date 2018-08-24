@@ -1,5 +1,5 @@
 {
-    "app-id" : "org.gnome.Fractal",
+    "app-id" : "org.gnome.FractalDevel",
     "runtime" : "org.gnome.Platform",
     "runtime-version" : "master",
     "sdk" : "org.gnome.Sdk",
@@ -8,15 +8,16 @@
     ],
     "command" : "fractal",
     "tags" : [
+        "devel",
+        "development",
         "nightly"
     ],
-    "desktop-file-name-prefix" : "(Nightly) ",
+    "desktop-file-name-suffix" : " (Development)",
     "finish-args" : [
         "--filesystem=xdg-run/dconf",
         "--filesystem=~/.config/dconf:ro",
         "--talk-name=ca.desrt.dconf",
         "--env=DCONF_USER_CONFIG_DIR=.config/dconf",
-        "--env=FRACTAL_ID=org.gnome.Fractal.nightly",
         "--share=network",
         "--share=ipc",
         "--socket=x11",
@@ -33,7 +34,6 @@
         ],
         "env" : {
             "CARGO_HOME" : "/run/build/Fractal/cargo",
-            "DEBUG" : "true",
             "RUST_BACKTRACE" : "1"
         }
     },
@@ -80,6 +80,9 @@
         {
             "name" : "fractal",
             "buildsystem" : "meson",
+            "config-opts" : [
+                "-Dprofile=development"
+            ],
             "sources" : [
                 {
                     "type" : "git",
