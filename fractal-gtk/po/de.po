@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/World/fractal/issues\n"
-"POT-Creation-Date: 2018-08-23 18:41+0000\n"
-"PO-Revision-Date: 2018-08-24 09:31+0200\n"
-"Last-Translator: Tim Sabsch <tim@sabsch.com>\n"
+"POT-Creation-Date: 2018-08-24 22:30+0000\n"
+"PO-Revision-Date: 2018-08-25 23:18+0200\n"
+"Last-Translator: Mario Blättermann <mario.blaettermann@gmail.com>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -57,22 +57,22 @@ msgstr "_Info"
 msgid "_Quit"
 msgstr "_Beenden"
 
-#: fractal-gtk/res/org.gnome.Fractal.appdata.xml:4
-#: fractal-gtk/res/org.gnome.Fractal.desktop:3
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:4
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:3
 msgid "Fractal"
 msgstr "Fractal"
 
-#: fractal-gtk/res/org.gnome.Fractal.appdata.xml:7
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:7
 msgid "Daniel García Moreno"
 msgstr "Daniel García Moreno"
 
-#: fractal-gtk/res/org.gnome.Fractal.appdata.xml:8
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:8
 msgid "Matrix group messaging app"
 msgstr "Matrix-Gruppenkommunikations-Anwendung"
 
 # Ich musste hier mal etwas weiter ausholen, denn die Sequenz »GNOME in Rust« sagt den meisten Leuten sicherlich gar nichts.
 # Wobei noch anzuweifeln wäre, ob diese Zusatzinfo für den typischen Benutzer einer neumodischen Softwareverwaltung (für die die Appdata-Strings verwendet werden) überhaupt in irgendeiner Form relevant ist.
-#: fractal-gtk/res/org.gnome.Fractal.appdata.xml:11
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:11
 msgid ""
 "Fractal is a Matrix messaging app for GNOME written in Rust. Its interface "
 "is optimized for collaboration in large groups, such as free software "
@@ -83,7 +83,7 @@ msgstr ""
 "Zusammenarbeit in großen Gruppen, wie bei freien Software-Projekten, "
 "optimiert."
 
-#: fractal-gtk/res/org.gnome.Fractal.desktop:4
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:4
 msgid ""
 "Fractal is a decentralized, secure messaging client for collaborative group "
 "communication."
@@ -91,17 +91,17 @@ msgstr ""
 "Fractal ist ein dezentrales, sicheres Nachrichtenprogramm für "
 "gemeinschaftliche Gruppenkommunikation."
 
-#: fractal-gtk/res/org.gnome.Fractal.desktop:5
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:5
 msgid "Fractal group messaging"
 msgstr "Fractal Gruppenkommunikation"
 
 #. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
-#: fractal-gtk/res/org.gnome.Fractal.desktop:8
-msgid "org.gnome.Fractal"
-msgstr "org.gnome.Fractal"
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:8
+msgid "@icon@"
+msgstr "@icon@"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
-#: fractal-gtk/res/org.gnome.Fractal.desktop:14
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:14
 msgid "Matrix;matrix.org;chat;irc;communications;talk;riot;"
 msgstr "Matrix;matrix.org;Chat;IRC;Kommunikation;Nachrichten;Riot;"
 
@@ -734,23 +734,23 @@ msgstr "Neuen Avatar auswählen"
 msgid "Select"
 msgstr "Auswählen"
 
-#: fractal-gtk/src/appop/about.rs:19
+#: fractal-gtk/src/appop/about.rs:21
 msgid "A Matrix.org client for GNOME"
 msgstr "Eine Matrix.org-Anwendung für GNOME"
 
-#: fractal-gtk/src/appop/about.rs:20
+#: fractal-gtk/src/appop/about.rs:22
 msgid "© 2017–2018 Daniel García Moreno, et al."
 msgstr "© 2017–2018 Daniel García Moreno, et al."
 
-#: fractal-gtk/src/appop/about.rs:26
+#: fractal-gtk/src/appop/about.rs:28
 msgid "Learn more about Fractal"
 msgstr "Erfahren Sie mehr über Fractal"
 
-#: fractal-gtk/src/appop/about.rs:27
+#: fractal-gtk/src/appop/about.rs:29
 msgid "translator-credits"
 msgstr "Tim Sabsch <tim@sabsch.com>, 2018"
 
-#: fractal-gtk/src/appop/about.rs:43
+#: fractal-gtk/src/appop/about.rs:45
 msgid "Name by"
 msgstr "Nach Name"
 
@@ -847,19 +847,16 @@ msgid "Could not retrieve file URI"
 msgstr "Datei-Adresse konnte nicht empfangen werden"
 
 #: fractal-gtk/src/widgets/message.rs:414
+#: fractal-gtk/src/widgets/message.rs:460
 msgid "Save"
 msgstr "Speichern"
 
 #: fractal-gtk/src/widgets/message.rs:424
-#: fractal-gtk/src/widgets/message.rs:467
+#: fractal-gtk/src/widgets/message.rs:471
 msgid "Could not download the file"
 msgstr "Datei konnte nicht heruntergeladen werden"
 
-#: fractal-gtk/src/widgets/message.rs:457
-msgid "Download"
-msgstr "Herunterladen"
-
-#: fractal-gtk/src/widgets/message.rs:484
+#: fractal-gtk/src/widgets/message.rs:489
 msgid "Open"
 msgstr "Öffnen"
 
@@ -907,6 +904,3 @@ msgstr "Räume"
 #: fractal-gtk/src/widgets/roomlist.rs:439
 msgid "You don’t have any rooms yet"
 msgstr "Sie haben noch keine Räume"
-
-#~ msgid "Searching"
-#~ msgstr "Suche läuft"
