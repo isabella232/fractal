@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/World/fractal/issues\n"
-"POT-Creation-Date: 2018-08-07 10:30+0000\n"
-"PO-Revision-Date: 2018-08-12 19:42+0200\n"
+"POT-Creation-Date: 2018-08-24 22:30+0000\n"
+"PO-Revision-Date: 2018-08-26 18:28+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -57,20 +57,20 @@ msgstr "_O programie"
 msgid "_Quit"
 msgstr "Za_kończ"
 
-#: fractal-gtk/res/org.gnome.Fractal.appdata.xml:4
-#: fractal-gtk/res/org.gnome.Fractal.desktop:3
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:4
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:3
 msgid "Fractal"
 msgstr "Fractal"
 
-#: fractal-gtk/res/org.gnome.Fractal.appdata.xml:7
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:7
 msgid "Daniel García Moreno"
 msgstr "Daniel García Moreno"
 
-#: fractal-gtk/res/org.gnome.Fractal.appdata.xml:8
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:8
 msgid "Matrix group messaging app"
 msgstr "Rozmowy grupowe w sieci Matrix"
 
-#: fractal-gtk/res/org.gnome.Fractal.appdata.xml:11
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:11
 msgid ""
 "Fractal is a Matrix messaging app for GNOME written in Rust. Its interface "
 "is optimized for collaboration in large groups, such as free software "
@@ -80,7 +80,7 @@ msgstr ""
 "w języku Rust. Jego interfejs jest zoptymalizowany do współpracy dużych "
 "grup, takich jak projekty wolnego oprogramowania."
 
-#: fractal-gtk/res/org.gnome.Fractal.desktop:4
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:4
 msgid ""
 "Fractal is a decentralized, secure messaging client for collaborative group "
 "communication."
@@ -88,17 +88,17 @@ msgstr ""
 "Fractal jest zdecentralizowanym, bezpiecznym komunikatorem do komunikacji "
 "wśród współpracujących grup."
 
-#: fractal-gtk/res/org.gnome.Fractal.desktop:5
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:5
 msgid "Fractal group messaging"
 msgstr "Wiadomości grupowe Fractal"
 
 #. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
-#: fractal-gtk/res/org.gnome.Fractal.desktop:8
-msgid "org.gnome.Fractal"
-msgstr "org.gnome.Fractal"
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:8
+msgid "@icon@"
+msgstr "@icon@"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
-#: fractal-gtk/res/org.gnome.Fractal.desktop:14
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:14
 msgid "Matrix;matrix.org;chat;irc;communications;talk;riot;"
 msgstr ""
 "Matrix;matrix.org;czat;chat;irc;komunikacja;komunikator;im;wiadomość;rozmowa;"
@@ -130,8 +130,7 @@ msgid "Name"
 msgstr "Nazwa"
 
 #: fractal-gtk/res/ui/account_settings.ui:122
-#: fractal-gtk/res/ui/room_settings.ui:171
-msgid "Type your name"
+msgid "Type in your name"
 msgstr "Nazwa użytkownika"
 
 #: fractal-gtk/res/ui/account_settings.ui:151
@@ -143,7 +142,7 @@ msgid "Phone"
 msgstr "Telefon"
 
 #: fractal-gtk/res/ui/account_settings.ui:209
-#: fractal-gtk/res/ui/main_window.ui:734
+#: fractal-gtk/res/ui/main_window.ui:660
 msgid "Password"
 msgstr "Hasło"
 
@@ -199,9 +198,9 @@ msgid "Account Settings"
 msgstr "Ustawienia konta"
 
 #: fractal-gtk/res/ui/account_settings.ui:676
-#: fractal-gtk/res/ui/main_window.ui:1286
-#: fractal-gtk/res/ui/main_window.ui:1354
-#: fractal-gtk/res/ui/media_viewer.ui:250
+#: fractal-gtk/res/ui/main_window.ui:1154
+#: fractal-gtk/res/ui/main_window.ui:1222
+#: fractal-gtk/res/ui/media_viewer.ui:249
 #: fractal-gtk/res/ui/room_settings.ui:1028
 msgid "Back"
 msgstr "Wstecz"
@@ -242,7 +241,7 @@ msgid "Play"
 msgstr "Odtwarza"
 
 #: fractal-gtk/res/ui/direct_chat.ui:64 fractal-gtk/res/ui/invite_user.ui:64
-#: fractal-gtk/res/ui/main_window.ui:701
+#: fractal-gtk/res/ui/main_window.ui:627
 msgid "Matrix username, email or phone number"
 msgstr "Nazwa użytkownika Matrix, adres e-mail lub numer telefonu"
 
@@ -298,130 +297,125 @@ msgstr ""
 msgid "Leave room"
 msgstr "Opuść pokój"
 
-#: fractal-gtk/res/ui/main_window.ui:173
-msgid "Searching"
-msgstr "Wyszukiwanie"
-
-#: fractal-gtk/res/ui/main_window.ui:252
+#: fractal-gtk/res/ui/main_window.ui:179
 msgid "Scroll to bottom"
 msgstr "Przewiń na dół"
 
-#: fractal-gtk/res/ui/main_window.ui:298
+#: fractal-gtk/res/ui/main_window.ui:225
 msgid "Attach files"
 msgstr "Załącz pliki"
 
-#: fractal-gtk/res/ui/main_window.ui:326
+#: fractal-gtk/res/ui/main_window.ui:253
 msgid "Text formatting"
 msgstr "Formatowanie tekstu"
 
-#: fractal-gtk/res/ui/main_window.ui:446
+#: fractal-gtk/res/ui/main_window.ui:373
 msgid "No room selected"
 msgstr "Nie wybrano pokoju"
 
-#: fractal-gtk/res/ui/main_window.ui:461
+#: fractal-gtk/res/ui/main_window.ui:388
 msgid "Join a room to start chatting"
 msgstr "Dołączenie do pokoju umożliwi rozpoczęcie rozmowy"
 
-#: fractal-gtk/res/ui/main_window.ui:471
+#: fractal-gtk/res/ui/main_window.ui:398
 msgid "No room"
 msgstr "Brak pokoju"
 
-#: fractal-gtk/res/ui/main_window.ui:518
+#: fractal-gtk/res/ui/main_window.ui:445
 msgid "This is an app-notification"
 msgstr "To jest powiadomienie"
 
-#: fractal-gtk/res/ui/main_window.ui:556
+#: fractal-gtk/res/ui/main_window.ui:483
 msgid "Chat"
 msgstr "Rozmowa"
 
-#: fractal-gtk/res/ui/main_window.ui:615
+#: fractal-gtk/res/ui/main_window.ui:541
 msgid "Directory"
 msgstr "Katalog"
 
-#: fractal-gtk/res/ui/main_window.ui:639
+#: fractal-gtk/res/ui/main_window.ui:565
 msgid "Loading"
 msgstr "Wczytywanie"
 
-#: fractal-gtk/res/ui/main_window.ui:665
+#: fractal-gtk/res/ui/main_window.ui:591
 msgctxt "big label"
 msgid "Log In"
 msgstr "Logowanie"
 
-#: fractal-gtk/res/ui/main_window.ui:684
+#: fractal-gtk/res/ui/main_window.ui:610
 msgid "Username"
 msgstr "Nazwa użytkownika"
 
-#: fractal-gtk/res/ui/main_window.ui:714
+#: fractal-gtk/res/ui/main_window.ui:640
 msgctxt "login button"
 msgid "Log In"
 msgstr "Zaloguj się"
 
-#: fractal-gtk/res/ui/main_window.ui:779
+#: fractal-gtk/res/ui/main_window.ui:705
 msgid "Home server URL"
 msgstr "Adres serwera domowego"
 
-#: fractal-gtk/res/ui/main_window.ui:797
+#: fractal-gtk/res/ui/main_window.ui:723
 msgid "Identity server URL"
 msgstr "Adres serwera tożsamości"
 
-#: fractal-gtk/res/ui/main_window.ui:814
+#: fractal-gtk/res/ui/main_window.ui:740
 msgid "Matrix Server"
 msgstr "Serwer Matrix"
 
-#: fractal-gtk/res/ui/main_window.ui:833
+#: fractal-gtk/res/ui/main_window.ui:759
 msgid "Identity server"
 msgstr "Serwer tożsamości"
 
-#: fractal-gtk/res/ui/main_window.ui:870
+#: fractal-gtk/res/ui/main_window.ui:796
 msgid "Advanced"
 msgstr "Zaawansowane"
 
-#: fractal-gtk/res/ui/main_window.ui:885 fractal-gtk/src/appop/login.rs:113
+#: fractal-gtk/res/ui/main_window.ui:811 fractal-gtk/src/appop/login.rs:113
 msgid "Invalid username or password"
 msgstr "Nieprawidłowa nazwa użytkownika lub hasło"
 
-#: fractal-gtk/res/ui/main_window.ui:939
+#: fractal-gtk/res/ui/main_window.ui:865
 msgid "Reset Password"
 msgstr "Przywróć hasło"
 
-#: fractal-gtk/res/ui/main_window.ui:953
+#: fractal-gtk/res/ui/main_window.ui:879
 msgid "Create Account"
 msgstr "Utwórz konto"
 
-#: fractal-gtk/res/ui/main_window.ui:967
+#: fractal-gtk/res/ui/main_window.ui:893
 msgid "Log In as Guest"
 msgstr "Zaloguj jako gość"
 
-#: fractal-gtk/res/ui/main_window.ui:989
+#: fractal-gtk/res/ui/main_window.ui:915
 msgid "Login"
 msgstr "Zaloguj"
 
-#: fractal-gtk/res/ui/main_window.ui:1026
+#: fractal-gtk/res/ui/main_window.ui:952
 msgid "User"
 msgstr "Użytkownik"
 
-#: fractal-gtk/res/ui/main_window.ui:1049
-#: fractal-gtk/res/ui/sticker_group.ui:74
+#: fractal-gtk/res/ui/main_window.ui:975 fractal-gtk/res/ui/sticker_group.ui:74
 msgid "Add"
 msgstr "Dodaj"
 
-#: fractal-gtk/res/ui/main_window.ui:1080
+#: fractal-gtk/res/ui/main_window.ui:1006
 msgid "Room search"
 msgstr "Wyszukiwanie pokoju"
 
-#: fractal-gtk/res/ui/main_window.ui:1149 fractal-gtk/res/ui/new_room.ui:108
+#: fractal-gtk/res/ui/main_window.ui:1039 fractal-gtk/res/ui/new_room.ui:108
 msgid "Room name"
 msgstr "Nazwa pokoju"
 
-#: fractal-gtk/res/ui/main_window.ui:1168
+#: fractal-gtk/res/ui/main_window.ui:1054
 msgid "Room topic"
 msgstr "Temat pokoju"
 
-#: fractal-gtk/res/ui/main_window.ui:1217
+#: fractal-gtk/res/ui/main_window.ui:1085
 msgid "Room Menu"
 msgstr "Menu pokoju"
 
-#: fractal-gtk/res/ui/main_window.ui:1316
+#: fractal-gtk/res/ui/main_window.ui:1184
 #: fractal-gtk/res/ui/server_chooser_menu.ui:65
 #: fractal-gtk/src/app/connect/directory.rs:65
 msgid "Default Matrix Server"
@@ -451,11 +445,11 @@ msgstr "*pochylenie*"
 msgid "Save as"
 msgstr "Zapisz jako"
 
-#: fractal-gtk/res/ui/media_viewer.ui:186
+#: fractal-gtk/res/ui/media_viewer.ui:185
 msgid "Loading more media"
 msgstr "Wczytywanie więcej multimediów"
 
-#: fractal-gtk/res/ui/media_viewer.ui:234
+#: fractal-gtk/res/ui/media_viewer.ui:233
 msgid "Media viewer"
 msgstr "Przeglądarka multimediów"
 
@@ -562,6 +556,10 @@ msgstr "Dodawanie nazwy"
 #: fractal-gtk/res/ui/room_settings.ui:147
 msgid "Add topic"
 msgstr "Dodawanie tematu"
+
+#: fractal-gtk/res/ui/room_settings.ui:171
+msgid "Type in your room topic"
+msgstr "Temat pokoju"
 
 #: fractal-gtk/res/ui/room_settings.ui:199
 msgid "No room description"
@@ -679,43 +677,43 @@ msgstr "Adres e-mail jest już używany"
 msgid "Phone number is already in use"
 msgstr "Numer telefonu jest już używany"
 
-#: fractal-gtk/src/app/backend_loop.rs:207
+#: fractal-gtk/src/app/backend_loop.rs:204
 msgid "Couldn’t delete the account"
 msgstr "Nie można usunąć konta"
 
-#: fractal-gtk/src/app/backend_loop.rs:212
+#: fractal-gtk/src/app/backend_loop.rs:209
 msgid "Couldn’t change the password"
 msgstr "Nie można zmienić hasła"
 
-#: fractal-gtk/src/app/backend_loop.rs:217
+#: fractal-gtk/src/app/backend_loop.rs:214
 msgid "Couldn’t add the email address."
 msgstr "Nie można dodać adresu e-mail."
 
-#: fractal-gtk/src/app/backend_loop.rs:222
+#: fractal-gtk/src/app/backend_loop.rs:219
 msgid "Couldn’t add the phone number."
 msgstr "Nie można dodać numeru telefonu."
 
-#: fractal-gtk/src/app/backend_loop.rs:229
+#: fractal-gtk/src/app/backend_loop.rs:226
 msgid "Can’t create the room, try again"
 msgstr "Nie można utworzyć pokoju. Proszę spróbować ponownie."
 
-#: fractal-gtk/src/app/backend_loop.rs:237
+#: fractal-gtk/src/app/backend_loop.rs:234
 msgid "Can’t join the room, try again."
 msgstr "Nie można dołączyć do pokoju. Proszę spróbować ponownie."
 
-#: fractal-gtk/src/app/backend_loop.rs:243
+#: fractal-gtk/src/app/backend_loop.rs:240
 msgid "Can’t login, try again"
 msgstr "Nie można się zalogować. Proszę spróbować ponownie."
 
-#: fractal-gtk/src/app/backend_loop.rs:259
+#: fractal-gtk/src/app/backend_loop.rs:256
 msgid "Error sending message"
 msgstr "Błąd podczas wysyłania wiadomości"
 
-#: fractal-gtk/src/app/backend_loop.rs:265
+#: fractal-gtk/src/app/backend_loop.rs:262
 msgid "Error deleting message"
 msgstr "Błąd podczas usuwania wiadomości"
 
-#: fractal-gtk/src/app/backend_loop.rs:269
+#: fractal-gtk/src/app/backend_loop.rs:266
 msgid "Error searching for rooms"
 msgstr "Błąd podczas wyszukiwania pokoi"
 
@@ -728,26 +726,26 @@ msgstr "Wybór nowego awatara"
 msgid "Select"
 msgstr "Wybierz"
 
-#: fractal-gtk/src/appop/about.rs:19
+#: fractal-gtk/src/appop/about.rs:21
 msgid "A Matrix.org client for GNOME"
 msgstr "Klient sieci Matrix.org dla środowiska GNOME"
 
-#: fractal-gtk/src/appop/about.rs:20
+#: fractal-gtk/src/appop/about.rs:22
 msgid "© 2017–2018 Daniel García Moreno, et al."
 msgstr "© 2017-2018 Daniel García Moreno i inni"
 
-#: fractal-gtk/src/appop/about.rs:26
+#: fractal-gtk/src/appop/about.rs:28
 msgid "Learn more about Fractal"
 msgstr "Więcej informacji o programie Fractal"
 
-#: fractal-gtk/src/appop/about.rs:27
+#: fractal-gtk/src/appop/about.rs:29
 msgid "translator-credits"
 msgstr ""
 "Marek Jędrzejewski <kontakt@marekjedrzejewski.pl>, 2018\n"
 "Piotr Drąg <piotrdrag@gmail.com>, 2018\n"
 "Aviary.pl <community-poland@mozilla.org>, 2018"
 
-#: fractal-gtk/src/appop/about.rs:43
+#: fractal-gtk/src/appop/about.rs:45
 msgid "Name by"
 msgstr "Nazwa"
 
@@ -810,19 +808,23 @@ msgstr "Błąd podczas wczytywania poprzednich multimediów"
 msgid "New Messages"
 msgstr "Nowe wiadomości"
 
+#: fractal-gtk/src/appop/notify.rs:52
+msgid "{name} (direct message)"
+msgstr "{name} (bezpośrednia wiadomość)"
+
 #: fractal-gtk/src/appop/room.rs:269
 msgid "Leave {room_name}?"
 msgstr "Opuścić pokój „{room_name}”?"
 
-#: fractal-gtk/src/appop/room.rs:527
+#: fractal-gtk/src/appop/room.rs:502
 msgid "EMPTY ROOM"
 msgstr "PUSTY POKÓJ"
 
-#: fractal-gtk/src/appop/room.rs:529
+#: fractal-gtk/src/appop/room.rs:504
 msgid "{m1} and {m2}"
 msgstr "{m1} i {m2}"
 
-#: fractal-gtk/src/appop/room.rs:530
+#: fractal-gtk/src/appop/room.rs:505
 msgid "{m1} and Others"
 msgstr "{m1} i inni"
 
@@ -839,21 +841,18 @@ msgid "Could not retrieve file URI"
 msgstr "Nie można odebrać adresu URI pliku"
 
 #: fractal-gtk/src/widgets/message.rs:414
+#: fractal-gtk/src/widgets/message.rs:460
 msgid "Save"
 msgstr "Zapisuje"
 
 #: fractal-gtk/src/widgets/message.rs:424
-#: fractal-gtk/src/widgets/message.rs:467
+#: fractal-gtk/src/widgets/message.rs:471
 msgid "Could not download the file"
 msgstr "Nie można pobrać pliku"
 
-#: fractal-gtk/src/widgets/message.rs:457
-msgid "Download"
-msgstr "Pobierz"
-
-#: fractal-gtk/src/widgets/message.rs:484
+#: fractal-gtk/src/widgets/message.rs:489
 msgid "Open"
-msgstr "Otwórz"
+msgstr "Otwiera"
 
 #: fractal-gtk/src/widgets/room_settings.rs:144
 msgid "Pick a new room avatar"
