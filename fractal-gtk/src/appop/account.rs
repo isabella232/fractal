@@ -43,7 +43,7 @@ impl AppOp {
             .expect("Can't find main_window in ui file.");
 
         let entry = gtk::Entry::new();
-        let msg = String::from("Insert the code recived via SMS");
+        let msg = String::from("Insert the code received via SMS");
         let flags = gtk::DialogFlags::MODAL | gtk::DialogFlags::DESTROY_WITH_PARENT;
         let dialog = gtk::MessageDialog::new(Some(&parent), flags, gtk::MessageType::Error, gtk::ButtonsType::None, &msg);
         if let Some(area) = dialog.get_message_area() {
