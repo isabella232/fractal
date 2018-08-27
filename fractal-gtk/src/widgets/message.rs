@@ -449,6 +449,9 @@ impl<'a> MessageBox<'a> {
         let url = msg.url.clone().unwrap_or_default();
         let backend = self.op.backend.clone();
         let name_lbl = gtk::Label::new(name.as_str());
+        name_lbl.set_tooltip_text(name.as_str());
+        name_lbl.set_ellipsize(pango::EllipsizeMode::End);
+
         if let Some(style) = name_lbl.get_style_context() {
             style.add_class("msg-redacted");
         }
