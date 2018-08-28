@@ -94,8 +94,8 @@ impl MessageMenu {
             .expect("Can't find msg_entry in ui file.");
 
         if let Some(buffer) = msg_entry.get_buffer() {
-            let quote = self.msg.body.lines().map(|l| "> ".to_owned() + l + "\n")
-                                .collect::<Vec<String>>().join("\n") + "\n";
+            let quote = self.msg.body.lines().map(|l| "> ".to_owned() + l)
+                                .collect::<Vec<String>>().join("\n") + "\n" + "\n";
 
             let mut start = buffer.get_start_iter();
             buffer.insert(&mut start, &quote);
