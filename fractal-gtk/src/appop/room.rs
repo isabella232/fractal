@@ -567,9 +567,9 @@ impl AppOp {
                 t.hide();
             },
             Some(ref topic) => {
-                t.set_tooltip_text(&topic[..]);
                 n.set_tooltip_text(&topic[..]);
                 t.set_markup(&markup_text(&topic.split('\n').next().unwrap_or_default()));
+                t.set_tooltip_text(&topic[..]);
                 t.show();
             }
         };
