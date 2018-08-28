@@ -76,33 +76,48 @@ impl AppOp {
     pub fn user_search_finished(&self, users: Vec<Member>) {
         match self.search_type {
             SearchType::Invite => {
+                let entry = self.ui.builder
+                    .get_object::<gtk::Entry>("invite_entry")
+                    .expect("Can't find invite_entry in ui file.");
                 let listbox = self.ui.builder
                     .get_object::<gtk::ListBox>("user_search_box")
                     .expect("Can't find user_search_box in ui file.");
                 let scroll = self.ui.builder
                     .get_object::<gtk::Widget>("user_search_scroll")
                     .expect("Can't find user_search_scroll in ui file.");
-                self.search_finished(users, listbox, scroll);
+                self.search_finished(users, listbox, scroll, entry.get_text());
             },
             SearchType::DirectChat => {
+                let entry = self.ui.builder
+                    .get_object::<gtk::Entry>("to_chat_entry")
+                    .expect("Can't find to_chat_entry in ui file.");
                 let listbox = self.ui.builder
                     .get_object::<gtk::ListBox>("direct_chat_search_box")
                     .expect("Can't find direct_chat_search_box in ui file.");
                 let scroll = self.ui.builder
                     .get_object::<gtk::Widget>("direct_chat_search_scroll")
                     .expect("Can't find direct_chat_search_scroll in ui file.");
-                self.search_finished(users, listbox, scroll);
+                self.search_finished(users, listbox, scroll, entry.get_text());
             }
         }
     }
 
-    pub fn search_finished(&self, users: Vec<Member>,
+    pub fn search_finished(&self, mut users: Vec<Member>,
                            listbox: gtk::ListBox,
-                           scroll: gtk::Widget) {
+                           scroll: gtk::Widget,
+                           term: Option<String>) {
         for ch in listbox.get_children().iter() {
             listbox.remove(ch);
         }
         scroll.hide();
+
+        let t = term.unwrap_or_default();
+        let uid_in_term = t.contains("@") && t.contains(":");
+        // Adding a new user if the user
+        if uid_in_term && !users.iter().find(|u| u.uid == t).is_some() {
+            let member = Member{ avatar: None, alias: None, uid: t };
+            users.insert(0, member);
+        }
 
         for (i, u) in users.iter().enumerate() {
             let w;
