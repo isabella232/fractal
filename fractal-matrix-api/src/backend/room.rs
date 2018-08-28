@@ -1,4 +1,3 @@
-extern crate serde_json;
 extern crate url;
 extern crate urlencoding;
 
@@ -29,7 +28,7 @@ use types::Room;
 use types::Member;
 use types::Message;
 
-use self::serde_json::Value as JsonValue;
+use serde_json::Value as JsonValue;
 
 pub fn set_room(bk: &Backend, room: Room) -> Result<(), Error> {
     get_room_detail(bk, room.id.clone(), String::from("m.room.topic"))?;
@@ -469,14 +468,22 @@ pub fn direct_chat(bk: &Backend, user: Member, internal_id: String) -> Result<()
 
     let m = user.clone();
     let tx = bk.tx.clone();
+    let data = bk.data.clone();
     post!(&url, &attrs,
         move |r: JsonValue| {
             let id = String::from(r["room_id"].as_str().unwrap_or(""));
-            let mut r = Room::new(id.clone(), m.alias);
+            let mut r = Room::new(id.clone(), m.alias.clone());
             r.direct = true;
             tx.send(BKResponse::NewRoom(r, internal_id)).unwrap();
 
-            let attrs = json!({ m.uid.clone(): [id] });
+            let mut directs = &mut data.lock().unwrap().m_direct;
+            if directs.contains_key(&m.uid) {
+                directs.get_mut(&m.uid).map(|v| v.push(id.clone()));
+            } else {
+                directs.insert(m.uid.clone(), vec![id.clone()]);
+            }
+
+            let attrs = json!(directs.clone());
             match json_q("put", &direct_url, &attrs, 0) {
                 Ok(_js) => { }
                 Err(err) => { println!("Error {:?}", err); }

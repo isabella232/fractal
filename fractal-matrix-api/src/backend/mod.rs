@@ -4,6 +4,7 @@ use url::Url;
 use std::sync::mpsc::{Sender, Receiver};
 use std::sync::mpsc::channel;
 use std::sync::mpsc::RecvError;
+use std::collections::HashMap;
 
 use util::build_url;
 
@@ -41,6 +42,7 @@ impl Backend {
             since: String::from(""),
             rooms_since: String::from(""),
             join_to_room: String::from(""),
+            m_direct: HashMap::new(),
         };
         Backend {
             tx: tx,

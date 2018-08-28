@@ -207,30 +207,41 @@ pub fn evc(events: &JsonValue, t: &str, field: &str) -> String {
         .unwrap_or_default()
 }
 
+pub fn parse_m_direct(r: &JsonValue) -> HashMap<String, Vec<String>> {
+    let mut direct = HashMap::new();
+
+    &r["account_data"]["events"]
+        .as_array()
+        .unwrap_or(&vec![]).iter()
+        .find(|x| x["type"] == "m.direct")
+        .and_then(|js| js["content"].as_object())
+        .map(|js| {
+            for (k, v) in js.iter() {
+                let value = v.as_array()
+                             .unwrap_or(&vec![]).iter()
+                             .map(|rid| rid.as_str().unwrap_or_default().to_string())
+                             .collect::<Vec<String>>();
+                direct.insert(k.clone(), value);
+            }
+        });
+
+    direct
+}
+
 pub fn get_rooms_from_json(r: &JsonValue, userid: &str, baseu: &Url) -> Result<Vec<Room>, Error> {
     let rooms = &r["rooms"];
 
     let join = rooms["join"].as_object().ok_or(Error::BackendError)?;
     let leave = rooms["leave"].as_object().ok_or(Error::BackendError)?;
     let invite = rooms["invite"].as_object().ok_or(Error::BackendError)?;
-    let global_account = &r["account_data"]["events"].as_array();
 
     // getting the list of direct rooms
     let mut direct: HashSet<String> = HashSet::new();
-    match global_account.unwrap_or(&vec![]).iter().find(|x| x["type"] == "m.direct") {
-        Some(js) => {
-            if let Some(content) = js["content"].as_object() {
-                for i in content.keys() {
-                    for room in content[i].as_array().unwrap_or(&vec![]) {
-                        if let Some(roomid) = room.as_str() {
-                            direct.insert(roomid.to_string());
-                        }
-                    }
-                }
-            }
-        },
-        None => {}
-    };
+    for v in parse_m_direct(r).values() {
+        for rid in v {
+            direct.insert(rid.clone());
+        }
+    }
 
     let mut rooms: Vec<Room> = vec![];
     for k in join.keys() {

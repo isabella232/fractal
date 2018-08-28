@@ -1,5 +1,6 @@
 use std::sync::{Arc, Mutex, Condvar};
 use std::sync::mpsc::Sender;
+use std::collections::HashMap;
 
 use error::Error;
 
@@ -189,6 +190,7 @@ pub struct BackendData {
     pub since: String,
     pub rooms_since: String,
     pub join_to_room: String,
+    pub m_direct: HashMap<String, Vec<String>>,
 }
 
 pub struct Backend {

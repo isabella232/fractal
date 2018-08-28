@@ -6,6 +6,7 @@ use util::get_rooms_from_json;
 use util::get_rooms_timeline_from_json;
 use util::get_rooms_notifies_from_json;
 use util::parse_sync_events;
+use util::parse_m_direct;
 use backend::types::BKResponse;
 use backend::types::Backend;
 use types::Room;
@@ -64,6 +65,9 @@ pub fn sync(bk: &Backend) -> Result<(), Error> {
             Ok(r) => {
                 let next_batch = String::from(r["next_batch"].as_str().unwrap_or(""));
                 if since.is_empty() {
+                    let m_direct = parse_m_direct(&r);
+                    data.lock().unwrap().m_direct = parse_m_direct(&r);
+
                     let rooms = match get_rooms_from_json(&r, &userid, &baseu) {
                         Ok(rs) => rs,
                         Err(err) => {
