@@ -23,7 +23,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="action_name">app.save_as</property>
-                <property name="text" translatable="yes">Save as</property>
+                <property name="text" translatable="yes">Save As</property>
               </object>
               <packing>
                 <property name="expand">False</property>

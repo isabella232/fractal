@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.20.2 -->
+<!-- Generated with glade 3.22.1 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
-
   <object class="GtkPopoverMenu" id="add_room_popover">
     <property name="can_focus">False</property>
     <child>
@@ -20,7 +19,7 @@
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
             <property name="action_name">app.directory</property>
-            <property name="text" translatable="yes">Room directory</property>
+            <property name="text" translatable="yes">Room Directory</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -34,7 +33,7 @@
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
             <property name="action_name">app.join_room</property>
-            <property name="text" translatable="yes">Join room</property>
+            <property name="text" translatable="yes">Join Room</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -61,7 +60,7 @@
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
             <property name="action_name">app.new_room</property>
-            <property name="text" translatable="yes">New room</property>
+            <property name="text" translatable="yes">New Room</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -75,7 +74,7 @@
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
             <property name="action_name">app.start_chat</property>
-            <property name="text" translatable="yes">New direct chat</property>
+            <property name="text" translatable="yes">New Direct Chat</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -90,5 +89,4 @@
       </packing>
     </child>
   </object>
-
 </interface>

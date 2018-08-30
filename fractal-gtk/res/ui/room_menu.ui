@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.20.2 -->
+<!-- Generated with glade 3.22.1 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
-
   <object class="GtkPopoverMenu" id="room_popover">
     <property name="can_focus">False</property>
     <child>
@@ -15,12 +14,12 @@
         <property name="margin_bottom">6</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkModelButton" id="room_invite">
+          <object class="GtkModelButton" id="room_menu">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
-            <property name="action_name">app.room_invite</property>
-            <property name="text" translatable="yes">Invite to this room</property>
+            <property name="action_name">app.room_details</property>
+            <property name="text" translatable="yes">Room Details</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -29,17 +28,17 @@
           </packing>
         </child>
         <child>
-          <object class="GtkModelButton" id="room_menu">
+          <object class="GtkModelButton" id="room_invite">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
-            <property name="action_name">app.room_details</property>
-            <property name="text" translatable="yes">Room details</property>
+            <property name="action_name">app.room_invite</property>
+            <property name="text" translatable="yes">Invite to This Room</property>
           </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">0</property>
+            <property name="position">1</property>
           </packing>
         </child>
         <child>
@@ -61,7 +60,7 @@
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
             <property name="action_name">app.leave_room</property>
-            <property name="text" translatable="yes">Leave room</property>
+            <property name="text" translatable="yes">Leave Room</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -76,5 +75,4 @@
       </packing>
     </child>
   </object>
-
 </interface>
