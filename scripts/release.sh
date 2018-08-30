@@ -14,6 +14,7 @@ cp -rf fractal-matrix-api $DIST
 cp Cargo.toml $DIST
 cp Cargo.lock $DIST
 cp meson.build $DIST
+cp meson_options.txt $DIST
 cp fractal.doap $DIST
 cp LICENSE.txt $DIST
 cp README.md $DIST
