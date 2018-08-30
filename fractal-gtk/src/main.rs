@@ -41,6 +41,7 @@ mod globals;
 #[macro_use]
 mod util;
 mod cache;
+mod uitypes;
 mod uibuilder;
 mod static_resources;
 mod passwd;
