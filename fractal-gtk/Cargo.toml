@@ -2,7 +2,7 @@
 authors = ["Daniel Garcia <danigm@wadobo.com>"]
 build = "build.rs"
 name = "fractal-gtk"
-version = "3.29.6"
+version = "3.29.92"
 workspace = "../"
 
 [dependencies]
