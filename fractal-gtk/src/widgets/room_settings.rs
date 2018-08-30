@@ -15,6 +15,7 @@ use types::Member;
 use widgets;
 use widgets::avatar::AvatarExt;
 use widgets::members_list::MembersList;
+use util::markup_text;
 
 #[derive(Debug, Clone)]
 pub struct RoomSettings {
@@ -286,7 +287,8 @@ impl RoomSettings {
             } else {
                 b.hide();
                 if let Some(text) = text {
-                    label.set_text(&text);
+                    let m = markup_text(&text);
+                    label.set_markup(&m);
                     label.show();
                 } else {
                     label.hide();
