@@ -94,7 +94,7 @@ impl AppOp {
             .get_object::<gtk::Window>("main_window")
             .expect("Can't find main_window in ui file.");
 
-        let msg = i18n("In order to add this email address, go to your inbox and follow the link you received. Once you've done that, click 'continue'");
+        let msg = i18n("In order to add this email address, go to your inbox and follow the link you received. Once you’ve done that, click Continue.");
 		let flags = gtk::DialogFlags::MODAL | gtk::DialogFlags::DESTROY_WITH_PARENT;
 		let dialog = gtk::MessageDialog::new(Some(&parent), flags, gtk::MessageType::Error, gtk::ButtonsType::None, &msg);
         let backend = self.backend.clone();
@@ -126,7 +126,7 @@ impl AppOp {
 		let flags = gtk::DialogFlags::MODAL | gtk::DialogFlags::DESTROY_WITH_PARENT;
 		let dialog = gtk::MessageDialog::new(Some(&parent), flags, gtk::MessageType::Error, gtk::ButtonsType::None, &msg);
 
-        dialog.add_button(&i18n("Ok"), gtk::ResponseType::Ok.into());
+        dialog.add_button(&i18n("OK"), gtk::ResponseType::Ok.into());
 
         let backend = self.backend.clone();
         dialog.connect_response(move |w, _| {
@@ -547,7 +547,7 @@ impl AppOp {
             .get_object::<gtk::Window>("main_window")
             .expect("Can't find main_window in ui file.");
 
-        let msg = i18n("Are you sure you wan't do delete your account?");
+        let msg = i18n("Are you sure you want to delete your account?");
         let flags = gtk::DialogFlags::MODAL | gtk::DialogFlags::DESTROY_WITH_PARENT;
         let dialog = gtk::MessageDialog::new(Some(&parent), flags, gtk::MessageType::Warning, gtk::ButtonsType::None, &msg);
 
