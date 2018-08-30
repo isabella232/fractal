@@ -28,10 +28,9 @@
         </child>
         <child>
           <object class="GtkModelButton" id="copy_selected_text_button">
-            <property name="visible">False</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
-            <property name="text" translatable="yes">Copy selected text</property>
+            <property name="text" translatable="yes">Copy Selection</property>
           </object>
           <packing>
             <property name="expand">False</property>
