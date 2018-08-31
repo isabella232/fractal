@@ -257,7 +257,7 @@ impl Autocomplete {
                                         }
                                     }
                                     else {
-                                        if let Some(space_pos) = first.rfind(" ") {
+                                        if let Some(space_pos) = first.rfind(|c: char| c.is_whitespace()) {
                                             own.borrow_mut().popover_position = Some(space_pos as i32 + 1);
                                         }
                                         else {
