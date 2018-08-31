@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/World/fractal/issues\n"
-"POT-Creation-Date: 2018-08-24 22:30+0000\n"
-"PO-Revision-Date: 2018-08-25 23:18+0200\n"
+"POT-Creation-Date: 2018-08-30 19:59+0000\n"
+"PO-Revision-Date: 2018-08-31 20:55+0200\n"
 "Last-Translator: Mario Blättermann <mario.blaettermann@gmail.com>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "Language: de\n"
@@ -217,7 +217,8 @@ msgstr "E-Mail überprüfen"
 #: fractal-gtk/res/ui/account_settings.ui:700
 #: fractal-gtk/res/ui/direct_chat.ui:118 fractal-gtk/res/ui/invite_user.ui:121
 #: fractal-gtk/res/ui/join_room.ui:93 fractal-gtk/res/ui/leave_room.ui:33
-#: fractal-gtk/res/ui/new_room.ui:42 fractal-gtk/src/appop/attach.rs:74
+#: fractal-gtk/res/ui/new_room.ui:42 fractal-gtk/src/appop/account.rs:56
+#: fractal-gtk/src/appop/account.rs:102 fractal-gtk/src/appop/attach.rs:74
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -225,21 +226,21 @@ msgstr "Abbrechen"
 msgid "Apply"
 msgstr "Anwenden"
 
-#: fractal-gtk/res/ui/add_room_menu.ui:23
-msgid "Room directory"
+#: fractal-gtk/res/ui/add_room_menu.ui:22
+msgid "Room Directory"
 msgstr "Raumordner"
 
-#: fractal-gtk/res/ui/add_room_menu.ui:37 fractal-gtk/res/ui/join_room.ui:90
-msgid "Join room"
+#: fractal-gtk/res/ui/add_room_menu.ui:36
+msgid "Join Room"
 msgstr "Raum beitreten"
 
-#: fractal-gtk/res/ui/add_room_menu.ui:64
-msgid "New room"
+#: fractal-gtk/res/ui/add_room_menu.ui:63
+msgid "New Room"
 msgstr "Neuer Raum"
 
 # Eigentlich müsste hier »Unterhaltung« statt »Chat« stehen, darauf hatten wir uns vor langer Zeit mal für das mittlerweile verwaiste Empathy geeinigt (im aktuellen Polari wird Chat und Unterhaltung gleichermaßen verwendet). Außerdem würde ich es angesichts der Zielgruppe des Programms sowieso lieber beim englischen Original belassen.
-#: fractal-gtk/res/ui/add_room_menu.ui:78 fractal-gtk/res/ui/direct_chat.ui:115
-msgid "New direct chat"
+#: fractal-gtk/res/ui/add_room_menu.ui:77
+msgid "New Direct Chat"
 msgstr "Neuer Direkt-Chat"
 
 #: fractal-gtk/res/ui/audio_player.ui:34 fractal-gtk/res/ui/audio_player.ui:50
@@ -250,6 +251,11 @@ msgstr "Wiedergeben"
 #: fractal-gtk/res/ui/main_window.ui:627
 msgid "Matrix username, email or phone number"
 msgstr "Matrix-Benutzername, E-Mail oder Telefonnummer"
+
+# Eigentlich müsste hier »Unterhaltung« statt »Chat« stehen, darauf hatten wir uns vor langer Zeit mal für das mittlerweile verwaiste Empathy geeinigt (im aktuellen Polari wird Chat und Unterhaltung gleichermaßen verwendet). Außerdem würde ich es angesichts der Zielgruppe des Programms sowieso lieber beim englischen Original belassen.
+#: fractal-gtk/res/ui/direct_chat.ui:115
+msgid "New direct chat"
+msgstr "Neuer Direkt-Chat"
 
 #: fractal-gtk/res/ui/direct_chat.ui:126
 msgid "Start chat"
@@ -285,6 +291,10 @@ msgstr "Einladen"
 msgid "ID or Alias"
 msgstr "Kennung oder Alias"
 
+#: fractal-gtk/res/ui/join_room.ui:90
+msgid "Join room"
+msgstr "Raum beitreten"
+
 #: fractal-gtk/res/ui/join_room.ui:101 fractal-gtk/src/widgets/room.rs:111
 msgid "Join"
 msgstr "Beitreten"
@@ -301,7 +311,7 @@ msgstr ""
 "Nach dem Verlassen können Sie nicht länger mit den Teilnehmern des Raums "
 "interagieren."
 
-#: fractal-gtk/res/ui/leave_room.ui:46 fractal-gtk/res/ui/room_menu.ui:64
+#: fractal-gtk/res/ui/leave_room.ui:46
 msgid "Leave room"
 msgstr "Raum verlassen"
 
@@ -450,7 +460,7 @@ msgid "*italic*"
 msgstr "*kursiv*"
 
 #: fractal-gtk/res/ui/media_viewer_menu.ui:26
-msgid "Save as"
+msgid "Save As"
 msgstr "Speichern unter"
 
 #: fractal-gtk/res/ui/media_viewer.ui:185
@@ -469,19 +479,19 @@ msgstr "Nach Raumteilnehmern suchen"
 msgid "Reply"
 msgstr "Antworten"
 
-#: fractal-gtk/res/ui/message_menu.ui:34
-msgid "Copy selected text"
-msgstr "Ausgewählten Text kopieren"
+#: fractal-gtk/res/ui/message_menu.ui:33
+msgid "Copy Selection"
+msgstr "Auswahl kopieren"
 
-#: fractal-gtk/res/ui/message_menu.ui:47
+#: fractal-gtk/res/ui/message_menu.ui:46
 msgid "Copy Text"
 msgstr "Text kopieren"
 
-#: fractal-gtk/res/ui/message_menu.ui:60
+#: fractal-gtk/res/ui/message_menu.ui:59
 msgid "View Source"
 msgstr "Quelle zeigen"
 
-#: fractal-gtk/res/ui/message_menu.ui:84
+#: fractal-gtk/res/ui/message_menu.ui:83
 msgid "Delete Message"
 msgstr "Nachricht löschen"
 
@@ -545,13 +555,17 @@ msgstr "_Neues Passwort"
 msgid "Current _Password"
 msgstr "A_ktuelles Passwort"
 
-#: fractal-gtk/res/ui/room_menu.ui:23
-msgid "Invite to this room"
+#: fractal-gtk/res/ui/room_menu.ui:22
+msgid "Room Details"
+msgstr "Raumdetails"
+
+#: fractal-gtk/res/ui/room_menu.ui:36
+msgid "Invite to This Room"
 msgstr "In diesen Raum einladen"
 
-#: fractal-gtk/res/ui/room_menu.ui:37
-msgid "Room details"
-msgstr "Raumdetails"
+#: fractal-gtk/res/ui/room_menu.ui:63
+msgid "Leave Room"
+msgstr "Raum verlassen"
 
 #: fractal-gtk/res/ui/room_settings.ui:89
 msgid "Unknown"
@@ -642,7 +656,7 @@ msgid "members"
 msgstr "Teilnehmer"
 
 #: fractal-gtk/res/ui/room_settings.ui:902
-msgid "Invite new member"
+msgid "Invite New Member"
 msgstr "Neuen Teilnehmer einladen"
 
 #: fractal-gtk/res/ui/room_settings.ui:1013
@@ -658,7 +672,7 @@ msgid "Your homeserver"
 msgstr "Ihr Heimserver"
 
 #: fractal-gtk/res/ui/server_chooser_menu.ui:134
-msgid "Other protocol"
+msgid "Other Protocol"
 msgstr "Anderes Protokoll"
 
 #: fractal-gtk/res/ui/server_chooser_menu.ui:207
@@ -730,7 +744,7 @@ msgid "Pick a new avatar"
 msgstr "Neuen Avatar auswählen"
 
 #: fractal-gtk/src/app/connect/account.rs:79
-#: fractal-gtk/src/widgets/room_settings.rs:147
+#: fractal-gtk/src/widgets/room_settings.rs:148
 msgid "Select"
 msgstr "Auswählen"
 
@@ -753,6 +767,35 @@ msgstr "Tim Sabsch <tim@sabsch.com>, 2018"
 #: fractal-gtk/src/appop/about.rs:45
 msgid "Name by"
 msgstr "Nach Name"
+
+#: fractal-gtk/src/appop/account.rs:36
+msgid "The validation code is not correct."
+msgstr "Der Überprüfungscode ist nicht korrekt."
+
+#: fractal-gtk/src/appop/account.rs:47
+msgid "Insert the code received via SMS"
+msgstr "Den per SMS empfangenen Code einfügen"
+
+#: fractal-gtk/src/appop/account.rs:57 fractal-gtk/src/appop/account.rs:103
+msgid "Continue"
+msgstr "Weiter"
+
+#: fractal-gtk/src/appop/account.rs:97
+msgid ""
+"In order to add this email address, go to your inbox and follow the link you "
+"received. Once you’ve done that, click Continue."
+msgstr ""
+"Um diese E-Mail-Adresse hinzuzufügen, öffnen Sie Ihren Posteingang und "
+"folgen Sie dem empfangenen Link. Sobald Sie dies getan haben, klicken Sie "
+"auf »Weiter«."
+
+#: fractal-gtk/src/appop/account.rs:129
+msgid "OK"
+msgstr "OK"
+
+#: fractal-gtk/src/appop/account.rs:550
+msgid "Are you sure you want to delete your account?"
+msgstr "Sind Sie sicher, dass Sie Ihr Konto löschen wollen?"
 
 #: fractal-gtk/src/appop/attach.rs:60
 msgid "Image from Clipboard"
@@ -847,20 +890,20 @@ msgid "Could not retrieve file URI"
 msgstr "Datei-Adresse konnte nicht empfangen werden"
 
 #: fractal-gtk/src/widgets/message.rs:414
-#: fractal-gtk/src/widgets/message.rs:460
+#: fractal-gtk/src/widgets/message.rs:463
 msgid "Save"
 msgstr "Speichern"
 
 #: fractal-gtk/src/widgets/message.rs:424
-#: fractal-gtk/src/widgets/message.rs:471
+#: fractal-gtk/src/widgets/message.rs:474
 msgid "Could not download the file"
 msgstr "Datei konnte nicht heruntergeladen werden"
 
-#: fractal-gtk/src/widgets/message.rs:489
+#: fractal-gtk/src/widgets/message.rs:492
 msgid "Open"
 msgstr "Öffnen"
 
-#: fractal-gtk/src/widgets/room_settings.rs:144
+#: fractal-gtk/src/widgets/room_settings.rs:145
 msgid "Pick a new room avatar"
 msgstr "Neuen Raum-Avatar auswählen"
 
@@ -868,13 +911,13 @@ msgstr "Neuen Raum-Avatar auswählen"
 #. let description = Some(format!("Private Group · {} members", members.len()));
 #.
 #. Some(format!("Public Room · {} members", members.len()))
-#: fractal-gtk/src/widgets/room_settings.rs:182
+#: fractal-gtk/src/widgets/room_settings.rs:183
 msgid "Room · {} member"
 msgid_plural "Room · {} members"
 msgstr[0] "Raum · {} Teilnehmer"
 msgstr[1] "Raum · {} Teilnehmer"
 
-#: fractal-gtk/src/widgets/room_settings.rs:580
+#: fractal-gtk/src/widgets/room_settings.rs:582
 msgid "{} member"
 msgid_plural "{} members"
 msgstr[0] "{} Teilnehmer"
