@@ -167,7 +167,7 @@ impl AppOp {
             }
         }
 
-        if msg.room == self.active_room.clone().unwrap_or_default() {
+        if msg.room == self.active_room.clone().unwrap_or_default() && !msg.redacted {
             if let Some(r) = self.rooms.get(&self.active_room.clone().unwrap_or_default()) {
                 let m;
                 {
