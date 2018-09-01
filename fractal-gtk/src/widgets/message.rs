@@ -144,17 +144,13 @@ impl<'a> MessageBox<'a> {
             content.pack_start(&info, false, false, 0);
         }
 
-        let body = if !msg.redacted {
-            match msg.mtype.as_ref() {
-                "m.sticker" => self.build_room_msg_sticker(),
-                "m.image" => self.build_room_msg_image(),
-                "m.emote" => self.build_room_msg_emote(&msg),
-                "m.audio" => self.build_room_audio_player(),
-                "m.video" | "m.file" => self.build_room_msg_file(),
-                _ => self.build_room_msg_body(&msg.body),
-            }
-        } else {
-            self.build_room_msg_redacted()
+        let body = match msg.mtype.as_ref() {
+            "m.sticker" => self.build_room_msg_sticker(),
+            "m.image" => self.build_room_msg_image(),
+            "m.emote" => self.build_room_msg_emote(&msg),
+            "m.audio" => self.build_room_audio_player(),
+            "m.video" | "m.file" => self.build_room_msg_file(),
+            _ => self.build_room_msg_body(&msg.body),
         };
 
         content.pack_start(&body, true, true, 0);
@@ -292,18 +288,6 @@ impl<'a> MessageBox<'a> {
         for part in msg_parts {
             bx.add(&part);
         }
-        bx
-    }
-
-    fn build_room_msg_redacted(&self) -> gtk::Box {
-        let bx = gtk::Box::new(gtk::Orientation::Horizontal, 0);
-
-        let redacted_label = gtk::Label::new("Message Deleted");
-        if let Some(style) = redacted_label.get_style_context() {
-            style.add_class("msg-redacted");
-        }
-
-        bx.add(&redacted_label);
         bx
     }
 
@@ -451,10 +435,6 @@ impl<'a> MessageBox<'a> {
         let name_lbl = gtk::Label::new(name.as_str());
         name_lbl.set_tooltip_text(name.as_str());
         name_lbl.set_ellipsize(pango::EllipsizeMode::End);
-
-        if let Some(style) = name_lbl.get_style_context() {
-            style.add_class("msg-redacted");
-        }
 
         let download_btn = gtk::Button::new_from_icon_name(
             "document-save-symbolic",
