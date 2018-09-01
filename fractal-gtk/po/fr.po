@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/World/fractal/issues\n"
-"POT-Creation-Date: 2018-08-30 17:59+0000\n"
-"PO-Revision-Date: 2018-08-30 20:02+0200\n"
+"POT-Creation-Date: 2018-09-01 09:30+0000\n"
+"PO-Revision-Date: 2018-09-01 12:42+0200\n"
 "Last-Translator: Alexandre Franke <alexandre.franke@gmail.com>\n"
 "Language-Team: none\n"
 "Language: fr\n"
@@ -216,7 +216,8 @@ msgstr "Vérifiez vos courriels"
 #: fractal-gtk/res/ui/account_settings.ui:700
 #: fractal-gtk/res/ui/direct_chat.ui:118 fractal-gtk/res/ui/invite_user.ui:121
 #: fractal-gtk/res/ui/join_room.ui:93 fractal-gtk/res/ui/leave_room.ui:33
-#: fractal-gtk/res/ui/new_room.ui:42 fractal-gtk/src/appop/attach.rs:74
+#: fractal-gtk/res/ui/new_room.ui:42 fractal-gtk/src/appop/account.rs:56
+#: fractal-gtk/src/appop/account.rs:102 fractal-gtk/src/appop/attach.rs:74
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -766,6 +767,34 @@ msgstr ""
 msgid "Name by"
 msgstr "Nommé par"
 
+#: fractal-gtk/src/appop/account.rs:36
+msgid "The validation code is not correct."
+msgstr "Le code de validation est incorrect."
+
+#: fractal-gtk/src/appop/account.rs:47
+msgid "Enter the code received via SMS"
+msgstr "Saisissez le code reçu par SMS"
+
+#: fractal-gtk/src/appop/account.rs:57 fractal-gtk/src/appop/account.rs:103
+msgid "Continue"
+msgstr "Continuer"
+
+#: fractal-gtk/src/appop/account.rs:97
+msgid ""
+"In order to add this email address, go to your inbox and follow the link you "
+"received. Once you’ve done that, click Continue."
+msgstr ""
+"Pour ajouter cette adresse de courriel, allez dans votre boîte de réception "
+"et suivez le lien que vous avez reçu. Ensuite, cliquez sur Continuer."
+
+#: fractal-gtk/src/appop/account.rs:129
+msgid "OK"
+msgstr "Valider"
+
+#: fractal-gtk/src/appop/account.rs:550
+msgid "Are you sure you want to delete your account?"
+msgstr "Voulez-vous vraiment supprimer ce compte ?"
+
 #: fractal-gtk/src/appop/attach.rs:60
 msgid "Image from Clipboard"
 msgstr "Image issue du presse-papiers"
@@ -854,21 +883,21 @@ msgstr "Synchronisation en cours, cela peut prendre un certain temps"
 msgid "No matching members found"
 msgstr "Aucun membre correspondant trouvé"
 
-#: fractal-gtk/src/widgets/message.rs:398
+#: fractal-gtk/src/widgets/message.rs:382
 msgid "Could not retrieve file URI"
 msgstr "Impossible de retrouver l’URI du fichier"
 
-#: fractal-gtk/src/widgets/message.rs:414
-#: fractal-gtk/src/widgets/message.rs:463
+#: fractal-gtk/src/widgets/message.rs:398
+#: fractal-gtk/src/widgets/message.rs:443
 msgid "Save"
 msgstr "Enregistrer"
 
-#: fractal-gtk/src/widgets/message.rs:424
-#: fractal-gtk/src/widgets/message.rs:474
+#: fractal-gtk/src/widgets/message.rs:408
+#: fractal-gtk/src/widgets/message.rs:454
 msgid "Could not download the file"
 msgstr "Impossible de télécharger le fichier"
 
-#: fractal-gtk/src/widgets/message.rs:492
+#: fractal-gtk/src/widgets/message.rs:472
 msgid "Open"
 msgstr "Ouvrir"
 
