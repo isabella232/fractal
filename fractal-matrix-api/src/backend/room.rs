@@ -45,13 +45,9 @@ pub fn get_room_detail(bk: &Backend, roomid: String, key: String) -> Result<(), 
     let keys = key.clone();
     get!(&url,
         |r: JsonValue| {
-            let mut value = String::from("");
             let k = keys.split('.').last().unwrap();
 
-            match r[&k].as_str() {
-                Some(x) => { value = String::from(x); },
-                None => {}
-            }
+            let value = String::from(r[&k].as_str().unwrap_or(""));
             tx.send(BKResponse::RoomDetail(roomid, key, value)).unwrap();
         },
         |err| { tx.send(BKResponse::RoomDetailError(err)).unwrap() }
@@ -110,18 +106,17 @@ pub fn get_room_members(bk: &Backend, roomid: String) -> Result<(), Error> {
     get!(&url,
         |r: JsonValue| {
             let joined = r["joined"].as_object().unwrap();
-            let mut ms: Vec<Member> = vec![];
-            for memberid in joined.keys() {
-                let alias = &joined[memberid]["display_name"];
-                let avatar = &joined[memberid]["avatar_url"];
+            let mut ms: Vec<Member> = joined.iter().map(|(mxid, member_data)| {
+                let alias = &member_data["display_name"];
+                let avatar = &member_data["avatar_url"];
 
-                let m = Member {
-                    alias: match alias.as_str() { None => None, Some(a) => Some(String::from(a)) },
-                    avatar: match avatar.as_str() { None => None, Some(a) => Some(String::from(a)) },
-                    uid: memberid.to_string(),
-                };
-                ms.push(m);
+                Member {
+                    alias: alias.as_str().map(String::from),
+                    avatar: avatar.as_str().map(String::from),
+                    uid: mxid.to_string(),
+                }
             }
+            ).collect();
             tx.send(BKResponse::RoomMembers(roomid, ms)).unwrap();
         },
         |err| { tx.send(BKResponse::RoomMembersError(err)).unwrap() }
