@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/World/fractal/issues\n"
-"POT-Creation-Date: 2018-08-30 19:59+0000\n"
-"PO-Revision-Date: 2018-08-31 20:55+0200\n"
+"POT-Creation-Date: 2018-08-31 21:59+0000\n"
+"PO-Revision-Date: 2018-09-02 12:36+0200\n"
 "Last-Translator: Mario Blättermann <mario.blaettermann@gmail.com>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "Language: de\n"
@@ -773,8 +773,8 @@ msgid "The validation code is not correct."
 msgstr "Der Überprüfungscode ist nicht korrekt."
 
 #: fractal-gtk/src/appop/account.rs:47
-msgid "Insert the code received via SMS"
-msgstr "Den per SMS empfangenen Code einfügen"
+msgid "Enter the code received via SMS"
+msgstr "Den per SMS empfangenen Code eingeben"
 
 #: fractal-gtk/src/appop/account.rs:57 fractal-gtk/src/appop/account.rs:103
 msgid "Continue"
