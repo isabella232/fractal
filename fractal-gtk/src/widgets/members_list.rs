@@ -155,11 +155,13 @@ fn filter_rows(
     search: Option<String>,
 ) -> Option<usize> {
     /* Load just enough members to fill atleast the visible list */
-    let search = search?;
+    // Convert to Lowercase for case-insensitive searching
+    let search = search?.to_lowercase();
     let search = search.as_str();
     let mut empty = true;
     for (index, member) in members.iter().enumerate() {
-        if !member.get_alias().contains(search) {
+        let alias_lower = member.get_alias().to_lowercase();
+        if !alias_lower.contains(search){
             container.get_row_at_index(index as i32)?.hide();
         } else {
             container.get_row_at_index(index as i32)?.show();
