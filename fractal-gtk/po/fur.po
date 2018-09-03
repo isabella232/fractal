@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/World/fractal/issues\n"
-"POT-Creation-Date: 2018-08-31 09:24+0000\n"
-"PO-Revision-Date: 2018-09-03 18:32+0200\n"
+"POT-Creation-Date: 2018-09-03 16:39+0000\n"
+"PO-Revision-Date: 2018-09-03 18:40+0200\n"
+"Last-Translator: \n"
 "Language-Team: Friulian <fur@li.org>\n"
 "Language: fur\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Last-Translator: \n"
 "X-Generator: Poedit 2.0.7\n"
 
 #: fractal-gtk/res/gtk/help-overlay.ui:13
@@ -763,7 +763,7 @@ msgid "The validation code is not correct."
 msgstr "Il codiç di convalide nol è just."
 
 #: fractal-gtk/src/appop/account.rs:47
-msgid "Insert the code received via SMS"
+msgid "Enter the code received via SMS"
 msgstr "Inserìs il codiç ricevût vie SMS"
 
 #: fractal-gtk/src/appop/account.rs:57 fractal-gtk/src/appop/account.rs:103
@@ -874,21 +874,21 @@ msgstr "In sincronizazion, al podarès tirâle a dilunc"
 msgid "No matching members found"
 msgstr "Nissun membri corispondent cjatât"
 
-#: fractal-gtk/src/widgets/message.rs:398
+#: fractal-gtk/src/widgets/message.rs:382
 msgid "Could not retrieve file URI"
 msgstr "Impussibil recuperâ il URI dal file"
 
-#: fractal-gtk/src/widgets/message.rs:414
-#: fractal-gtk/src/widgets/message.rs:463
+#: fractal-gtk/src/widgets/message.rs:398
+#: fractal-gtk/src/widgets/message.rs:443
 msgid "Save"
 msgstr "Salve"
 
-#: fractal-gtk/src/widgets/message.rs:424
-#: fractal-gtk/src/widgets/message.rs:474
+#: fractal-gtk/src/widgets/message.rs:408
+#: fractal-gtk/src/widgets/message.rs:454
 msgid "Could not download the file"
 msgstr "Impussibil discjariâ il file"
 
-#: fractal-gtk/src/widgets/message.rs:492
+#: fractal-gtk/src/widgets/message.rs:472
 msgid "Open"
 msgstr "Vierç"
 
