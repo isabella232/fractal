@@ -65,7 +65,6 @@ pub fn sync(bk: &Backend) -> Result<(), Error> {
             Ok(r) => {
                 let next_batch = String::from(r["next_batch"].as_str().unwrap_or(""));
                 if since.is_empty() {
-                    let m_direct = parse_m_direct(&r);
                     data.lock().unwrap().m_direct = parse_m_direct(&r);
 
                     let rooms = match get_rooms_from_json(&r, &userid, &baseu) {

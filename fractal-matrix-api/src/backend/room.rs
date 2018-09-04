@@ -106,7 +106,7 @@ pub fn get_room_members(bk: &Backend, roomid: String) -> Result<(), Error> {
     get!(&url,
         |r: JsonValue| {
             let joined = r["joined"].as_object().unwrap();
-            let mut ms: Vec<Member> = joined.iter().map(|(mxid, member_data)| {
+            let ms: Vec<Member> = joined.iter().map(|(mxid, member_data)| {
                 let alias = &member_data["display_name"];
                 let avatar = &member_data["avatar_url"];
 
@@ -471,7 +471,7 @@ pub fn direct_chat(bk: &Backend, user: Member, internal_id: String) -> Result<()
             r.direct = true;
             tx.send(BKResponse::NewRoom(r, internal_id)).unwrap();
 
-            let mut directs = &mut data.lock().unwrap().m_direct;
+            let directs = &mut data.lock().unwrap().m_direct;
             if directs.contains_key(&m.uid) {
                 directs.get_mut(&m.uid).map(|v| v.push(id.clone()));
             } else {
