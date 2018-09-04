@@ -2,8 +2,13 @@ use std::collections::HashMap;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Member {
-    pub alias: Option<String>,
+    // The mxid is either inside the json object, or outside of it.
+    // Since we don't know, we always have to populate it manually
+    #[serde(default)]
     pub uid: String,
+    #[serde(rename = "display_name")]
+    pub alias: Option<String>,
+    #[serde(rename = "avatar_url")]
     pub avatar: Option<String>,
 }
 

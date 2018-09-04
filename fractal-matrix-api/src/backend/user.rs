@@ -436,20 +436,12 @@ pub fn search(bk: &Backend, term: String) -> Result<(), Error> {
             let mut users: Vec<Member> = vec![];
             if let Some(arr) = js["results"].as_array() {
                 for member in arr.iter() {
-                    let alias = match member["display_name"].as_str() {
-                        None => None,
-                        Some(a) => Some(a.to_string()),
-                    };
-                    let avatar = match member["avatar_url"].as_str() {
-                        None => None,
-                        Some(a) => Some(a.to_string()),
-                    };
+                    let mut member_s: Member = serde_json::from_value(
+                        member.clone()).unwrap();
+                    member_s.uid = member["user_id"]
+                        .as_str().unwrap_or_default().to_string();
 
-                    users.push(Member{
-                        alias: alias,
-                        uid: member["user_id"].as_str().unwrap_or_default().to_string(),
-                        avatar: avatar,
-                    });
+                    users.push(member_s);
                 }
             }
             tx.send(BKResponse::UserSearch(users)).unwrap();

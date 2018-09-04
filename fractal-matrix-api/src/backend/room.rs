@@ -1,5 +1,6 @@
 extern crate url;
 extern crate urlencoding;
+extern crate serde_json;
 
 use std::fs::File;
 use std::io::prelude::*;
@@ -107,14 +108,10 @@ pub fn get_room_members(bk: &Backend, roomid: String) -> Result<(), Error> {
         |r: JsonValue| {
             let joined = r["joined"].as_object().unwrap();
             let ms: Vec<Member> = joined.iter().map(|(mxid, member_data)| {
-                let alias = &member_data["display_name"];
-                let avatar = &member_data["avatar_url"];
-
-                Member {
-                    alias: alias.as_str().map(String::from),
-                    avatar: avatar.as_str().map(String::from),
-                    uid: mxid.to_string(),
-                }
+                let mut member: Member = serde_json::from_value(
+                    member_data.clone()).unwrap();
+                member.uid = mxid.to_string();
+                member
             }
             ).collect();
             tx.send(BKResponse::RoomMembers(roomid, ms)).unwrap();
