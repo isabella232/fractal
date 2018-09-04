@@ -377,6 +377,7 @@ impl AppOp {
             source: None,
             receipt: HashMap::new(),
             redacted: false,
+            in_reply_to: None,
         };
 
         if msg.starts_with("/me ") {
@@ -445,6 +446,7 @@ impl AppOp {
             source: None,
             receipt: HashMap::new(),
             redacted: false,
+            in_reply_to: None,
         };
 
         m.id = Some(m.get_txn_id());

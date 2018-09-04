@@ -24,6 +24,8 @@ pub struct Message {
     pub source: Option<String>,
     pub receipt: HashMap<String, i64>, // This `HashMap` associates the user ID with a timestamp
     pub redacted: bool,
+    // The event ID of the message this is in reply to.
+    pub in_reply_to: Option<String>,
 }
 
 impl Clone for Message {
@@ -42,6 +44,7 @@ impl Clone for Message {
             source: self.source.clone(),
             receipt: self.receipt.clone(),
             redacted: self.redacted,
+            in_reply_to: self.in_reply_to.clone(),
         }
     }
 }
@@ -62,6 +65,7 @@ impl Default for Message {
             source: None,
             receipt: HashMap::new(),
             redacted: false,
+            in_reply_to: None,
         }
     }
 }
@@ -153,6 +157,7 @@ impl Message {
             source: serde_json::to_string_pretty(&msg).ok(),
             receipt: HashMap::new(),
             redacted,
+            in_reply_to: None,
         };
 
         let c = &msg["content"];
@@ -181,7 +186,14 @@ impl Message {
 
                 msg.url = Some(url);
                 msg.thumb = Some(t);
-            }
+            },
+            "m.text" => {
+                // Only m.text messages can be replies for backward compatability
+                // https://matrix.org/docs/spec/client_server/r0.4.0.html#rich-replies
+                msg.in_reply_to =
+                    c["m.relates_to"]["m.in_reply_to"]["event_id"]
+                    .as_str().map(String::from)
+            },
             _ => {}
         };
 
