@@ -48,7 +48,6 @@ fractal-gtk/src/app/connect/leave_room.rs
 fractal-gtk/src/app/connect/load_more.rs
 fractal-gtk/src/app/connect/login.rs
 fractal-gtk/src/app/connect/markdown.rs
-fractal-gtk/src/app/connect/media_viewer.rs
 fractal-gtk/src/app/connect/mod.rs
 fractal-gtk/src/app/connect/new_room.rs
 fractal-gtk/src/app/connect/roomlist_search.rs
@@ -90,6 +89,7 @@ fractal-gtk/src/widgets/avatar.rs
 fractal-gtk/src/widgets/divider.rs
 fractal-gtk/src/widgets/image.rs
 fractal-gtk/src/widgets/inline_player.rs
+fractal-gtk/src/widgets/media_viewer.rs
 fractal-gtk/src/widgets/member.rs
 fractal-gtk/src/widgets/members_list.rs
 fractal-gtk/src/widgets/message.rs
