@@ -126,17 +126,17 @@ impl AppOp {
         let scroll = self.ui.builder
             .get_object::<gtk::Widget>("user_search_scroll")
             .expect("Can't find user_search_scroll in ui file.");
-        let title = self.ui.builder
-            .get_object::<gtk::Label>("invite_title")
-            .expect("Can't find invite_title in ui file.");
+        let headerbar = self.ui.builder
+            .get_object::<gtk::HeaderBar>("invite_headerbar")
+            .expect("Can't find invite_headerbar in ui file.");
         self.search_type = SearchType::Invite;
 
         if let Some(aroom) = self.active_room.clone() {
             if let Some(r) = self.rooms.get(&aroom) {
                 if let &Some(ref name) = &r.name {
-                    title.set_text(&i18n_k("Invite to {name}", &[("name", name)]));
+                    headerbar.set_title(i18n_k("Invite to {name}", &[("name", name)]).as_str());
                 } else {
-                    title.set_text(i18n("Invite").as_str());
+                    headerbar.set_title(i18n("Invite").as_str());
                 }
             }
         }
