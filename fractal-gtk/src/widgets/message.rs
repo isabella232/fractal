@@ -22,6 +22,7 @@ use std::sync::mpsc::TryRecvError;
 
 use cache::download_to_cache;
 use cache::download_to_cache_username;
+use cache::download_to_cache_username_emote;
 
 use globals;
 use widgets;
@@ -492,20 +493,7 @@ impl<'a> MessageBox<'a> {
         let body: &str = &msg.body;
         let markup = markup_text(body);
 
-        /*
-        let m = markup.clone();
-        let sname = match member {
-            Some(m) => m.get_alias(),
-            None => {
-                let backend = self.backend.clone();
-                let label = msg_label.clone();
-                set_username_async(backend, sender, move |n| {
-                    label.set_markup(&format!("<b>{}</b> {}", n, m));
-                });
-                String::from(sender)
-            }
-        };
-        */
+        download_to_cache_username_emote(self.backend.clone(), &sname, &markup, msg_label.clone(), None);
 
         self.connect_right_click_menu(msg_label.clone().upcast::<gtk::Widget>());
         msg_label.set_markup(&format!("<b>{}</b> {}", sname, markup));

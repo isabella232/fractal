@@ -117,3 +117,28 @@ pub fn download_to_cache_username(backend: Sender<BKCommand>,
         }
     });
 }
+
+/* Download username for a given MXID and update a emote message
+ * FIXME: We should cache this request and do it before we need to display the username in an emote*/
+pub fn download_to_cache_username_emote(backend: Sender<BKCommand>,
+                         uid: &str,
+                         text: &str,
+                         label: gtk::Label,
+                         avatar: Option<Rc<RefCell<AvatarData>>>) {
+    let (tx, rx): (Sender<String>, Receiver<String>) = channel();
+    backend.send(BKCommand::GetUserNameAsync(uid.to_string(), tx)).unwrap();
+    let text = text.to_string();
+    gtk::timeout_add(50, move || match rx.try_recv() {
+        Err(TryRecvError::Empty) => gtk::Continue(true),
+        Err(TryRecvError::Disconnected) => gtk::Continue(false),
+        Ok(username) => {
+            label.set_markup(&format!("<b>{}</b> {}", &username, text));
+            if let Some(ref rc_data) = avatar {
+                let mut data = rc_data.borrow_mut();
+                data.redraw_fallback(Some(username));
+            }
+
+            gtk::Continue(false)
+        }
+    });
+}
