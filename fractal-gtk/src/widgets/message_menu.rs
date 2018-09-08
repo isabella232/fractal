@@ -1,16 +1,22 @@
 extern crate gdk;
+extern crate gdk_pixbuf;
 extern crate gtk;
+extern crate glib;
 extern crate sourceview;
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::sync::mpsc::Sender;
+use std::sync::mpsc::channel;
+use std::sync::mpsc::{Sender, Receiver};
+use std::sync::mpsc::TryRecvError;
 
 use self::gtk::prelude::*;
 use self::gdk::prelude::*;
 use self::sourceview::prelude::*;
 
+use app::App;
 use backend::BKCommand;
+use i18n::i18n;
 
 use uibuilder::UI;
 use types::Message;
@@ -124,6 +130,67 @@ impl MessageMenu {
         }
     }
 
+    pub fn open_with(&self) {
+        let url = self.msg.url.clone().unwrap_or_default();
+
+        self.backend.send(BKCommand::GetMedia(url)).unwrap();
+    }
+
+    pub fn save_image_as(&self) {
+        let name = self.msg.body.clone();
+        let url = self.msg.url.clone().unwrap_or_default();
+        let backend = self.backend.clone();
+
+        let (tx, rx): (Sender<String>, Receiver<String>) = channel();
+
+        backend.send(BKCommand::GetMediaAsync(url.clone(), tx)).unwrap();
+
+        gtk::timeout_add(50, clone!(name => move || match rx.try_recv() {
+            Err(TryRecvError::Empty) => gtk::Continue(true),
+            Err(TryRecvError::Disconnected) => {
+                let msg = i18n("Could not download the file");
+                APPOP!(show_error, (msg));
+
+                gtk::Continue(true)
+            },
+            Ok(fname) => {
+                let name = name.clone();
+                APPOP!(save_file_as, (fname, name));
+
+                gtk::Continue(false)
+            }
+        }));
+    }
+
+    pub fn copy_image(&self) {
+        let url = self.msg.url.clone().unwrap_or_default();
+        let backend = self.backend.clone();
+
+        let (tx, rx): (Sender<String>, Receiver<String>) = channel();
+
+        backend.send(BKCommand::GetMediaAsync(url.clone(), tx)).unwrap();
+
+        gtk::timeout_add(50, move || match rx.try_recv() {
+            Err(TryRecvError::Empty) => gtk::Continue(true),
+            Err(TryRecvError::Disconnected) => {
+                let msg = i18n("Could not download the file");
+                APPOP!(show_error, (msg));
+
+                gtk::Continue(true)
+            },
+            Ok(fname) => {
+                if let Ok(pixbuf) = gdk_pixbuf::Pixbuf::new_from_file(fname) {
+                    let atom = gdk::Atom::intern("CLIPBOARD");
+                    let clipboard = gtk::Clipboard::get(&atom);
+
+                    clipboard.set_image(&pixbuf);
+                }
+
+                gtk::Continue(false)
+            }
+        });
+    }
+
     pub fn copy_text(&self) {
         let atom = gdk::Atom::intern("CLIPBOARD");
         let clipboard = gtk::Clipboard::get(&atom);
@@ -162,6 +229,18 @@ impl MessageMenu {
             .get_object("reply_button")
             .expect("Can't find reply_button in ui file.");
 
+        let open_with_button: gtk::ModelButton = self.builder
+            .get_object("open_with_button")
+            .expect("Can't find open_with_button in ui file.");
+
+        let save_image_as_button: gtk::ModelButton = self.builder
+            .get_object("save_image_as_button")
+            .expect("Can't find save_image_as_button in ui file.");
+
+        let copy_image_button: gtk::ModelButton = self.builder
+            .get_object("copy_image_button")
+            .expect("Can't find copy_image_button in ui file.");
+
         let copy_text_button: gtk::ModelButton = self.builder
             .get_object("copy_text_button")
             .expect("Can't find copy_text_button in ui file.");
@@ -183,6 +262,18 @@ impl MessageMenu {
 
         reply_button.connect_clicked(clone!(this => move |_| {
             this.borrow().insert_quote();
+        }));
+
+        open_with_button.connect_clicked(clone!(this => move |_| {
+            this.borrow().open_with();
+        }));
+
+        save_image_as_button.connect_clicked(clone!(this => move |_| {
+            this.borrow().save_image_as();
+        }));
+
+        copy_image_button.connect_clicked(clone!(this => move |_| {
+            this.borrow().copy_image();
         }));
 
         copy_text_button.connect_clicked(clone!(this => move |_| {
