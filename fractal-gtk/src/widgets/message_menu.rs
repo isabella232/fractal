@@ -61,6 +61,26 @@ impl MessageMenu {
                                       .expect("Can't find copy_selected_text_button");
         button.set_visible(self.selected_text.is_some());
 
+        let open_with_button: gtk::Widget = self.builder
+                                                .get_object("open_with_button")
+                                                .expect("Can't find open_with_button");
+        open_with_button.set_visible(self.msg.mtype == "m.image");
+
+        let save_image_as_button: gtk::Widget = self.builder
+                                                    .get_object("save_image_as_button")
+                                                    .expect("Can't find save_image_as_button");
+        save_image_as_button.set_visible(self.msg.mtype == "m.image");
+
+        let copy_image_button: gtk::Widget = self.builder
+                                                 .get_object("copy_image_button")
+                                                 .expect("Can't find copy_image_button");
+        copy_image_button.set_visible(self.msg.mtype == "m.image");
+
+        let copy_text_button: gtk::Widget = self.builder
+                                                .get_object("copy_text_button")
+                                                .expect("Can't find copy_text_button");
+        copy_text_button.set_visible(self.msg.mtype != "m.image");
+
         gdk::Display::get_default()
             .and_then(|disp| disp.get_default_seat())
             .and_then(|seat| seat.get_pointer())
