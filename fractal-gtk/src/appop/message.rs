@@ -14,12 +14,15 @@ use self::comrak::{markdown_to_html, ComrakOptions};
 
 use app::InternalCommand;
 use appop::AppOp;
+use app::App;
 use appop::RoomPanel;
 use appop::room::Force;
 
 use glib;
 use globals;
 use widgets;
+use uitypes::MessageContent;
+use uitypes::RowType;
 use backend::BKCommand;
 
 use types::Message;
@@ -150,100 +153,137 @@ impl AppOp {
                             prev: Option<Message>,
                             force_full: bool,
                             first_new: bool) {
-        let msg_entry: sourceview::View = self.ui.builder
-            .get_object("msg_entry")
-            .expect("Couldn't find msg_entry in ui file.");
-        let messages = self.ui.builder
-            .get_object::<gtk::ListBox>("message_list")
-            .expect("Can't find message_list in ui file.");
+        if let Some(ui_msg) = self.create_new_room_message(&msg) {
+            let msg_entry: sourceview::View = self.ui.builder
+                .get_object("msg_entry")
+                .expect("Couldn't find msg_entry in ui file.");
+            let messages = self.ui.builder
+                .get_object::<gtk::ListBox>("message_list")
+                .expect("Can't find message_list in ui file.");
 
-        let mut calc_prev = prev;
-        if !force_full && calc_prev.is_none() {
-            if let Some(r) = self.rooms.get(&msg.room) {
-                calc_prev = match r.messages.iter().position(|ref m| m.id == msg.id) {
-                    Some(pos) if pos > 0 => r.messages.get(pos - 1).cloned(),
-                    _ => None
-                };
+            let mut calc_prev = prev;
+            if !force_full && calc_prev.is_none() {
+                if let Some(r) = self.rooms.get(&msg.room) {
+                    calc_prev = match r.messages.iter().position(|ref m| m.id == msg.id) {
+                        Some(pos) if pos > 0 => r.messages.get(pos - 1).cloned(),
+                        _ => None
+                    };
+                }
             }
-        }
 
-        if msg.room == self.active_room.clone().unwrap_or_default() && !msg.redacted {
-            if let Some(r) = self.rooms.get(&self.active_room.clone().unwrap_or_default()) {
-                let m;
-                {
-                    let mb = widgets::MessageBox::new(r, &msg, &self);
-                    let entry = msg_entry.clone();
-                    mb.username_event_box.set_focus_on_click(false);
-                    mb.username_event_box.connect_button_press_event(move |eb, btn| {
-                        if btn.get_button() != 3 {
-                            if let Some(label) = eb.get_children().iter().next() {
-                                if let Ok(l) = label.clone().downcast::<gtk::Label>() {
-                                    if let Some(t) = l.get_text() {
-                                        if let Some(buffer) = entry.get_buffer() {
-                                            buffer.insert_at_cursor(&t[..]);
+            if msg.room == self.active_room.clone().unwrap_or_default() && !msg.redacted {
+                if let Some(r) = self.rooms.get(&self.active_room.clone().unwrap_or_default()) {
+                    let m;
+                    {
+                        let backend = self.backend.clone();
+                        let ui = self.ui.clone();
+                        let mut mb = widgets::MessageBox::new(&ui_msg, backend, &ui);
+                        let entry = msg_entry.clone();
+                        mb.username_event_box.set_focus_on_click(false);
+                        mb.username_event_box.connect_button_press_event(move |eb, btn| {
+                            if btn.get_button() != 3 {
+                                if let Some(label) = eb.get_children().iter().next() {
+                                    if let Ok(l) = label.clone().downcast::<gtk::Label>() {
+                                        if let Some(t) = l.get_text() {
+                                            if let Some(buffer) = entry.get_buffer() {
+                                                buffer.insert_at_cursor(&t[..]);
+                                            }
                                         }
-                                        entry.grab_focus();
                                     }
                                 }
+
                             }
-                        }
+                            glib::signal::Inhibit(false)
+                        });
+                        m = match calc_prev {
+                            Some(ref p) if self.should_group(&msg, p) => mb.small_widget(),
+                            Some(_) if self.has_small_mtype(&msg) => mb.small_widget(),
+                            _ => mb.widget(),
+                        };
+                        if let Some(ref image) = mb.image {
+                            let msg = msg.clone();
+                            let room = r.clone();
+                            image.connect_button_press_event(move |_, btn| {
+                                if btn.get_button() != 3 {
+                                    let msg = msg.clone();
+                                    let room = room.clone();
+                                    APPOP!(create_media_viewer, (msg, room));
 
-                        glib::signal::Inhibit(false)
-                    });
-                    m = match calc_prev {
-                        Some(ref p) if self.should_group(&msg, p) => mb.small_widget(),
-                        Some(_) if self.has_small_mtype(&msg) => mb.small_widget(),
-                        _ => mb.widget(),
+                                    Inhibit(true)
+                                } else {
+                                    Inhibit(false)
+                                }
+                            });
+                        }
                     }
+
+                    m.set_focus_on_click(false);
+
+                    match msgpos {
+                        MsgPos::Bottom => {
+                            messages.insert(&m, -1);
+
+                            if first_new {
+                                let divider = widgets::divider::new(i18n("New Messages").as_str());
+                                messages.insert(&divider, -1);
+                            }
+                        },
+                        MsgPos::Top => {
+                            messages.insert(&m, 1);
+
+                            if first_new {
+                                let divider = widgets::divider::new(i18n("New Messages").as_str());
+                                messages.insert(&divider, 1);
+                            }
+                        },
+                    };
+
+                    self.shown_messages += 1;
                 }
-
-                m.set_focus_on_click(false);
-
-                match msgpos {
-                    MsgPos::Bottom => {
-                        messages.insert(&m, -1);
-
-                        if first_new {
-                            let divider = widgets::divider::new(i18n("New Messages").as_str());
-                            messages.insert(&divider, -1);
-                        }
-                    },
-                    MsgPos::Top => {
-                        messages.insert(&m, 1);
-
-                        if first_new {
-                            let divider = widgets::divider::new(i18n("New Messages").as_str());
-                            messages.insert(&divider, 1);
-                        }
-                    },
-                };
-
-                self.shown_messages += 1;
             }
         }
     }
 
     pub fn add_tmp_room_message(&mut self, msg: Message) {
-        let messages = self.ui.builder
-            .get_object::<gtk::ListBox>("message_list")
-            .expect("Can't find message_list in ui file.");
+        if let Some(ui_msg) = self.create_new_room_message(&msg) {
+            let messages = self.ui.builder
+                .get_object::<gtk::ListBox>("message_list")
+                .expect("Can't find message_list in ui file.");
 
-        if let Some(r) = self.rooms.get(&self.active_room.clone().unwrap_or_default()) {
-            let m;
-            {
-                let mb = widgets::MessageBox::new(r, &msg, &self);
-                m = mb.tmpwidget();
+            if let Some(r) = self.rooms.get(&self.active_room.clone().unwrap_or_default()) {
+                let m;
+                {
+                    let backend = self.backend.clone();
+                    let ui = self.ui.clone();
+                    let mut mb = widgets::MessageBox::new(&ui_msg, backend, &ui);
+                    m = mb.tmpwidget();
+                    if let Some(ref image) = mb.image {
+                        let msg = msg.clone();
+                        let room = r.clone();
+                        image.connect_button_press_event(move |_, btn| {
+                            if btn.get_button() != 3 {
+                                let msg = msg.clone();
+                                let room = room.clone();
+                                APPOP!(create_media_viewer, (msg, room));
+
+                                Inhibit(true)
+                            } else {
+                                Inhibit(false)
+                            }
+                        });
+                    }
+                }
+
+                messages.add(&m);
             }
 
-            messages.add(&m);
-        }
-
-        if let Some(w) = messages.get_children().iter().last() {
-            self.msg_queue.insert(0, TmpMsg {
+            if let Some(w) = messages.get_children().iter().last() {
+                self.msg_queue.insert(0, TmpMsg {
                     msg: msg.clone(),
                     widget: Some(w.clone()),
-            });
-        };
+                });
+            };
+        }
     }
 
     pub fn clear_tmp_msgs(&mut self) {
@@ -263,15 +303,35 @@ impl AppOp {
         if let Some(r) = self.rooms.get(&self.active_room.clone().unwrap_or_default()) {
             let mut widgets = vec![];
             for t in self.msg_queue.iter().rev().filter(|m| m.msg.room == r.id) {
-                let m;
-                {
-                    let mb = widgets::MessageBox::new(r, &t.msg, &self);
-                    m = mb.tmpwidget();
-                }
+                if let Some(ui_msg) = self.create_new_room_message(&t.msg) {
+                    let m;
+                    {
+                        let backend = self.backend.clone();
+                        let ui = self.ui.clone();
+                        let mut mb = widgets::MessageBox::new(&ui_msg, backend, &ui);
+                        m = mb.tmpwidget();
+                        if let Some(ref image) = mb.image {
+                            println!("i have a image");
+                            let msg = t.msg.clone();
+                            let room = r.clone();
+                            image.connect_button_press_event(move |_, btn| {
+                                if btn.get_button() != 3 {
+                                    let msg = msg.clone();
+                                    let room = room.clone();
+                                    APPOP!(create_media_viewer, (msg, room));
 
-                messages.add(&m);
-                if let Some(w) = messages.get_children().iter().last() {
-                    widgets.push(w.clone());
+                                    Inhibit(true)
+                                } else {
+                                    Inhibit(false)
+                                }
+                            });
+                        }
+                    }
+
+                    messages.add(&m);
+                    if let Some(w) = messages.get_children().iter().last() {
+                        widgets.push(w.clone());
+                    }
                 }
             }
 
@@ -612,4 +672,66 @@ impl AppOp {
         }
         self.internal.send(InternalCommand::LoadMoreNormal).unwrap();
     }
+    /* parese a backend Message into a Message for the UI */
+    pub fn create_new_room_message(&self, msg: &Message) -> Option<MessageContent> {
+        let mut highlights = vec![];
+        let t = match msg.mtype.as_ref() {
+            "m.emote" => RowType::Emote,
+            "m.image" => RowType::Image,
+            "m.sticker" => RowType::Sticker,
+            "m.audio" => RowType::Audio,
+            "m.video" => RowType::Video,
+            "m.file" => RowType::File,
+            _ => {
+                /* set message type to mention if the body contains the username, we should
+                 * also match for MXID */
+                let is_mention = if let Some(user) = self.username.clone() {
+                    msg.sender != self.uid.clone()? && msg.body.contains(&user)
+                } else {
+                    false
+                };
+
+                if is_mention {
+                    if let Some(user) = self.username.clone() {
+                        highlights.push(user);
+                    }
+                    if let Some(mxid) = self.uid.clone() {
+                        highlights.push(mxid);
+                    }
+                    highlights.push(String::from("message_menu"));
+
+                    RowType::Mention
+                } else {
+                    RowType::Message
+                }
+            }
+        };
+
+        let room = self.rooms.get(&msg.room)?;
+        let name = if let Some(member) = room.members.get(&msg.sender) {
+            member.alias.clone()
+        } else {
+            None
+        };
+
+        Some(create_ui_message(msg.clone(), name, t, highlights))
+    }
+}
+
+/* FIXME: don't convert msg to ui messages here, we should later get a ui message from storage */
+fn create_ui_message (msg: Message, name: Option<String>, t: RowType, highlights: Vec<String>) -> MessageContent {
+        MessageContent {
+        msg: msg.clone(),
+        id: msg.id.unwrap_or(String::from("")),
+        sender: msg.sender,
+        sender_name: name,
+        mtype: t,
+        body: msg.body,
+        date: msg.date,
+        thumb: msg.thumb,
+        url: msg.url,
+        formatted_body: msg.formatted_body,
+        format: msg.format,
+        highlights: highlights,
+        }
 }
