@@ -18,7 +18,6 @@ mod new_room;
 mod roomlist_search;
 mod scroll;
 mod send;
-mod spellcheck;
 mod stickers;
 
 use app::App;
@@ -72,7 +71,6 @@ impl App {
         self.connect_markdown();
         //self.connect_stickers();
         self.connect_autocomplete();
-        self.connect_spellcheck();
 
         self.connect_directory();
         self.connect_leave_room_dialog();
