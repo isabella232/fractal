@@ -294,6 +294,6 @@ stack.titlebar:not(headerbar) > box > separator {
   color: alpha(@theme_fg_color, 0.1);
 }
 
-.devel headerbar:last-child label {
+.devel headerbar:last-child > box > label {
   color: @theme_fg_color;
 }
