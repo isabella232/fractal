@@ -12,7 +12,6 @@ use self::comrak::{markdown_to_html, ComrakOptions};
 use app::InternalCommand;
 use appop::AppOp;
 use app::App;
-use appop::RoomPanel;
 use appop::room::Force;
 
 use glib;
@@ -23,7 +22,6 @@ use uitypes::RowType;
 use backend::BKCommand;
 
 use types::Message;
-
 
 #[derive(Debug, Clone)]
 pub enum MsgPos {
@@ -42,7 +40,6 @@ pub enum LastViewed {
     Last,
     No,
 }
-
 
 impl AppOp {
     /// This function is used to mark as read the last message of a room when the focus comes in,
@@ -115,31 +112,26 @@ impl AppOp {
         }
     }
 
-    /* FIXME: remove not used arguments */
     pub fn add_room_message(&mut self,
                             msg: Message,
                             msgpos: MsgPos,
-                            _prev: Option<Message>,
-                            _force_full: bool,
                             first_new: bool) {
         if let Some(mut history) = self.history.clone() {
             if msg.room == self.active_room.clone().unwrap_or_default() && !msg.redacted {
-                if let Some(_r) = self.rooms.get(&self.active_room.clone().unwrap_or_default()) {
-                    if let Some(ui_msg) = self.create_new_room_message(&msg) {
-                        match msgpos {
-                            MsgPos::Bottom => {
-                                if first_new {
-                                    history.add_divider();
-                                }
-                                history.add_new_message(ui_msg);
-                            },
-                            MsgPos::Top => {
-                                history.add_old_message(ui_msg);
+                if let Some(ui_msg) = self.create_new_room_message(&msg) {
+                    match msgpos {
+                        MsgPos::Bottom => {
+                            if first_new {
+                                history.add_divider();
                             }
+                            history.add_new_message(ui_msg);
+                        },
+                        MsgPos::Top => {
+                            history.add_old_message(ui_msg);
                         }
                     }
-                    self.shown_messages += 1;
                 }
+                self.shown_messages += 1;
             }
         }
     }
@@ -469,11 +461,9 @@ impl AppOp {
                                      .skip(self.shown_messages)
                                      .take(globals::INITIAL_MESSAGES)
                                      .collect::<Vec<&Message>>();
-                for (i, msg) in msgs.iter().enumerate() {
+                for msg in msgs.iter() {
                     let command = InternalCommand::AddRoomMessage((*msg).clone(),
                                                                   MsgPos::Top,
-                                                                  None,
-                                                                  i == msgs.len() - 1,
                                                                   self.is_first_new(&msg));
                     self.internal.send(command).unwrap();
                 }
@@ -514,7 +504,8 @@ impl AppOp {
                 self.notify(msg);
             }
 
-            let command = InternalCommand::AddRoomMessage(msg.clone(), MsgPos::Bottom, None, false,
+            let command = InternalCommand::AddRoomMessage(msg.clone(),
+                                                          MsgPos::Bottom,
                                                           self.is_first_new(&msg));
             self.internal.send(command).unwrap();
 
@@ -553,18 +544,15 @@ impl AppOp {
         for i in 0..size+1 {
             let msg = &msgs[size - i];
 
-            let prev = match i {
-                n if size - n > 0 => msgs.get(size - n - 1).cloned(),
-                _ => None
-            };
-
-            let command = InternalCommand::AddRoomMessage(msg.clone(), MsgPos::Top, prev, false,
+            let command = InternalCommand::AddRoomMessage(msg.clone(),
+                                                          MsgPos::Top,
                                                           self.is_first_new(&msg));
             self.internal.send(command).unwrap();
 
         }
         self.internal.send(InternalCommand::LoadMoreNormal).unwrap();
     }
+
     /* parese a backend Message into a Message for the UI */
     pub fn create_new_room_message(&self, msg: &Message) -> Option<MessageContent> {
         let mut highlights = vec![];
