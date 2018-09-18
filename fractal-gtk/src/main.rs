@@ -6,6 +6,7 @@ extern crate gdk;
 
 extern crate rand;
 extern crate itertools;
+extern crate dirs;
 
 extern crate gstreamer as gst;
 extern crate gstreamer_player as gst_player;

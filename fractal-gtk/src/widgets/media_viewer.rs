@@ -10,11 +10,11 @@ use self::gtk::ResponseType;
 use gdk::*;
 use glib::signal;
 use i18n::i18n;
+use dirs;
 
 use types::Message;
 use types::Room;
 
-use std::env;
 use std::fs;
 
 use backend::BKCommand;
@@ -815,7 +815,7 @@ fn save_file_as(main_window: &gtk::Window, src: String, name: String) {
         (&i18n("_Cancel"), ResponseType::Cancel.into()),
         (&i18n("_Save"), ResponseType::Accept.into()),
     ]);
-    file_chooser.set_current_folder(env::home_dir().unwrap_or_default());
+    file_chooser.set_current_folder(dirs::home_dir().unwrap_or_default());
     file_chooser.set_current_name(&name);
 
     let main_window = main_window.clone();

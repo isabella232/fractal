@@ -27,14 +27,13 @@ static mut OP: Option<Arc<Mutex<AppOp>>> = None;
 #[macro_export]
 macro_rules! APPOP {
     ($fn: ident, ($($x:ident),*) ) => {{
-        if let Some(ctx) = glib::MainContext::default() {
-            ctx.invoke(move || {
-                $( let $x = $x.clone(); )*
-                if let Some(op) = App::get_op() {
-                    op.lock().unwrap().$fn($($x),*);
-                }
-            });
-        }
+        let ctx = glib::MainContext::default();
+        ctx.invoke(move || {
+            $( let $x = $x.clone(); )*
+            if let Some(op) = App::get_op() {
+                op.lock().unwrap().$fn($($x),*);
+            }
+        });
     }};
     ($fn: ident) => {{
         APPOP!($fn, ( ) );

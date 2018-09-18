@@ -24,6 +24,7 @@ pub struct MessageContent {
 /* To-Do: this should be moved to a file collecting all structs used in the UI */
 #[derive(Debug, Clone, PartialEq)]
 pub enum RowType {
+    #[allow(dead_code)]
     Divider,
     Mention,
     Emote,

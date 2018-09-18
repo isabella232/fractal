@@ -2,13 +2,13 @@ extern crate gtk;
 
 use i18n::i18n;
 
-use std::env;
 use std::fs;
 
 use self::gtk::prelude::*;
 use self::gtk::ResponseType;
 
 use glib;
+use dirs;
 
 use app::App;
 use appop::AppOp;
@@ -30,7 +30,7 @@ impl AppOp {
             (&i18n("_Cancel"), ResponseType::Cancel.into()),
             (&i18n("_Save"), ResponseType::Accept.into()),
         ]);
-        file_chooser.set_current_folder(env::home_dir().unwrap_or_default());
+        file_chooser.set_current_folder(dirs::home_dir().unwrap_or_default());
         file_chooser.set_current_name(&name);
 
         file_chooser.connect_response(move |fcd, res| {
