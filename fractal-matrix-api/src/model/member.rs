@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Member {
     // The mxid is either inside the json object, or outside of it.
     // Since we don't know, we always have to populate it manually
@@ -10,16 +10,6 @@ pub struct Member {
     pub alias: Option<String>,
     #[serde(rename = "avatar_url")]
     pub avatar: Option<String>,
-}
-
-impl Clone for Member {
-    fn clone(&self) -> Member {
-        Member {
-            alias: self.alias.clone(),
-            uid: self.uid.clone(),
-            avatar: self.avatar.clone(),
-        }
-    }
 }
 
 impl Member {
