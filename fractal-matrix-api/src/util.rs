@@ -3,7 +3,6 @@ extern crate url;
 extern crate reqwest;
 extern crate regex;
 extern crate serde_json;
-extern crate mime;
 extern crate tree_magic;
 
 use self::regex::Regex;
@@ -30,8 +29,7 @@ use types::Room;
 use types::Event;
 use types::Member;
 
-use self::reqwest::header::ContentType;
-use self::mime::Mime;
+use self::reqwest::header::CONTENT_TYPE;
 
 use globals;
 
@@ -510,7 +508,7 @@ pub fn get_room_media_list(baseu: &Url,
 
 pub fn get_media(url: &str) -> Result<Vec<u8>, Error> {
     let client = reqwest::Client::new();
-    let mut conn = client.get(url);
+    let conn = client.get(url);
     let mut res = conn.send()?;
 
     let mut buffer = Vec::new();
@@ -521,12 +519,11 @@ pub fn get_media(url: &str) -> Result<Vec<u8>, Error> {
 
 pub fn put_media(url: &str, file: Vec<u8>) -> Result<JsonValue, Error> {
     let client = reqwest::Client::new();
-    let mut conn = client.post(url);
-    let mime: Mime = (&tree_magic::from_u8(&file)).parse().unwrap();
+    let mime = tree_magic::from_u8(&file);
 
-    conn.body(file);
-
-    conn.header(ContentType(mime));
+    let conn = client.post(url)
+                     .body(file)
+                     .header(CONTENT_TYPE, mime);
 
     let mut res = conn.send()?;
 
@@ -621,7 +618,7 @@ pub fn download_file(url: &str, fname: String, dest: Option<&str>) -> Result<Str
 }
 
 pub fn json_q(method: &str, url: &Url, attrs: &JsonValue, timeout: u64) -> Result<JsonValue, Error> {
-    let mut clientb = reqwest::ClientBuilder::new();
+    let clientb = reqwest::ClientBuilder::new();
     let client = match timeout {
         0 => clientb.timeout(None).build()?,
         n => clientb.timeout(StdDuration::from_secs(n)).build()?
@@ -635,7 +632,7 @@ pub fn json_q(method: &str, url: &Url, attrs: &JsonValue, timeout: u64) -> Resul
     };
 
     if !attrs.is_null() {
-        conn.json(attrs);
+        conn = conn.json(attrs);
     }
 
     let mut res = conn.send()?;
