@@ -8,8 +8,7 @@ use std::collections::HashMap;
 use self::serde_json::Value as JsonValue;
 use self::time::Duration;
 
-#[derive(Debug)]
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Message {
     pub sender: String,
     pub mtype: String,
@@ -26,27 +25,6 @@ pub struct Message {
     pub redacted: bool,
     // The event ID of the message this is in reply to.
     pub in_reply_to: Option<String>,
-}
-
-impl Clone for Message {
-    fn clone(&self) -> Message {
-        Message {
-            sender: self.sender.clone(),
-            mtype: self.mtype.clone(),
-            body: self.body.clone(),
-            date: self.date.clone(),
-            room: self.room.clone(),
-            thumb: self.thumb.clone(),
-            url: self.url.clone(),
-            id: self.id.clone(),
-            formatted_body: self.formatted_body.clone(),
-            format: self.format.clone(),
-            source: self.source.clone(),
-            receipt: self.receipt.clone(),
-            redacted: self.redacted,
-            in_reply_to: self.in_reply_to.clone(),
-        }
-    }
 }
 
 impl Default for Message {
