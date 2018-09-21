@@ -14,7 +14,7 @@ use error::Error;
 use util::json_q;
 use util::dw_media;
 use util::get_initial_room_messages;
-use util::build_url;
+use util::{build_url, client_url, media_url};
 use util::put_media;
 use util;
 use util::cache_path;
@@ -144,7 +144,7 @@ pub fn get_room_messages(bk: &Backend, roomid: String) -> Result<(), Error> {
 }
 
 fn parse_context(tx: Sender<BKResponse>, tk: String, baseu: Url, roomid: String, eid: String, limit: i32) -> Result<(), Error> {
-    let url = client_url!(&baseu, &format!("rooms/{}/context/{}", roomid, eid),
+    let url = client_url(&baseu, &format!("rooms/{}/context/{}", roomid, eid),
         vec![("limit", format!("{}", limit)), ("access_token", tk.clone())])?;
 
     get!(&url,
@@ -341,7 +341,7 @@ pub fn set_room_avatar(bk: &Backend, roomid: String, avatar: String) -> Result<(
     let baseu = bk.get_base_url()?;
     let tk = bk.data.lock().unwrap().access_token.clone();
     let params = vec![("access_token", tk.clone())];
-    let mediaurl = media_url!(&baseu, "upload", params)?;
+    let mediaurl = media_url(&baseu, "upload", params)?;
     let roomurl = bk.url(&format!("rooms/{}/state/m.room.avatar", roomid), vec![])?;
 
     let mut file = File::open(&avatar)?;
@@ -388,7 +388,7 @@ pub fn attach_file(bk: &Backend, msg: Message) -> Result<(), Error> {
     let baseu = bk.get_base_url()?;
     let tk = bk.data.lock().unwrap().access_token.clone();
     let params = vec![("access_token", tk.clone())];
-    let mediaurl = media_url!(&baseu, "upload", params)?;
+    let mediaurl = media_url(&baseu, "upload", params)?;
 
     let mut m = msg.clone();
     let tx = bk.tx.clone();

@@ -82,27 +82,6 @@ macro_rules! clone {
 }
 
 #[macro_export]
-macro_rules! client_url {
-    ($b: expr, $path: expr, $params: expr) => (
-        build_url($b, &format!("/_matrix/client/r0/{}", $path), $params)
-    )
-}
-
-#[macro_export]
-macro_rules! scalar_url {
-    ($b: expr, $path: expr, $params: expr) => (
-        build_url($b, &format!("api/{}", $path), $params)
-    )
-}
-
-#[macro_export]
-macro_rules! media_url {
-    ($b: expr, $path: expr, $params: expr) => (
-        build_url($b, &format!("/_matrix/media/r0/{}", $path), $params)
-    )
-}
-
-#[macro_export]
 macro_rules! derror {
     ($from: path, $to: path) => {
         impl From<$from> for Error {
@@ -459,7 +438,7 @@ pub fn get_prev_batch_from(baseu: &Url, tk: String, roomid: String, evid: String
     ];
 
     let path = format!("rooms/{}/context/{}", roomid, evid);
-    let url = client_url!(baseu, &path, params)?;
+    let url = client_url(baseu, &path, params)?;
 
     let r = json_q("get", &url, &json!(null), globals::TIMEOUT)?;
     let prev_batch = r["start"].to_string().trim_matches('"').to_string();
@@ -491,7 +470,7 @@ pub fn get_room_media_list(baseu: &Url,
     };
 
     let path = format!("rooms/{}/messages", roomid);
-    let url = client_url!(baseu, &path, params)?;
+    let url = client_url(baseu, &path, params)?;
 
     let r = json_q("get", &url, &json!(null), globals::TIMEOUT)?;
     let array = r["chunk"].as_array();
@@ -557,7 +536,7 @@ pub fn resolve_media_url(
         path = format!("download/{}/{}", server, media);
     }
 
-    media_url!(base, &path, params)
+    media_url(base, &path, params)
 }
 
 pub fn dw_media(base: &Url,
@@ -584,7 +563,7 @@ pub fn dw_media(base: &Url,
         path = format!("download/{}/{}", server, media);
     }
 
-    let url = media_url!(base, &path, params)?;
+    let url = media_url(base, &path, params)?;
 
     let fname = match dest {
         None if thumb => { cache_dir_path("thumbs", &media)?  }
@@ -665,7 +644,7 @@ pub fn json_q(method: &str, url: &Url, attrs: &JsonValue, timeout: u64) -> Resul
 }
 
 pub fn get_user_avatar(baseu: &Url, userid: &str) -> Result<(String, String), Error> {
-    let url = client_url!(baseu, &format!("profile/{}", userid), vec![])?;
+    let url = client_url(baseu, &format!("profile/{}", userid), vec![])?;
     let attrs = json!(null);
 
     match json_q("get", &url, &attrs, globals::TIMEOUT) {
@@ -690,7 +669,7 @@ pub fn get_user_avatar(baseu: &Url, userid: &str) -> Result<(String, String), Er
 }
 
 pub fn get_room_st(base: &Url, tk: &str, roomid: &str) -> Result<JsonValue, Error> {
-    let url = client_url!(base, &format!("rooms/{}/state", roomid), vec![("access_token", String::from(tk))])?;
+    let url = client_url(base, &format!("rooms/{}/state", roomid), vec![("access_token", String::from(tk))])?;
 
     let attrs = json!(null);
     let st = json_q("get", &url, &attrs, globals::TIMEOUT)?;
@@ -823,7 +802,7 @@ pub fn get_initial_room_messages(baseu: &Url,
     };
 
     let path = format!("rooms/{}/messages", roomid);
-    let url = client_url!(baseu, &path, params)?;
+    let url = client_url(baseu, &path, params)?;
 
     let r = json_q("get", &url, &json!(null), globals::TIMEOUT)?;
     nend = String::from(r["end"].as_str().unwrap_or(""));
@@ -873,7 +852,7 @@ pub fn fill_room_gap(baseu: &Url,
     params.push(("to", to.clone()));
 
     let path = format!("rooms/{}/messages", roomid);
-    let url = client_url!(baseu, &path, params)?;
+    let url = client_url(baseu, &path, params)?;
 
     let r = json_q("get", &url, &json!(null), globals::TIMEOUT)?;
     nend = String::from(r["end"].as_str().unwrap_or(""));
@@ -911,6 +890,18 @@ pub fn build_url(base: &Url, path: &str, params: Vec<(&str, String)>) -> Result<
     }
 
     Ok(url)
+}
+
+pub fn client_url(base: &Url, path: &str, params: Vec<(&str, String)>) -> Result<Url, Error> {
+    build_url(base, &format!("/_matrix/client/r0/{}", path), params)
+}
+
+pub fn scalar_url(base: &Url, path: &str, params: Vec<(&str, String)>) -> Result<Url, Error> {
+    build_url(base, &format!("api/{}", path), params)
+}
+
+pub fn media_url(base: &Url, path: &str, params: Vec<(&str, String)>) -> Result<Url, Error> {
+    build_url(base, &format!("/_matrix/media/r0/{}", path), params)
 }
 
 pub fn cache_path(name: &str) -> Result<String, Error> {

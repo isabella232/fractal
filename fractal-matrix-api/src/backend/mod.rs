@@ -6,7 +6,7 @@ use std::sync::mpsc::channel;
 use std::sync::mpsc::RecvError;
 use std::collections::HashMap;
 
-use util::build_url;
+use util::{build_url, client_url};
 
 use error::Error;
 
@@ -66,7 +66,7 @@ impl Backend {
         let mut params2 = params.to_vec();
         params2.push(("access_token", tk.clone()));
 
-        client_url!(&base, path, params2)
+        client_url(&base, path, params2)
     }
 
     pub fn run(mut self) -> Sender<BKCommand> {

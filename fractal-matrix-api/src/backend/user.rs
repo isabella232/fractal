@@ -11,7 +11,7 @@ use std::sync::{Arc, Mutex};
 use std::sync::mpsc::Sender;
 use error::Error;
 use util::json_q;
-use util::build_url;
+use util::{build_url, media_url};
 use util::put_media;
 use util::get_user_avatar;
 use util::get_user_avatar_img;
@@ -391,7 +391,7 @@ pub fn set_user_avatar(bk: &Backend, avatar: String) -> Result<(), Error> {
     let id = bk.data.lock().unwrap().user_id.clone();
     let tk = bk.data.lock().unwrap().access_token.clone();
     let params = vec![("access_token", tk.clone())];
-    let mediaurl = media_url!(&baseu, "upload", params)?;
+    let mediaurl = media_url(&baseu, "upload", params)?;
     let url = bk.url(&format!("profile/{}/avatar_url", id), vec![])?;
 
     let mut file = File::open(&avatar)?;
