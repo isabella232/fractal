@@ -60,7 +60,7 @@ pub struct App {
 impl App {
     /// Create an App instance
     pub fn new() {
-        let appid = globals::APP_ID.to_string();
+        let appid = globals::APP_ID.unwrap_or("org.gnome.FractalDevel").to_string();
 
         let gtk_app = gtk::Application::new(Some(&appid[..]), gio::ApplicationFlags::empty())
             .expect("Failed to initialize GtkApplication");
@@ -79,7 +79,7 @@ impl App {
 
             // Set up the textdomain for gettext
             setlocale(LocaleCategory::LcAll, "");
-            bindtextdomain("fractal", globals::LOCALEDIR);
+            bindtextdomain("fractal", globals::LOCALEDIR.unwrap_or("./fractal-gtk/po"));
             textdomain("fractal");
 
 
