@@ -20,6 +20,8 @@ use std::fs::create_dir_all;
 use std::io::prelude::*;
 
 use std::collections::HashSet;
+use std::sync::{Mutex, Condvar, Arc};
+use std::thread;
 
 use std::time::Duration as StdDuration;
 
@@ -33,33 +35,32 @@ use self::reqwest::header::CONTENT_TYPE;
 
 use globals;
 
-macro_rules! semaphore {
-    ($cv: expr, $blk: block) => {{
-        let thread_count = $cv.clone();
-        thread::spawn(move || {
-            // waiting, less than 20 threads at the same time
-            // this is a semaphore
-            // TODO: use std::sync::Semaphore when it's on stable version
-            // https://doc.rust-lang.org/1.1.0/std/sync/struct.Semaphore.html
-            let &(ref num, ref cvar) = &*thread_count;
-            {
-                let mut start = num.lock().unwrap();
-                while *start >= 20 {
-                    start = cvar.wait(start).unwrap()
-                }
-                *start += 1;
+pub fn semaphore<F>(thread_count: Arc<(Mutex<u8>, Condvar)>, func: F)
+where F: FnOnce() + Send + 'static
+{
+    thread::spawn(move || {
+        // waiting, less than 20 threads at the same time
+        // this is a semaphore
+        // TODO: use std::sync::Semaphore when it's on stable version
+        // https://doc.rust-lang.org/1.1.0/std/sync/struct.Semaphore.html
+        let &(ref num, ref cvar) = &*thread_count;
+        {
+            let mut start = num.lock().unwrap();
+            while *start >= 20 {
+                start = cvar.wait(start).unwrap()
             }
+            *start += 1;
+        }
 
-            $blk
+        func();
 
-            // freeing the cvar for new threads
-            {
-                let mut counter = num.lock().unwrap();
-                *counter -= 1;
-            }
-            cvar.notify_one();
-        });
-    }}
+        // freeing the cvar for new threads
+        {
+            let mut counter = num.lock().unwrap();
+            *counter -= 1;
+        }
+        cvar.notify_one();
+    });
 }
 
 // from https://stackoverflow.com/a/43992218/1592377

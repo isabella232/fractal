@@ -17,6 +17,7 @@ use util::get_user_avatar;
 use util::get_user_avatar_img;
 use backend::types::BKResponse;
 use backend::types::Backend;
+use util::semaphore;
 
 use types::Member;
 use types::UserInfo;
@@ -321,7 +322,7 @@ pub fn get_user_info_async(bk: &mut Backend,
     let cache_key = u.clone();
     let cache_value = info.clone();
 
-    semaphore!(bk.limit_threads, {
+    semaphore(bk.limit_threads.clone(), move || {
         let i0 = info.lock();
         match get_user_avatar(&baseu, &u) {
             Ok(info) => {
@@ -375,7 +376,7 @@ pub fn get_avatar_async(bk: &Backend, member: Option<Member>, tx: Sender<String>
     let uid = m.uid.clone();
     let avatar = m.avatar.clone();
 
-    semaphore!(bk.limit_threads, {
+    semaphore(bk.limit_threads.clone(), move || {
         match get_user_avatar_img(&baseu, uid,
                                   avatar.unwrap_or_default()) {
             Ok(fname) => { tx.send(fname.clone()).unwrap(); }
