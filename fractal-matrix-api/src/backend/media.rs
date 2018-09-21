@@ -11,6 +11,7 @@ use util::cache_dir_path;
 use util::get_room_media_list;
 use util::resolve_media_url;
 use util::semaphore;
+use util;
 
 use types::Message;
 
@@ -35,7 +36,7 @@ pub fn get_media_async(bk: &Backend, media: String, tx: Sender<String>) -> Resul
     let baseu = bk.get_base_url()?;
 
     semaphore(bk.limit_threads.clone(), move || {
-        match media!(&baseu, &media) {
+        match util::media(&baseu, &media, None) {
             Ok(fname) => {
                 tx.send(fname).unwrap();
             }
@@ -78,7 +79,7 @@ pub fn get_media(bk: &Backend, media: String) -> Result<(), Error> {
 
     let tx = bk.tx.clone();
     thread::spawn(move || {
-        match media!(&baseu, &media) {
+        match util::media(&baseu, &media, None) {
             Ok(fname) => {
                 tx.send(BKResponse::Media(fname)).unwrap();
             }

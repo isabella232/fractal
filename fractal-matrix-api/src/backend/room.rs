@@ -17,6 +17,7 @@ use util::get_initial_room_messages;
 use util::{build_url, client_url, media_url};
 use util::put_media;
 use util;
+use util::media;
 use util::cache_path;
 
 use backend::types::Backend;
@@ -71,7 +72,7 @@ pub fn get_room_avatar(bk: &Backend, roomid: String) -> Result<(), Error> {
             match r["url"].as_str() {
                 Some(u) => {
                     if let Ok(dest) = cache_path(&roomid) {
-                        avatar = media!(&baseu, u, Some(&dest)).unwrap_or_default();
+                        avatar = media(&baseu, u, Some(&dest)).unwrap_or_default();
                     } else {
                         avatar = String::from("");
                     }

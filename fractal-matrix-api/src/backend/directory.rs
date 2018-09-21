@@ -14,6 +14,7 @@ use backend::types::Backend;
 use util::json_q;
 use util::dw_media;
 use util::cache_path;
+use util::media;
 
 use types::Room;
 use types::Protocol;
@@ -117,7 +118,7 @@ pub fn room_search(bk: &Backend,
                 /* download the avatar */
                 if let Some(avatar) = r.avatar.clone() {
                     if let Ok(dest) = cache_path(&id) {
-                        media!(&base.clone(), &avatar, Some(&dest)).unwrap_or_default();
+                        media(&base.clone(), &avatar, Some(&dest)).unwrap_or_default();
                     }
                 }
                 rooms.push(r);

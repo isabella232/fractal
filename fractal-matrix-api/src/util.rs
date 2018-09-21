@@ -154,16 +154,6 @@ macro_rules! query {
 }
 
 #[macro_export]
-macro_rules! media {
-    ($base: expr, $url: expr, $dest: expr) => {
-        dw_media($base, $url, false, $dest, 0, 0)
-    };
-    ($base: expr, $url: expr) => {
-        dw_media($base, $url, false, None, 0, 0)
-    };
-}
-
-#[macro_export]
 macro_rules! thumb {
     ($base: expr, $url: expr) => {
         dw_media($base, $url, true, None, 64, 64)
@@ -575,6 +565,10 @@ pub fn dw_media(base: &Url,
     download_file(url.as_str(), fname, dest)
 }
 
+pub fn media(base: &Url, url: &str, dest: Option<&str>) -> Result<String, Error> {
+    dw_media(base, url, false, dest, 0, 0)
+}
+
 pub fn download_file(url: &str, fname: String, dest: Option<&str>) -> Result<String, Error> {
     let pathname = fname.clone();
     let p = Path::new(&pathname);
@@ -697,7 +691,7 @@ pub fn get_room_avatar(base: &Url, tk: &str, userid: &str, roomid: &str) -> Resu
     let mut fname = match members.count() {
         1 => {
             if let Ok(dest) = cache_path(&roomid) {
-                 media!(&base, m1, Some(&dest)).unwrap_or_default()
+                 media(&base, m1, Some(&dest)).unwrap_or_default()
             } else {
                 String::new()
             }
