@@ -153,19 +153,6 @@ macro_rules! query {
     };
 }
 
-#[macro_export]
-macro_rules! thumb {
-    ($base: expr, $url: expr) => {
-        dw_media($base, $url, true, None, 64, 64)
-    };
-    ($base: expr, $url: expr, $size: expr) => {
-        dw_media($base, $url, true, None, $size, $size)
-    };
-    ($base: expr, $url: expr, $w: expr, $h: expr) => {
-        dw_media($base, $url, true, None, $w, $h)
-    };
-}
-
 pub fn evc(events: &JsonValue, t: &str, field: &str) -> String {
     events
         .as_array()
@@ -567,6 +554,10 @@ pub fn dw_media(base: &Url,
 
 pub fn media(base: &Url, url: &str, dest: Option<&str>) -> Result<String, Error> {
     dw_media(base, url, false, dest, 0, 0)
+}
+
+pub fn thumb(base: &Url, url: &str)-> Result<String, Error> {
+    dw_media(base, url, true, None, 64, 64)
 }
 
 pub fn download_file(url: &str, fname: String, dest: Option<&str>) -> Result<String, Error> {

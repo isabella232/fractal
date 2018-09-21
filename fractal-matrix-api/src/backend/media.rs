@@ -11,6 +11,7 @@ use util::cache_dir_path;
 use util::get_room_media_list;
 use util::resolve_media_url;
 use util::semaphore;
+use util::thumb;
 use util;
 
 use types::Message;
@@ -19,7 +20,7 @@ pub fn get_thumb_async(bk: &Backend, media: String, tx: Sender<String>) -> Resul
     let baseu = bk.get_base_url()?;
 
     semaphore(bk.limit_threads.clone(), move || {
-        match thumb!(&baseu, &media) {
+        match thumb(&baseu, &media) {
             Ok(fname) => {
                 tx.send(fname).unwrap();
             }
