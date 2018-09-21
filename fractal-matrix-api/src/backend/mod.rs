@@ -6,7 +6,7 @@ use std::sync::mpsc::channel;
 use std::sync::mpsc::RecvError;
 use std::collections::HashMap;
 
-use util::{build_url, client_url};
+use util::client_url;
 
 use error::Error;
 

@@ -12,9 +12,8 @@ use std::thread;
 use error::Error;
 
 use util::json_q;
-use util::dw_media;
 use util::get_initial_room_messages;
-use util::{build_url, client_url, media_url};
+use util::{client_url, media_url};
 use util::put_media;
 use util;
 use util::media;

@@ -6,7 +6,7 @@ use self::chrono::prelude::*;
 
 use std::thread;
 use util::json_q;
-use util::{scalar_url, build_url, client_url};
+use util::{scalar_url, client_url};
 use url::Url;
 use std::sync::{Arc, Mutex};
 use backend::BackendData;

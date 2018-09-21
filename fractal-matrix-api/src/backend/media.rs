@@ -5,7 +5,6 @@ use error::Error;
 use backend::types::BKResponse;
 use backend::types::Backend;
 
-use util::dw_media;
 use util::download_file;
 use util::cache_dir_path;
 use util::get_room_media_list;
