@@ -129,11 +129,9 @@ fn load_row_content(member: Member) -> gtk::Box {
     let uid = gtk::Label::new(Some(member.uid.as_str()));
     username.set_xalign(0.);
     uid.set_xalign(0.);
-    //let sc = uid.get_style_context();
     if let Some(style) = uid.get_style_context() {
         style.add_class("uid-label");
     }
-    //Some(sc).add_class(Some("hello"));
     b.set_margin_start(12);
     b.set_margin_end(12);
     b.set_margin_top(6);
