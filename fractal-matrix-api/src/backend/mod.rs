@@ -39,7 +39,7 @@ impl Backend {
             scalar_token: None,
             scalar_url: String::from("https://scalar.vector.im"),
             sticker_widget: None,
-            since: String::from(""),
+            since: None,
             rooms_since: String::from(""),
             join_to_room: String::from(""),
             m_direct: HashMap::new(),
