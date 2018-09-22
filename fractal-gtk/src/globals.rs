@@ -9,4 +9,7 @@ pub static DEFAULT_IDENTITYSERVER: &'static str = "https://vector.im";
 pub static MAX_IMAGE_SIZE: (i32, i32) = (600, 400);
 pub static MAX_STICKER_SIZE: (i32, i32) = (200, 130);
 
-include!(concat!(env!("OUT_DIR"), "/build_globals.rs"));
+pub static LOCALEDIR: Option<&'static str> = option_env!("FRACTAL_LOCALEDIR");
+pub static APP_ID: Option<&'static str> = option_env!("FRACTAL_APP_ID");
+pub static NAME_SUFFIX: Option<&'static str> = option_env!("FRACTAL_NAME_SUFFIX");
+pub static VERSION: Option<&'static str> = option_env!("FRACTAL_VERSION");
