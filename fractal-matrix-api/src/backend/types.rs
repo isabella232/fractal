@@ -37,7 +37,7 @@ pub enum BKCommand {
     AccountDestruction(String, String, bool),
     GetAvatar,
     SetUserAvatar(String),
-    Sync,
+    Sync(Option<String>),
     SyncForced,
     GetRoomMembers(String),
     GetRoomMessages(String),

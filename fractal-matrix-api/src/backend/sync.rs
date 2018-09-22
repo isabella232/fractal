@@ -11,19 +11,25 @@ use backend::types::BKResponse;
 use backend::types::Backend;
 use types::Room;
 
-pub fn sync(bk: &Backend) -> Result<(), Error> {
+pub fn sync(bk: &Backend, new_since: Option<String>) -> Result<(), Error> {
     let tk = bk.data.lock().unwrap().access_token.clone();
     if tk.is_empty() {
         return Err(Error::BackendError);
     }
 
-    let since = bk.data.lock().unwrap().since.clone();
+    let mut since = bk.data.lock().unwrap().since.clone();
     let userid = bk.data.lock().unwrap().user_id.clone();
 
     let mut params: Vec<(&str, String)> = vec![];
     params.push(("full_state", String::from("false")));
 
     let timeout;
+    /* FIXME: since in backend data should be a Option, that would make this simpler */
+    if since.is_empty() {
+        if let Some(new_since) = new_since {
+            since = new_since;
+        }
+    }
 
     if since.is_empty() {
         let filter = format!("{{
@@ -155,5 +161,5 @@ pub fn sync(bk: &Backend) -> Result<(), Error> {
 
 pub fn force_sync(bk: &Backend) -> Result<(), Error> {
     bk.data.lock().unwrap().since = String::from("");
-    sync(bk)
+    sync(bk, None)
 }
