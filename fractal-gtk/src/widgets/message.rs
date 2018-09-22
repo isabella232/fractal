@@ -44,6 +44,7 @@ pub struct MessageBox {
     widget: gtk::EventBox,
     row: Option<gtk::ListBoxRow>,
     pub image: Option<gtk::DrawingArea>,
+    header: bool,
 }
 
 impl MessageBox {
@@ -72,6 +73,7 @@ impl MessageBox {
             widget: row_eb,
             row: None,
             image: None,
+            header: true,
         }
     }
 
@@ -82,8 +84,10 @@ impl MessageBox {
         row.set_selectable(false);
         let w = if has_header && self.msg.mtype != RowType::Emote {
             row.set_margin_top(12);
+            self.header = true;
             self.widget()
         } else {
+            self.header = false;
             self.small_widget()
         };
 
@@ -97,24 +101,29 @@ impl MessageBox {
     /* Updates the header of a message row */
     #[allow(dead_code)]
     pub fn update(&mut self, has_header: bool) -> Option<()> {
-        self.username.destroy();
-        self.username = gtk::Label::new("");
-        self.username_event_box.destroy();
-        self.username_event_box = gtk::EventBox::new();
-        let row = self.row.clone()?;
-        let child = self.widget.get_child()?;
-        self.widget.remove(&child);
-        let w = if has_header && self.msg.mtype != RowType::Emote {
-            row.set_margin_top(12);
-            self.widget()
-        } else {
-            /* we need to reset the margin */
-            row.set_margin_top(0);
-            self.small_widget()
-        };
+        /* Update only if some thing changed */
+        if has_header != self.header {
+            self.username.destroy();
+            self.username = gtk::Label::new("");
+            self.username_event_box.destroy();
+            self.username_event_box = gtk::EventBox::new();
+            let row = self.row.clone()?;
+            let child = self.widget.get_child()?;
+            self.widget.remove(&child);
+            let w = if has_header && self.msg.mtype != RowType::Emote {
+                row.set_margin_top(12);
+                self.header = true;
+                self.widget()
+            } else {
+                /* we need to reset the margin */
+                row.set_margin_top(0);
+                self.header = false;
+                self.small_widget()
+            };
 
-        self.widget.add(&w);
-        row.show_all();
+            self.widget.add(&w);
+            row.show_all();
+        }
         None
     }
 
