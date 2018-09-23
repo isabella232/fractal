@@ -130,7 +130,7 @@ fn load_row_content(member: Member) -> gtk::Box {
     username.set_xalign(0.);
     uid.set_xalign(0.);
     if let Some(style) = uid.get_style_context() {
-        style.add_class("uid-label");
+        style.add_class("dim-label");
     }
     b.set_margin_start(12);
     b.set_margin_end(12);
