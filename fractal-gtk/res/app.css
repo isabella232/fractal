@@ -298,6 +298,6 @@ stack.titlebar:not(headerbar) > box > separator {
   color: @theme_fg_color;
 }
 
-.uid-label {
+.small-font {
     font-size: small;
 }
