@@ -40,7 +40,7 @@ pub fn sync(bk: &Backend) -> Result<(), Error> {
             }},
             \"presence\": {{ \"types\": [] }},
             \"event_format\": \"client\",
-            \"event_fields\": [\"type\", \"content\", \"sender\", \"event_id\", \"age\", \"unsigned\"]
+            \"event_fields\": [\"type\", \"content\", \"sender\", \"origin_server_ts\", \"event_id\"]
         }}", globals::PAGE_LIMIT);
 
         params.push(("filter", String::from(filter)));

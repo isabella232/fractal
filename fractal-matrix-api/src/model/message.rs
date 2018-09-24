@@ -1,12 +1,13 @@
 extern crate md5;
 extern crate chrono;
 extern crate serde_json;
-extern crate time;
 use self::chrono::prelude::*;
 use std::cmp::Ordering;
 use std::collections::HashMap;
 use self::serde_json::Value as JsonValue;
-use self::time::Duration;
+use self::chrono::Utc;
+use self::chrono::TimeZone;
+use self::chrono::DateTime;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Message {
@@ -111,10 +112,9 @@ impl Message {
     /// * `msg` - The message event as Json
     pub fn parse_room_message(roomid: String, msg: &JsonValue) -> Message {
         let sender = msg["sender"].as_str().unwrap_or("");
-        let mut age = msg["age"].as_i64().unwrap_or(0);
-        if age == 0 {
-            age = msg["unsigned"]["age"].as_i64().unwrap_or(0);
-        }
+
+        let timestamp = msg["origin_server_ts"].as_i64().unwrap_or(0) / 1000;
+        let server_timestamp: DateTime<Local> = Local.timestamp(timestamp, 0);
 
         let id = msg["event_id"].as_str().unwrap_or("");
         let type_ = msg["type"].as_str().unwrap_or("");
@@ -123,7 +123,7 @@ impl Message {
 
         let mut message = Message {
             sender: sender.to_string(),
-            date: Message::age_to_datetime(age),
+            date: server_timestamp,
             room: roomid.clone(),
             id: Some(id.to_string()),
             mtype: type_.to_string(),
@@ -210,12 +210,6 @@ impl Message {
         }
 
         ms
-    }
-
-    fn age_to_datetime(age: i64) -> DateTime<Local> {
-        let now = Local::now();
-        let diff = Duration::seconds(age / 1000);
-        now - diff
     }
 
     pub fn set_receipt(&mut self, receipt: HashMap<String, i64>) {
