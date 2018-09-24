@@ -25,7 +25,7 @@ use widgets::AvatarData;
 
 #[derive(Serialize, Deserialize)]
 pub struct CacheData {
-    pub since: String,
+    pub since: Option<String>,
     pub rooms: RoomList,
     pub username: String,
     pub uid: String,
@@ -34,7 +34,7 @@ pub struct CacheData {
 
 pub fn store(
     rooms: &RoomList,
-    since: String,
+    since: Option<String>,
     username: String,
     uid: String
 ) -> Result<(), Error> {
