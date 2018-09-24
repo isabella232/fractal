@@ -297,3 +297,7 @@ stack.titlebar:not(headerbar) > box > separator {
 .devel headerbar:last-child > box > label {
   color: @theme_fg_color;
 }
+
+.small-font {
+    font-size: small;
+}
