@@ -17,7 +17,7 @@ pub fn sync(bk: &Backend, new_since: Option<String>) -> Result<(), Error> {
         return Err(Error::BackendError);
     }
 
-    let mut since = bk.data.lock().unwrap().since.clone().or(new_since);
+    let since = bk.data.lock().unwrap().since.clone().or(new_since);
     let userid = bk.data.lock().unwrap().user_id.clone();
 
     let mut params: Vec<(&str, String)> = vec![];
