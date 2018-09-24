@@ -18,7 +18,7 @@ impl AppOp {
     pub fn sync(&mut self) {
         if !self.syncing && self.logged_in {
             self.syncing = true;
-            self.backend.send(BKCommand::Sync).unwrap();
+            self.backend.send(BKCommand::Sync(self.since.clone())).unwrap();
         }
     }
 

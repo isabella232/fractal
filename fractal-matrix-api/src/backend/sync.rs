@@ -11,13 +11,13 @@ use backend::types::BKResponse;
 use backend::types::Backend;
 use types::Room;
 
-pub fn sync(bk: &Backend) -> Result<(), Error> {
+pub fn sync(bk: &Backend, new_since: Option<String>) -> Result<(), Error> {
     let tk = bk.data.lock().unwrap().access_token.clone();
     if tk.is_empty() {
         return Err(Error::BackendError);
     }
 
-    let since = bk.data.lock().unwrap().since.clone();
+    let mut since = bk.data.lock().unwrap().since.clone().or(new_since);
     let userid = bk.data.lock().unwrap().user_id.clone();
 
     let mut params: Vec<(&str, String)> = vec![];
@@ -25,7 +25,11 @@ pub fn sync(bk: &Backend) -> Result<(), Error> {
 
     let timeout;
 
-    if since.is_empty() {
+    if let Some(since) = since.clone() {
+        params.push(("since", since));
+        params.push(("timeout", String::from("30000")));
+        timeout = 30;
+    } else {
         let filter = format!("{{
             \"room\": {{
                 \"state\": {{
@@ -46,10 +50,6 @@ pub fn sync(bk: &Backend) -> Result<(), Error> {
         params.push(("filter", String::from(filter)));
         params.push(("timeout", String::from("0")));
         timeout = 0;
-    } else {
-        params.push(("since", since.clone()));
-        params.push(("timeout", String::from("30000")));
-        timeout = 30;
     }
 
     let baseu = bk.get_base_url()?;
@@ -64,26 +64,7 @@ pub fn sync(bk: &Backend) -> Result<(), Error> {
         match json_q("get", &url, &attrs, timeout) {
             Ok(r) => {
                 let next_batch = String::from(r["next_batch"].as_str().unwrap_or(""));
-                if since.is_empty() {
-                    data.lock().unwrap().m_direct = parse_m_direct(&r);
-
-                    let rooms = match get_rooms_from_json(&r, &userid, &baseu) {
-                        Ok(rs) => rs,
-                        Err(err) => {
-                            tx.send(BKResponse::SyncError(err)).unwrap();
-                            vec![]
-                        }
-                    };
-
-                    let mut def: Option<Room> = None;
-                    let jtr = data.lock().unwrap().join_to_room.clone();
-                    if !jtr.is_empty() {
-                        if let Some(r) = rooms.iter().find(|x| x.id == jtr) {
-                            def = Some(r.clone());
-                        }
-                    }
-                    tx.send(BKResponse::Rooms(rooms, def)).unwrap();
-                } else {
+                if let Some(since) = since {
                     // New rooms
                     match get_rooms_from_json(&r, &userid, &baseu) {
                         Ok(rs) => tx.send(BKResponse::NewRooms(rs)).unwrap(),
@@ -134,10 +115,33 @@ pub fn sync(bk: &Backend) -> Result<(), Error> {
                             }
                         }
                     };
+                } else {
+                   data.lock().unwrap().m_direct = parse_m_direct(&r);
+
+                    let rooms = match get_rooms_from_json(&r, &userid, &baseu) {
+                        Ok(rs) => rs,
+                        Err(err) => {
+                            tx.send(BKResponse::SyncError(err)).unwrap();
+                            vec![]
+                        }
+                    };
+
+                    let mut def: Option<Room> = None;
+                    let jtr = data.lock().unwrap().join_to_room.clone();
+                    if !jtr.is_empty() {
+                        if let Some(r) = rooms.iter().find(|x| x.id == jtr) {
+                            def = Some(r.clone());
+                        }
+                    }
+                    tx.send(BKResponse::Rooms(rooms, def)).unwrap();
                 }
 
                 tx.send(BKResponse::Sync(next_batch.clone())).unwrap();
-                data.lock().unwrap().since = next_batch;
+                data.lock().unwrap().since = if !next_batch.is_empty() {
+                    Some(next_batch)
+                } else {
+                    None
+                }
             },
             Err(err) => {
                 // we wait if there's an error to avoid 100% CPU
@@ -154,6 +158,6 @@ pub fn sync(bk: &Backend) -> Result<(), Error> {
 }
 
 pub fn force_sync(bk: &Backend) -> Result<(), Error> {
-    bk.data.lock().unwrap().since = String::from("");
-    sync(bk)
+    bk.data.lock().unwrap().since = None;
+    sync(bk, None)
 }
