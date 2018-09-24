@@ -113,7 +113,7 @@ impl Message {
     pub fn parse_room_message(roomid: String, msg: &JsonValue) -> Message {
         let sender = msg["sender"].as_str().unwrap_or("");
 
-        let timestamp = msg["origin_server_ts"].as_i64().unwrap_or(0)/1000;
+        let timestamp = msg["origin_server_ts"].as_i64().unwrap_or(0) / 1000;
         let server_timestamp: DateTime<Local> = Local.timestamp(timestamp, 0);
 
         let id = msg["event_id"].as_str().unwrap_or("");
