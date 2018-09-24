@@ -5,7 +5,6 @@ use self::chrono::prelude::*;
 use std::cmp::Ordering;
 use std::collections::HashMap;
 use self::serde_json::Value as JsonValue;
-use self::chrono::Utc;
 use self::chrono::TimeZone;
 use self::chrono::DateTime;
 
