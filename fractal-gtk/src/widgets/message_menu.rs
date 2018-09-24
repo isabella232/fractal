@@ -363,7 +363,9 @@ fn get_selected_text(event_widget: Option<&gtk::Widget>) -> Option<SelectedText>
     match w.get_selection_bounds() {
         Some((s, e)) => {
             let text = w.get_text()?;
-            let slice = text.get(s as usize..e as usize)?;
+            let slice: String = text.chars()
+                .take(e as usize).skip(s as usize)
+                .collect();
             Some(SelectedText{ widget: w.clone(), text: slice.to_string(), start: s, end: e })
         }
         _ => None
