@@ -366,7 +366,7 @@ fn get_selected_text(event_widget: Option<&gtk::Widget>) -> Option<SelectedText>
             let slice: String = text.chars()
                 .take(e as usize).skip(s as usize)
                 .collect();
-            Some(SelectedText{ widget: w.clone(), text: slice.to_string(), start: s, end: e })
+            Some(SelectedText{ widget: w.clone(), text: slice, start: s, end: e })
         }
         _ => None
     }
