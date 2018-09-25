@@ -70,7 +70,6 @@ impl Element {
 pub struct RoomHistory {
     /* Contains a list of msg ids to keep track of the displayed messages */
     rows: Rc<RefCell<List>>,
-    /* Op should be removed, but the MessageBox still needs it */
     ui: UI,
     backend: Sender<BKCommand>,
     room: Room,
@@ -81,8 +80,7 @@ pub struct RoomHistory {
 }
 
 impl RoomHistory {
-    /*FIXME: return Option, to handler errors */
-    pub fn new(listbox: gtk::ListBox, op: &AppOp) -> RoomHistory {
+    pub fn new(listbox: gtk::ListBox, room: Room, op: &AppOp) -> RoomHistory {
         /* remove all old messages from the listbox */
         for ch in listbox.get_children().iter().skip(1) {
             listbox.remove(ch);

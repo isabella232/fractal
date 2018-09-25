@@ -212,7 +212,7 @@ impl AppOp {
             history.destroy();
         }
 
-        let mut history = widgets::RoomHistory::new(list, self);
+        let mut history = widgets::RoomHistory::new(list, room.clone(), self);
         history.create(messages);
         self.history = Some(history);
 
