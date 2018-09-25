@@ -372,7 +372,7 @@ impl AppOp {
             }
             m.widget = None;
             m.msg.id = Some(evid);
-            self.show_room_messages(vec![m.msg.clone()], false);
+            self.show_room_messages(vec![m.msg.clone()]);
         }
         self.force_dequeue_message();
     }
@@ -591,7 +591,7 @@ impl AppOp {
         self.loading_more = false;
     }
 
-    pub fn show_room_messages(&mut self, newmsgs: Vec<Message>, init: bool) -> Option<()> {
+    pub fn show_room_messages(&mut self, newmsgs: Vec<Message>) -> Option<()> {
         let mut msgs = vec![];
 
         for msg in newmsgs.iter() {
@@ -603,32 +603,22 @@ impl AppOp {
             }
         }
 
-        let mut prev = None;
+        let uid = self.uid.clone()?;
         for msg in msgs.iter() {
-            let mut should_notify = msg.body.contains(&self.username.clone()?) || {
-                match self.rooms.get(&msg.room) {
-                    None => false,
-                    Some(r) => r.direct,
-                }
-            };
-            // not notifying the initial messages
-            should_notify = should_notify && !init;
-            // not notifying my own messages
-            should_notify = should_notify && (msg.sender != self.uid.clone()?);
+            let should_notify = msg.sender != uid &&
+                                (msg.body.contains(&self.username.clone()?) ||
+                                self.rooms.get(&msg.room).map_or(false, |r| r.direct));
 
             if should_notify {
                 self.notify(msg);
             }
 
-            let command = InternalCommand::AddRoomMessage(msg.clone(), MsgPos::Bottom, prev, false,
+            let command = InternalCommand::AddRoomMessage(msg.clone(), MsgPos::Bottom, None, false,
                                                           self.is_first_new(&msg));
             self.internal.send(command).unwrap();
-            prev = Some(msg.clone());
 
-            if !init {
-                self.roomlist.moveup(msg.room.clone());
-                self.roomlist.set_bold(msg.room.clone(), true);
-            }
+            self.roomlist.moveup(msg.room.clone());
+            self.roomlist.set_bold(msg.room.clone(), true);
         }
 
         if !msgs.is_empty() {
@@ -637,10 +627,6 @@ impl AppOp {
             if let Some(msg) = fs.last() {
                 self.mark_as_read(msg, Force(false));
             }
-        }
-
-        if init {
-            self.room_panel(RoomPanel::Room);
         }
 
         Some(())
