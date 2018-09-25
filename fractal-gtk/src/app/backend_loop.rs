@@ -124,10 +124,6 @@ pub fn backend_loop(rx: Receiver<BKResponse>) {
                     let init = false;
                     APPOP!(show_room_messages, (msgs, init));
                 }
-                Ok(BKResponse::RoomMessagesInit(msgs)) => {
-                    let init = true;
-                    APPOP!(show_room_messages, (msgs, init));
-                }
                 Ok(BKResponse::RoomMessagesTo(msgs, room, prev_batch)) => {
                     APPOP!(show_room_messages_top, (msgs, room, prev_batch));
                 }

@@ -262,10 +262,6 @@ impl Backend {
                 let r = room::add_to_fav(self, roomid, tofav);
                 bkerror!(r, tx, BKResponse::AddToFavError);
             }
-            Ok(BKCommand::Search(roomid, term)) => {
-                let r = room::search(self, roomid, term);
-                bkerror!(r, tx, BKResponse::SearchError);
-            }
             Ok(BKCommand::AcceptInv(roomid)) => {
                 let r = room::join_room(self, roomid);
                 bkerror!(r, tx, BKResponse::AcceptInvError);

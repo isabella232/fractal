@@ -491,58 +491,6 @@ pub fn direct_chat(bk: &Backend, user: Member, internal_id: String) -> Result<()
     Ok(())
 }
 
-pub fn search(bk: &Backend, roomid: String, term: Option<String>) -> Result<(), Error> {
-    let tx = bk.tx.clone();
-
-    match term {
-        Some(ref t) if !t.is_empty() => {
-            make_search(bk, roomid, t.clone())
-        }
-        _ => {
-            tx.send(BKResponse::SearchEnd).unwrap();
-            Ok(())
-        }
-    }
-}
-
-pub fn make_search(bk: &Backend, roomid: String, term: String) -> Result<(), Error> {
-    let url = bk.url("search", vec![])?;
-
-    let attrs = json!({
-        "search_categories": {
-            "room_events": {
-                "keys": ["content.body"],
-                "search_term": term,
-                "filter": {
-                    "rooms": [ roomid.clone() ],
-                },
-                "order_by": "recent",
-            },
-        },
-    });
-
-    let tx = bk.tx.clone();
-
-    thread::spawn(move || {
-        match json_q("post", &url, &attrs, 0) {
-            Ok(js) => {
-                tx.send(BKResponse::SearchEnd).unwrap();
-                let res = &js["search_categories"]["room_events"]["results"];
-                let events = res.as_array().unwrap().iter().rev();
-                let ms = Message::from_json_events_iter(roomid.clone(), events);
-
-                tx.send(BKResponse::RoomMessagesInit(ms)).unwrap();
-            }
-            Err(err) => {
-                tx.send(BKResponse::SearchEnd).unwrap();
-                tx.send(BKResponse::SearchError(err)).unwrap()
-            }
-        };
-    });
-
-    Ok(())
-}
-
 pub fn add_to_fav(bk: &Backend, roomid: String, tofav: bool) -> Result<(), Error> {
     let userid = bk.data.lock().unwrap().user_id.clone();
     let url = bk.url(&format!("user/{}/rooms/{}/tags/m.favourite", userid, roomid), vec![])?;
