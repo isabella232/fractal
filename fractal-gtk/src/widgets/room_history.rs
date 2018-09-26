@@ -91,13 +91,7 @@ impl RoomHistory {
             ui: op.ui.clone(),
             listbox: listbox,
             backend: op.backend.clone(),
-            /* FIXME: don't use unwarp, because it could fail:
-             * We only create the room history when we have an active room */
-            room: op
-                .rooms
-                .get(&op.active_room.clone().unwrap_or_default())
-                .unwrap()
-                .clone(),
+            room: room,
             divider: None,
             source_id: Rc::new(RefCell::new(None)),
             queue: Rc::new(RefCell::new(VecDeque::new())),

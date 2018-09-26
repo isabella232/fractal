@@ -17,7 +17,6 @@ use cache;
 use widgets;
 
 use types::Room;
-use types::Message;
 
 use util::markup_text;
 
