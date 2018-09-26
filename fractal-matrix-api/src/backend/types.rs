@@ -41,6 +41,7 @@ pub enum BKCommand {
     SyncForced,
     GetRoomMembers(String),
     GetRoomMessages(String, String),
+    GetRoomMessagesFromMsg(String, Message),
     GetMessageContext(Message),
     GetRoomAvatar(String),
     GetThumbAsync(String, Sender<String>),

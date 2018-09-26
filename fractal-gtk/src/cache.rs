@@ -47,6 +47,9 @@ pub fn store(
             _ => 0,
         };
         r.messages = r.messages.iter().skip(skip).cloned().collect();
+        // setting prev_batch to none because we're removing some messages so the
+        // prev_batch isn't valid now, it's not pointing to the stored last msg
+        r.prev_batch = None;
     }
 
     let data = CacheData {

@@ -198,6 +198,10 @@ impl Backend {
                 let r = room::get_room_messages(self, room, from);
                 bkerror!(r, tx, BKResponse::RoomMessagesError);
             }
+            Ok(BKCommand::GetRoomMessagesFromMsg(room, from)) => {
+                let r = room::get_room_messages_from_msg(self, room, from);
+                bkerror!(r, tx, BKResponse::RoomMessagesError);
+            }
             Ok(BKCommand::GetMessageContext(message)) => {
                 let r = room::get_message_context(self, message);
                 bkerror!(r, tx, BKResponse::RoomMessagesError);

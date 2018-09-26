@@ -471,9 +471,15 @@ impl AppOp {
                 self.internal.send(InternalCommand::LoadMoreNormal).unwrap();
             } else if let Some(prev_batch) = r.prev_batch.clone() {
                 self.backend.send(BKCommand::GetRoomMessages(r.id.clone(), prev_batch)).unwrap();
+            } else if let Some(msg) = r.messages.iter().next() {
+                // no prev_batch so we use the last message to calculate that in the backend
+                self.backend.send(BKCommand::GetRoomMessagesFromMsg(r.id.clone(), msg.clone())).unwrap();
+            } else if let Some(from) = self.since.clone() {
+                // no messages and no prev_batch so we use the last since
+                self.backend.send(BKCommand::GetRoomMessages(r.id.clone(), from)).unwrap();
             } else {
-                self.loading_more = false;
                 self.load_more_spn.stop();
+                self.loading_more = false;
             }
         }
     }
