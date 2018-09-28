@@ -179,8 +179,8 @@ impl Backend {
 
             // Sync module
 
-            Ok(BKCommand::Sync(since)) => {
-                let r = sync::sync(self, since);
+            Ok(BKCommand::Sync(since, initial)) => {
+                let r = sync::sync(self, since, initial);
                 bkerror!(r, tx, BKResponse::SyncError);
             }
             Ok(BKCommand::SyncForced) => {

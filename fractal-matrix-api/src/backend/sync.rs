@@ -11,7 +11,7 @@ use backend::types::BKResponse;
 use backend::types::Backend;
 use types::Room;
 
-pub fn sync(bk: &Backend, new_since: Option<String>) -> Result<(), Error> {
+pub fn sync(bk: &Backend, new_since: Option<String>, initial: bool) -> Result<(), Error> {
     let tk = bk.data.lock().unwrap().access_token.clone();
     if tk.is_empty() {
         return Err(Error::BackendError);
@@ -27,6 +27,9 @@ pub fn sync(bk: &Backend, new_since: Option<String>) -> Result<(), Error> {
 
     if let Some(since) = since.clone() {
         params.push(("since", since));
+    }
+
+    if !initial {
         params.push(("timeout", String::from("30000")));
         timeout = 30;
     } else {
@@ -159,5 +162,5 @@ pub fn sync(bk: &Backend, new_since: Option<String>) -> Result<(), Error> {
 
 pub fn force_sync(bk: &Backend) -> Result<(), Error> {
     bk.data.lock().unwrap().since = None;
-    sync(bk, None)
+    sync(bk, None, true)
 }
