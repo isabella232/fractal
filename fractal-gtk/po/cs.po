@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/World/fractal/issues\n"
-"POT-Creation-Date: 2018-09-09 16:22+0000\n"
-"PO-Revision-Date: 2018-09-14 02:49+0200\n"
+"POT-Creation-Date: 2018-09-14 00:51+0000\n"
+"PO-Revision-Date: 2018-10-03 15:13+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -649,7 +649,7 @@ msgstr "Zveřejnit v adresáři místností"
 
 #: fractal-gtk/res/ui/room_settings.ui:827
 msgid "Join addresses"
-msgstr ""
+msgstr "Adresa místnosti"
 
 #: fractal-gtk/res/ui/room_settings.ui:886
 msgid "members"
@@ -853,7 +853,7 @@ msgstr "Neznámá chyba"
 msgid "Passwords didn’t match, try again"
 msgstr "Hesla si neodpovídají, zkuste to znovu."
 
-#: fractal-gtk/src/appop/message.rs:207 fractal-gtk/src/appop/message.rs:215
+#: fractal-gtk/src/appop/message.rs:227 fractal-gtk/src/appop/message.rs:235
 msgid "New Messages"
 msgstr "Nové zprávy"
 
@@ -889,23 +889,23 @@ msgstr "Chyba při načítání předchozích multimédií"
 msgid "No matching members found"
 msgstr "Nebyli nalezení žádní vyhovující členové"
 
-#: fractal-gtk/src/widgets/message.rs:382
+#: fractal-gtk/src/widgets/message.rs:335
 msgid "Could not retrieve file URI"
 msgstr "Nezdařilo se získat adresu URI souboru"
 
-#: fractal-gtk/src/widgets/message.rs:398
-#: fractal-gtk/src/widgets/message.rs:447
+#: fractal-gtk/src/widgets/message.rs:351
+#: fractal-gtk/src/widgets/message.rs:400
 msgid "Save"
 msgstr "Uložit"
 
-#: fractal-gtk/src/widgets/message.rs:408
-#: fractal-gtk/src/widgets/message.rs:458
+#: fractal-gtk/src/widgets/message.rs:361
+#: fractal-gtk/src/widgets/message.rs:411
 #: fractal-gtk/src/widgets/message_menu.rs:151
 #: fractal-gtk/src/widgets/message_menu.rs:176
 msgid "Could not download the file"
 msgstr "Nezdařilo se stáhnout soubor"
 
-#: fractal-gtk/src/widgets/message.rs:476
+#: fractal-gtk/src/widgets/message.rs:429
 msgid "Open"
 msgstr "Otevřít"
 
