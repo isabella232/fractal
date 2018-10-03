@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal gnome-3.30\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/World/fractal/issues\n"
-"POT-Creation-Date: 2018-09-04 17:21+0000\n"
-"PO-Revision-Date: 2018-09-14 02:49+0200\n"
+"POT-Creation-Date: 2018-09-14 12:40+0000\n"
+"PO-Revision-Date: 2018-10-03 15:14+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -447,7 +447,6 @@ msgid "*italic*"
 msgstr "*kurzíva*"
 
 #: fractal-gtk/res/ui/media_viewer_menu.ui:26
-#, fuzzy
 msgid "Save As"
 msgstr "Uložit jako"
 
@@ -637,7 +636,7 @@ msgstr "Zveřejnit v adresáři místností"
 
 #: fractal-gtk/res/ui/room_settings.ui:827
 msgid "Join addresses"
-msgstr ""
+msgstr "Adresa místnosti"
 
 #: fractal-gtk/res/ui/room_settings.ui:886
 msgid "members"
@@ -935,21 +934,3 @@ msgstr "Místnosti"
 #: fractal-gtk/src/widgets/roomlist.rs:439
 msgid "You don’t have any rooms yet"
 msgstr "Zatím nemáte žádné místnosti"
-
-msgid "org.gnome.Fractal"
-msgstr "org.gnome.Fractal"
-
-msgid "Searching"
-msgstr "Hledá se"
-
-msgid "ID"
-msgstr "ID"
-
-msgid "Topic"
-msgstr "Téma"
-
-msgid "and one more"
-msgid_plural "and {member_count} more"
-msgstr[0] "a jeden další"
-msgstr[1] "a {member_count} další"
-msgstr[2] "a {member_count} dalších"
