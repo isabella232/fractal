@@ -34,6 +34,10 @@ extern crate chrono;
 
 extern crate fragile;
 
+extern crate mdl;
+#[macro_use]
+extern crate lazy_static;
+
 use fractal_api::backend;
 use fractal_api::types;
 use fractal_api::error;
