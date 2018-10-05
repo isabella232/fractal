@@ -3,6 +3,7 @@ extern crate glib;
 extern crate gio;
 extern crate gtk;
 extern crate gdk;
+extern crate sourceview;
 
 extern crate rand;
 extern crate itertools;
@@ -24,6 +25,8 @@ extern crate serde_derive;
 extern crate fractal_matrix_api as fractal_api;
 
 extern crate html2pango;
+
+extern crate libhandy;
 
 extern crate gettextrs;
 

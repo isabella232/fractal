@@ -13,6 +13,7 @@ pub mod media_viewer;
 pub mod divider;
 pub mod image;
 mod inline_player;
+mod sourceview_entry;
 pub mod message_menu;
 
 pub use self::message::MessageBox;
@@ -33,3 +34,4 @@ pub use self::avatar::AvatarData;
 pub use self::avatar::admin_badge;
 pub use self::avatar::AdminColor;
 pub use self::inline_player::AudioPlayerWidget;
+pub use self::sourceview_entry::SVEntry;
