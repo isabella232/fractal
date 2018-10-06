@@ -22,10 +22,10 @@ impl AppOp {
         let user = self.invite_list[0].clone();
 
         let internal_id: String = thread_rng().sample_iter(&Alphanumeric).take(10).collect();
-        self.backend.send(BKCommand::DirectChat(user.clone(), internal_id.clone())).unwrap();
+        self.backend.send(BKCommand::DirectChat(user.0.clone(), internal_id.clone())).unwrap();
         self.close_direct_chat_dialog();
 
-        let mut fakeroom = Room::new(internal_id.clone(), user.alias.clone());
+        let mut fakeroom = Room::new(internal_id.clone(), user.0.alias.clone());
         fakeroom.direct = true;
 
         self.new_room(fakeroom, None);

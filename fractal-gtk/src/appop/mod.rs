@@ -91,7 +91,7 @@ pub struct AppOp {
 
     pub invitation_roomid: Option<String>,
     pub md_enabled: bool,
-    invite_list: Vec<Member>,
+    pub invite_list: Vec<(Member, gtk::TextChildAnchor)>,
     search_type: SearchType,
 
     pub stickers: Vec<StickerGroup>,

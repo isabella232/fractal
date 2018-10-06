@@ -44,6 +44,12 @@ impl App {
         let invite = self.ui.builder
             .get_object::<gtk::Button>("invite_button")
             .expect("Can't find invite_button in ui file.");
+        let to_chat_textview = self.ui.builder
+            .get_object::<gtk::TextView>("to_chat_textview")
+            .expect("Can't find to_chat_textview in ui file.");
+        let invite_textview = self.ui.builder
+            .get_object::<gtk::TextView>("invite_textview")
+            .expect("Can't find invite_textview in ui file.");
         let entry = self.ui.builder
             .get_object::<gtk::Entry>("invite_entry")
             .expect("Can't find invite_entry in ui file.");
@@ -71,6 +77,24 @@ impl App {
             *(source_id.lock().unwrap()) = Some(sid);
             glib::signal::Inhibit(false)
         }));
+
+        if let Some(buffer) = to_chat_textview.get_buffer() {
+            buffer.connect_delete_range(clone!( op => move |_, _, _| {
+                gtk::idle_add(clone!(op => move || {
+                    op.lock().unwrap().detect_removed_invite();
+                    Continue(false)
+                }));
+            }));
+        }
+
+        if let Some(buffer) = invite_textview.get_buffer() {
+            buffer.connect_delete_range(clone!( op => move |_, _, _| {
+                gtk::idle_add(clone!(op => move || {
+                    op.lock().unwrap().detect_removed_invite();
+                    Continue(false)
+                }));
+            }));
+        }
 
         dialog.connect_delete_event(clone!(op => move |_, _| {
             op.lock().unwrap().close_invite_dialog();

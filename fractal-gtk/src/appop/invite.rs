@@ -32,11 +32,11 @@ impl AppOp {
             .get_object::<gtk::ListBox>(listboxid)
             .expect("Can't find to_invite in ui file.");
 
-        if self.invite_list.contains(&u) {
         let to_invite_textview = self.ui.builder
             .get_object::<gtk::TextView>(textviewid)
             .expect("Can't find to_invite_textview in ui file.");
 
+        if self.invite_list.iter().any(|(mem, _)| *mem == u) {
             return;
         }
 
@@ -132,7 +132,7 @@ impl AppOp {
             .get_object::<gtk::Dialog>(dialogid)
             .expect("Can’t find invite_user_dialog in ui file.");
 
-        let idx = self.invite_list.iter().position(|x| x.uid == uid);
+        let idx = self.invite_list.iter().position(|x| x.0.uid == uid);
         if let Some(i) = idx {
             self.invite_list.remove(i);
             if let Some(r) = to_invite.get_row_at_index(i as i32) {
@@ -151,6 +151,17 @@ impl AppOp {
         }
 
         dialog.resize(300, 200);
+    }
+
+    pub fn detect_removed_invite(&self) {
+        for (member, anchor) in self.invite_list.clone() {
+            if anchor.get_deleted() {
+                let tx = self.internal.clone();
+                let uid = member.uid.clone();
+
+                tx.send(InternalCommand::RmInvite(uid)).unwrap();
+            }
+        }
     }
 
     pub fn show_invite_user_dialog(&mut self) {
@@ -181,7 +192,7 @@ impl AppOp {
     pub fn invite(&mut self) {
         if let &Some(ref r) = &self.active_room {
             for user in &self.invite_list {
-                self.backend.send(BKCommand::Invite(r.clone(), user.uid.clone())).unwrap();
+                self.backend.send(BKCommand::Invite(r.clone(), user.0.uid.clone())).unwrap();
             }
         }
         self.close_invite_dialog();
