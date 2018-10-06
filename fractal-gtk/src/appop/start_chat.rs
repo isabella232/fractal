@@ -56,9 +56,9 @@ impl AppOp {
         let scroll = self.ui.builder
             .get_object::<gtk::Widget>("direct_chat_search_scroll")
             .expect("Can't find direct_chat_search_scroll in ui file.");
-        let to_invite = self.ui.builder
-            .get_object::<gtk::ListBox>("to_chat")
-            .expect("Can't find to_chat in ui file.");
+        let to_chat_textview = self.ui.builder
+            .get_object::<gtk::TextView>("to_chat_textview")
+            .expect("Can't find to_chat_textview in ui file.");
         let entry = self.ui.builder
             .get_object::<gtk::Entry>("to_chat_entry")
             .expect("Can't find to_chat_entry in ui file.");
@@ -67,8 +67,11 @@ impl AppOp {
             .expect("Can't find direct_chat_dialog in ui file.");
 
         self.invite_list = vec![];
-        for ch in to_invite.get_children().iter() {
-            to_invite.remove(ch);
+        if let Some(buffer) = to_chat_textview.get_buffer() {
+            let mut start = buffer.get_start_iter();
+            let mut end = buffer.get_end_iter();
+
+            buffer.delete(&mut start, &mut end);
         }
         for ch in listbox.get_children().iter() {
             listbox.remove(ch);

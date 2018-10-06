@@ -18,34 +18,18 @@ use types::Room;
 
 impl AppOp {
     pub fn add_to_invite(&mut self, u: Member) {
-        let listboxid = match self.search_type {
-            SearchType::Invite => "to_invite",
-            SearchType::DirectChat => "to_chat",
-        };
+        if self.invite_list.iter().any(|(mem, _)| *mem == u) {
+            return;
+        }
 
         let textviewid = match self.search_type {
             SearchType::Invite => "invite_textview",
             SearchType::DirectChat => "to_chat_textview",
         };
 
-        let to_invite = self.ui.builder
-            .get_object::<gtk::ListBox>(listboxid)
-            .expect("Can't find to_invite in ui file.");
-
         let to_invite_textview = self.ui.builder
             .get_object::<gtk::TextView>(textviewid)
             .expect("Can't find to_invite_textview in ui file.");
-
-        if self.invite_list.iter().any(|(mem, _)| *mem == u) {
-            return;
-        }
-
-        if let SearchType::DirectChat = self.search_type {
-            self.invite_list = vec![];
-            for ch in to_invite.get_children().iter() {
-                to_invite.remove(ch);
-            }
-        }
 
         if let SearchType::DirectChat = self.search_type {
             self.invite_list = vec![];
@@ -81,63 +65,12 @@ impl AppOp {
                 self.invite_list.push((u.clone(), anchor));
             }
         }
-
-        let w;
-        {
-            let mb = widgets::MemberBox::new(&u, &self);
-            w = mb.widget(true);
-        }
-
-        let mbox;
-
-        mbox = gtk::Box::new(gtk::Orientation::Horizontal, 0);
-        let btn = gtk::Button::new();
-        let img = gtk::Image::new_from_icon_name("window-close-symbolic", 2);
-        btn.get_style_context().unwrap().add_class("circular");
-        btn.set_image(&img);
-
-        mbox.pack_start(&w, true, true, 0);
-        mbox.pack_start(&btn, false, false, 0);
-        mbox.show_all();
-
-        let tx = self.internal.clone();
-        let uid = u.uid.clone();
-        btn.connect_clicked(move |_| {
-            tx.send(InternalCommand::RmInvite(uid.clone())).unwrap();
-        });
-
-        let size = (self.invite_list.len() - 1) as i32;
-        to_invite.insert(&mbox, size);
     }
 
     pub fn rm_from_invite(&mut self, uid: String) {
-        let invid;
-        let dialogid;
-
-        match self.search_type {
-            SearchType::Invite => {
-                invid = "to_invite";
-                dialogid = "invite_user_dialog";
-            }
-            SearchType::DirectChat => {
-                invid = "to_chat";
-                dialogid = "direct_chat_dialog";
-            }
-        };
-
-        let to_invite = self.ui.builder
-            .get_object::<gtk::ListBox>(invid)
-            .expect("Can’t find to_invite in ui file.");
-        let dialog = self.ui.builder
-            .get_object::<gtk::Dialog>(dialogid)
-            .expect("Can’t find invite_user_dialog in ui file.");
-
         let idx = self.invite_list.iter().position(|x| x.0.uid == uid);
         if let Some(i) = idx {
             self.invite_list.remove(i);
-            if let Some(r) = to_invite.get_row_at_index(i as i32) {
-                to_invite.remove(&r);
-            }
         }
 
         if self.invite_list.is_empty() {
@@ -149,6 +82,19 @@ impl AppOp {
                 .get_object::<gtk::Button>("invite_button")
                 .map(|btn| btn.set_sensitive(false));
         }
+
+        let dialogid = match self.search_type {
+            SearchType::Invite => {
+                "invite_user_dialog"
+            }
+            SearchType::DirectChat => {
+                "direct_chat_dialog"
+            }
+        };
+
+        let dialog = self.ui.builder
+            .get_object::<gtk::Dialog>(dialogid)
+            .expect("Can’t find invite_user_dialog in ui file.");
 
         dialog.resize(300, 200);
     }
@@ -205,9 +151,9 @@ impl AppOp {
         let scroll = self.ui.builder
             .get_object::<gtk::Widget>("user_search_scroll")
             .expect("Can't find user_search_scroll in ui file.");
-        let to_invite = self.ui.builder
-            .get_object::<gtk::ListBox>("to_invite")
-            .expect("Can't find to_invite in ui file.");
+        let invite_textview = self.ui.builder
+            .get_object::<gtk::TextView>("invite_textview")
+            .expect("Can't find invite_textview in ui file.");
         let entry = self.ui.builder
             .get_object::<gtk::Entry>("invite_entry")
             .expect("Can't find invite_entry in ui file.");
@@ -216,8 +162,11 @@ impl AppOp {
             .expect("Can't find invite_user_dialog in ui file.");
 
         self.invite_list = vec![];
-        for ch in to_invite.get_children().iter() {
-            to_invite.remove(ch);
+        if let Some(buffer) = invite_textview.get_buffer() {
+            let mut start = buffer.get_start_iter();
+            let mut end = buffer.get_end_iter();
+
+            buffer.delete(&mut start, &mut end);
         }
         for ch in listbox.get_children().iter() {
             listbox.remove(ch);
