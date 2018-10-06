@@ -60,6 +60,62 @@ impl App {
         // this is used to cancel the timeout and not search for every key input. We'll wait 500ms
         // without key release event to launch the search
         let source_id: Arc<Mutex<Option<glib::source::SourceId>>> = Arc::new(Mutex::new(None));
+        to_chat_textview.connect_key_release_event(clone!(op => move |entry, _| {
+            {
+                let mut id = source_id.lock().unwrap();
+                if let Some(sid) = id.take() {
+                    glib::source::source_remove(sid);
+                }
+            }
+
+            let sid = gtk::timeout_add(500, clone!(op, entry, source_id => move || {
+                if let Some(buffer) = entry.get_buffer() {
+                    let start = buffer.get_start_iter();
+                    let end = buffer.get_end_iter();
+
+                    let text = buffer.get_text(&start, &end, false);
+
+                    op.lock().unwrap().search_invite_user(text);
+                }
+
+                *(source_id.lock().unwrap()) = None;
+                gtk::Continue(false)
+            }));
+
+            *(source_id.lock().unwrap()) = Some(sid);
+            glib::signal::Inhibit(false)
+        }));
+        // this is used to cancel the timeout and not search for every key input. We'll wait 500ms
+        // without key release event to launch the search
+        let source_id: Arc<Mutex<Option<glib::source::SourceId>>> = Arc::new(Mutex::new(None));
+        invite_textview.connect_key_release_event(clone!(op => move |entry, _| {
+            {
+                let mut id = source_id.lock().unwrap();
+                if let Some(sid) = id.take() {
+                    glib::source::source_remove(sid);
+                }
+            }
+
+            let sid = gtk::timeout_add(500, clone!(op, entry, source_id => move || {
+                if let Some(buffer) = entry.get_buffer() {
+                    let start = buffer.get_start_iter();
+                    let end = buffer.get_end_iter();
+
+                    let text = buffer.get_text(&start, &end, false);
+
+                    op.lock().unwrap().search_invite_user(text);
+                }
+
+                *(source_id.lock().unwrap()) = None;
+                gtk::Continue(false)
+            }));
+
+            *(source_id.lock().unwrap()) = Some(sid);
+            glib::signal::Inhibit(false)
+        }));
+        // this is used to cancel the timeout and not search for every key input. We'll wait 500ms
+        // without key release event to launch the search
+        let source_id: Arc<Mutex<Option<glib::source::SourceId>>> = Arc::new(Mutex::new(None));
         entry.connect_key_release_event(clone!(op => move |entry, _| {
             {
                 let mut id = source_id.lock().unwrap();

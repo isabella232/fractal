@@ -51,9 +51,19 @@ impl AppOp {
             .map(|btn| btn.set_sensitive(true));
 
         if let Some(buffer) = to_invite_textview.get_buffer() {
-            let mut iter = buffer.get_end_iter();
+            let mut start_word = buffer.get_iter_at_offset(buffer.get_property_cursor_position());
+            let mut end_word = buffer.get_iter_at_offset(buffer.get_property_cursor_position());
 
-            if let Some(anchor) = buffer.create_child_anchor(&mut iter) {
+            // Remove the search input in the entry before inserting the member's pill
+            if !start_word.starts_word() {
+                start_word.backward_word_start();
+            }
+            if !end_word.ends_word() {
+                end_word.forward_word_end();
+            }
+            buffer.delete(&mut start_word, &mut end_word);
+
+            if let Some(anchor) = buffer.create_child_anchor(&mut end_word) {
                 let w;
                 {
                     let mb = widgets::MemberBox::new(&u, &self);
