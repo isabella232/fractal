@@ -23,11 +23,20 @@ impl AppOp {
             SearchType::DirectChat => "to_chat",
         };
 
+        let textviewid = match self.search_type {
+            SearchType::Invite => "invite_textview",
+            SearchType::DirectChat => "to_chat_textview",
+        };
+
         let to_invite = self.ui.builder
             .get_object::<gtk::ListBox>(listboxid)
             .expect("Can't find to_invite in ui file.");
 
         if self.invite_list.contains(&u) {
+        let to_invite_textview = self.ui.builder
+            .get_object::<gtk::TextView>(textviewid)
+            .expect("Can't find to_invite_textview in ui file.");
+
             return;
         }
 
@@ -38,7 +47,16 @@ impl AppOp {
             }
         }
 
-        self.invite_list.push(u.clone());
+        if let SearchType::DirectChat = self.search_type {
+            self.invite_list = vec![];
+
+            if let Some(buffer) = to_invite_textview.get_buffer() {
+                let mut start = buffer.get_start_iter();
+                let mut end = buffer.get_end_iter();
+
+                buffer.delete(&mut start, &mut end);
+            }
+        }
 
         self.ui.builder
             .get_object::<gtk::Button>("direct_chat_button")
@@ -47,6 +65,22 @@ impl AppOp {
         self.ui.builder
             .get_object::<gtk::Button>("invite_button")
             .map(|btn| btn.set_sensitive(true));
+
+        if let Some(buffer) = to_invite_textview.get_buffer() {
+            let mut iter = buffer.get_end_iter();
+
+            if let Some(anchor) = buffer.create_child_anchor(&mut iter) {
+                let w;
+                {
+                    let mb = widgets::MemberBox::new(&u, &self);
+                    w = mb.pill();
+                }
+
+                to_invite_textview.add_child_at_anchor(&w, &anchor);
+
+                self.invite_list.push((u.clone(), anchor));
+            }
+        }
 
         let w;
         {
