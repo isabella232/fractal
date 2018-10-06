@@ -57,6 +57,15 @@
         {
             "name" : "libhandy",
             "buildsystem" : "meson",
+            "config-opts" : [
+                "-Dprofiling=false",
+                "-Dintrospection=true",
+                "-Dgtk_doc=false",
+                "-Dtests=false",
+                "-Dexamples=false",
+                "-Dvapi=false",
+                "-Dglade_catalog=false"
+            ],
             "sources" : [
                 {
                     "type" : "git",
