@@ -60,8 +60,8 @@ impl AppOp {
             .get_object::<gtk::TextView>("to_chat_textview")
             .expect("Can't find to_chat_textview in ui file.");
         let entry = self.ui.builder
-            .get_object::<gtk::Entry>("to_chat_entry")
-            .expect("Can't find to_chat_entry in ui file.");
+            .get_object::<gtk::TextView>("to_chat_textview")
+            .expect("Can't find to_chat_textview in ui file.");
         let dialog = self.ui.builder
             .get_object::<gtk::Dialog>("direct_chat_dialog")
             .expect("Can't find direct_chat_dialog in ui file.");
@@ -77,7 +77,9 @@ impl AppOp {
             listbox.remove(ch);
         }
         scroll.hide();
-        entry.set_text("");
+        if let Some(buffer) = entry.get_buffer() {
+            buffer.set_text("");
+        }
         dialog.hide();
         dialog.resize(300, 200);
     }

@@ -51,9 +51,6 @@ impl App {
         let invite_textview = self.ui.builder
             .get_object::<gtk::TextView>("invite_textview")
             .expect("Can't find invite_textview in ui file.");
-        let entry = self.ui.builder
-            .get_object::<gtk::Entry>("invite_entry")
-            .expect("Can't find invite_entry in ui file.");
         let dialog = self.ui.builder
             .get_object::<gtk::Dialog>("invite_user_dialog")
             .expect("Can't find invite_user_dialog in ui file.");
@@ -101,30 +98,14 @@ impl App {
             *(source_id.lock().unwrap()) = Some(sid);
             glib::signal::Inhibit(false)
         }));
-        // this is used to cancel the timeout and not search for every key input. We'll wait 500ms
-        // without key release event to launch the search
-        let source_id: Arc<Mutex<Option<glib::source::SourceId>>> = Arc::new(Mutex::new(None));
-        entry.connect_key_release_event(clone!(op => move |entry, _| {
-            {
-                let mut id = source_id.lock().unwrap();
-                if let Some(sid) = id.take() {
-                    glib::source::source_remove(sid);
-                }
 
         invite_textview.connect_focus_in_event(clone!(op, invite_textview_box => move |_, _| {
             if let Some(style) = invite_textview_box.get_style_context() {
                 style.add_class("message-input-focused");
             }
 
-            let sid = gtk::timeout_add(500, clone!(op, entry, source_id => move || {
-                op.lock().unwrap().search_invite_user(entry.get_text());
-                *(source_id.lock().unwrap()) = None;
-                gtk::Continue(false)
-            }));
             op.lock().unwrap().remove_invite_user_dialog_placeholder();
 
-            *(source_id.lock().unwrap()) = Some(sid);
-            glib::signal::Inhibit(false)
             Inhibit(false)
         }));
 

@@ -169,9 +169,6 @@ impl AppOp {
         let invite_textview = self.ui.builder
             .get_object::<gtk::TextView>("invite_textview")
             .expect("Can't find invite_textview in ui file.");
-        let entry = self.ui.builder
-            .get_object::<gtk::Entry>("invite_entry")
-            .expect("Can't find invite_entry in ui file.");
         let dialog = self.ui.builder
             .get_object::<gtk::Dialog>("invite_user_dialog")
             .expect("Can't find invite_user_dialog in ui file.");
@@ -187,7 +184,6 @@ impl AppOp {
             listbox.remove(ch);
         }
         scroll.hide();
-        entry.set_text("");
         dialog.hide();
         dialog.resize(300, 200);
     }

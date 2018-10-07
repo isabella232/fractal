@@ -17,9 +17,6 @@ impl App {
         let invite = self.ui.builder
             .get_object::<gtk::Button>("direct_chat_button")
             .expect("Can't find direct_chat_button in ui file.");
-        let entry = self.ui.builder
-            .get_object::<gtk::Entry>("to_chat_entry")
-            .expect("Can't find to_chat_entry in ui file.");
         let to_chat_textview_box = self.ui.builder
             .get_object::<gtk::Box>("to_chat_textview_box")
             .expect("Can't find to_chat_textview_box in ui file.");
@@ -48,7 +45,7 @@ impl App {
         // this is used to cancel the timeout and not search for every key input. We'll wait 500ms
         // without key release event to launch the search
         let source_id: Arc<Mutex<Option<glib::source::SourceId>>> = Arc::new(Mutex::new(None));
-        entry.connect_key_release_event(clone!(op => move |entry, _| {
+        to_chat_textview.connect_key_release_event(clone!(op => move |entry, _| {
             {
                 let mut id = source_id.lock().unwrap();
                 if let Some(sid) = id.take() {
@@ -57,7 +54,15 @@ impl App {
             }
 
             let sid = gtk::timeout_add(500, clone!(op, entry, source_id => move || {
-                op.lock().unwrap().search_invite_user(entry.get_text());
+                if let Some(buffer) = entry.get_buffer() {
+                    let start = buffer.get_start_iter();
+                    let end = buffer.get_end_iter();
+
+                    let text = buffer.get_text(&start, &end, false);
+
+                    op.lock().unwrap().search_invite_user(text);
+                }
+
                 *(source_id.lock().unwrap()) = None;
                 gtk::Continue(false)
             }));
