@@ -56,18 +56,18 @@ impl AppOp {
         let scroll = self.ui.builder
             .get_object::<gtk::Widget>("direct_chat_search_scroll")
             .expect("Can't find direct_chat_search_scroll in ui file.");
-        let to_chat_textview = self.ui.builder
-            .get_object::<gtk::TextView>("to_chat_textview")
-            .expect("Can't find to_chat_textview in ui file.");
+        let to_chat_entry = self.ui.builder
+            .get_object::<gtk::TextView>("to_chat_entry")
+            .expect("Can't find to_chat_entry in ui file.");
         let entry = self.ui.builder
-            .get_object::<gtk::TextView>("to_chat_textview")
-            .expect("Can't find to_chat_textview in ui file.");
+            .get_object::<gtk::TextView>("to_chat_entry")
+            .expect("Can't find to_chat_entry in ui file.");
         let dialog = self.ui.builder
             .get_object::<gtk::Dialog>("direct_chat_dialog")
             .expect("Can't find direct_chat_dialog in ui file.");
 
         self.invite_list = vec![];
-        if let Some(buffer) = to_chat_textview.get_buffer() {
+        if let Some(buffer) = to_chat_entry.get_buffer() {
             let mut start = buffer.get_start_iter();
             let mut end = buffer.get_end_iter();
 

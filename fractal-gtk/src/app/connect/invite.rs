@@ -45,17 +45,17 @@ impl App {
         let invite = self.ui.builder
             .get_object::<gtk::Button>("invite_button")
             .expect("Can't find invite_button in ui file.");
-        let invite_textview_box = self.ui.builder
-            .get_object::<gtk::Box>("invite_textview_box")
-            .expect("Can't find invite_textview_box in ui file.");
-        let invite_textview = self.ui.builder
-            .get_object::<gtk::TextView>("invite_textview")
-            .expect("Can't find invite_textview in ui file.");
+        let invite_entry_box = self.ui.builder
+            .get_object::<gtk::Box>("invite_entry_box")
+            .expect("Can't find invite_entry_box in ui file.");
+        let invite_entry = self.ui.builder
+            .get_object::<gtk::TextView>("invite_entry")
+            .expect("Can't find invite_entry in ui file.");
         let dialog = self.ui.builder
             .get_object::<gtk::Dialog>("invite_user_dialog")
             .expect("Can't find invite_user_dialog in ui file.");
 
-        if let Some(buffer) = invite_textview.get_buffer() {
+        if let Some(buffer) = invite_entry.get_buffer() {
             let placeholder_tag = gtk::TextTag::new(Some("placeholder"));
 
             placeholder_tag.set_property_foreground_rgba(Some(&gdk::RGBA {
@@ -73,7 +73,7 @@ impl App {
         // this is used to cancel the timeout and not search for every key input. We'll wait 500ms
         // without key release event to launch the search
         let source_id: Arc<Mutex<Option<glib::source::SourceId>>> = Arc::new(Mutex::new(None));
-        invite_textview.connect_key_release_event(clone!(op => move |entry, _| {
+        invite_entry.connect_key_release_event(clone!(op => move |entry, _| {
             {
                 let mut id = source_id.lock().unwrap();
                 if let Some(sid) = id.take() {
@@ -99,8 +99,8 @@ impl App {
             glib::signal::Inhibit(false)
         }));
 
-        invite_textview.connect_focus_in_event(clone!(op, invite_textview_box => move |_, _| {
-            if let Some(style) = invite_textview_box.get_style_context() {
+        invite_entry.connect_focus_in_event(clone!(op, invite_entry_box => move |_, _| {
+            if let Some(style) = invite_entry_box.get_style_context() {
                 style.add_class("message-input-focused");
             }
 
@@ -109,8 +109,8 @@ impl App {
             Inhibit(false)
         }));
 
-        invite_textview.connect_focus_out_event(clone!(op, invite_textview_box => move |_, _| {
-            if let Some(style) = invite_textview_box.get_style_context() {
+        invite_entry.connect_focus_out_event(clone!(op, invite_entry_box => move |_, _| {
+            if let Some(style) = invite_entry_box.get_style_context() {
                 style.remove_class("message-input-focused");
             }
 
@@ -119,7 +119,7 @@ impl App {
             Inhibit(false)
         }));
 
-        if let Some(buffer) = invite_textview.get_buffer() {
+        if let Some(buffer) = invite_entry.get_buffer() {
             buffer.connect_delete_range(clone!( op => move |_, _, _| {
                 gtk::idle_add(clone!(op => move || {
                     op.lock().unwrap().detect_removed_invite();

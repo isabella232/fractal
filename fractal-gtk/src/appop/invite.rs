@@ -25,18 +25,18 @@ impl AppOp {
         }
 
         let textviewid = match self.search_type {
-            SearchType::Invite => "invite_textview",
-            SearchType::DirectChat => "to_chat_textview",
+            SearchType::Invite => "invite_entry",
+            SearchType::DirectChat => "to_chat_entry",
         };
 
-        let to_invite_textview = self.ui.builder
+        let invite_entry = self.ui.builder
             .get_object::<gtk::TextView>(textviewid)
-            .expect("Can't find to_invite_textview in ui file.");
+            .expect("Can't find invite_entry in ui file.");
 
         if let SearchType::DirectChat = self.search_type {
             self.invite_list = vec![];
 
-            if let Some(buffer) = to_invite_textview.get_buffer() {
+            if let Some(buffer) = invite_entry.get_buffer() {
                 let mut start = buffer.get_start_iter();
                 let mut end = buffer.get_end_iter();
 
@@ -52,7 +52,7 @@ impl AppOp {
             .get_object::<gtk::Button>("invite_button")
             .map(|btn| btn.set_sensitive(true));
 
-        if let Some(buffer) = to_invite_textview.get_buffer() {
+        if let Some(buffer) = invite_entry.get_buffer() {
             let mut start_word = buffer.get_iter_at_offset(buffer.get_property_cursor_position());
             let mut end_word = buffer.get_iter_at_offset(buffer.get_property_cursor_position());
 
@@ -72,7 +72,7 @@ impl AppOp {
                     w = mb.pill();
                 }
 
-                to_invite_textview.add_child_at_anchor(&w, &anchor);
+                invite_entry.add_child_at_anchor(&w, &anchor);
 
                 self.invite_list.push((u.clone(), anchor));
             }
@@ -166,15 +166,15 @@ impl AppOp {
         let scroll = self.ui.builder
             .get_object::<gtk::Widget>("user_search_scroll")
             .expect("Can't find user_search_scroll in ui file.");
-        let invite_textview = self.ui.builder
-            .get_object::<gtk::TextView>("invite_textview")
-            .expect("Can't find invite_textview in ui file.");
+        let invite_entry = self.ui.builder
+            .get_object::<gtk::TextView>("invite_entry")
+            .expect("Can't find invite_entry in ui file.");
         let dialog = self.ui.builder
             .get_object::<gtk::Dialog>("invite_user_dialog")
             .expect("Can't find invite_user_dialog in ui file.");
 
         self.invite_list = vec![];
-        if let Some(buffer) = invite_textview.get_buffer() {
+        if let Some(buffer) = invite_entry.get_buffer() {
             let mut start = buffer.get_start_iter();
             let mut end = buffer.get_end_iter();
 
@@ -231,15 +231,15 @@ impl AppOp {
 
     pub fn set_invite_user_dialog_placeholder(&mut self) {
         let textviewid = match self.search_type {
-            SearchType::Invite => "invite_textview",
-            SearchType::DirectChat => "to_chat_textview",
+            SearchType::Invite => "invite_entry",
+            SearchType::DirectChat => "to_chat_entry",
         };
 
-        let to_invite_textview = self.ui.builder
+        let invite_entry = self.ui.builder
             .get_object::<gtk::TextView>(textviewid)
-            .expect("Can't find to_invite_textview in ui file.");
+            .expect("Can't find invite_entry in ui file.");
 
-        if let Some(buffer) = to_invite_textview.get_buffer() {
+        if let Some(buffer) = invite_entry.get_buffer() {
             let start = buffer.get_start_iter();
             let end = buffer.get_end_iter();
 
@@ -258,15 +258,15 @@ impl AppOp {
 
     pub fn remove_invite_user_dialog_placeholder(&mut self) {
         let textviewid = match self.search_type {
-            SearchType::Invite => "invite_textview",
-            SearchType::DirectChat => "to_chat_textview",
+            SearchType::Invite => "invite_entry",
+            SearchType::DirectChat => "to_chat_entry",
         };
 
-        let to_invite_textview = self.ui.builder
+        let invite_entry = self.ui.builder
             .get_object::<gtk::TextView>(textviewid)
-            .expect("Can't find to_invite_textview in ui file.");
+            .expect("Can't find invite_entry in ui file.");
 
-        if let Some(buffer) = to_invite_textview.get_buffer() {
+        if let Some(buffer) = invite_entry.get_buffer() {
             let mut start = buffer.get_start_iter();
             let mut end = buffer.get_end_iter();
 

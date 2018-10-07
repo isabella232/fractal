@@ -17,17 +17,17 @@ impl App {
         let invite = self.ui.builder
             .get_object::<gtk::Button>("direct_chat_button")
             .expect("Can't find direct_chat_button in ui file.");
-        let to_chat_textview_box = self.ui.builder
-            .get_object::<gtk::Box>("to_chat_textview_box")
-            .expect("Can't find to_chat_textview_box in ui file.");
-        let to_chat_textview = self.ui.builder
-            .get_object::<gtk::TextView>("to_chat_textview")
-            .expect("Can't find to_chat_textview in ui file.");
+        let to_chat_entry_box = self.ui.builder
+            .get_object::<gtk::Box>("to_chat_entry_box")
+            .expect("Can't find to_chat_entry_box in ui file.");
+        let to_chat_entry = self.ui.builder
+            .get_object::<gtk::TextView>("to_chat_entry")
+            .expect("Can't find to_chat_entry in ui file.");
         let dialog = self.ui.builder
             .get_object::<gtk::Dialog>("direct_chat_dialog")
             .expect("Can't find direct_chat_dialog in ui file.");
 
-        if let Some(buffer) = to_chat_textview.get_buffer() {
+        if let Some(buffer) = to_chat_entry.get_buffer() {
             let placeholder_tag = gtk::TextTag::new(Some("placeholder"));
 
             placeholder_tag.set_property_foreground_rgba(Some(&gdk::RGBA {
@@ -45,7 +45,7 @@ impl App {
         // this is used to cancel the timeout and not search for every key input. We'll wait 500ms
         // without key release event to launch the search
         let source_id: Arc<Mutex<Option<glib::source::SourceId>>> = Arc::new(Mutex::new(None));
-        to_chat_textview.connect_key_release_event(clone!(op => move |entry, _| {
+        to_chat_entry.connect_key_release_event(clone!(op => move |entry, _| {
             {
                 let mut id = source_id.lock().unwrap();
                 if let Some(sid) = id.take() {
@@ -71,8 +71,8 @@ impl App {
             glib::signal::Inhibit(false)
         }));
 
-        to_chat_textview.connect_focus_in_event(clone!(op, to_chat_textview_box => move |_, _| {
-            if let Some(style) = to_chat_textview_box.get_style_context() {
+        to_chat_entry.connect_focus_in_event(clone!(op, to_chat_entry_box => move |_, _| {
+            if let Some(style) = to_chat_entry_box.get_style_context() {
                 style.add_class("message-input-focused");
             }
 
@@ -81,8 +81,8 @@ impl App {
             Inhibit(false)
         }));
 
-        to_chat_textview.connect_focus_out_event(clone!(op, to_chat_textview_box => move |_, _| {
-            if let Some(style) = to_chat_textview_box.get_style_context() {
+        to_chat_entry.connect_focus_out_event(clone!(op, to_chat_entry_box => move |_, _| {
+            if let Some(style) = to_chat_entry_box.get_style_context() {
                 style.remove_class("message-input-focused");
             }
 
@@ -91,7 +91,7 @@ impl App {
             Inhibit(false)
         }));
 
-        if let Some(buffer) = to_chat_textview.get_buffer() {
+        if let Some(buffer) = to_chat_entry.get_buffer() {
             buffer.connect_delete_range(clone!( op => move |_, _, _| {
                 gtk::idle_add(clone!(op => move || {
                     op.lock().unwrap().detect_removed_invite();

@@ -43,7 +43,7 @@
             <property name="orientation">vertical</property>
             <property name="spacing">6</property>
             <child>
-              <object class="GtkBox" id="to_chat_textview_box">
+              <object class="GtkBox" id="to_chat_entry_box">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
@@ -54,7 +54,7 @@
                     <property name="hscrollbar_policy">external</property>
                     <property name="vscrollbar_policy">never</property>
                     <child>
-                      <object class="GtkTextView" id="to_chat_textview">
+                      <object class="GtkTextView" id="to_chat_entry">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                       </object>
