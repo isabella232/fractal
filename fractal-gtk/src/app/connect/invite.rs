@@ -1,3 +1,4 @@
+extern crate gdk;
 extern crate gtk;
 use self::gtk::prelude::*;
 
@@ -44,9 +45,9 @@ impl App {
         let invite = self.ui.builder
             .get_object::<gtk::Button>("invite_button")
             .expect("Can't find invite_button in ui file.");
-        let to_chat_textview = self.ui.builder
-            .get_object::<gtk::TextView>("to_chat_textview")
-            .expect("Can't find to_chat_textview in ui file.");
+        let invite_textview_box = self.ui.builder
+            .get_object::<gtk::Box>("invite_textview_box")
+            .expect("Can't find invite_textview_box in ui file.");
         let invite_textview = self.ui.builder
             .get_object::<gtk::TextView>("invite_textview")
             .expect("Can't find invite_textview in ui file.");
@@ -57,34 +58,21 @@ impl App {
             .get_object::<gtk::Dialog>("invite_user_dialog")
             .expect("Can't find invite_user_dialog in ui file.");
 
-        // this is used to cancel the timeout and not search for every key input. We'll wait 500ms
-        // without key release event to launch the search
-        let source_id: Arc<Mutex<Option<glib::source::SourceId>>> = Arc::new(Mutex::new(None));
-        to_chat_textview.connect_key_release_event(clone!(op => move |entry, _| {
-            {
-                let mut id = source_id.lock().unwrap();
-                if let Some(sid) = id.take() {
-                    glib::source::source_remove(sid);
-                }
-            }
+        if let Some(buffer) = invite_textview.get_buffer() {
+            let placeholder_tag = gtk::TextTag::new(Some("placeholder"));
 
-            let sid = gtk::timeout_add(500, clone!(op, entry, source_id => move || {
-                if let Some(buffer) = entry.get_buffer() {
-                    let start = buffer.get_start_iter();
-                    let end = buffer.get_end_iter();
-
-                    let text = buffer.get_text(&start, &end, false);
-
-                    op.lock().unwrap().search_invite_user(text);
-                }
-
-                *(source_id.lock().unwrap()) = None;
-                gtk::Continue(false)
+            placeholder_tag.set_property_foreground_rgba(Some(&gdk::RGBA {
+                red: 1.0,
+                green: 1.0,
+                blue: 1.0,
+                alpha: 0.5,
             }));
 
-            *(source_id.lock().unwrap()) = Some(sid);
-            glib::signal::Inhibit(false)
-        }));
+            if let Some(tag_table) = buffer.get_tag_table() {
+                tag_table.add(&placeholder_tag);
+            }
+        }
+
         // this is used to cancel the timeout and not search for every key input. We'll wait 500ms
         // without key release event to launch the search
         let source_id: Arc<Mutex<Option<glib::source::SourceId>>> = Arc::new(Mutex::new(None));
@@ -122,6 +110,10 @@ impl App {
                 if let Some(sid) = id.take() {
                     glib::source::source_remove(sid);
                 }
+
+        invite_textview.connect_focus_in_event(clone!(op, invite_textview_box => move |_, _| {
+            if let Some(style) = invite_textview_box.get_style_context() {
+                style.add_class("message-input-focused");
             }
 
             let sid = gtk::timeout_add(500, clone!(op, entry, source_id => move || {
@@ -129,19 +121,22 @@ impl App {
                 *(source_id.lock().unwrap()) = None;
                 gtk::Continue(false)
             }));
+            op.lock().unwrap().remove_invite_user_dialog_placeholder();
 
             *(source_id.lock().unwrap()) = Some(sid);
             glib::signal::Inhibit(false)
+            Inhibit(false)
         }));
 
-        if let Some(buffer) = to_chat_textview.get_buffer() {
-            buffer.connect_delete_range(clone!( op => move |_, _, _| {
-                gtk::idle_add(clone!(op => move || {
-                    op.lock().unwrap().detect_removed_invite();
-                    Continue(false)
-                }));
-            }));
-        }
+        invite_textview.connect_focus_out_event(clone!(op, invite_textview_box => move |_, _| {
+            if let Some(style) = invite_textview_box.get_style_context() {
+                style.remove_class("message-input-focused");
+            }
+
+            op.lock().unwrap().set_invite_user_dialog_placeholder();
+
+            Inhibit(false)
+        }));
 
         if let Some(buffer) = invite_textview.get_buffer() {
             buffer.connect_delete_range(clone!( op => move |_, _, _| {

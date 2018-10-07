@@ -1,3 +1,4 @@
+extern crate gdk;
 extern crate gtk;
 use self::gtk::prelude::*;
 
@@ -19,9 +20,30 @@ impl App {
         let entry = self.ui.builder
             .get_object::<gtk::Entry>("to_chat_entry")
             .expect("Can't find to_chat_entry in ui file.");
+        let to_chat_textview_box = self.ui.builder
+            .get_object::<gtk::Box>("to_chat_textview_box")
+            .expect("Can't find to_chat_textview_box in ui file.");
+        let to_chat_textview = self.ui.builder
+            .get_object::<gtk::TextView>("to_chat_textview")
+            .expect("Can't find to_chat_textview in ui file.");
         let dialog = self.ui.builder
             .get_object::<gtk::Dialog>("direct_chat_dialog")
             .expect("Can't find direct_chat_dialog in ui file.");
+
+        if let Some(buffer) = to_chat_textview.get_buffer() {
+            let placeholder_tag = gtk::TextTag::new(Some("placeholder"));
+
+            placeholder_tag.set_property_foreground_rgba(Some(&gdk::RGBA {
+                red: 1.0,
+                green: 1.0,
+                blue: 1.0,
+                alpha: 0.5,
+            }));
+
+            if let Some(tag_table) = buffer.get_tag_table() {
+                tag_table.add(&placeholder_tag);
+            }
+        }
 
         // this is used to cancel the timeout and not search for every key input. We'll wait 500ms
         // without key release event to launch the search
@@ -43,6 +65,35 @@ impl App {
             *(source_id.lock().unwrap()) = Some(sid);
             glib::signal::Inhibit(false)
         }));
+
+        to_chat_textview.connect_focus_in_event(clone!(op, to_chat_textview_box => move |_, _| {
+            if let Some(style) = to_chat_textview_box.get_style_context() {
+                style.add_class("message-input-focused");
+            }
+
+            op.lock().unwrap().remove_invite_user_dialog_placeholder();
+
+            Inhibit(false)
+        }));
+
+        to_chat_textview.connect_focus_out_event(clone!(op, to_chat_textview_box => move |_, _| {
+            if let Some(style) = to_chat_textview_box.get_style_context() {
+                style.remove_class("message-input-focused");
+            }
+
+            op.lock().unwrap().set_invite_user_dialog_placeholder();
+
+            Inhibit(false)
+        }));
+
+        if let Some(buffer) = to_chat_textview.get_buffer() {
+            buffer.connect_delete_range(clone!( op => move |_, _, _| {
+                gtk::idle_add(clone!(op => move || {
+                    op.lock().unwrap().detect_removed_invite();
+                    Continue(false)
+                }));
+            }));
+        }
 
         dialog.connect_delete_event(clone!(op => move |_, _| {
             op.lock().unwrap().close_direct_chat_dialog();

@@ -10,6 +10,8 @@ use appop::member::SearchType;
 use app::InternalCommand;
 use backend::BKCommand;
 
+use globals;
+
 use widgets;
 
 use types::Member;
@@ -141,6 +143,9 @@ impl AppOp {
                 }
             }
         }
+
+        self.set_invite_user_dialog_placeholder();
+
         dialog.present();
         scroll.hide();
     }
@@ -226,5 +231,59 @@ impl AppOp {
 
         self.invitation_roomid = Some(r.id.clone());
         dialog.present();
+    }
+
+    pub fn set_invite_user_dialog_placeholder(&mut self) {
+        let textviewid = match self.search_type {
+            SearchType::Invite => "invite_textview",
+            SearchType::DirectChat => "to_chat_textview",
+        };
+
+        let to_invite_textview = self.ui.builder
+            .get_object::<gtk::TextView>(textviewid)
+            .expect("Can't find to_invite_textview in ui file.");
+
+        if let Some(buffer) = to_invite_textview.get_buffer() {
+            let start = buffer.get_start_iter();
+            let end = buffer.get_end_iter();
+
+            if let Some(text) = buffer.get_text(&start, &end, true) {
+                if text.is_empty() && self.invite_list.is_empty() {
+                    buffer.set_text(globals::PLACEHOLDER_TEXT);
+
+                    let start = buffer.get_start_iter();
+                    let end = buffer.get_end_iter();
+
+                    buffer.apply_tag_by_name("placeholder", &start, &end);
+                }
+            }
+        }
+    }
+
+    pub fn remove_invite_user_dialog_placeholder(&mut self) {
+        let textviewid = match self.search_type {
+            SearchType::Invite => "invite_textview",
+            SearchType::DirectChat => "to_chat_textview",
+        };
+
+        let to_invite_textview = self.ui.builder
+            .get_object::<gtk::TextView>(textviewid)
+            .expect("Can't find to_invite_textview in ui file.");
+
+        if let Some(buffer) = to_invite_textview.get_buffer() {
+            let mut start = buffer.get_start_iter();
+            let mut end = buffer.get_end_iter();
+
+            if let Some(text) = buffer.get_text(&start, &end, true) {
+                if text == globals::PLACEHOLDER_TEXT && self.invite_list.is_empty() {
+                    buffer.set_text("");
+
+                    let start = buffer.get_start_iter();
+                    let end = buffer.get_end_iter();
+
+                    buffer.remove_tag_by_name("placeholder", &start, &end);
+                }
+            }
+        }
     }
 }
