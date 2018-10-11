@@ -212,7 +212,7 @@ impl Data {
             previous_media_button.set_visible(true);
         }
 
-        if self.current_media_index >= self.media_list.len() - 1 {
+        if self.media_list.len() > 0 && self.current_media_index >= self.media_list.len() - 1 {
             next_media_button.set_visible(false);
         } else {
             next_media_button.set_visible(true);
