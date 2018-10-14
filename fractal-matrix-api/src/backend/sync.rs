@@ -33,22 +33,22 @@ pub fn sync(bk: &Backend, new_since: Option<String>, initial: bool) -> Result<()
         params.push(("timeout", String::from("30000")));
         timeout = 30;
     } else {
-        let filter = format!("{{
-            \"room\": {{
-                \"state\": {{
-                    \"types\": [\"m.room.*\"],
-                    \"not_types\": [\"m.room.member\"]
+        let filter = format!(r#"{{
+            "room": {{
+                "state": {{
+                    "types": ["m.room.*"],
+                    "not_types": ["m.room.member"]
                 }},
-                \"timeline\": {{
-                    \"types\": [\"m.room.message\", \"m.sticker\"],
-                    \"limit\": {}
+                "timeline": {{
+                    "types": ["m.room.message", "m.sticker"],
+                    "limit": {}
                 }},
-                \"ephemeral\": {{ \"types\": [] }}
+                "ephemeral": {{ "types": [] }}
             }},
-            \"presence\": {{ \"types\": [] }},
-            \"event_format\": \"client\",
-            \"event_fields\": [\"type\", \"content\", \"sender\", \"origin_server_ts\", \"event_id\"]
-        }}", globals::PAGE_LIMIT);
+            "presence": {{ "types": [] }},
+            "event_format": "client",
+            "event_fields": ["type", "content", "sender", "origin_server_ts", "event_id"]
+        }}"#, globals::PAGE_LIMIT);
 
         params.push(("filter", String::from(filter)));
         params.push(("timeout", String::from("0")));
