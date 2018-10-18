@@ -32,6 +32,7 @@ extern crate libhandy;
 extern crate gettextrs;
 
 extern crate chrono;
+extern crate comrak;
 
 extern crate fragile;
 
