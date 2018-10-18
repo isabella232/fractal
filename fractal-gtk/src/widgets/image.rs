@@ -1,4 +1,3 @@
-extern crate gdk;
 extern crate tree_magic;
 
 use std::path::Path;
@@ -12,7 +11,8 @@ use gtk::DrawingArea;
 use gdk_pixbuf;
 use gdk_pixbuf::Pixbuf;
 use gdk_pixbuf::PixbufExt;
-use self::gdk::ContextExt;
+use gdk;
+use gdk::ContextExt;
 use gdk_pixbuf::PixbufAnimation;
 use gdk_pixbuf::PixbufAnimationExt;
 

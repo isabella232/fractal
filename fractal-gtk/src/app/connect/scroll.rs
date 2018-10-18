@@ -1,7 +1,7 @@
-extern crate gdk;
+use gdk;
 use gtk;
 use gtk::prelude::*;
-use self::gdk::FrameClockExt;
+use gdk::FrameClockExt;
 
 use glib;
 

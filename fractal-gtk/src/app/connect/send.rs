@@ -1,6 +1,6 @@
-extern crate gdk;
 extern crate sourceview;
 
+use gdk;
 use gtk;
 use gtk::prelude::*;
 use self::sourceview::BufferExt;

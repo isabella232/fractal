@@ -1,7 +1,7 @@
 extern crate pango;
-extern crate gdk;
 extern crate cairo;
 
+use gdk;
 use gtk;
 use gtk::prelude::*;
 

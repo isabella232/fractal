@@ -1,4 +1,4 @@
-extern crate gdk;
+use gdk;
 
 use std::cell::RefCell;
 use std::rc::Rc;

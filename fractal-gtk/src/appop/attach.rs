@@ -1,5 +1,3 @@
-extern crate gdk;
-
 use i18n::i18n;
 
 use std::fs::File;
@@ -10,7 +8,7 @@ use failure::Error;
 use failure::err_msg;
 
 use glib;
-
+use gdk;
 use gtk;
 use gtk::prelude::*;
 

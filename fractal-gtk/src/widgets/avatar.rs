@@ -1,4 +1,3 @@
-extern crate gdk;
 extern crate cairo;
 extern crate letter_avatar;
 
@@ -11,7 +10,8 @@ pub use gtk::DrawingArea;
 use gdk_pixbuf;
 use gdk_pixbuf::Pixbuf;
 use gdk_pixbuf::PixbufExt;
-use self::gdk::ContextExt;
+use gdk;
+use gdk::ContextExt;
 use fractal_api::util::cache_path;
 
 pub type Avatar = gtk::Box;

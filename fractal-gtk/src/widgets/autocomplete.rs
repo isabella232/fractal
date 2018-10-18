@@ -1,5 +1,4 @@
 extern crate sourceview;
-extern crate gdk;
 
 use std::sync::{Arc, Mutex};
 use std::collections::HashMap;
@@ -7,6 +6,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 use glib;
+use gdk;
 use gtk;
 use gtk::prelude::*;
 use gtk::TextTag;

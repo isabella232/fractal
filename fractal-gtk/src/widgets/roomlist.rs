@@ -1,11 +1,11 @@
 extern crate url;
 extern crate pango;
-extern crate gdk;
 
 use i18n::i18n;
 
 use glib;
-use self::gdk::DragContextExtManual;
+use gdk;
+use gdk::DragContextExtManual;
 
 use self::url::Url;
 use std::collections::HashMap;

@@ -1,4 +1,3 @@
-extern crate gdk;
 extern crate sourceview;
 
 use std::cell::RefCell;
@@ -10,8 +9,9 @@ use std::sync::mpsc::TryRecvError;
 use glib;
 use gtk;
 use gtk::prelude::*;
-use self::gdk::prelude::*;
-use self::sourceview::prelude::*;
+use gdk;
+use gdk::prelude::*;
+use sourceview::prelude::*;
 use gdk_pixbuf;
 
 use app::App;
