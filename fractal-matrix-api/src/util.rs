@@ -1,4 +1,3 @@
-extern crate glib;
 extern crate url;
 extern crate reqwest;
 extern crate regex;
@@ -9,6 +8,7 @@ use self::regex::Regex;
 
 use self::serde_json::Value as JsonValue;
 
+use glib;
 use self::url::Url;
 use std::io::Read;
 use std::path::Path;

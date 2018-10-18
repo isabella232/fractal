@@ -1,7 +1,7 @@
-extern crate glib;
-
 use chrono;
 use chrono::prelude::*;
+
+use glib;
 
 use gtk;
 use gtk::ContainerExt;

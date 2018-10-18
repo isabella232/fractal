@@ -1,5 +1,4 @@
 extern crate gdk;
-extern crate glib;
 extern crate sourceview;
 
 use std::cell::RefCell;
@@ -8,6 +7,7 @@ use std::sync::mpsc::channel;
 use std::sync::mpsc::{Sender, Receiver};
 use std::sync::mpsc::TryRecvError;
 
+use glib;
 use gtk;
 use gtk::prelude::*;
 use self::gdk::prelude::*;

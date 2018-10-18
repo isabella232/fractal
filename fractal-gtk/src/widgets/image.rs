@@ -1,4 +1,3 @@
-extern crate glib;
 extern crate gdk;
 extern crate tree_magic;
 
@@ -6,6 +5,7 @@ use std::path::Path;
 use std::sync::{Arc, Mutex};
 use std::sync::mpsc::channel;
 use std::sync::mpsc::{Sender, Receiver};
+use glib;
 use gtk;
 use gtk::prelude::*;
 use gtk::DrawingArea;

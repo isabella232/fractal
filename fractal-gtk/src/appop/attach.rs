@@ -1,4 +1,3 @@
-extern crate glib;
 extern crate gdk;
 
 use i18n::i18n;
@@ -9,6 +8,8 @@ use std::path::PathBuf;
 
 use failure::Error;
 use failure::err_msg;
+
+use glib;
 
 use gtk;
 use gtk::prelude::*;

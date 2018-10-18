@@ -1,5 +1,4 @@
 extern crate gdk;
-extern crate glib;
 
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -8,6 +7,7 @@ use gtk;
 use gtk::prelude::*;
 use gtk::ResponseType;
 use gdk::*;
+use glib;
 use glib::signal;
 use i18n::i18n;
 use dirs;

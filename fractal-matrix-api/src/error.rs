@@ -2,9 +2,9 @@ extern crate cairo;
 extern crate url;
 extern crate regex;
 extern crate reqwest;
-extern crate glib;
 extern crate serde_json;
 
+use glib;
 use std::io;
 use std::time::SystemTimeError;
 use std::ffi::OsString;

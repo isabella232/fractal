@@ -1,5 +1,4 @@
 extern crate pango;
-extern crate glib;
 extern crate regex;
 
 use self::regex::Regex;
@@ -7,6 +6,7 @@ use itertools::Itertools;
 use app::App;
 use i18n::i18n;
 
+use glib;
 use gtk;
 use gtk::prelude::*;
 use chrono;

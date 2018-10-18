@@ -6,6 +6,7 @@ extern crate serde_json;
 extern crate serde_derive;
 
 extern crate chrono;
+extern crate glib;
 
 extern crate url;
 
