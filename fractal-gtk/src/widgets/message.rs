@@ -1,4 +1,3 @@
-extern crate chrono;
 extern crate pango;
 extern crate glib;
 extern crate regex;
@@ -10,7 +9,8 @@ use i18n::i18n;
 
 use gtk;
 use gtk::prelude::*;
-use self::chrono::prelude::*;
+use chrono;
+use chrono::prelude::*;
 
 use backend::BKCommand;
 

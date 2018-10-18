@@ -1,8 +1,8 @@
 extern crate serde_json;
 extern crate md5;
-extern crate chrono;
 
-use self::chrono::prelude::*;
+use chrono;
+use chrono::prelude::*;
 
 use std::thread;
 use util::json_q;

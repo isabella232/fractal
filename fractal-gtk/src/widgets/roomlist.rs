@@ -1,4 +1,3 @@
-extern crate chrono;
 extern crate url;
 extern crate pango;
 extern crate gdk;
@@ -19,7 +18,8 @@ use types::Room;
 use types::Message;
 use std::sync::{Arc, Mutex, MutexGuard};
 
-use self::chrono::prelude::*;
+use chrono;
+use chrono::prelude::*;
 
 
 fn get_url(url: Option<String>) -> Url {

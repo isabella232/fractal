@@ -1,8 +1,8 @@
 extern crate glib;
 extern crate gdk_pixbuf;
-extern crate chrono;
 
-use self::chrono::prelude::*;
+use chrono;
+use chrono::prelude::*;
 
 use gtk;
 use gtk::ContainerExt;
