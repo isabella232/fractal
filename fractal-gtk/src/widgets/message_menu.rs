@@ -1,5 +1,4 @@
 extern crate gdk;
-extern crate gdk_pixbuf;
 extern crate glib;
 extern crate sourceview;
 
@@ -13,6 +12,7 @@ use gtk;
 use gtk::prelude::*;
 use self::gdk::prelude::*;
 use self::sourceview::prelude::*;
+use gdk_pixbuf;
 
 use app::App;
 use backend::BKCommand;

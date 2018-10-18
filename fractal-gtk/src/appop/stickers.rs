@@ -1,5 +1,4 @@
 extern crate glib;
-extern crate gdk_pixbuf;
 
 use chrono;
 use chrono::prelude::*;
@@ -12,9 +11,10 @@ use gtk::LabelExt;
 use gtk::BoxExt;
 use gtk::ButtonExt;
 
-use self::gdk_pixbuf::Pixbuf;
+use gdk_pixbuf;
+use gdk_pixbuf::Pixbuf;
 use gtk::ImageExt;
-use self::gdk_pixbuf::PixbufExt;
+use gdk_pixbuf::PixbufExt;
 
 use std::sync::mpsc::channel;
 use std::sync::mpsc::{Sender, Receiver};

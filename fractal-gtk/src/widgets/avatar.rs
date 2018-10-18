@@ -1,5 +1,4 @@
 extern crate gdk;
-extern crate gdk_pixbuf;
 extern crate cairo;
 extern crate letter_avatar;
 
@@ -9,8 +8,9 @@ use std::rc::Rc;
 use gtk;
 use gtk::prelude::*;
 pub use gtk::DrawingArea;
-use self::gdk_pixbuf::Pixbuf;
-use self::gdk_pixbuf::PixbufExt;
+use gdk_pixbuf;
+use gdk_pixbuf::Pixbuf;
+use gdk_pixbuf::PixbufExt;
 use self::gdk::ContextExt;
 use fractal_api::util::cache_path;
 

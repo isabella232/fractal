@@ -1,9 +1,9 @@
 extern crate cairo;
 extern crate gdk;
-extern crate gdk_pixbuf;
 
-use self::gdk_pixbuf::Pixbuf;
-use self::gdk_pixbuf::PixbufExt;
+use gdk_pixbuf;
+use gdk_pixbuf::Pixbuf;
+use gdk_pixbuf::PixbufExt;
 use failure::Error;
 use self::gdk::ContextExt;
 use gio::{SettingsExt, Settings, SettingsSchemaSource};

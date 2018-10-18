@@ -1,6 +1,5 @@
 extern crate glib;
 extern crate gdk;
-extern crate gdk_pixbuf;
 extern crate tree_magic;
 
 use std::path::Path;
@@ -10,11 +9,12 @@ use std::sync::mpsc::{Sender, Receiver};
 use gtk;
 use gtk::prelude::*;
 use gtk::DrawingArea;
-use self::gdk_pixbuf::Pixbuf;
-use self::gdk_pixbuf::PixbufExt;
+use gdk_pixbuf;
+use gdk_pixbuf::Pixbuf;
+use gdk_pixbuf::PixbufExt;
 use self::gdk::ContextExt;
-use self::gdk_pixbuf::PixbufAnimation;
-use self::gdk_pixbuf::PixbufAnimationExt;
+use gdk_pixbuf::PixbufAnimation;
+use gdk_pixbuf::PixbufAnimationExt;
 
 use backend::BKCommand;
 use std::sync::mpsc::TryRecvError;
