@@ -1,8 +1,7 @@
-extern crate gtk;
-
 use i18n::i18n;
 
-use self::gtk::prelude::*;
+use gtk;
+use gtk::prelude::*;
 
 use appop::AppOp;
 use globals;

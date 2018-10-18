@@ -1,7 +1,5 @@
 extern crate glib;
 extern crate gdk;
-extern crate gdk_pixbuf;
-extern crate gtk;
 
 use i18n::i18n;
 
@@ -12,13 +10,15 @@ use std::path::PathBuf;
 use failure::Error;
 use failure::err_msg;
 
-use self::gtk::prelude::*;
+use gtk;
+use gtk::prelude::*;
 
 use appop::AppOp;
 use app::InternalCommand;
 
-use self::gdk_pixbuf::Pixbuf;
-use self::gdk_pixbuf::PixbufExt;
+use gdk_pixbuf;
+use gdk_pixbuf::Pixbuf;
+use gdk_pixbuf::PixbufExt;
 use util::get_pixbuf_data;
 
 

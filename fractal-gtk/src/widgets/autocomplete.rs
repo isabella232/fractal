@@ -1,4 +1,3 @@
-extern crate gtk;
 extern crate sourceview;
 extern crate gdk;
 
@@ -8,8 +7,9 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 use glib;
-use self::gtk::prelude::*;
-use self::gtk::TextTag;
+use gtk;
+use gtk::prelude::*;
+use gtk::TextTag;
 
 use types::Member;
 //use types::Room;

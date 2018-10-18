@@ -1,8 +1,8 @@
-extern crate gtk;
+use gtk;
 
 use i18n::i18n;
 
-use self::gtk::prelude::*;
+use gtk::prelude::*;
 use libhandy::{Column, ColumnExt};
 
 use app::App;

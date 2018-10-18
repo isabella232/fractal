@@ -1,6 +1,5 @@
 extern crate gdk;
 extern crate gdk_pixbuf;
-extern crate gtk;
 extern crate glib;
 extern crate sourceview;
 
@@ -10,7 +9,8 @@ use std::sync::mpsc::channel;
 use std::sync::mpsc::{Sender, Receiver};
 use std::sync::mpsc::TryRecvError;
 
-use self::gtk::prelude::*;
+use gtk;
+use gtk::prelude::*;
 use self::gdk::prelude::*;
 use self::sourceview::prelude::*;
 

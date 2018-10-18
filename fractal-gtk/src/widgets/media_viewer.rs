@@ -1,12 +1,12 @@
 extern crate gdk;
 extern crate glib;
-extern crate gtk;
 
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use self::gtk::prelude::*;
-use self::gtk::ResponseType;
+use gtk;
+use gtk::prelude::*;
+use gtk::ResponseType;
 use gdk::*;
 use glib::signal;
 use i18n::i18n;

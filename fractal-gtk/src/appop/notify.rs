@@ -1,7 +1,7 @@
 extern crate notify_rust;
-extern crate gtk;
 
-use self::gtk::prelude::*;
+use gtk;
+use gtk::prelude::*;
 use self::notify_rust::Notification;
 use std::sync::mpsc::TryRecvError;
 use std::thread;

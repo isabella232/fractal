@@ -1,7 +1,7 @@
-extern crate gtk;
+use gtk;
 extern crate sourceview;
 
-use self::gtk::prelude::*;
+use gtk::prelude::*;
 use self::sourceview::prelude::*;
 
 use util;

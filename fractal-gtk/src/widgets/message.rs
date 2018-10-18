@@ -1,4 +1,3 @@
-extern crate gtk;
 extern crate chrono;
 extern crate pango;
 extern crate glib;
@@ -9,7 +8,8 @@ use itertools::Itertools;
 use app::App;
 use i18n::i18n;
 
-use self::gtk::prelude::*;
+use gtk;
+use gtk::prelude::*;
 use self::chrono::prelude::*;
 
 use backend::BKCommand;

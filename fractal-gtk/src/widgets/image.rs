@@ -1,4 +1,3 @@
-extern crate gtk;
 extern crate glib;
 extern crate gdk;
 extern crate gdk_pixbuf;
@@ -8,8 +7,9 @@ use std::path::Path;
 use std::sync::{Arc, Mutex};
 use std::sync::mpsc::channel;
 use std::sync::mpsc::{Sender, Receiver};
-use self::gtk::prelude::*;
-use self::gtk::DrawingArea;
+use gtk;
+use gtk::prelude::*;
+use gtk::DrawingArea;
 use self::gdk_pixbuf::Pixbuf;
 use self::gdk_pixbuf::PixbufExt;
 use self::gdk::ContextExt;

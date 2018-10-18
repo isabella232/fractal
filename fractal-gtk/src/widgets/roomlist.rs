@@ -1,6 +1,5 @@
 extern crate chrono;
 extern crate url;
-extern crate gtk;
 extern crate pango;
 extern crate gdk;
 
@@ -11,7 +10,8 @@ use self::gdk::DragContextExtManual;
 
 use self::url::Url;
 use std::collections::HashMap;
-use self::gtk::prelude::*;
+use gtk;
+use gtk::prelude::*;
 
 use globals;
 use widgets::roomrow::RoomRow;

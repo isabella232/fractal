@@ -5,6 +5,7 @@ extern crate gtk;
 extern crate gdk;
 extern crate sourceview;
 
+extern crate gdk_pixbuf;
 extern crate rand;
 extern crate itertools;
 extern crate dirs;

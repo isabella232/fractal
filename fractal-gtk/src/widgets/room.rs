@@ -1,9 +1,9 @@
-extern crate gtk;
 extern crate pango;
 
 use i18n::i18n;
 
-use self::gtk::prelude::*;
+use gtk;
+use gtk::prelude::*;
 
 use types::Room;
 
@@ -15,7 +15,7 @@ use appop::AppOp;
 
 use widgets;
 use widgets::AvatarExt;
-use self::gtk::WidgetExt;
+use gtk::WidgetExt;
 
 const AVATAR_SIZE: i32 = 60;
 const JOIN_BUTTON_WIDTH: i32 = 84;

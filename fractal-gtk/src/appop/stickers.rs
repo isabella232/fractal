@@ -1,19 +1,19 @@
 extern crate glib;
-extern crate gtk;
 extern crate gdk_pixbuf;
 extern crate chrono;
 
 use self::chrono::prelude::*;
 
-use self::gtk::ContainerExt;
-use self::gtk::StackExt;
-use self::gtk::WidgetExt;
-use self::gtk::LabelExt;
-use self::gtk::BoxExt;
-use self::gtk::ButtonExt;
+use gtk;
+use gtk::ContainerExt;
+use gtk::StackExt;
+use gtk::WidgetExt;
+use gtk::LabelExt;
+use gtk::BoxExt;
+use gtk::ButtonExt;
 
 use self::gdk_pixbuf::Pixbuf;
-use self::gtk::ImageExt;
+use gtk::ImageExt;
 use self::gdk_pixbuf::PixbufExt;
 
 use std::sync::mpsc::channel;
