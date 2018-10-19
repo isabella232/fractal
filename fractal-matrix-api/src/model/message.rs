@@ -25,6 +25,10 @@ pub struct Message {
     pub redacted: bool,
     // The event ID of the message this is in reply to.
     pub in_reply_to: Option<String>,
+    // This can be used for the client to add more values to the message on sending
+    // for example for images attachment the "info" field can be attached as
+    // Some(json!({"info": {"h": 296, "w": 296, "mimetype": "image/png", "orientation": 0, "size": 8796}});
+    pub extra_content: Option<JsonValue>,
 }
 
 impl Default for Message {
@@ -44,6 +48,7 @@ impl Default for Message {
             receipt: HashMap::new(),
             redacted: false,
             in_reply_to: None,
+            extra_content: None,
         }
     }
 }
@@ -135,6 +140,7 @@ impl Message {
             receipt: HashMap::new(),
             redacted,
             in_reply_to: None,
+            extra_content: None,
         };
 
         let c = &msg["content"];

@@ -203,6 +203,7 @@ impl AppOp {
             receipt: HashMap::new(),
             redacted: false,
             in_reply_to: None,
+            extra_content: None,
         };
 
         self.add_tmp_room_message(msg);

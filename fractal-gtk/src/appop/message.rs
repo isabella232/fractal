@@ -1,6 +1,7 @@
 extern crate comrak;
 extern crate tree_magic;
 
+use std::fs;
 use std::path::Path;
 use std::collections::HashMap;
 
@@ -22,6 +23,8 @@ use uitypes::RowType;
 use backend::BKCommand;
 
 use types::Message;
+use serde_json::Value as JsonValue;
+use gdk_pixbuf::Pixbuf;
 
 #[derive(Debug, Clone)]
 pub enum MsgPos {
@@ -329,6 +332,7 @@ impl AppOp {
             receipt: HashMap::new(),
             redacted: false,
             in_reply_to: None,
+            extra_content: None,
         };
 
         if msg.starts_with("/me ") {
@@ -383,6 +387,11 @@ impl AppOp {
         };
         let body = String::from(file.split("/").last().unwrap_or(&file));
 
+        let info = match mtype {
+            "m.image" => get_image_media_info(&file, mime.as_ref()),
+            _ => None,
+        };
+
         let mut m = Message {
             sender: self.uid.clone().unwrap_or_default(),
             mtype: mtype.to_string(),
@@ -398,6 +407,7 @@ impl AppOp {
             receipt: HashMap::new(),
             redacted: false,
             in_reply_to: None,
+            extra_content: info,
         };
 
         m.id = Some(m.get_txn_id());
@@ -629,4 +639,35 @@ fn create_ui_message (msg: Message, name: Option<String>, t: RowType, highlights
         redactable,
         widget: None,
         }
+}
+
+/// This function open the image and fill the info data as a Json value
+/// If something fails this will returns None
+///
+/// The output json will look like:
+///
+/// {
+///  "info": {
+///   "h": 296,
+///   "w": 296,
+///   "size": 8796,
+///   "orientation": 0,
+///   "mimetype": "image/png"
+///  }
+/// }
+fn get_image_media_info(file: &str, mimetype: &str) -> Option<JsonValue> {
+    let (_, w, h) = Pixbuf::get_file_info(file)?;
+    let size = fs::metadata(file).ok()?.len();
+
+    let info = json!({
+        "info": {
+            "w": w,
+            "h": h,
+            "size": size,
+            "mimetype": mimetype,
+            "orientation": 0,
+        }
+    });
+
+    Some(info)
 }
