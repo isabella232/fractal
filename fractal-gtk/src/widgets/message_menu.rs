@@ -1,11 +1,10 @@
-extern crate sourceview;
-
 use std::cell::RefCell;
 use std::rc::Rc;
 use std::sync::mpsc::channel;
 use std::sync::mpsc::{Sender, Receiver};
 use std::sync::mpsc::TryRecvError;
 
+use sourceview;
 use glib;
 use gtk;
 use gtk::prelude::*;

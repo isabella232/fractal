@@ -1,9 +1,8 @@
-extern crate sourceview;
-
+use sourceview;
 use gdk;
 use gtk;
 use gtk::prelude::*;
-use self::sourceview::BufferExt;
+use sourceview::BufferExt;
 
 use app::App;
 

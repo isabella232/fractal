@@ -1,10 +1,9 @@
-extern crate sourceview;
-
 use std::sync::{Arc, Mutex};
 use std::collections::HashMap;
 use std::cell::RefCell;
 use std::rc::Rc;
 
+use sourceview;
 use glib;
 use gdk;
 use gtk;

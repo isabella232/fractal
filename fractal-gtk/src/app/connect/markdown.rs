@@ -1,8 +1,7 @@
 use gtk;
-extern crate sourceview;
-
 use gtk::prelude::*;
-use self::sourceview::prelude::*;
+use sourceview;
+use sourceview::prelude::*;
 
 use util;
 
