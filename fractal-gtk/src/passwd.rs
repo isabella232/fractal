@@ -1,4 +1,4 @@
-extern crate secret_service;
+use secret_service;
 
 use gio::{Settings, SettingsSchemaSource};
 use gio::SettingsExt;
