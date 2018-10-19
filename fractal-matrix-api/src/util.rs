@@ -2,12 +2,12 @@ extern crate url;
 extern crate reqwest;
 extern crate regex;
 extern crate serde_json;
-extern crate tree_magic;
 
 use self::regex::Regex;
 
 use self::serde_json::Value as JsonValue;
 
+use tree_magic;
 use glib;
 use self::url::Url;
 use std::io::Read;

@@ -1,5 +1,4 @@
-extern crate tree_magic;
-
+use tree_magic;
 use std::path::Path;
 use std::collections::HashMap;
 use gtk;

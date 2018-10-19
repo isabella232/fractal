@@ -31,6 +31,7 @@ extern crate libhandy;
 
 extern crate gettextrs;
 
+extern crate tree_magic;
 extern crate chrono;
 extern crate comrak;
 extern crate notify_rust;
