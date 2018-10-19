@@ -1,7 +1,7 @@
 extern crate cairo;
-extern crate regex;
 extern crate reqwest;
 
+use regex;
 use url;
 use glib;
 use std::io;

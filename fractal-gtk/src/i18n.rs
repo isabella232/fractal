@@ -1,11 +1,12 @@
 extern crate gettextrs;
-extern crate regex;
+
 use self::gettextrs::gettext;
 use self::gettextrs::ngettext;
 use self::gettextrs::pgettext;
 use self::gettextrs::npgettext;
-use self::regex::Captures;
-use self::regex::Regex;
+use regex;
+use regex::Captures;
+use regex::Regex;
 
 #[allow(dead_code)]
 fn freplace(input: String, args: &[&str]) -> String {

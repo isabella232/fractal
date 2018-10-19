@@ -1,8 +1,7 @@
-extern crate regex;
-
 use serde_json;
 use serde_json::Value as JsonValue;
-use self::regex::Regex;
+use regex;
+use regex::Regex;
 
 use std::thread;
 use url;
@@ -14,7 +13,6 @@ use error::Error;
 
 use backend::types::BKResponse;
 use backend::types::Backend;
-
 
 pub fn guest(bk: &Backend, server: String) -> Result<(), Error> {
     let s = server.clone();

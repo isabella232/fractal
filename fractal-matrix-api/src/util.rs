@@ -1,7 +1,7 @@
 extern crate reqwest;
-extern crate regex;
 
-use self::regex::Regex;
+use regex;
+use regex::Regex;
 
 use serde_json;
 use serde_json::Value as JsonValue;
