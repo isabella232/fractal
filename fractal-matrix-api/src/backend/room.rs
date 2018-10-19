@@ -1,6 +1,7 @@
 extern crate url;
 extern crate urlencoding;
-extern crate serde_json;
+
+use serde_json;
 
 use std::fs::File;
 use std::io::prelude::*;

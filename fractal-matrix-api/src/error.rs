@@ -2,14 +2,14 @@ extern crate cairo;
 extern crate url;
 extern crate regex;
 extern crate reqwest;
-extern crate serde_json;
 
 use glib;
 use std::io;
 use std::time::SystemTimeError;
 use std::ffi::OsString;
 
-use self::serde_json::Value as JsonValue;
+use serde_json;
+use serde_json::Value as JsonValue;
 
 #[derive(Debug)]
 pub enum Error {

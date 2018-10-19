@@ -1,11 +1,11 @@
 extern crate md5;
-extern crate serde_json;
 
 use chrono;
 use chrono::prelude::*;
 use std::cmp::Ordering;
 use std::collections::HashMap;
-use self::serde_json::Value as JsonValue;
+use serde_json;
+use serde_json::Value as JsonValue;
 use chrono::TimeZone;
 use chrono::DateTime;
 

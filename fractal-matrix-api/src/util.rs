@@ -1,11 +1,11 @@
 extern crate url;
 extern crate reqwest;
 extern crate regex;
-extern crate serde_json;
 
 use self::regex::Regex;
 
-use self::serde_json::Value as JsonValue;
+use serde_json;
+use serde_json::Value as JsonValue;
 
 use tree_magic;
 use glib;

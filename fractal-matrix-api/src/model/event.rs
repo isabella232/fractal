@@ -1,6 +1,5 @@
-extern crate serde_json;
-
-use self::serde_json::Value as JsonValue;
+use serde_json;
+use serde_json::Value as JsonValue;
 
 #[derive(Debug, Clone)]
 pub struct Event {
