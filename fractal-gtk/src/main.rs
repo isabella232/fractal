@@ -33,6 +33,7 @@ extern crate libhandy;
 
 extern crate gettextrs;
 
+extern crate letter_avatar;
 extern crate secret_service;
 extern crate cairo;
 extern crate pango;

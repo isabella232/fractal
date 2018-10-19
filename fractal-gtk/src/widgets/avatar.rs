@@ -1,5 +1,4 @@
-extern crate letter_avatar;
-
+use letter_avatar;
 use std::cell::RefCell;
 use std::rc::Rc;
 
