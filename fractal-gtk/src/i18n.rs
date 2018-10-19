@@ -1,9 +1,8 @@
-extern crate gettextrs;
-
-use self::gettextrs::gettext;
-use self::gettextrs::ngettext;
-use self::gettextrs::pgettext;
-use self::gettextrs::npgettext;
+use gettextrs;
+use gettextrs::gettext;
+use gettextrs::ngettext;
+use gettextrs::pgettext;
+use gettextrs::npgettext;
 use regex;
 use regex::Captures;
 use regex::Regex;
