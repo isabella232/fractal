@@ -1,5 +1,4 @@
-extern crate cairo;
-
+use cairo;
 use gdk_pixbuf;
 use gdk_pixbuf::Pixbuf;
 use gdk_pixbuf::PixbufExt;

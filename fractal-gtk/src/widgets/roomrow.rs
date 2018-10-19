@@ -1,5 +1,4 @@
-extern crate cairo;
-
+use cairo;
 use pango;
 use gdk;
 use gtk;

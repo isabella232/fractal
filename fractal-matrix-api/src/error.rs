@@ -1,6 +1,6 @@
-extern crate cairo;
 extern crate reqwest;
 
+use cairo;
 use regex;
 use url;
 use glib;

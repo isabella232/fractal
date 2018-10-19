@@ -1,9 +1,9 @@
-extern crate cairo;
 extern crate letter_avatar;
 
 use std::cell::RefCell;
 use std::rc::Rc;
 
+use cairo;
 use gtk;
 use gtk::prelude::*;
 pub use gtk::DrawingArea;
