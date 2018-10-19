@@ -1,5 +1,4 @@
-extern crate urlencoding;
-
+use urlencoding;
 use serde_json;
 
 use std::fs::File;
