@@ -5,6 +5,7 @@ extern crate serde_json;
 #[macro_use]
 extern crate serde_derive;
 
+extern crate md5;
 extern crate cairo;
 extern crate regex;
 extern crate tree_magic;

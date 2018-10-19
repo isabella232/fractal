@@ -1,5 +1,4 @@
-extern crate md5;
-
+use md5;
 use chrono;
 use chrono::prelude::*;
 use std::cmp::Ordering;
