@@ -1,4 +1,3 @@
-extern crate url;
 extern crate urlencoding;
 
 use serde_json;
@@ -6,7 +5,8 @@ use serde_json;
 use std::fs::File;
 use std::io::prelude::*;
 use std::sync::mpsc::Sender;
-use self::url::Url;
+use url;
+use url::Url;
 
 use globals;
 use std::thread;

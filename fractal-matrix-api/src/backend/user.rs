@@ -1,9 +1,8 @@
-extern crate url;
-
 use std::fs::File;
 use std::io::prelude::*;
 
-use self::url::Url;
+use url;
+use url::Url;
 use globals;
 use std::thread;
 use std::sync::{Arc, Mutex};

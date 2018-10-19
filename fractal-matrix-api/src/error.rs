@@ -1,8 +1,8 @@
 extern crate cairo;
-extern crate url;
 extern crate regex;
 extern crate reqwest;
 
+use url;
 use glib;
 use std::io;
 use std::time::SystemTimeError;

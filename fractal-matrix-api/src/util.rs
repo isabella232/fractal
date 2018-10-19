@@ -1,4 +1,3 @@
-extern crate url;
 extern crate reqwest;
 extern crate regex;
 
@@ -9,7 +8,8 @@ use serde_json::Value as JsonValue;
 
 use tree_magic;
 use glib;
-use self::url::Url;
+use url;
+use url::Url;
 use std::io::Read;
 use std::path::Path;
 use std::path::PathBuf;

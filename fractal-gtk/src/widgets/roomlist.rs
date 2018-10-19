@@ -1,4 +1,3 @@
-extern crate url;
 extern crate pango;
 
 use i18n::i18n;
@@ -7,7 +6,8 @@ use glib;
 use gdk;
 use gdk::DragContextExtManual;
 
-use self::url::Url;
+use url;
+use url::Url;
 use std::collections::HashMap;
 use gtk;
 use gtk::prelude::*;

@@ -1,4 +1,3 @@
-extern crate url;
 extern crate regex;
 
 use serde_json;
@@ -6,7 +5,8 @@ use serde_json::Value as JsonValue;
 use self::regex::Regex;
 
 use std::thread;
-use self::url::Url;
+use url;
+use url::Url;
 
 use util::json_q;
 use globals;
