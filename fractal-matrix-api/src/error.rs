@@ -1,5 +1,4 @@
-extern crate reqwest;
-
+use reqwest;
 use cairo;
 use regex;
 use url;

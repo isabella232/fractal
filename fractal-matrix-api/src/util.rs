@@ -1,5 +1,4 @@
-extern crate reqwest;
-
+use reqwest;
 use regex;
 use regex::Regex;
 
@@ -31,7 +30,7 @@ use types::Room;
 use types::Event;
 use types::Member;
 
-use self::reqwest::header::CONTENT_TYPE;
+use reqwest::header::CONTENT_TYPE;
 
 use globals;
 
