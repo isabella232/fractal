@@ -32,6 +32,7 @@ extern crate libhandy;
 
 extern crate gettextrs;
 
+extern crate pango;
 extern crate url;
 extern crate tree_magic;
 extern crate chrono;

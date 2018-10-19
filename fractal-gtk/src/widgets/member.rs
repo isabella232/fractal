@@ -1,5 +1,4 @@
-extern crate pango;
-
+use pango;
 use gtk;
 use gtk::prelude::*;
 

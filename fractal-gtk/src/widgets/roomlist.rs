@@ -1,7 +1,6 @@
-extern crate pango;
-
 use i18n::i18n;
 
+use pango;
 use glib;
 use gdk;
 use gdk::DragContextExtManual;
