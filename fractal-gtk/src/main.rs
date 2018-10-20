@@ -22,7 +22,10 @@ extern crate failure;
 
 #[macro_use]
 extern crate serde_derive;
+#[macro_use]
 extern crate serde_json;
+
+extern crate gdk_pixbuf;
 
 #[macro_use]
 extern crate fractal_matrix_api as fractal_api;

@@ -236,6 +236,14 @@ pub fn send_msg(bk: &Backend, msg: Message) -> Result<(), Error> {
         attrs["format"] = json!(f);
     }
 
+    if let Some(xctx) = msg.extra_content {
+        if let Some(xctx) = xctx.as_object() {
+            for (k, v) in xctx {
+                attrs[k] = v.clone();
+            }
+        }
+    }
+
     let tx = bk.tx.clone();
     query!("put", &url, &attrs,
         move |js: JsonValue| {
