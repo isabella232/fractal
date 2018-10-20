@@ -1,16 +1,13 @@
-extern crate gtk;
-extern crate chrono;
-extern crate pango;
-extern crate glib;
-extern crate regex;
-
-use self::regex::Regex;
+use regex::Regex;
 use itertools::Itertools;
 use app::App;
 use i18n::i18n;
 
-use self::gtk::prelude::*;
-use self::chrono::prelude::*;
+use pango;
+use glib;
+use gtk;
+use gtk::prelude::*;
+use chrono::prelude::*;
 
 use backend::BKCommand;
 

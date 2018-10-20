@@ -1,10 +1,7 @@
-extern crate serde_json;
-extern crate url;
-
 use std::fs::File;
 use std::io::prelude::*;
 
-use self::url::Url;
+use url::Url;
 use globals;
 use std::thread;
 use std::sync::{Arc, Mutex};
@@ -22,7 +19,8 @@ use util::semaphore;
 use types::Member;
 use types::UserInfo;
 
-use self::serde_json::Value as JsonValue;
+use serde_json;
+use serde_json::Value as JsonValue;
 
 
 pub fn get_username(bk: &Backend) -> Result<(), Error> {

@@ -1,5 +1,4 @@
-extern crate gtk;
-
+use gtk;
 use chrono::prelude::DateTime;
 use chrono::prelude::Local;
 use types::Message;

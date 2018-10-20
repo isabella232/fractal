@@ -1,14 +1,11 @@
-extern crate comrak;
-extern crate tree_magic;
-
+use tree_magic;
 use std::fs;
 use std::path::Path;
 use std::collections::HashMap;
-
 use gtk;
 use gtk::prelude::*;
 use chrono::prelude::*;
-use self::comrak::{markdown_to_html, ComrakOptions};
+use comrak::{markdown_to_html, ComrakOptions};
 
 use app::InternalCommand;
 use appop::AppOp;

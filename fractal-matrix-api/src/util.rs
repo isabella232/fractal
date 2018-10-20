@@ -1,15 +1,11 @@
-extern crate glib;
-extern crate url;
-extern crate reqwest;
-extern crate regex;
-extern crate serde_json;
-extern crate tree_magic;
+use reqwest;
+use regex::Regex;
 
-use self::regex::Regex;
+use serde_json::Value as JsonValue;
 
-use self::serde_json::Value as JsonValue;
-
-use self::url::Url;
+use tree_magic;
+use glib;
+use url::Url;
 use std::io::Read;
 use std::path::Path;
 use std::path::PathBuf;
@@ -31,7 +27,7 @@ use types::Room;
 use types::Event;
 use types::Member;
 
-use self::reqwest::header::CONTENT_TYPE;
+use reqwest::header::CONTENT_TYPE;
 
 use globals;
 

@@ -1,12 +1,11 @@
-extern crate md5;
-extern crate chrono;
-extern crate serde_json;
-use self::chrono::prelude::*;
+use md5;
+use chrono::prelude::*;
 use std::cmp::Ordering;
 use std::collections::HashMap;
-use self::serde_json::Value as JsonValue;
-use self::chrono::TimeZone;
-use self::chrono::DateTime;
+use serde_json;
+use serde_json::Value as JsonValue;
+use chrono::TimeZone;
+use chrono::DateTime;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Message {

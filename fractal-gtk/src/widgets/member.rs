@@ -1,7 +1,6 @@
-extern crate pango;
-extern crate gtk;
-
-use self::gtk::prelude::*;
+use pango;
+use gtk;
+use gtk::prelude::*;
 
 use types::Member;
 

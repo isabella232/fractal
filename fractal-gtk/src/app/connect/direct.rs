@@ -1,6 +1,6 @@
-extern crate gdk;
-extern crate gtk;
-use self::gtk::prelude::*;
+use gdk;
+use gtk;
+use gtk::prelude::*;
 
 use glib;
 use std::sync::{Arc, Mutex};

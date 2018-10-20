@@ -1,10 +1,9 @@
-extern crate gtk;
-
 use std::sync::mpsc::Sender;
 use std::collections::HashMap;
 
 use gio::ApplicationExt;
-use self::gtk::prelude::*;
+use gtk;
+use gtk::prelude::*;
 
 use globals;
 use backend::BKCommand;

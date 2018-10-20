@@ -1,5 +1,4 @@
-extern crate gtk;
-use self::gtk::prelude::*;
+use gtk::prelude::*;
 
 use app::App;
 

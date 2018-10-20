@@ -1,11 +1,10 @@
-extern crate gtk;
-
 use i18n::i18n;
 
 use std::fs;
 
-use self::gtk::prelude::*;
-use self::gtk::ResponseType;
+use gtk;
+use gtk::prelude::*;
+use gtk::ResponseType;
 
 use glib;
 use dirs;

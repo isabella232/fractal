@@ -1,18 +1,17 @@
-extern crate gdk;
-extern crate gdk_pixbuf;
-extern crate gtk;
-extern crate glib;
-extern crate sourceview;
-
 use std::cell::RefCell;
 use std::rc::Rc;
 use std::sync::mpsc::channel;
 use std::sync::mpsc::{Sender, Receiver};
 use std::sync::mpsc::TryRecvError;
 
-use self::gtk::prelude::*;
-use self::gdk::prelude::*;
-use self::sourceview::prelude::*;
+use sourceview;
+use glib;
+use gtk;
+use gtk::prelude::*;
+use gdk;
+use gdk::prelude::*;
+use sourceview::prelude::*;
+use gdk_pixbuf;
 
 use app::App;
 use backend::BKCommand;

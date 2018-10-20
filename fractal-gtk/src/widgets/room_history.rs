@@ -1,6 +1,3 @@
-extern crate glib;
-extern crate gtk;
-
 use std::cell::RefCell;
 use std::rc::Rc;
 use std::sync::mpsc::Sender;
@@ -15,7 +12,9 @@ use uitypes::MessageContent;
 use uitypes::RowType;
 use App;
 
-use self::gtk::prelude::*;
+use gtk;
+use gtk::prelude::*;
+use glib;
 use glib::source;
 use globals;
 use widgets;

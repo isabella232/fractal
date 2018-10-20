@@ -5,6 +5,8 @@ extern crate gtk;
 extern crate gdk;
 extern crate sourceview;
 
+extern crate regex;
+extern crate gdk_pixbuf;
 extern crate rand;
 extern crate itertools;
 extern crate dirs;
@@ -23,8 +25,6 @@ extern crate serde_derive;
 #[macro_use]
 extern crate serde_json;
 
-extern crate gdk_pixbuf;
-
 #[macro_use]
 extern crate fractal_matrix_api as fractal_api;
 
@@ -34,7 +34,15 @@ extern crate libhandy;
 
 extern crate gettextrs;
 
+extern crate letter_avatar;
+extern crate secret_service;
+extern crate cairo;
+extern crate pango;
+extern crate url;
+extern crate tree_magic;
 extern crate chrono;
+extern crate comrak;
+extern crate notify_rust;
 
 extern crate fragile;
 
