@@ -1,4 +1,3 @@
-use chrono;
 use chrono::prelude::*;
 
 use glib;
@@ -11,7 +10,6 @@ use gtk::LabelExt;
 use gtk::BoxExt;
 use gtk::ButtonExt;
 
-use gdk_pixbuf;
 use gdk_pixbuf::Pixbuf;
 use gtk::ImageExt;
 use gdk_pixbuf::PixbufExt;

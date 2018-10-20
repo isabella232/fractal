@@ -5,7 +5,6 @@ use glib;
 use gdk;
 use gdk::DragContextExtManual;
 
-use url;
 use url::Url;
 use std::collections::HashMap;
 use gtk;
@@ -17,7 +16,6 @@ use types::Room;
 use types::Message;
 use std::sync::{Arc, Mutex, MutexGuard};
 
-use chrono;
 use chrono::prelude::*;
 
 

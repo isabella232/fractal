@@ -1,6 +1,5 @@
 use gtk;
 use gtk::prelude::*;
-use notify_rust;
 use notify_rust::Notification;
 use std::sync::mpsc::TryRecvError;
 use std::thread;

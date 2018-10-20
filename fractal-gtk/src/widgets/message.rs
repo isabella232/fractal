@@ -1,4 +1,3 @@
-use regex;
 use regex::Regex;
 use itertools::Itertools;
 use app::App;
@@ -8,7 +7,6 @@ use pango;
 use glib;
 use gtk;
 use gtk::prelude::*;
-use chrono;
 use chrono::prelude::*;
 
 use backend::BKCommand;

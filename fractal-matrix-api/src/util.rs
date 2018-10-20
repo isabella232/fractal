@@ -1,13 +1,10 @@
 use reqwest;
-use regex;
 use regex::Regex;
 
-use serde_json;
 use serde_json::Value as JsonValue;
 
 use tree_magic;
 use glib;
-use url;
 use url::Url;
 use std::io::Read;
 use std::path::Path;

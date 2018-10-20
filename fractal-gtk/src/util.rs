@@ -1,9 +1,7 @@
 use cairo;
-use gdk_pixbuf;
 use gdk_pixbuf::Pixbuf;
 use gdk_pixbuf::PixbufExt;
 use failure::Error;
-use gdk;
 use gdk::ContextExt;
 use gio::{SettingsExt, Settings, SettingsSchemaSource};
 

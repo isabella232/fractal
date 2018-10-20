@@ -6,10 +6,8 @@ use cairo;
 use gtk;
 use gtk::prelude::*;
 pub use gtk::DrawingArea;
-use gdk_pixbuf;
 use gdk_pixbuf::Pixbuf;
 use gdk_pixbuf::PixbufExt;
-use gdk;
 use gdk::ContextExt;
 use fractal_api::util::cache_path;
 

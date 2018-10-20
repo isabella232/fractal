@@ -1,10 +1,7 @@
-use serde_json;
 use serde_json::Value as JsonValue;
-use regex;
 use regex::Regex;
 
 use std::thread;
-use url;
 use url::Url;
 
 use util::json_q;

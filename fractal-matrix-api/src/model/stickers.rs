@@ -1,4 +1,3 @@
-use serde_json;
 use serde_json::Value as JsonValue;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

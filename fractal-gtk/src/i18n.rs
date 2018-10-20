@@ -1,9 +1,7 @@
-use gettextrs;
 use gettextrs::gettext;
 use gettextrs::ngettext;
 use gettextrs::pgettext;
 use gettextrs::npgettext;
-use regex;
 use regex::Captures;
 use regex::Regex;
 

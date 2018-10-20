@@ -1,6 +1,4 @@
-use serde_json;
 use serde_json::Value as JsonValue;
-use url;
 use url::Url;
 
 use globals;

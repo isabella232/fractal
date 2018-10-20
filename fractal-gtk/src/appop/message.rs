@@ -5,7 +5,6 @@ use std::collections::HashMap;
 use gtk;
 use gtk::prelude::*;
 use chrono::prelude::*;
-use comrak;
 use comrak::{markdown_to_html, ComrakOptions};
 
 use app::InternalCommand;

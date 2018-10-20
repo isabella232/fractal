@@ -1,7 +1,6 @@
 use std::fs::File;
 use std::io::prelude::*;
 
-use url;
 use url::Url;
 use globals;
 use std::thread;

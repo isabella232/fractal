@@ -1,4 +1,3 @@
-use gdk;
 use gtk;
 use gtk::prelude::*;
 use gdk::FrameClockExt;
