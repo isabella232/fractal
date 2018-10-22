@@ -895,6 +895,9 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="orientation">vertical</property>
+                    <style>
+                      <class name="sidebar"/>
+                    </style>
                   </object>
                 </child>
                 <child>
