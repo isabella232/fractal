@@ -48,7 +48,7 @@ msgid "Keyboard _Shortcuts"
 msgstr "_Scurtis tastiere"
 
 #: fractal-gtk/res/gtk/menus.ui:10
-msgid "_About"
+msgid "_About Fractal"
 msgstr "_Informazions"
 
 #: fractal-gtk/res/gtk/menus.ui:14
