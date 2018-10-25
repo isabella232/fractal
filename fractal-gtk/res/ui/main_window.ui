@@ -830,6 +830,10 @@
                           </object>
                         </child>
                       </object>
+                      <packing>
+                        <property name="pack_type">end</property>
+                        <property name="position">0</property>
+                      </packing>
                     </child>
                     <child>
                       <object class="GtkMenuButton" id="add_room_menu">
@@ -883,10 +887,6 @@
                           </object>
                         </child>
                       </object>
-                      <packing>
-                        <property name="pack_type">end</property>
-                        <property name="position">0</property>
-                      </packing>
                     </child>
                   </object>
                 </child>
