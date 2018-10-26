@@ -439,7 +439,7 @@ dependencies = [
  "glib 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "md5 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "regex 1.0.5 (registry+https://github.com/rust-lang/crates.io-index)",
- "reqwest 0.9.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "reqwest 0.9.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.79 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_derive 1.0.79 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_json 1.0.32 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1731,7 +1731,7 @@ dependencies = [
 
 [[package]]
 name = "reqwest"
-version = "0.9.2"
+version = "0.9.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "base64 0.9.3 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -2635,7 +2635,7 @@ dependencies = [
 "checksum regex-syntax 0.5.6 (registry+https://github.com/rust-lang/crates.io-index)" = "7d707a4fa2637f2dca2ef9fd02225ec7661fe01a53623c1e6515b6916511f7a7"
 "checksum regex-syntax 0.6.2 (registry+https://github.com/rust-lang/crates.io-index)" = "747ba3b235651f6e2f67dfa8bcdcd073ddb7c243cb21c442fc12395dfcac212d"
 "checksum remove_dir_all 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)" = "3488ba1b9a2084d38645c4c08276a1752dcbf2c7130d74f1569681ad5d2799c5"
-"checksum reqwest 0.9.2 (registry+https://github.com/rust-lang/crates.io-index)" = "1d68c7bf0b1dc3860b80c6d31d05808bf54cdc1bfc70a4680893791becd083ae"
+"checksum reqwest 0.9.3 (registry+https://github.com/rust-lang/crates.io-index)" = "aa238ac676ec77e62be3e70656828ca4f596fccd33c6fab92942701bc8c8b4fe"
 "checksum rust-crypto 0.2.36 (git+https://github.com/awmath/rust-crypto?rev=394c247254dbe2ac5d44483232cf335d10cf0260)" = "<none>"
 "checksum rust-gmp 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)" = "4cd7d57377b309a73f69e164109203aa9ab3fee6ea68ac5fb76e2edb50662e9b"
 "checksum rustc-demangle 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)" = "bcfe5b13211b4d78e5c2cadfebd7769197d95c639c35a50057eb4c05de811395"
