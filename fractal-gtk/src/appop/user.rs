@@ -54,11 +54,6 @@ impl AppOp {
             stack.set_visible_child_name("spinner");
         }
 
-        /* update user menu button avatar */
-        let button = self.ui.builder
-            .get_object::<gtk::MenuButton>("user_menu_button")
-            .expect("Can't find user_menu_button in ui file.");
-
         let eb = gtk::EventBox::new();
         match self.avatar.clone() {
             Some(_) => {
@@ -78,7 +73,6 @@ impl AppOp {
         };
 
         eb.connect_button_press_event(move |_, _| { Inhibit(false) });
-        button.set_image(&eb);
     }
 
     pub fn set_username(&mut self, username: Option<String>) {

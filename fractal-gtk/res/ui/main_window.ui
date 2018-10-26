@@ -809,27 +809,31 @@
                     <property name="can_focus">False</property>
                     <!--<property name="show-close-button">True</property>-->
                     <child>
-                      <object class="GtkMenuButton" id="user_menu_button">
+                      <object class="GtkMenuButton" id="main_menu_button">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="popover">user_popover</property>
                         <child>
-                          <object class="GtkSpinner">
+                          <object class="GtkImage">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="active">True</property>
+                            <property name="icon_name">open-menu-symbolic</property>
                           </object>
                         </child>
                         <accessibility>
 
                         </accessibility>
                         <child internal-child="accessible">
-                          <object class="AtkObject" id="a11y-user_menu_button">
+                          <object class="AtkObject" id="a11y-main_menu_button">
                             <property name="AtkObject::accessible_name" translatable="yes">User</property>
                           </object>
                         </child>
                       </object>
+                      <packing>
+                        <property name="pack_type">end</property>
+                        <property name="position">0</property>
+                      </packing>
                     </child>
                     <child>
                       <object class="GtkMenuButton" id="add_room_menu">
@@ -883,10 +887,6 @@
                           </object>
                         </child>
                       </object>
-                      <packing>
-                        <property name="pack_type">end</property>
-                        <property name="position">0</property>
-                      </packing>
                     </child>
                   </object>
                 </child>
