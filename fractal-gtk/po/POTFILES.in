@@ -29,7 +29,7 @@ fractal-gtk/res/ui/room_settings.ui
 fractal-gtk/res/ui/server_chooser_menu.ui
 fractal-gtk/res/ui/sticker_group.ui
 fractal-gtk/res/ui/stickers_popover.ui
-fractal-gtk/res/ui/user_menu.ui
+fractal-gtk/res/ui/main_menu.ui
 
 # rust files
 fractal-gtk/src/app/actions.rs

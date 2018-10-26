@@ -809,7 +809,7 @@
                     <property name="can_focus">False</property>
                     <!--<property name="show-close-button">True</property>-->
                     <child>
-                      <object class="GtkMenuButton" id="user_menu_button">
+                      <object class="GtkMenuButton" id="main_menu_button">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
@@ -825,7 +825,7 @@
 
                         </accessibility>
                         <child internal-child="accessible">
-                          <object class="AtkObject" id="a11y-user_menu_button">
+                          <object class="AtkObject" id="a11y-main_menu_button">
                             <property name="AtkObject::accessible_name" translatable="yes">User</property>
                           </object>
                         </child>

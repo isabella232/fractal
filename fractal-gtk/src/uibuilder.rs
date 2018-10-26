@@ -18,8 +18,8 @@ impl UI {
 
         // needed from main_window
         // These are popup menus showed from main_window interface
-        builder.add_from_resource("/org/gnome/Fractal/ui/user_menu.ui")
-               .expect("Can't load ui file: user_menu.ui");
+        builder.add_from_resource("/org/gnome/Fractal/ui/main_menu.ui")
+               .expect("Can't load ui file: main_menu.ui");
         builder.add_from_resource("/org/gnome/Fractal/ui/add_room_menu.ui")
                .expect("Can't load ui file: add_room_menu.ui");
         builder.add_from_resource("/org/gnome/Fractal/ui/room_menu.ui")
