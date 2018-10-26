@@ -815,10 +815,10 @@
                         <property name="receives_default">True</property>
                         <property name="popover">user_popover</property>
                         <child>
-                          <object class="GtkSpinner">
+                          <object class="GtkImage">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="active">True</property>
+                            <property name="icon_name">open-menu-symbolic</property>
                           </object>
                         </child>
                         <accessibility>
