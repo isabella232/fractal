@@ -462,11 +462,12 @@ impl AppOp {
         self.load_more_spn.start();
 
         if let Some(r) = self.rooms.get(&self.active_room.clone().unwrap_or_default()) {
-            if self.shown_messages < r.messages.len() {
-                let msgs = r.messages.iter().rev()
-                                     .skip(self.shown_messages)
-                                     .take(globals::INITIAL_MESSAGES)
-                                     .collect::<Vec<&Message>>();
+            let msgs = r.messages.iter().filter(|x| !x.redacted).cloned().collect::<Vec<Message>>();
+            if self.shown_messages < msgs.len() {
+                let msgs = msgs.iter().rev()
+                               .skip(self.shown_messages)
+                               .take(globals::INITIAL_MESSAGES)
+                               .collect::<Vec<&Message>>();
                 for msg in msgs.iter() {
                     let command = InternalCommand::AddRoomMessage((*msg).clone(),
                                                                   MsgPos::Top,
