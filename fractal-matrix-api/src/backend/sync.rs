@@ -47,7 +47,7 @@ pub fn sync(bk: &Backend, new_since: Option<String>, initial: bool) -> Result<()
             }},
             "presence": {{ "types": [] }},
             "event_format": "client",
-            "event_fields": ["type", "content", "sender", "origin_server_ts", "event_id"]
+            "event_fields": ["type", "content", "sender", "origin_server_ts", "event_id", "unsigned"]
         }}"#, globals::PAGE_LIMIT);
 
         params.push(("filter", String::from(filter)));
