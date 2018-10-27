@@ -6,6 +6,7 @@ use serde_json::Value as JsonValue;
 use tree_magic;
 use glib;
 use url::Url;
+use url::percent_encoding::{utf8_percent_encode, USERINFO_ENCODE_SET};
 use std::io::Read;
 use std::path::Path;
 use std::path::PathBuf;
@@ -628,7 +629,7 @@ pub fn json_q(method: &str, url: &Url, attrs: &JsonValue, timeout: u64) -> Resul
 }
 
 pub fn get_user_avatar(baseu: &Url, userid: &str) -> Result<(String, String), Error> {
-    let url = client_url(baseu, &format!("profile/{}", userid), vec![])?;
+    let url = client_url(baseu, &format!("profile/{}", encode_uid(userid)), vec![])?;
     let attrs = json!(null);
 
     match json_q("get", &url, &attrs, globals::TIMEOUT) {
@@ -901,3 +902,8 @@ pub fn parse_room_member(msg: &JsonValue) -> Option<Member> {
         avatar: avatar_url,
     })
 }
+
+pub fn encode_uid(userid: &str) -> String {
+    utf8_percent_encode(userid, USERINFO_ENCODE_SET).collect::<String>()
+}
+
