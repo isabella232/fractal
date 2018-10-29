@@ -2,6 +2,7 @@ use gdk;
 use gtk;
 use gtk::prelude::*;
 use sourceview::BufferExt;
+use appop::attach;
 
 use app::App;
 
@@ -56,7 +57,7 @@ impl App {
 
         op = self.op.clone();
         msg_entry.connect_paste_clipboard(move |_| {
-            op.lock().unwrap().paste();
+            attach::paste(op.clone());
         });
 
         msg_entry.connect_focus_in_event(clone!(msg_entry_box => move |_, _| {

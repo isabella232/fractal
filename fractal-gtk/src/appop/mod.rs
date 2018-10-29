@@ -36,7 +36,7 @@ mod files;
 mod message;
 mod directory;
 mod notify;
-mod attach;
+pub mod attach;
 mod member;
 mod invite;
 mod about;
