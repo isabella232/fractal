@@ -23,10 +23,11 @@ pub fn guest(bk: &Backend, server: String) -> Result<(), Error> {
           |r: JsonValue| {
         let uid = String::from(r["user_id"].as_str().unwrap_or(""));
         let tk = String::from(r["access_token"].as_str().unwrap_or(""));
+        let dev = String::from(r["device_id"].as_str().unwrap_or(""));
         data.lock().unwrap().user_id = uid.clone();
         data.lock().unwrap().access_token = tk.clone();
         data.lock().unwrap().since = None;
-        tx.send(BKResponse::Token(uid, tk)).unwrap();
+        tx.send(BKResponse::Token(uid, tk, Some(dev))).unwrap();
         tx.send(BKResponse::Rooms(vec![], None)).unwrap();
     },
           |err| tx.send(BKResponse::GuestLoginError(err)).unwrap());
@@ -77,6 +78,7 @@ pub fn login(bk: &Backend, user: String, password: String, server: String) -> Re
         |r: JsonValue| {
             let uid = String::from(r["user_id"].as_str().unwrap_or(""));
             let tk = String::from(r["access_token"].as_str().unwrap_or(""));
+            let dev = String::from(r["device_id"].as_str().unwrap_or(""));
 
             if uid.is_empty() || tk.is_empty() {
                 tx.send(BKResponse::LoginError(Error::BackendError)).unwrap();
@@ -84,7 +86,7 @@ pub fn login(bk: &Backend, user: String, password: String, server: String) -> Re
                 data.lock().unwrap().user_id = uid.clone();
                 data.lock().unwrap().access_token = tk.clone();
                 data.lock().unwrap().since = None;
-                tx.send(BKResponse::Token(uid, tk)).unwrap();
+                tx.send(BKResponse::Token(uid, tk, Some(dev))).unwrap();
             }
         },
         |err| { tx.send(BKResponse::LoginError(err)).unwrap() }
@@ -99,7 +101,7 @@ pub fn set_token(bk: &Backend, token: String, uid: String, server: String) -> Re
     bk.data.lock().unwrap().access_token = token.clone();
     bk.data.lock().unwrap().user_id = uid.clone();
     bk.data.lock().unwrap().since = None;
-    bk.tx.send(BKResponse::Token(uid, token)).unwrap();
+    bk.tx.send(BKResponse::Token(uid, token , None)).unwrap();
 
     Ok(())
 }
@@ -140,11 +142,12 @@ pub fn register(bk: &Backend, user: String, password: String, server: String) ->
         |r: JsonValue| {
             let uid = String::from(r["user_id"].as_str().unwrap_or(""));
             let tk = String::from(r["access_token"].as_str().unwrap_or(""));
+            let dev = String::from(r["device_id"].as_str().unwrap_or(""));
 
             data.lock().unwrap().user_id = uid.clone();
             data.lock().unwrap().access_token = tk.clone();
             data.lock().unwrap().since = None;
-            tx.send(BKResponse::Token(uid, tk)).unwrap();
+            tx.send(BKResponse::Token(uid, tk, Some(dev))).unwrap();
         },
         |err| { tx.send(BKResponse::LoginError(err)).unwrap() }
     );

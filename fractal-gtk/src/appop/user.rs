@@ -85,6 +85,10 @@ impl AppOp {
         self.show_user_info();
     }
 
+    pub fn set_device(&mut self, device: Option<String>) {
+        self.device_id = device;
+    }
+
     pub fn set_avatar(&mut self, fname: Option<String>) {
         self.avatar = fname;
         self.show_user_info();

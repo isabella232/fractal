@@ -34,8 +34,8 @@ pub fn backend_loop(rx: Receiver<BKResponse>) {
             match recv {
                 Err(RecvError) => { break; }
                 Ok(BKResponse::ShutDown) => { shutting_down = true; }
-                Ok(BKResponse::Token(uid, tk)) => {
-                    APPOP!(bk_login, (uid, tk));
+                Ok(BKResponse::Token(uid, tk, dev)) => {
+                    APPOP!(bk_login, (uid, tk, dev));
                 }
                 Ok(BKResponse::Logout) => {
                     APPOP!(bk_logout);
