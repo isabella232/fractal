@@ -35,6 +35,7 @@ pub struct CacheData {
     pub rooms: RoomList,
     pub username: String,
     pub uid: String,
+    pub device_id: String,
 }
 
 
@@ -42,7 +43,8 @@ pub fn store(
     rooms: &RoomList,
     since: Option<String>,
     username: String,
-    uid: String
+    uid: String,
+    device_id: String
 ) -> Result<(), Error> {
 
     // don't store all messages in the cache
@@ -60,7 +62,7 @@ pub fn store(
         cacherooms.push(r);
     }
 
-    let st = AppState { since, username, uid };
+    let st = AppState { since, username, uid, device_id };
     get().save_st(st)?;
 
     // This is slow because we iterate over all room msgs
@@ -86,6 +88,7 @@ pub fn load() -> Result<CacheData, Error> {
         since: st.since,
         username: st.username,
         uid: st.uid,
+        device_id: st.device_id,
         rooms: cacherooms,
     };
 

@@ -65,6 +65,7 @@ pub struct AppOp {
 
     pub username: Option<String>,
     pub uid: Option<String>,
+    pub device_id: Option<String>,
     pub avatar: Option<String>,
     pub server_url: String,
     pub identity_url: String,
@@ -120,6 +121,7 @@ impl AppOp {
             history: None,
             username: None,
             uid: None,
+            device_id: None,
             avatar: None,
             server_url: String::from(globals::DEFAULT_HOMESERVER),
             identity_url: String::from(globals::DEFAULT_IDENTITYSERVER),
@@ -160,6 +162,7 @@ impl AppOp {
             self.since = data.since.filter(|s| !s.is_empty());
             self.username = Some(data.username);
             self.uid = Some(data.uid);
+            self.device_id = Some(data.device_id);
         }
 
         if let Ok(pass) = self.get_pass() {

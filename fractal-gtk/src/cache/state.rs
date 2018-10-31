@@ -21,6 +21,7 @@ pub struct AppState {
     pub since: Option<String>,
     pub username: String,
     pub uid: String,
+    pub device_id: String,
 }
 
 /// Backend Room model but without the list of messages

@@ -348,8 +348,9 @@ impl AppOp {
         let since = self.since.clone();
         let username = self.username.clone().unwrap_or_default();
         let uid = self.uid.clone().unwrap_or_default();
+        let device_id = self.device_id.clone().unwrap_or_default();
 
-        if let Err(_) = cache::store(&rooms, since, username, uid) {
+        if let Err(_) = cache::store(&rooms, since, username, uid, device_id) {
             println!("Error caching rooms");
         };
     }
