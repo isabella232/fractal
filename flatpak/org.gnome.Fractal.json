@@ -34,6 +34,7 @@
         ],
         "env" : {
             "CARGO_HOME" : "/run/build/Fractal/cargo",
+            "RUSTFLAGS" : "--error-format=short --remap-path-prefix =../",
             "RUST_BACKTRACE" : "1"
         }
     },
