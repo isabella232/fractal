@@ -909,8 +909,6 @@
                       <object class="GtkBox" id="room_info">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="valign">fill</property>
-                        <property name="hexpand">True</property>
                         <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkLabel" id="room_name">
