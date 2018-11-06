@@ -260,6 +260,7 @@ row .timestamp {
 }
 
 .messages-scroll {
+  background-color: @theme_base_color;
   border-bottom: 1px solid @borders;
 }
 
