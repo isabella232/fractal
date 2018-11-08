@@ -1,3 +1,6 @@
+use std::cell::RefCell;
+use std::rc::Rc;
+
 use gtk;
 use gtk::prelude::*;
 use gdk::FrameClockExt;
@@ -17,11 +20,6 @@ impl App {
         let revealer = self.ui.builder
             .get_object::<gtk::Revealer>("scroll_btn_revealer")
             .expect("Can't find scroll_btn_revealer in ui file.");
-
-        let op = self.op.clone();
-        s.connect_edge_overshot(move |_, dir| if dir == gtk::PositionType::Top {
-            op.lock().unwrap().load_more_messages();
-        });
 
         /* From clutter-easing.c, based on Robert Penner's
          * infamous easing equations, MIT license.
@@ -67,13 +65,32 @@ impl App {
             let op = self.op.clone();
             adj.connect_changed(clone!(s => move |_| {
                 if op.lock().unwrap().autoscroll {
+                    op.lock().unwrap().autoscroll = true;
                     scroll_down(&s, false);
                 }
             }));
 
+            /* Keep the scroll position when loading more messages */
+            let op = self.op.clone();
+            let upper: Rc<RefCell<f64>> = Rc::new(RefCell::new(adj.get_upper()));
+            adj.connect_property_upper_notify(move |x| {
+                let new_upper = x.get_upper();
+                let diff = new_upper - *upper.borrow();
+                *upper.borrow_mut() = new_upper;
+                if !op.lock().unwrap().autoscroll {
+                    x.set_value(x.get_value() + diff);
+                }
+            });
+
             let op = self.op.clone();
             let r = revealer.clone();
             adj.connect_value_changed(move |adj| {
+                /* the page size twice to detect if the user gets close the edge */
+                if adj.get_value() < adj.get_page_size() * 2.0 {
+                    /* Load more messages once the user is nearly at the end of the history */
+                    op.lock().unwrap().load_more_messages();
+                }
+
                 let bottom = adj.get_upper() - adj.get_page_size();
                 if adj.get_value() == bottom {
                     r.set_reveal_child(false);
@@ -85,8 +102,10 @@ impl App {
             });
         }
 
+        let op = self.op.clone();
         btn.connect_clicked(move |_| {
             revealer.set_reveal_child(false);
+            op.lock().unwrap().autoscroll = true;
             scroll_down(&s, true);
         });
     }
