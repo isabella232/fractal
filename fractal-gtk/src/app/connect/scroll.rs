@@ -35,23 +35,25 @@ impl App {
                     if let Some(clock) = view.get_frame_clock() {
                         let duration = 200;
                         let start = adj.get_value();
-                        let end = adj.get_upper() - adj.get_page_size();
                         let start_time = clock.get_frame_time();
                         let end_time = start_time + 1000 * duration;
-                        view.add_tick_callback(move |_view, clock| {
+                        view.add_tick_callback(move |view, clock| {
                             let now = clock.get_frame_time();
-
-                            if now < end_time && adj.get_value() != end {
-                                let mut t = (now - start_time) as f64 / (end_time - start_time) as f64;
-                                t = ease_out_cubic(t);
-                                adj.set_value(start + t * (end - start));
-                                return glib::Continue(true);
+                            if let Some(adj) = view.get_vadjustment() {
+                                let end = adj.get_upper() - adj.get_page_size();
+                                if now < end_time && adj.get_value() != end {
+                                    let mut t = (now - start_time) as f64 / (end_time - start_time) as f64;
+                                    t = ease_out_cubic(t);
+                                    adj.set_value(start + t * (end - start));
+                                    return glib::Continue(true);
+                                }
+                                else
+                                {
+                                    adj.set_value (end);
+                                    return glib::Continue(false);
+                                }
                             }
-                            else
-                            {
-                                adj.set_value (end);
-                                return glib::Continue(false);
-                            }
+                            return glib::Continue(false);
                         });
                     }
                 }
@@ -86,7 +88,7 @@ impl App {
             let r = revealer.clone();
             adj.connect_value_changed(move |adj| {
                 /* the page size twice to detect if the user gets close the edge */
-                if adj.get_value() < adj.get_page_size() * 2.0 {
+                if !op.lock().unwrap().autoscroll && adj.get_value() < adj.get_page_size() * 2.0 {
                     /* Load more messages once the user is nearly at the end of the history */
                     op.lock().unwrap().load_more_messages();
                 }
