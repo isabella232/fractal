@@ -50,6 +50,7 @@ impl MessageBox {
 
         let row_eb = gtk::EventBox::new();
 
+        username.set_ellipsize(pango::EllipsizeMode::End);
         row_eb.connect_button_press_event(clone!(msg, backend, ui => move |eb, btn| {
             if btn.get_button() == 3 {
                 let menu = MessageMenu::new_message_menu(ui.clone(), backend.clone(),
