@@ -15,6 +15,7 @@ fractal-gtk/res/ui/invite.ui
 fractal-gtk/res/ui/invite_user.ui
 fractal-gtk/res/ui/join_room.ui
 fractal-gtk/res/ui/leave_room.ui
+fractal-gtk/res/ui/main_menu.ui
 fractal-gtk/res/ui/main_window.ui
 fractal-gtk/res/ui/markdown_popover.ui
 fractal-gtk/res/ui/media_viewer_menu.ui
@@ -26,10 +27,10 @@ fractal-gtk/res/ui/new_room.ui
 fractal-gtk/res/ui/password_dialog.ui
 fractal-gtk/res/ui/room_menu.ui
 fractal-gtk/res/ui/room_settings.ui
+fractal-gtk/res/ui/scroll_widget.ui
 fractal-gtk/res/ui/server_chooser_menu.ui
 fractal-gtk/res/ui/sticker_group.ui
 fractal-gtk/res/ui/stickers_popover.ui
-fractal-gtk/res/ui/main_menu.ui
 
 # rust files
 fractal-gtk/src/app/actions.rs
@@ -44,13 +45,11 @@ fractal-gtk/src/app/connect/headerbar.rs
 fractal-gtk/src/app/connect/invite.rs
 fractal-gtk/src/app/connect/join_room.rs
 fractal-gtk/src/app/connect/leave_room.rs
-fractal-gtk/src/app/connect/load_more.rs
 fractal-gtk/src/app/connect/login.rs
 fractal-gtk/src/app/connect/markdown.rs
 fractal-gtk/src/app/connect/mod.rs
 fractal-gtk/src/app/connect/new_room.rs
 fractal-gtk/src/app/connect/roomlist_search.rs
-fractal-gtk/src/app/connect/scroll.rs
 fractal-gtk/src/app/connect/send.rs
 fractal-gtk/src/app/connect/stickers.rs
 fractal-gtk/src/app/mod.rs
@@ -99,3 +98,4 @@ fractal-gtk/src/widgets/room.rs
 fractal-gtk/src/widgets/room_settings.rs
 fractal-gtk/src/widgets/roomlist.rs
 fractal-gtk/src/widgets/roomrow.rs
+fractal-gtk/src/widgets/scroll_widget.rs
