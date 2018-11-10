@@ -198,9 +198,6 @@ impl AppOp {
             }
         }
 
-        /* FIXME: We show all messages always therefore we don't need to track how many messages we show */
-        self.shown_messages = messages.len();
-
         /* make sure we remove the old room history first, because the lazy loading could try to
          * load messages */
         if let Some(history) = self.history.take() {
