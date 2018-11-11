@@ -13,7 +13,6 @@ use app::App;
 use appop::room::Force;
 
 use glib;
-use globals;
 use widgets;
 use uitypes::MessageContent;
 use uitypes::RowType;
@@ -133,7 +132,6 @@ impl AppOp {
 
                 }
             }
-            self.shown_messages += 1;
         }
     }
 
@@ -462,20 +460,7 @@ impl AppOp {
         self.load_more_spn.start();
 
         if let Some(r) = self.rooms.get(&self.active_room.clone().unwrap_or_default()) {
-            let msgs = r.messages.iter().filter(|x| !x.redacted).cloned().collect::<Vec<Message>>();
-            if self.shown_messages < msgs.len() {
-                let msgs = msgs.iter().rev()
-                               .skip(self.shown_messages)
-                               .take(globals::INITIAL_MESSAGES)
-                               .collect::<Vec<&Message>>();
-                for msg in msgs.iter() {
-                    let command = InternalCommand::AddRoomMessage((*msg).clone(),
-                                                                  MsgPos::Top,
-                                                                  self.is_first_new(&msg));
-                    self.internal.send(command).unwrap();
-                }
-                self.internal.send(InternalCommand::LoadMoreNormal).unwrap();
-            } else if let Some(prev_batch) = r.prev_batch.clone() {
+            if let Some(prev_batch) = r.prev_batch.clone() {
                 self.backend.send(BKCommand::GetRoomMessages(r.id.clone(), prev_batch)).unwrap();
             } else if let Some(msg) = r.messages.iter().next() {
                 // no prev_batch so we use the last message to calculate that in the backend
