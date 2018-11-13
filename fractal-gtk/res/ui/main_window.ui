@@ -14,6 +14,10 @@
         <property name="hhomogeneous">False</property>
         <child>
           <object class="HdyLeaflet" id="chat_state">
+            <property name="child-transition-duration" bind-source="header_leaflet" bind-property="child-transition-duration" bind-flags="bidirectional|sync-create"/>
+            <property name="child-transition-type" bind-source="header_leaflet" bind-property="child-transition-type" bind-flags="bidirectional|sync-create"/>
+            <property name="mode-transition-duration" bind-source="header_leaflet" bind-property="mode-transition-duration" bind-flags="bidirectional|sync-create"/>
+            <property name="mode-transition-type" bind-source="header_leaflet" bind-property="mode-transition-type" bind-flags="bidirectional|sync-create"/>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="hhomogeneous-folded">True</property>
@@ -805,6 +809,8 @@
             <property name="hhomogeneous">False</property>
             <child>
               <object class="HdyLeaflet" id="header_leaflet"> <!--message view-->
+                <property name="child-transition-type">slide</property>
+                <property name="mode-transition-type">slide</property>
                 <property name="visible">True</property>
                 <property name="hhomogeneous-folded">True</property>
                 <child>
