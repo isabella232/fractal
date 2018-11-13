@@ -11,6 +11,7 @@ mod directory;
 mod headerbar;
 mod invite;
 mod join_room;
+mod leaflet;
 mod leave_room;
 mod load_more;
 mod login;
@@ -67,6 +68,7 @@ impl App {
         self.connect_login_view();
 
         self.connect_msg_scroll();
+        self.connect_leaflet();
 
         self.connect_send();
         self.connect_attach();
