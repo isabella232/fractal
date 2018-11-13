@@ -2,6 +2,7 @@
 <!-- Generated with glade 3.20.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
+  <requires lib="libhandy" version="0.0"/>
   <object class="GtkApplicationWindow" id="main_window">
     <property name="can_focus">False</property>
     <property name="default_width">860</property>
@@ -10,16 +11,18 @@
     <child>
       <object class="GtkStack" id="main_content_stack">
         <property name="can_focus">False</property>
+        <property name="hhomogeneous">False</property>
         <child>
-          <object class="GtkBox" id="chat_state">
+          <object class="HdyLeaflet" id="chat_state">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="hhomogeneous-folded">True</property>
             <child>
               <object class="GtkBox" id="sidebar-box">
                 <property name="width_request">200</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="halign">start</property>
+                <property name="halign">fill</property>
                 <property name="hexpand">False</property>
                 <property name="orientation">vertical</property>
                 <child>
@@ -80,15 +83,16 @@
                 </child>
               </object>
               <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">0</property>
+                <property name="name">sidebar-box</property>
               </packing>
             </child>
             <child>
-              <object class="GtkSeparator">
+              <object class="GtkSeparator" id="content_separator">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <style>
+                  <class name="sidebar"/>
+                </style>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -349,10 +353,7 @@
                 </child>
               </object>
               <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="pack_type">end</property>
-                <property name="position">0</property>
+                <property name="name">inapp</property>
               </packing>
             </child>
           </object>
@@ -801,14 +802,17 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="hexpand">True</property>
+            <property name="hhomogeneous">False</property>
             <child>
-              <object class="GtkBox"> <!--message view-->
+              <object class="HdyLeaflet" id="header_leaflet"> <!--message view-->
                 <property name="visible">True</property>
+                <property name="hhomogeneous-folded">True</property>
                 <child>
                   <object class="GtkHeaderBar" id="left-header"> <!--left titlebar-->
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <!--<property name="show-close-button">True</property>-->
+                    <property name="halign">fill</property>
+                    <property name="show-close-button">True</property>
                     <child>
                       <object class="GtkMenuButton" id="main_menu_button">
                         <property name="visible">True</property>
@@ -890,9 +894,12 @@
                       </object>
                     </child>
                   </object>
+                  <packing>
+                    <property name="name">left-header</property>
+                  </packing>
                 </child>
                 <child>
-                  <object class="GtkSeparator">
+                  <object class="GtkSeparator" id="header_separator">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="orientation">vertical</property>
@@ -906,6 +913,35 @@
                     <property name="show-close-button">True</property>
                     <property name="has-subtitle">False</property>
                     <property name="hexpand">True</property>
+                    <child>
+                      <object class="GtkRevealer">
+                        <property name="reveal-child" bind-source="header_leaflet" bind-property="folded" bind-flags="sync-create"/>
+                        <property name="transition-duration" bind-source="header_leaflet" bind-property="mode-transition-duration" bind-flags="bidirectional|sync-create"/>
+                        <property name="transition-type">crossfade</property>
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkButton" id="room_header_back_button">
+                            <property name="receives-default">False</property>
+                            <property name="visible">True</property>
+                            <style>
+                              <class name="image-button"/>
+                            </style>
+                            <child internal-child="accessible">
+                              <object class="AtkObject">
+                                <property name="accessible-name" translatable="yes">Back</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="icon-name">go-previous-symbolic</property>
+                                <property name="icon-size">1</property>
+                                <property name="visible">True</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
                     <child type="title">
                       <object class="GtkBox" id="room_info">
                         <property name="visible">True</property>
@@ -970,6 +1006,9 @@
                       </packing>
                     </child>
                   </object>
+                  <packing>
+                    <property name="name">room_header_bar</property>
+                  </packing>
                 </child>
               </object>
               <packing>
@@ -1107,5 +1146,25 @@
       <widget name="left-header"/>
       <widget name="sidebar-box"/>
     </widgets>
+  </object>
+  <object class="GtkSizeGroup">
+    <property name="mode">horizontal</property>
+    <widgets>
+      <widget name="room_header_bar"/>
+      <widget name="inapp"/>
+    </widgets>
+  </object>
+  <object class="GtkSizeGroup">
+    <property name="mode">horizontal</property>
+    <widgets>
+      <widget name="header_separator"/>
+      <widget name="content_separator"/>
+    </widgets>
+  </object>
+  <object class="HdyHeaderGroup">
+    <headerbars>
+      <headerbar name="left-header"/>
+      <headerbar name="room_header_bar"/>
+    </headerbars>
   </object>
 </interface>

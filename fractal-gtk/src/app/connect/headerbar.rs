@@ -4,6 +4,9 @@ use gtk::prelude::*;
 use appop::AppState;
 
 use app::App;
+use app::InternalCommand;
+
+use std::sync::Arc;
 
 impl App {
     pub fn connect_headerbars(&self) {
@@ -13,6 +16,17 @@ impl App {
             .expect("Can't find back_button in ui file.");
         btn.connect_clicked(move |_| {
             op.lock().unwrap().set_state(AppState::Chat);
+        });
+        let back_btn = self.ui.builder
+            .get_object::<gtk::Button>("room_header_back_button")
+            .expect("Can't find room_header_back_button in ui file.");
+
+        let weak_op = Arc::downgrade(&self.op);
+        back_btn.connect_clicked(move |_| {
+            weak_op.upgrade().map(|op| {
+                op.lock().unwrap().internal.send(InternalCommand::ShowRoomList)
+                    .unwrap();
+            });
         });
 
         if let Some(set) = gtk::Settings::get_default() {
