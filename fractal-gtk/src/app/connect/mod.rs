@@ -10,6 +10,7 @@ mod directory;
 mod headerbar;
 mod invite;
 mod join_room;
+mod leaflet;
 mod leave_room;
 mod login;
 mod markdown;
@@ -60,6 +61,8 @@ impl App {
 
         self.connect_headerbars();
         self.connect_login_view();
+
+        self.connect_leaflet();
 
         self.connect_send();
         self.connect_attach();

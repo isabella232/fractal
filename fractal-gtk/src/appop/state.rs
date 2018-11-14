@@ -3,6 +3,7 @@ use gtk::prelude::*;
 
 use appop::AppOp;
 use appop::room::RoomPanel;
+use appop::LeafletState;
 
 
 #[derive(Debug, Clone, PartialEq)]
@@ -89,6 +90,8 @@ impl AppOp {
                 self.room_panel(RoomPanel::NoRoom);
                 self.active_room = None;
                 self.clear_tmp_msgs();
+                self.set_leaflet_state(LeafletState::Sidebar);
+
                 true
             },
             _ => { false }
