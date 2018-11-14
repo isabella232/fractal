@@ -4,7 +4,6 @@ use gdk;
 
 mod attach;
 mod autocomplete;
-mod column;
 mod direct;
 mod account;
 mod directory;
@@ -13,12 +12,10 @@ mod invite;
 mod join_room;
 mod leaflet;
 mod leave_room;
-mod load_more;
 mod login;
 mod markdown;
 mod new_room;
 mod roomlist_search;
-mod scroll;
 mod send;
 mod stickers;
 
@@ -60,14 +57,11 @@ impl App {
             }
         });
 
-        self.create_message_column();
-        self.create_load_more_spn();
         self.create_actions();
 
         self.connect_headerbars();
         self.connect_login_view();
 
-        self.connect_msg_scroll();
         self.connect_leaflet();
 
         self.connect_send();

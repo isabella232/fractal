@@ -80,7 +80,6 @@ pub struct AppOp {
     pub history: Option<widgets::RoomHistory>,
     pub roomlist: widgets::RoomList,
     pub message_box: gtk::ListBox,
-    pub load_more_spn: gtk::Spinner,
     pub unsent_messages: HashMap<String, (String, i32)>,
     pub header_leaflet: libhandy::Leaflet,
     pub chat_state: libhandy::Leaflet,
@@ -120,7 +119,6 @@ impl AppOp {
         AppOp {
             ui: ui,
             gtk_app: app,
-            load_more_spn: gtk::Spinner::new(),
             message_box: gtk::ListBox::new(),
             backend: tx,
             internal: itx,
