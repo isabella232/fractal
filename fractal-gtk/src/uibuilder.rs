@@ -32,6 +32,8 @@ impl UI {
                .expect("Can't load ui file: server_chooser_menu.ui");
         builder.add_from_resource("/org/gnome/Fractal/ui/stickers_popover.ui")
                .expect("Can't load ui file: stickers_popover.ui");
+        builder.add_from_resource("/org/gnome/Fractal/ui/scroll_widget.ui")
+               .expect("Can't load ui file: scroll_widget.ui");
         builder.add_from_resource("/org/gnome/Fractal/ui/main_window.ui")
                .expect("Can't load ui file: main_window.ui");
 
