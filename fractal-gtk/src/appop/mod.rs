@@ -5,8 +5,6 @@ use gio::ApplicationExt;
 use gtk;
 use gtk::prelude::*;
 
-use libhandy;
-
 use globals;
 use backend::BKCommand;
 use backend;
@@ -44,7 +42,6 @@ mod invite;
 mod about;
 mod start_chat;
 mod stickers;
-mod leaflet;
 
 pub use self::state::AppState;
 use self::message::TmpMsg;
@@ -52,7 +49,6 @@ pub use self::message::MsgPos;
 pub use self::message::LastViewed;
 pub use self::room::RoomPanel;
 use self::member::SearchType;
-pub use self::leaflet::LeafletState;
 
 pub struct AppOp {
     pub ui: uibuilder::UI,
@@ -81,8 +77,6 @@ pub struct AppOp {
     pub roomlist: widgets::RoomList,
     pub message_box: gtk::ListBox,
     pub unsent_messages: HashMap<String, (String, i32)>,
-    pub header_leaflet: libhandy::Leaflet,
-    pub chat_state: libhandy::Leaflet,
 
     pub inhibit_escape: bool,
 
@@ -111,11 +105,6 @@ impl AppOp {
                ui: uibuilder::UI,
                tx: Sender<BKCommand>,
                itx: Sender<InternalCommand>) -> AppOp {
-        let header_leaflet = ui.builder.get_object("header_leaflet")
-            .expect("could not find header_leaflet in .ui file");
-        let chat_state = ui.builder.get_object("chat_state")
-            .expect("could not find chat_state in .ui file");
-
         AppOp {
             ui: ui,
             gtk_app: app,
@@ -143,8 +132,6 @@ impl AppOp {
             since: None,
             member_limit: 50,
             unsent_messages: HashMap::new(),
-            header_leaflet,
-            chat_state,
 
             inhibit_escape: false,
 

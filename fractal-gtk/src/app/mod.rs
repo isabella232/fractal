@@ -65,8 +65,6 @@ impl App {
         let gtk_app = gtk::Application::new(Some(&appid[..]), gio::ApplicationFlags::empty())
             .expect("Failed to initialize GtkApplication");
 
-        libhandy::Leaflet::get_type(&libhandy::Leaflet::new());
-
         gtk_app.set_accels_for_action("app.quit", &["<Ctrl>Q"]);
 
         let path = "/org/gnome/Fractal".to_string();

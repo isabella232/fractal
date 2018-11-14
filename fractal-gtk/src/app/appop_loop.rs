@@ -2,7 +2,6 @@ use app::App;
 
 use appop::MsgPos;
 use appop::AppState;
-use appop::LeafletState;
 
 use std::thread;
 use std::sync::mpsc::Receiver;
@@ -21,7 +20,6 @@ pub enum InternalCommand {
     SetView(AppState),
     NotifyClicked(Message),
     SelectRoom(Room),
-    ShowRoomList,
     LoadMore,
     LoadMoreNormal,
     RemoveInv(String),
@@ -56,15 +54,11 @@ pub fn appop_loop(rx: Receiver<InternalCommand>) {
                     APPOP!(set_state, (view));
                 }
                 Ok(InternalCommand::NotifyClicked(msg)) => {
-                    let state = LeafletState::Content;
                     APPOP!(notification_cliked, (msg));
-                    APPOP!(set_leaflet_state, (state));
                 }
                 Ok(InternalCommand::SelectRoom(r)) => {
                     let id = r.id;
-                    let state = LeafletState::Content;
                     APPOP!(set_active_room_by_id, (id));
-                    APPOP!(set_leaflet_state, (state));
                 }
                 Ok(InternalCommand::LoadMore) => {
                     APPOP!(load_more_messages);
@@ -89,10 +83,6 @@ pub fn appop_loop(rx: Receiver<InternalCommand>) {
                 }
                 Ok(InternalCommand::PurchaseSticker(group)) => {
                     APPOP!(purchase_sticker, (group));
-                }
-                Ok(InternalCommand::ShowRoomList) => {
-                    let state = LeafletState::Sidebar;
-                    APPOP!(set_leaflet_state, (state));
                 }
                 Err(_) => {
                     break;

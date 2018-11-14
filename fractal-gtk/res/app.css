@@ -301,8 +301,3 @@ stack.titlebar:not(headerbar) > box > separator {
 .small-font {
     font-size: small;
 }
-
-box.folded-history > hdycolumn > list {
-  padding-left: 6px;
-  padding-right: 6px;
-}
