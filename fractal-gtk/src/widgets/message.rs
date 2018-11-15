@@ -490,27 +490,29 @@ impl MessageBox {
     }
 
     fn build_room_msg_date(&self, dt: &DateTime<Local>) -> gtk::Label {
-        let now = Local::now();
+	/* TODO: get system preference for 12h/24h */
+	let use_ampm = false;
+	let format = if use_ampm {
+            /* Use 12h time format (AM/PM) */
+	    i18n("%l:%M %p")
+	} else {
+            /* Use 24 time format */
+	    i18n("%R")
+	};
 
-        let d = if (now.year() == dt.year()) && (now.ordinal() == dt.ordinal()) {
-            dt.format("%H:%M").to_string()
-        } else if now.year() == dt.year() {
-            dt.format("%e %b %H:%M").to_string()
-        } else {
-            dt.format("%e %b %Y %H:%M").to_string()
-        };
+	let d = dt.format(&format).to_string();
 
-        let date = gtk::Label::new("");
-        date.set_markup(&format!("<span alpha=\"60%\">{}</span>", d.trim()));
-        date.set_line_wrap(true);
-        date.set_justify(gtk::Justification::Right);
-        date.set_valign(gtk::Align::Start);
-        date.set_halign(gtk::Align::End);
-        if let Some(style) = date.get_style_context() {
-            style.add_class("timestamp");
-        }
+	let date = gtk::Label::new("");
+	date.set_markup(&format!("<span alpha=\"60%\">{}</span>", d.trim()));
+	date.set_line_wrap(true);
+	date.set_justify(gtk::Justification::Right);
+	date.set_valign(gtk::Align::Start);
+	date.set_halign(gtk::Align::End);
+	if let Some(style) = date.get_style_context() {
+	    style.add_class("timestamp");
+	}
 
-        date
+	date
     }
 
     fn build_room_msg_info(&self, msg: &Message) -> gtk::Box {
