@@ -143,8 +143,8 @@ impl AppOp {
                 {
                     let backend = self.backend.clone();
                     let ui = self.ui.clone();
-                    let mut mb = widgets::MessageBox::new(ui_msg, backend, ui);
-                    m = mb.tmpwidget();
+                    let mut mb = widgets::MessageBox::new(backend, ui);
+                    m = mb.tmpwidget(&ui_msg);
                     if let Some(ref image) = mb.image {
                         let msg = msg.clone();
                         let room = r.clone();
@@ -195,8 +195,8 @@ impl AppOp {
                     {
                         let backend = self.backend.clone();
                         let ui = self.ui.clone();
-                        let mut mb = widgets::MessageBox::new(ui_msg, backend, ui);
-                        m = mb.tmpwidget();
+                        let mut mb = widgets::MessageBox::new(backend, ui);
+                        m = mb.tmpwidget(&ui_msg);
                         if let Some(ref image) = mb.image {
                             info!("i have a image");
                             let msg = t.msg.clone();

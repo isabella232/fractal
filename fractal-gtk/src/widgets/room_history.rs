@@ -233,8 +233,8 @@ fn create_row(
     let widget = {
         /* we need to create a message with the username, so that we don't have to pass
          * all information to the widget creating each row */
-        let mut mb = widgets::MessageBox::new(row.clone(), backend, ui);
-        let w = mb.create(has_header && row.mtype != RowType::Emote);
+        let mut mb = widgets::MessageBox::new(backend, ui);
+        let w = mb.create(&row, has_header && row.mtype != RowType::Emote);
 
         if let Some(ref image) = mb.image {
             let msg = row.msg.clone();
