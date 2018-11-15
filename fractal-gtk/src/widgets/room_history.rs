@@ -60,7 +60,7 @@ impl List {
                 self.listbox.insert(message.widget.as_ref()?.get_listbox_row()?, -1);
             },
             Element::DayDivider(ref divider) => {
-                self.listbox.insert(divider, 1);
+                self.listbox.insert(divider, -1);
             }
         }
         self.list.push_front(element);
@@ -216,7 +216,7 @@ impl RoomHistory {
         };
 
         if let Some(day_divider) = day_divider {
-            rows.add_top(day_divider);
+            rows.add_bottom(day_divider);
         }
 
         let b = create_row(item.clone(),
