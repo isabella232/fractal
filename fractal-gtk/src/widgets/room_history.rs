@@ -286,14 +286,19 @@ fn should_group_message(msg: &MessageContent, prev: &MessageContent) -> bool {
     }
 }
 
-/* This creates a row for the day divider */
+/* Create the day divider */
 fn create_day_divider(date: DateTime<Local>) -> gtk::ListBoxRow {
-    /* Todo: localize the date string */
-    let stamp = date.format("%A, %-d %B").to_string();
+    /* We show the year only when the message wasn't send in the current year */
+    let stamp = if date.year() == Local::now().year() {
+        date.format(i18n("%e %B").as_str()).to_string()
+    } else {
+        date.format(i18n("%e %B %Y").as_str()).to_string()
+    };
     let row = gtk::ListBoxRow::new();
     if let Some(style) = row.get_style_context() {
         style.add_class("divider");
     }
+    row.set_margin_top(24);
     row.set_selectable(false);
     row.set_activatable(false);
     let label = gtk::Label::new(stamp.as_str());
