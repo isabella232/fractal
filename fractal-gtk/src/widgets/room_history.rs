@@ -289,5 +289,17 @@ fn should_group_message(msg: &MessageContent, prev: &MessageContent) -> bool {
 /* This creates a row for the day divider */
 fn create_day_divider(date: DateTime<Local>) -> gtk::ListBoxRow {
     /* Todo: localize the date string */
-    widgets::divider::new(&date.format("%A, %-d %B").to_string())
+    let stamp = date.format("%A, %-d %B").to_string();
+    let row = gtk::ListBoxRow::new();
+    if let Some(style) = row.get_style_context() {
+        style.add_class("divider");
+    }
+    row.set_selectable(false);
+    row.set_activatable(false);
+    let label = gtk::Label::new(stamp.as_str());
+    label.set_selectable(false);
+    row.add(&label);
+
+    row.show_all();
+    row
 }
