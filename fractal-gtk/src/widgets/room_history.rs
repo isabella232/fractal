@@ -37,7 +37,11 @@ impl List {
     pub fn add_top(&mut self, element: Element) -> Option<()> {
         self.view.set_balance_top();
         /* insert position is 1 because at position 0 is the spinner */
-        self.listbox.insert(element.message.as_ref()?.widget.as_ref()?.get_listbox_row()?, 1);
+        match element {
+            Element::Message(ref message) => {
+                self.listbox.insert(message.widget.as_ref()?.get_listbox_row()?, 1);
+            }
+        }
         self.list.push_back(element);
         /* TODO: update the previous message:
          * we need to update the previous row because it could be that we have to remove the header */
@@ -45,28 +49,20 @@ impl List {
     }
 
     pub fn add_bottom(&mut self, element: Element) -> Option<()> {
-        self.listbox.insert(element.message.as_ref()?.widget.as_ref()?.get_listbox_row()?, -1);
+        match element {
+            Element::Message(ref message) => {
+                self.listbox.insert(message.widget.as_ref()?.get_listbox_row()?, -1);
+            }
+        }
         self.list.push_front(element);
         None
     }
 }
 
 #[derive(Clone)]
-struct Element {
+enum Element {
     /* TODO: we have to add other types here, like new message divider, or time divider */
-    message: Option<MessageContent>,
-}
-
-impl Element {
-    pub fn new() -> Element {
-        Element {
-            message: None,
-        }
-    }
-    pub fn set_message(mut self, message: MessageContent) -> Element {
-        self.message = Some(message);
-        self
-    }
+    Message(MessageContent),
 }
 
 pub struct RoomHistory {
@@ -149,7 +145,7 @@ impl RoomHistory {
 
                 let b = create_row(item.clone(), &room, has_header, backend.clone(), ui.clone());
                 item.widget = b;
-                rows.borrow_mut().add_top(Element::new().set_message(item));
+                rows.borrow_mut().add_top(Element::Message(item));
             } else {
                 /* Remove the source id, since the closure is destoryed */
                 source_id.borrow_mut().take();
@@ -187,10 +183,10 @@ impl RoomHistory {
         let has_header = {
             let last = rows.list.front();
             if let Some(last) = last {
-                if let Some(ref last) = last.message {
-                    last.mtype == RowType::Emote || !should_group_message(&item, &last)
-                } else {
-                    true
+                match last {
+                    Element::Message(ref message) => {
+                        message.mtype == RowType::Emote || !should_group_message(&item, &message)
+                    }
                 }
             } else {
                 true
@@ -198,12 +194,12 @@ impl RoomHistory {
         };
 
         let b = create_row(item.clone(),
-            &self.room.clone(),
-            has_header,
-            self.backend.clone(),
+        &self.room.clone(),
+        has_header,
+        self.backend.clone(),
             self.ui.clone());
         item.widget = b;
-        rows.add_bottom(Element::new().set_message(item));
+        rows.add_bottom(Element::Message(item));
         None
     }
 
