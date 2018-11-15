@@ -29,7 +29,7 @@ use uitypes::MessageContent as Message;
 use uibuilder::UI;
 
 /* A message row in the room history */
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct MessageBox {
     backend: Sender<BKCommand>,
     /* FIXME: Remove UI */

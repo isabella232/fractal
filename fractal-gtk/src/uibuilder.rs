@@ -1,7 +1,7 @@
 use gtk::{self, prelude::*};
 use widgets::SVEntry;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct UI {
     pub builder: gtk::Builder,
     pub sventry: SVEntry,
