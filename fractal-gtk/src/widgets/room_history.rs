@@ -76,7 +76,7 @@ impl List {
                 self.listbox.insert(message.widget.as_ref()?.get_listbox_row()?, -1);
             },
             Element::NewDivider(ref divider) => {
-                self.listbox.insert(divider, 1);
+                self.listbox.insert(divider, -1);
                 /* Add destroy timeout
                  * The new message divider should disapear after a couple of secounds */
                 let divider = divider.downgrade();
