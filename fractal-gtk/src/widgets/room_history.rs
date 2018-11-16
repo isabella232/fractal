@@ -2,6 +2,9 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use std::sync::mpsc::Sender;
 use std::collections::VecDeque;
+use chrono::DateTime;
+use chrono::Local;
+use chrono::Datelike;
 
 use appop::AppOp;
 use backend::BKCommand;
@@ -37,7 +40,14 @@ impl List {
     pub fn add_top(&mut self, element: Element) -> Option<()> {
         self.view.set_balance_top();
         /* insert position is 1 because at position 0 is the spinner */
-        self.listbox.insert(element.message.as_ref()?.widget.as_ref()?.get_listbox_row()?, 1);
+        match element {
+            Element::Message(ref message) => {
+                self.listbox.insert(message.widget.as_ref()?.get_listbox_row()?, 1);
+            },
+            Element::DayDivider(ref divider) => {
+                self.listbox.insert(divider, 1);
+            }
+        }
         self.list.push_back(element);
         /* TODO: update the previous message:
          * we need to update the previous row because it could be that we have to remove the header */
@@ -45,28 +55,25 @@ impl List {
     }
 
     pub fn add_bottom(&mut self, element: Element) -> Option<()> {
-        self.listbox.insert(element.message.as_ref()?.widget.as_ref()?.get_listbox_row()?, -1);
+        match element {
+            Element::Message(ref message) => {
+                self.listbox.insert(message.widget.as_ref()?.get_listbox_row()?, -1);
+            },
+            Element::DayDivider(ref divider) => {
+                self.listbox.insert(divider, -1);
+            }
+        }
         self.list.push_front(element);
         None
     }
 }
 
+/* These Enum contains all differnet types of rows the room history can have, e.g room message, new
+ * message divider, day divider */
 #[derive(Clone)]
-struct Element {
-    /* TODO: we have to add other types here, like new message divider, or time divider */
-    message: Option<MessageContent>,
-}
-
-impl Element {
-    pub fn new() -> Element {
-        Element {
-            message: None,
-        }
-    }
-    pub fn set_message(mut self, message: MessageContent) -> Element {
-        self.message = Some(message);
-        self
-    }
+enum Element {
+    Message(MessageContent),
+    DayDivider(gtk::ListBoxRow),
 }
 
 pub struct RoomHistory {
@@ -139,8 +146,12 @@ impl RoomHistory {
             let mut data = queue.borrow_mut();
             if let Some(mut item) = data.pop_front() {
                 let last = data.front();
+                let mut day_divider = None;
                 let has_header = {
                     if let Some(last) = last {
+                        if item.date.day() != last.date.day() {
+                            day_divider = Some(Element::DayDivider(create_day_divider(item.date)));
+                        }
                         last.mtype == RowType::Emote || !should_group_message(&item, &last)
                     } else {
                         true
@@ -149,7 +160,10 @@ impl RoomHistory {
 
                 let b = create_row(item.clone(), &room, has_header, backend.clone(), ui.clone());
                 item.widget = b;
-                rows.borrow_mut().add_top(Element::new().set_message(item));
+                rows.borrow_mut().add_top(Element::Message(item));
+                if let Some(day_divider) = day_divider {
+                    rows.borrow_mut().add_top(day_divider);
+                }
             } else {
                 /* Remove the source id, since the closure is destoryed */
                 source_id.borrow_mut().take();
@@ -180,30 +194,38 @@ impl RoomHistory {
         &self.loading_spinner
     }
 
-
     /* This adds new incomming messages at then end of the list */
     pub fn add_new_message(&mut self, mut item: MessageContent) -> Option<()> {
         let mut rows = self.rows.borrow_mut();
+        let mut day_divider = None;
         let has_header = {
             let last = rows.list.front();
             if let Some(last) = last {
-                if let Some(ref last) = last.message {
-                    last.mtype == RowType::Emote || !should_group_message(&item, &last)
-                } else {
-                    true
+                match last {
+                    Element::Message(ref message) => {
+                        if item.date.day() != message.date.day() {
+                            day_divider = Some(Element::DayDivider(create_day_divider(item.date)));
+                        }
+                        message.mtype == RowType::Emote || !should_group_message(&item, &message)
+                    }
+                    _ => false
                 }
             } else {
                 true
             }
         };
 
+        if let Some(day_divider) = day_divider {
+            rows.add_bottom(day_divider);
+        }
+
         let b = create_row(item.clone(),
-            &self.room.clone(),
-            has_header,
-            self.backend.clone(),
+        &self.room.clone(),
+        has_header,
+        self.backend.clone(),
             self.ui.clone());
         item.widget = b;
-        rows.add_bottom(Element::new().set_message(item));
+        rows.add_bottom(Element::Message(item));
         None
     }
 
@@ -262,4 +284,27 @@ fn should_group_message(msg: &MessageContent, prev: &MessageContent) -> bool {
     } else {
         false
     }
+}
+
+/* Create the day divider */
+fn create_day_divider(date: DateTime<Local>) -> gtk::ListBoxRow {
+    /* We show the year only when the message wasn't send in the current year */
+    let stamp = if date.year() == Local::now().year() {
+        date.format(i18n("%e %B").as_str()).to_string()
+    } else {
+        date.format(i18n("%e %B %Y").as_str()).to_string()
+    };
+    let row = gtk::ListBoxRow::new();
+    if let Some(style) = row.get_style_context() {
+        style.add_class("divider");
+    }
+    row.set_margin_top(24);
+    row.set_selectable(false);
+    row.set_activatable(false);
+    let label = gtk::Label::new(stamp.as_str());
+    label.set_selectable(false);
+    row.add(&label);
+
+    row.show_all();
+    row
 }
