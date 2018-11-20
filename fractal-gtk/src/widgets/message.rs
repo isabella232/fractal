@@ -86,6 +86,9 @@ impl MessageBox {
             self.header = true;
             self.widget(msg)
         } else {
+            if let RowType::Emote = msg.mtype {
+                row.set_margin_top(12);
+            }
             self.header = false;
             self.small_widget(msg)
         };
@@ -118,7 +121,10 @@ impl MessageBox {
                 self.widget(msg)
             } else {
                 /* we need to reset the margin */
-                row.set_margin_top(0);
+                match msg.mtype {
+                    RowType::Emote => row.set_margin_top(12),
+                    _ => row.set_margin_top(0),
+                }
                 self.header = false;
                 self.small_widget(msg)
             };
