@@ -33,13 +33,6 @@ pub struct TmpMsg {
     pub widget: Option<gtk::Widget>,
 }
 
-#[derive(Clone, Debug, Eq, PartialEq)]
-pub enum LastViewed {
-    Inline,
-    Last,
-    No,
-}
-
 impl AppOp {
     /// This function is used to mark as read the last message of a room when the focus comes in,
     /// so we need to force the mark_as_read because the window isn't active yet
@@ -61,68 +54,14 @@ impl AppOp {
         }
     }
 
-    pub fn is_last_viewed(&self, msg: &Message) -> LastViewed {
-        match self.last_viewed_messages.get(&msg.room) {
-            Some(lvm_id) if msg.id.clone().map_or(false, |id| *lvm_id == id) => {
-                match self.rooms.get(&msg.room) {
-                    Some(r) => {
-                        match r.messages.last() {
-                            Some(m) if m == msg => LastViewed::Last,
-                            _ => LastViewed::Inline,
-                        }
-                    },
-                    _ => LastViewed::Inline,
-                }
-            },
-            _ => LastViewed::No,
-        }
-    }
-
-    pub fn get_first_new_from_last(&self, last_msg: &Message) -> Option<Message> {
-        match self.is_last_viewed(last_msg) {
-            LastViewed::Last | LastViewed::No => None,
-            LastViewed::Inline => {
-                self.rooms.get(&last_msg.room).and_then(|r| {
-                    r.messages.clone().into_iter()
-                              .filter(|msg| *msg > *last_msg && msg.sender !=
-                                      self.uid.clone().unwrap_or_default()).next()
-                })
-            }
-        }
-    }
-
-    pub fn get_msg_from_id(&self, roomid: &str, msg_id: &str) -> Option<Message> {
-        let room = self.rooms.get(roomid);
-
-        room.and_then(|r| r.messages.clone().into_iter()
-                                    .filter(|msg| msg.id.clone().unwrap_or_default() == msg_id)
-                                    .next())
-    }
-
-    pub fn is_first_new(&self, msg: &Message) -> bool {
-        match self.first_new_messages.get(&msg.room) {
-            None => false,
-            Some(new_msg) => {
-                match new_msg {
-                    None => false,
-                    Some(new_msg) => new_msg == msg,
-                }
-            }
-        }
-    }
-
     pub fn add_room_message(&mut self,
                             msg: Message,
-                            msgpos: MsgPos,
-                            first_new: bool) {
+                            msgpos: MsgPos) {
         if msg.room == self.active_room.clone().unwrap_or_default() && !msg.redacted {
             if let Some(ui_msg) = self.create_new_room_message(&msg) {
                 if let Some(ref mut history) = self.history {
                     match msgpos {
                         MsgPos::Bottom => {
-                            if first_new {
-                                history.add_divider();
-                            }
                             history.add_new_message(ui_msg);
                         },
                         MsgPos::Top => {
@@ -222,29 +161,26 @@ impl AppOp {
         None
     }
 
-    pub fn set_last_viewed_messages(&mut self) {
-        if let Some(uid) = self.uid.clone() {
-            for room in self.rooms.values() {
-                let roomid = room.id.clone();
-
-                if !self.last_viewed_messages.contains_key(&roomid) {
-                    if let Some(lvm) = room.messages.iter().filter(|msg| msg.receipt.contains_key(&uid) && msg.id.is_some()).next() {
-                        self.last_viewed_messages.insert(roomid, lvm.id.clone().unwrap_or_default());
-                    }
-                }
-            }
-        }
-    }
-
-    pub fn mark_as_read(&mut self, msg: &Message, Force(force): Force) {
+    pub fn mark_as_read(&mut self, msg: &Message, Force(force): Force) -> Option<()> {
         let window: gtk::Window = self.ui.builder
             .get_object("main_window")
             .expect("Can't find main_window in ui file.");
         if window.is_active() || force {
-            self.last_viewed_messages.insert(msg.room.clone(), msg.id.clone().unwrap_or_default());
+            /* Move the last viewed mark to the last message */
+            let active_room_id = self.active_room.as_ref()?;
+            let room = self.rooms.get_mut(active_room_id)?;
+            let uid = self.uid.clone()?;
+            room.messages.iter_mut().for_each(|msg|
+                                     if msg.receipt.contains_key(&uid) {
+                                         msg.receipt.remove(&uid);
+                                     });
+            let last_message = room.messages.last_mut()?;
+            last_message.receipt.insert(self.uid.clone()?, 0);
+
             self.backend.send(BKCommand::MarkAsRead(msg.room.clone(),
-                                                    msg.id.clone().unwrap_or_default())).unwrap();
+            msg.id.clone().unwrap_or_default())).unwrap();
         }
+        None
     }
 
     pub fn msg_sent(&mut self, _txid: String, evid: String) {
@@ -497,9 +433,7 @@ impl AppOp {
                 self.notify(msg);
             }
 
-            let command = InternalCommand::AddRoomMessage(msg.clone(),
-                                                          MsgPos::Bottom,
-                                                          self.is_first_new(&msg));
+            let command = InternalCommand::AddRoomMessage(msg.clone(), MsgPos::Bottom);
             self.internal.send(command).unwrap();
 
             self.roomlist.moveup(msg.room.clone());
@@ -537,9 +471,7 @@ impl AppOp {
         for i in 0..size+1 {
             let msg = &msgs[size - i];
 
-            let command = InternalCommand::AddRoomMessage(msg.clone(),
-                                                          MsgPos::Top,
-                                                          self.is_first_new(&msg));
+            let command = InternalCommand::AddRoomMessage(msg.clone(), MsgPos::Top);
             self.internal.send(command).unwrap();
 
         }
@@ -595,12 +527,13 @@ impl AppOp {
         };
         let redactable = power_level != 0 || uid == msg.sender;
 
-        Some(create_ui_message(msg.clone(), name, t, highlights, redactable))
+        let is_last_viewed = msg.receipt.contains_key(&uid);
+        Some(create_ui_message(msg.clone(), name, t, highlights, redactable, is_last_viewed))
     }
 }
 
 /* FIXME: don't convert msg to ui messages here, we should later get a ui message from storage */
-fn create_ui_message (msg: Message, name: Option<String>, t: RowType, highlights: Vec<String>, redactable: bool) -> MessageContent {
+fn create_ui_message (msg: Message, name: Option<String>, t: RowType, highlights: Vec<String>, redactable: bool, last_viewed: bool) -> MessageContent {
         MessageContent {
         msg: msg.clone(),
         id: msg.id.unwrap_or(String::from("")),
@@ -613,6 +546,7 @@ fn create_ui_message (msg: Message, name: Option<String>, t: RowType, highlights
         url: msg.url,
         formatted_body: msg.formatted_body,
         format: msg.format,
+        last_viewed: last_viewed,
         highlights: highlights,
         redactable,
         widget: None,
