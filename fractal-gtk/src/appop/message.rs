@@ -22,12 +22,6 @@ use types::Message;
 use serde_json::Value as JsonValue;
 use gdk_pixbuf::Pixbuf;
 
-#[derive(Debug, Clone)]
-pub enum MsgPos {
-    Top,
-    Bottom,
-}
-
 pub struct TmpMsg {
     pub msg: Message,
     pub widget: Option<gtk::Widget>,
@@ -54,21 +48,11 @@ impl AppOp {
         }
     }
 
-    pub fn add_room_message(&mut self,
-                            msg: Message,
-                            msgpos: MsgPos) {
+    pub fn add_room_message(&mut self, msg: Message) {
         if msg.room == self.active_room.clone().unwrap_or_default() && !msg.redacted {
             if let Some(ui_msg) = self.create_new_room_message(&msg) {
                 if let Some(ref mut history) = self.history {
-                    match msgpos {
-                        MsgPos::Bottom => {
-                            history.add_new_message(ui_msg);
-                        },
-                        MsgPos::Top => {
-                            history.add_old_message(ui_msg);
-                        }
-                    }
-
+                    history.add_new_message(ui_msg);
                 }
             }
         }
@@ -433,7 +417,7 @@ impl AppOp {
                 self.notify(msg);
             }
 
-            let command = InternalCommand::AddRoomMessage(msg.clone(), MsgPos::Bottom);
+            let command = InternalCommand::AddRoomMessage(msg.clone());
             self.internal.send(command).unwrap();
 
             self.roomlist.moveup(msg.room.clone());
@@ -451,6 +435,7 @@ impl AppOp {
         Some(())
     }
 
+    /* TODO: find a better name for this function */
     pub fn show_room_messages_top(&mut self, msgs: Vec<Message>, roomid: String, prev_batch: Option<String>) {
         if let Some(r) = self.rooms.get_mut(&roomid) {
             r.prev_batch = prev_batch;
@@ -461,21 +446,26 @@ impl AppOp {
             return;
         }
 
-        for msg in msgs.iter().rev() {
-            if let Some(r) = self.rooms.get_mut(&msg.room) {
-                r.messages.insert(0, msg.clone());
+        let active_room = self.active_room.clone().unwrap_or_default();
+        let mut list = vec![];
+        for item in msgs.iter().rev() {
+            /* create a list of new messages to load to the history */
+            if item.room == active_room && !item.redacted {
+                if let Some(ui_msg) = self.create_new_room_message(item) {
+                    list.push(ui_msg);
+                }
+            }
+
+            if let Some(r) = self.rooms.get_mut(&item.room) {
+                r.messages.insert(0, item.clone());
             }
         }
 
-        let size = msgs.len() - 1;
-        for i in 0..size+1 {
-            let msg = &msgs[size - i];
-
-            let command = InternalCommand::AddRoomMessage(msg.clone(), MsgPos::Top);
-            self.internal.send(command).unwrap();
-
+        if let Some(ref mut history) = self.history {
+            history.add_old_messages_in_batch(list);
         }
-        self.internal.send(InternalCommand::LoadMoreNormal).unwrap();
+
+        self.load_more_normal();
     }
 
     /* parese a backend Message into a Message for the UI */

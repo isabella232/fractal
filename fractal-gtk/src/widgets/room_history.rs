@@ -270,9 +270,9 @@ impl RoomHistory {
         None
     }
 
-    /* This adds messages to the top of the list */
-    pub fn add_old_message(&mut self, item: MessageContent) -> Option<()> {
-        self.queue.borrow_mut().push_back(item);
+    pub fn add_old_messages_in_batch(&mut self, messages: Vec<MessageContent>) -> Option<()> {
+        /* TODO: Try if extend would be faster then append */
+        self.queue.borrow_mut().append(&mut VecDeque::from(messages));
         self.run_queue();
 
         None
