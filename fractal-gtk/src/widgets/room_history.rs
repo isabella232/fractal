@@ -151,9 +151,18 @@ impl RoomHistory {
     }
 
     pub fn create(&mut self, mut messages: Vec<MessageContent>) -> Option<()> {
+        let mut position = messages.len();
+        /* Find position of last viewed message */
+        for (i, item) in messages.iter().enumerate() {
+            if item.last_viewed {
+                position = i + 1;
+            }
+        };
+        let bottom = messages.split_off(position);
         messages.reverse();
-        self.queue.borrow_mut().append(&mut VecDeque::from(messages));
-        self.run_queue();
+        self.add_old_messages_in_batch(messages);
+        /* Add the rest of the messages after the new message divider */
+        self.add_new_messages_in_batch(bottom);
 
         None
     }
@@ -267,6 +276,15 @@ impl RoomHistory {
             self.ui.clone());
         item.widget = b;
         rows.add_bottom(Element::Message(item));
+        None
+    }
+
+    pub fn add_new_messages_in_batch(&mut self, messages: Vec<MessageContent>) -> Option<()> {
+        /* TODO: use lazy loading */
+        for item in messages {
+            self.add_new_message(item);
+        }
+
         None
     }
 
