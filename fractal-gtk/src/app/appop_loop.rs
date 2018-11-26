@@ -1,6 +1,5 @@
 use app::App;
 
-use appop::MsgPos;
 use appop::AppState;
 
 use std::thread;
@@ -16,12 +15,11 @@ use types::StickerGroup;
 
 #[derive(Debug)]
 pub enum InternalCommand {
-    AddRoomMessage(Message, MsgPos),
+    AddRoomMessage(Message),
     SetView(AppState),
     NotifyClicked(Message),
     SelectRoom(Room),
     LoadMore,
-    LoadMoreNormal,
     RemoveInv(String),
     AppendTmpMessages,
     ForceDequeueMessage,
@@ -41,8 +39,8 @@ pub fn appop_loop(rx: Receiver<InternalCommand>) {
         loop {
             let recv = rx.recv();
             match recv {
-                Ok(InternalCommand::AddRoomMessage(msg, pos)) => {
-                    APPOP!(add_room_message, (msg, pos));
+                Ok(InternalCommand::AddRoomMessage(msg)) => {
+                    APPOP!(add_room_message, (msg));
                 }
                 Ok(InternalCommand::ToInvite(member)) => {
                     APPOP!(add_to_invite, (member));
@@ -62,9 +60,6 @@ pub fn appop_loop(rx: Receiver<InternalCommand>) {
                 }
                 Ok(InternalCommand::LoadMore) => {
                     APPOP!(load_more_messages);
-                }
-                Ok(InternalCommand::LoadMoreNormal) => {
-                    APPOP!(load_more_normal);
                 }
                 Ok(InternalCommand::RemoveInv(rid)) => {
                     APPOP!(remove_inv, (rid));
