@@ -118,7 +118,7 @@ impl ScrollWidget {
             widgets,
             value: Rc::new(Cell::new(value)),
             upper: Rc::new(Cell::new(upper)),
-            autoscroll: Rc::new(Cell::new(true)),
+            autoscroll: Rc::new(Cell::new(false)),
             balance: Rc::new(Cell::new(None)),
         }
     }
