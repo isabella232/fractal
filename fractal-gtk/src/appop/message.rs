@@ -1,26 +1,26 @@
-use tree_magic;
-use std::fs;
-use std::path::Path;
-use std::collections::HashMap;
-use gtk;
-use gtk::prelude::*;
 use chrono::prelude::*;
 use comrak::{markdown_to_html, ComrakOptions};
+use gtk;
+use gtk::prelude::*;
+use std::collections::HashMap;
+use std::fs;
+use std::path::Path;
+use tree_magic;
 
-use app::InternalCommand;
-use appop::AppOp;
 use app::App;
+use app::InternalCommand;
 use appop::room::Force;
+use appop::AppOp;
 
+use backend::BKCommand;
 use glib;
-use widgets;
 use uitypes::MessageContent;
 use uitypes::RowType;
-use backend::BKCommand;
+use widgets;
 
-use types::Message;
-use serde_json::Value as JsonValue;
 use gdk_pixbuf::Pixbuf;
+use serde_json::Value as JsonValue;
+use types::Message;
 
 pub struct TmpMsg {
     pub msg: Message,
@@ -61,7 +61,10 @@ impl AppOp {
     pub fn add_tmp_room_message(&mut self, msg: Message) -> Option<()> {
         let messages = self.history.as_ref()?.get_listbox();
         if let Some(ui_msg) = self.create_new_room_message(&msg) {
-            if let Some(r) = self.rooms.get(&self.active_room.clone().unwrap_or_default()) {
+            if let Some(r) = self
+                .rooms
+                .get(&self.active_room.clone().unwrap_or_default())
+            {
                 let backend = self.backend.clone();
                 let ui = self.ui.clone();
                 let mb = widgets::MessageBox::new(backend, ui).tmpwidget(&ui_msg)?;
@@ -85,10 +88,13 @@ impl AppOp {
             }
 
             if let Some(w) = messages.get_children().iter().last() {
-                self.msg_queue.insert(0, TmpMsg {
-                    msg: msg.clone(),
-                    widget: Some(w.clone()),
-                });
+                self.msg_queue.insert(
+                    0,
+                    TmpMsg {
+                        msg: msg.clone(),
+                        widget: Some(w.clone()),
+                    },
+                );
             };
         }
         None
@@ -106,7 +112,10 @@ impl AppOp {
     pub fn append_tmp_msgs(&mut self) -> Option<()> {
         let messages = self.history.as_ref()?.get_listbox();
 
-        if let Some(r) = self.rooms.get(&self.active_room.clone().unwrap_or_default()) {
+        if let Some(r) = self
+            .rooms
+            .get(&self.active_room.clone().unwrap_or_default())
+        {
             let mut widgets = vec![];
             for t in self.msg_queue.iter().rev().filter(|m| m.msg.room == r.id) {
                 if let Some(ui_msg) = self.create_new_room_message(&t.msg) {
@@ -146,7 +155,9 @@ impl AppOp {
     }
 
     pub fn mark_as_read(&mut self, msg: &Message, Force(force): Force) -> Option<()> {
-        let window: gtk::Window = self.ui.builder
+        let window: gtk::Window = self
+            .ui
+            .builder
             .get_object("main_window")
             .expect("Can't find main_window in ui file.");
         if window.is_active() || force {
@@ -154,15 +165,20 @@ impl AppOp {
             let active_room_id = self.active_room.as_ref()?;
             let room = self.rooms.get_mut(active_room_id)?;
             let uid = self.uid.clone()?;
-            room.messages.iter_mut().for_each(|msg|
-                                     if msg.receipt.contains_key(&uid) {
-                                         msg.receipt.remove(&uid);
-                                     });
+            room.messages.iter_mut().for_each(|msg| {
+                if msg.receipt.contains_key(&uid) {
+                    msg.receipt.remove(&uid);
+                }
+            });
             let last_message = room.messages.last_mut()?;
             last_message.receipt.insert(self.uid.clone()?, 0);
 
-            self.backend.send(BKCommand::MarkAsRead(msg.room.clone(),
-            msg.id.clone().unwrap_or_default())).unwrap();
+            self.backend
+                .send(BKCommand::MarkAsRead(
+                    msg.room.clone(),
+                    msg.id.clone().unwrap_or_default(),
+                ))
+                .unwrap();
         }
         None
     }
@@ -255,11 +271,14 @@ impl AppOp {
             // Removing wrap tag: <p>..</p>\n
             let limit = md_parsed_msg.len() - 5;
             let trim = match (md_parsed_msg.get(0..3), md_parsed_msg.get(limit..)) {
-                (Some(open), Some(close)) if open == "<p>" && close == "</p>\n" => { true }
-                _ => { false }
+                (Some(open), Some(close)) if open == "<p>" && close == "</p>\n" => true,
+                _ => false,
             };
             if trim {
-                md_parsed_msg = md_parsed_msg.get(3..limit).unwrap_or(&md_parsed_msg).to_string();
+                md_parsed_msg = md_parsed_msg
+                    .get(3..limit)
+                    .unwrap_or(&md_parsed_msg)
+                    .to_string();
             }
 
             if md_parsed_msg != msg {
@@ -284,7 +303,7 @@ impl AppOp {
             "image/png" => "m.image",
             "image/jpeg" => "m.image",
             "image/jpg" => "m.image",
-            _ => "m.file"
+            _ => "m.file",
         };
         let body = String::from(file.split("/").last().unwrap_or(&file));
 
@@ -331,7 +350,9 @@ impl AppOp {
     }
 
     pub fn attach_file(&mut self) {
-        let window: gtk::ApplicationWindow = self.ui.builder
+        let window: gtk::ApplicationWindow = self
+            .ui
+            .builder
             .get_object("main_window")
             .expect("Can't find main_window in ui file.");
 
@@ -366,15 +387,24 @@ impl AppOp {
         let loading_spinner = self.history.as_ref()?.get_loading_spinner();
         loading_spinner.start();
 
-        if let Some(r) = self.rooms.get(&self.active_room.clone().unwrap_or_default()) {
+        if let Some(r) = self
+            .rooms
+            .get(&self.active_room.clone().unwrap_or_default())
+        {
             if let Some(prev_batch) = r.prev_batch.clone() {
-                self.backend.send(BKCommand::GetRoomMessages(r.id.clone(), prev_batch)).unwrap();
+                self.backend
+                    .send(BKCommand::GetRoomMessages(r.id.clone(), prev_batch))
+                    .unwrap();
             } else if let Some(msg) = r.messages.iter().next() {
                 // no prev_batch so we use the last message to calculate that in the backend
-                self.backend.send(BKCommand::GetRoomMessagesFromMsg(r.id.clone(), msg.clone())).unwrap();
+                self.backend
+                    .send(BKCommand::GetRoomMessagesFromMsg(r.id.clone(), msg.clone()))
+                    .unwrap();
             } else if let Some(from) = self.since.clone() {
                 // no messages and no prev_batch so we use the last since
-                self.backend.send(BKCommand::GetRoomMessages(r.id.clone(), from)).unwrap();
+                self.backend
+                    .send(BKCommand::GetRoomMessages(r.id.clone(), from))
+                    .unwrap();
             } else {
                 loading_spinner.stop();
                 self.loading_more = false;
@@ -403,9 +433,9 @@ impl AppOp {
 
         let uid = self.uid.clone()?;
         for msg in msgs.iter() {
-            let should_notify = msg.sender != uid &&
-                                (msg.body.contains(&self.username.clone()?) ||
-                                self.rooms.get(&msg.room).map_or(false, |r| r.direct));
+            let should_notify = msg.sender != uid
+                && (msg.body.contains(&self.username.clone()?)
+                    || self.rooms.get(&msg.room).map_or(false, |r| r.direct));
 
             if should_notify {
                 self.notify(msg);
@@ -430,7 +460,12 @@ impl AppOp {
     }
 
     /* TODO: find a better name for this function */
-    pub fn show_room_messages_top(&mut self, msgs: Vec<Message>, roomid: String, prev_batch: Option<String>) {
+    pub fn show_room_messages_top(
+        &mut self,
+        msgs: Vec<Message>,
+        roomid: String,
+        prev_batch: Option<String>,
+    ) {
         if let Some(r) = self.rooms.get_mut(&roomid) {
             r.prev_batch = prev_batch;
         }
@@ -512,13 +547,27 @@ impl AppOp {
         let redactable = power_level != 0 || uid == msg.sender;
 
         let is_last_viewed = msg.receipt.contains_key(&uid);
-        Some(create_ui_message(msg.clone(), name, t, highlights, redactable, is_last_viewed))
+        Some(create_ui_message(
+            msg.clone(),
+            name,
+            t,
+            highlights,
+            redactable,
+            is_last_viewed,
+        ))
     }
 }
 
 /* FIXME: don't convert msg to ui messages here, we should later get a ui message from storage */
-fn create_ui_message (msg: Message, name: Option<String>, t: RowType, highlights: Vec<String>, redactable: bool, last_viewed: bool) -> MessageContent {
-        MessageContent {
+fn create_ui_message(
+    msg: Message,
+    name: Option<String>,
+    t: RowType,
+    highlights: Vec<String>,
+    redactable: bool,
+    last_viewed: bool,
+) -> MessageContent {
+    MessageContent {
         msg: msg.clone(),
         id: msg.id.unwrap_or(String::from("")),
         sender: msg.sender,
@@ -534,7 +583,7 @@ fn create_ui_message (msg: Message, name: Option<String>, t: RowType, highlights
         highlights: highlights,
         redactable,
         widget: None,
-        }
+    }
 }
 
 /// This function open the image and fill the info data as a Json value

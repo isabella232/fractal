@@ -16,16 +16,19 @@ use std::rc::Rc;
 
 impl AppOp {
     pub fn create_media_viewer(&mut self, msg: Message, room: Room) -> Option<()> {
-        let stack = self.ui
+        let stack = self
+            .ui
             .builder
             .get_object::<gtk::Stack>("main_content_stack")
             .expect("Can't find main_content_stack in ui file.");
-        let stack_header = self.ui
+        let stack_header = self
+            .ui
             .builder
             .get_object::<gtk::Stack>("headerbar_stack")
             .expect("Can't find headerbar_stack in ui file.");
 
-        let main_window = self.ui
+        let main_window = self
+            .ui
             .builder
             .get_object::<gtk::Window>("main_window")
             .expect("Can't find main_window in ui file.");

@@ -17,7 +17,6 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-
 use gst::prelude::*;
 use gst::ClockTime;
 use gst_player;
@@ -31,9 +30,9 @@ use glib::SignalHandlerId;
 use chrono::NaiveTime;
 use fragile::Fragile;
 
+use std::cell::RefCell;
 use std::ops::Deref;
 use std::rc::Rc;
-use std::cell::RefCell;
 
 trait PlayerExt {
     fn play(&self);

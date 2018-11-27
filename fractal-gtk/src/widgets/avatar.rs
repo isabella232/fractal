@@ -3,13 +3,13 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 use cairo;
+use fractal_api::util::cache_path;
+use gdk::ContextExt;
+use gdk_pixbuf::Pixbuf;
+use gdk_pixbuf::PixbufExt;
 use gtk;
 use gtk::prelude::*;
 pub use gtk::DrawingArea;
-use gdk_pixbuf::Pixbuf;
-use gdk_pixbuf::PixbufExt;
-use gdk::ContextExt;
-use fractal_api::util::cache_path;
 
 pub type Avatar = gtk::Box;
 
@@ -26,10 +26,8 @@ impl AvatarData {
     pub fn redraw_fallback(&mut self, username: Option<String>) {
         self.username = username.clone();
         /* This function should never fail */
-        self.fallback = letter_avatar::generate::new(self.uid.clone(),
-                                                     username,
-                                                     self.size as f64)
-                        .expect("this function should never fail");
+        self.fallback = letter_avatar::generate::new(self.uid.clone(), username, self.size as f64)
+            .expect("this function should never fail");
         self.widget.queue_draw();
     }
 
@@ -44,8 +42,7 @@ pub trait AvatarExt {
     fn avatar_new(size: Option<i32>) -> gtk::Box;
     fn clean(&self);
     fn create_da(&self, size: Option<i32>) -> DrawingArea;
-    fn circle(&self, uid: String, username: Option<String>, size: i32)
-        -> Rc<RefCell<AvatarData>>;
+    fn circle(&self, uid: String, username: Option<String>, size: i32) -> Rc<RefCell<AvatarData>>;
 }
 
 impl AvatarExt for gtk::Box {
@@ -77,9 +74,7 @@ impl AvatarExt for gtk::Box {
         b
     }
 
-    fn circle(&self, uid: String, username: Option<String>, size: i32)
-        -> Rc<RefCell<AvatarData>> {
-
+    fn circle(&self, uid: String, username: Option<String>, size: i32) -> Rc<RefCell<AvatarData>> {
         self.clean();
         let da = self.create_da(Some(size));
         let path = cache_path(&uid).unwrap_or(String::from(""));
@@ -88,12 +83,12 @@ impl AvatarExt for gtk::Box {
         /* remove IRC postfix from the username */
         let username = if let Some(u) = username {
             Some(u.trim_right_matches(" (IRC)").to_owned())
-        }else {
+        } else {
             None
         };
         /* This function should never fail */
         let fallback = letter_avatar::generate::new(uid.clone(), username, size as f64)
-                        .expect("this function should never fail");
+            .expect("this function should never fail");
 
         let data = AvatarData {
             uid: uid.clone(),
@@ -119,7 +114,13 @@ impl AvatarExt for gtk::Box {
                     let context = da.get_style_context().unwrap();
                     gtk::render_background(&context, g, 0.0, 0.0, width, height);
 
-                    g.arc(width / 2.0, height / 2.0, width.min(height) / 2.0, 0.0, 2.0 * PI);
+                    g.arc(
+                        width / 2.0,
+                        height / 2.0,
+                        width.min(height) / 2.0,
+                        0.0,
+                        2.0 * PI,
+                    );
                     g.clip();
 
                     let hpos: f64 = (width - (pb.get_height()) as f64) / 2.0;
@@ -187,11 +188,23 @@ pub fn admin_badge(kind: AdminColor, size: Option<i32>) -> gtk::DrawingArea {
         gtk::render_background(&context, g, 0.0, 0.0, width, height);
 
         g.set_source_rgba(color.0 / 256.0, color.1 / 256.0, color.2 / 256.0, 1.);
-        g.arc(width / 2.0, height / 2.0, width.min(height) / 2.5, 0.0, 2.0 * PI);
+        g.arc(
+            width / 2.0,
+            height / 2.0,
+            width.min(height) / 2.5,
+            0.0,
+            2.0 * PI,
+        );
         g.fill();
 
         g.set_source_rgba(border.0 / 256.0, border.1 / 256.0, border.2 / 256.0, 0.5);
-        g.arc(width / 2.0, height / 2.0, width.min(height) / 2.5, 0.0, 2.0 * PI);
+        g.arc(
+            width / 2.0,
+            height / 2.0,
+            width.min(height) / 2.5,
+            0.0,
+            2.0 * PI,
+        );
         g.stroke();
 
         Inhibit(false)

@@ -1,7 +1,7 @@
 use secret_service;
 
-use gio::{Settings, SettingsSchemaSource};
 use gio::SettingsExt;
+use gio::{Settings, SettingsSchemaSource};
 
 use serde_json;
 use std;
@@ -16,12 +16,10 @@ derror!(secret_service::SsError, Error::SecretServiceError);
 derror!(std::io::Error, Error::PlainTextError);
 derror!(serde_json::Error, Error::PlainTextError);
 
-
 enum PWDConf {
     SecretService,
     PlainText,
 }
-
 
 fn pwd_conf() -> PWDConf {
     SettingsSchemaSource::get_default()
@@ -36,7 +34,6 @@ fn pwd_conf() -> PWDConf {
         .unwrap_or(PWDConf::SecretService)
 }
 
-
 pub trait PasswordStorage {
     fn delete_pass(&self, key: &str) -> Result<(), Error> {
         match pwd_conf() {
@@ -45,7 +42,13 @@ pub trait PasswordStorage {
         }
     }
 
-    fn store_pass(&self, username: String, password: String, server: String, identity: String) -> Result<(), Error> {
+    fn store_pass(
+        &self,
+        username: String,
+        password: String,
+        server: String,
+        identity: String,
+    ) -> Result<(), Error> {
         match pwd_conf() {
             PWDConf::PlainText => plain_text::store_pass(username, password, server, identity),
             _ => ss_storage::store_pass(username, password, server, identity),
@@ -74,12 +77,11 @@ pub trait PasswordStorage {
     }
 }
 
-
 mod ss_storage {
     use super::Error;
 
-    use super::secret_service::SecretService;
     use super::secret_service::EncryptionType;
+    use super::secret_service::SecretService;
 
     use globals;
 
@@ -150,7 +152,12 @@ mod ss_storage {
         Ok((token, uid))
     }
 
-    pub fn store_pass(username: String, password: String, server: String, identity: String) -> Result<(), Error> {
+    pub fn store_pass(
+        username: String,
+        password: String,
+        server: String,
+        identity: String,
+    ) -> Result<(), Error> {
         let ss = SecretService::new(EncryptionType::Dh)?;
         let collection = ss.get_default_collection()?;
         let key = "fractal";
@@ -161,11 +168,15 @@ mod ss_storage {
         // create new item
         collection.unlock()?;
         collection.create_item(
-            key,                                                // label
-            vec![("username", &username), ("server", &server), ("identity", &identity)], // properties
-            password.as_bytes(),                                //secret
-            true,                                               // replace item with same attributes
-            "text/plain",                                       // secret content type
+            key, // label
+            vec![
+                ("username", &username),
+                ("server", &server),
+                ("identity", &identity),
+            ], // properties
+            password.as_bytes(), //secret
+            true, // replace item with same attributes
+            "text/plain", // secret content type
         )?;
 
         Ok(())
@@ -246,33 +257,33 @@ mod ss_storage {
             .ok_or(Error::SecretServiceError)?;
         let server = attr.1.clone();
 
-        let attr = attrs
-            .iter()
-            .find(|&ref x| x.0 == "identity");
+        let attr = attrs.iter().find(|&ref x| x.0 == "identity");
 
         /* Fallback to the vector identity server when there is none */
         let identity = match attr {
             Some(a) => a.1.clone(),
-            None => {
-                String::from(globals::DEFAULT_IDENTITYSERVER)
-            },
+            None => String::from(globals::DEFAULT_IDENTITYSERVER),
         };
 
-        let tup = (username, String::from_utf8(secret).unwrap(), server, identity);
+        let tup = (
+            username,
+            String::from_utf8(secret).unwrap(),
+            server,
+            identity,
+        );
 
         Ok(tup)
     }
 }
 
-
 mod plain_text {
-    use super::Error;
     use super::serde_json;
+    use super::Error;
     use glib::get_user_config_dir;
     use std::fs::create_dir_all;
-    use std::path::PathBuf;
     use std::fs::File;
     use std::io::prelude::*;
+    use std::path::PathBuf;
 
     #[derive(Serialize, Deserialize, Default)]
     pub struct UserData {
@@ -320,9 +331,15 @@ mod plain_text {
     pub fn delete_pass(key: &str) -> Result<(), Error> {
         let mut data = load().unwrap_or_default();
         match key {
-            "fractal" => { data.password = None; },
-            "fractal-token" => { data.token = None; },
-            _ => { data.password = None; },
+            "fractal" => {
+                data.password = None;
+            }
+            "fractal-token" => {
+                data.token = None;
+            }
+            _ => {
+                data.password = None;
+            }
         };
         store(&data)?;
 
@@ -342,7 +359,12 @@ mod plain_text {
         Ok((data.token.unwrap_or_default(), data.username))
     }
 
-    pub fn store_pass(username: String, password: String, server: String, identity: String) -> Result<(), Error> {
+    pub fn store_pass(
+        username: String,
+        password: String,
+        server: String,
+        identity: String,
+    ) -> Result<(), Error> {
         let mut data = load().unwrap_or_default();
         data.username = username;
         data.password = Some(password);
@@ -354,6 +376,11 @@ mod plain_text {
 
     pub fn get_pass() -> Result<(String, String, String, String), Error> {
         let data = load().unwrap_or_default();
-        Ok((data.username, data.password.unwrap_or_default(), data.server, data.identity))
+        Ok((
+            data.username,
+            data.password.unwrap_or_default(),
+            data.server,
+            data.identity,
+        ))
     }
 }

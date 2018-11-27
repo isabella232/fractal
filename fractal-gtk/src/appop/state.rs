@@ -1,9 +1,8 @@
 use gtk;
 use gtk::prelude::*;
 
-use appop::AppOp;
 use appop::room::RoomPanel;
-
+use appop::AppOp;
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum AppState {
@@ -16,7 +15,6 @@ pub enum AppState {
     MediaViewer,
 }
 
-
 impl AppOp {
     pub fn set_state(&mut self, state: AppState) {
         self.state = state;
@@ -25,7 +23,7 @@ impl AppOp {
             AppState::Login => {
                 self.clean_login();
                 "login"
-            },
+            }
             AppState::Chat => "chat",
             AppState::Directory => "directory",
             AppState::Loading => "loading",
@@ -34,7 +32,8 @@ impl AppOp {
             AppState::MediaViewer => "media-viewer",
         };
 
-        self.ui.builder
+        self.ui
+            .builder
             .get_object::<gtk::Stack>("main_content_stack")
             .expect("Can't find main_content_stack in ui file.")
             .set_visible_child_name(widget_name);
@@ -50,7 +49,8 @@ impl AppOp {
             _ => "normal",
         };
 
-        self.ui.builder
+        self.ui
+            .builder
             .get_object::<gtk::Stack>("headerbar_stack")
             .expect("Can't find headerbar_stack in ui file.")
             .set_visible_child_name(bar_name);
@@ -63,7 +63,8 @@ impl AppOp {
         };
 
         if widget_focus != "" {
-            self.ui.builder
+            self.ui
+                .builder
                 .get_object::<gtk::Widget>(widget_focus)
                 .expect("Can't find widget to set focus in ui file.")
                 .grab_focus();
@@ -90,8 +91,8 @@ impl AppOp {
                 self.active_room = None;
                 self.clear_tmp_msgs();
                 true
-            },
-            _ => { false }
+            }
+            _ => false,
         }
     }
 }

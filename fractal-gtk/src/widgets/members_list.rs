@@ -1,9 +1,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
+use glib::signal;
 use gtk;
 use gtk::prelude::*;
-use glib::signal;
 
 use i18n::i18n;
 use types::Member;
@@ -75,7 +75,7 @@ impl MembersList {
                 members.clone(),
                 error.clone(),
                 w.get_text(),
-                );
+            );
         });
         /* we need to remove the handler when the member list is destroyed */
         let id: Rc<RefCell<Option<signal::SignalHandlerId>>> = Rc::new(RefCell::new(Some(id)));
@@ -88,19 +88,19 @@ impl MembersList {
         });
         /* we could slowly load members when the main thread is idle */
         /*
-           let container = self.container.clone();
-           let members = self.members.clone();
-           for (index, member) in members.iter().enumerate() {
-           gtk::idle_add(clone!(index, member, container => move || {
-           if let Some(w) = container.get_row_at_index(index as i32) {
-           if w.get_child().is_none() {
-           w.add(&load_row_content(member.clone()));
-           }
-           }
-           gtk::Continue(false)
-           }));
-           }
-           */
+        let container = self.container.clone();
+        let members = self.members.clone();
+        for (index, member) in members.iter().enumerate() {
+        gtk::idle_add(clone!(index, member, container => move || {
+        if let Some(w) = container.get_row_at_index(index as i32) {
+        if w.get_child().is_none() {
+        w.add(&load_row_content(member.clone()));
+        }
+        }
+        gtk::Continue(false)
+        }));
+        }
+        */
     }
 }
 
@@ -168,7 +168,7 @@ fn filter_rows(
     let mut empty = true;
     for (index, member) in members.iter().enumerate() {
         let alias_lower = member.get_alias().to_lowercase();
-        if !alias_lower.contains(search){
+        if !alias_lower.contains(search) {
             container.get_row_at_index(index as i32)?.hide();
         } else {
             container.get_row_at_index(index as i32)?.show();

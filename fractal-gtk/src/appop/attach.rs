@@ -1,26 +1,25 @@
 use i18n::i18n;
 
-use std::sync::{Arc, Mutex};
 use std::fs::File;
 use std::io::prelude::*;
 use std::path::PathBuf;
+use std::sync::{Arc, Mutex};
 
-use failure::Error;
 use failure::err_msg;
+use failure::Error;
 
-use glib;
 use gdk;
+use glib;
 use gtk;
 use gtk::prelude::*;
 
-use appop::AppOp;
 use app::InternalCommand;
+use appop::AppOp;
 
 use gdk_pixbuf;
 use gdk_pixbuf::Pixbuf;
 use gdk_pixbuf::PixbufExt;
 use util::get_pixbuf_data;
-
 
 impl AppOp {
     fn draw_image_paste_dialog(&self, pixb: &Pixbuf) {
@@ -28,23 +27,26 @@ impl AppOp {
         let h = pixb.get_height();
         let scaled;
         if w > 600 {
-            scaled = pixb.scale_simple(600, h*600/w, gdk_pixbuf::InterpType::Bilinear);
+            scaled = pixb.scale_simple(600, h * 600 / w, gdk_pixbuf::InterpType::Bilinear);
         } else {
             scaled = Some(pixb.clone());
         }
 
         if let Some(pb) = scaled {
-            let window: gtk::ApplicationWindow = self.ui.builder
+            let window: gtk::ApplicationWindow = self
+                .ui
+                .builder
                 .get_object("main_window")
                 .expect("Can't find main_window in ui file.");
             let img = gtk::Image::new();
             let dialog = gtk::Dialog::new_with_buttons(
                 Some(i18n("Image from Clipboard").as_str()),
                 Some(&window),
-                gtk::DialogFlags::MODAL|
-                gtk::DialogFlags::USE_HEADER_BAR|
-                gtk::DialogFlags::DESTROY_WITH_PARENT,
-                &[]);
+                gtk::DialogFlags::MODAL
+                    | gtk::DialogFlags::USE_HEADER_BAR
+                    | gtk::DialogFlags::DESTROY_WITH_PARENT,
+                &[],
+            );
 
             img.set_from_pixbuf(&pb);
             img.show();
@@ -55,7 +57,10 @@ impl AppOp {
                 let bar = hbar.downcast::<gtk::HeaderBar>().unwrap();
                 let closebtn = gtk::Button::new_with_label(i18n("Cancel").as_str());
                 let okbtn = gtk::Button::new_with_label(i18n("Send").as_str());
-                okbtn.get_style_context().unwrap().add_class("suggested-action");
+                okbtn
+                    .get_style_context()
+                    .unwrap()
+                    .add_class("suggested-action");
 
                 bar.set_show_close_button(false);
                 bar.pack_start(&closebtn);
@@ -83,7 +88,10 @@ fn store_pixbuf(pixb: &Pixbuf) -> Result<String, Error> {
     let data = get_pixbuf_data(pixb)?;
     let mut path = glib::get_tmp_dir().unwrap_or(PathBuf::from("/tmp"));
     path.push("fractal-pasted-image");
-    let file = path.into_os_string().into_string().map_err(|_| err_msg("bad string"))?;
+    let file = path
+        .into_os_string()
+        .into_string()
+        .map_err(|_| err_msg("bad string"))?;
     let mut f = File::create(file.clone())?;
     f.write_all(&data)?;
     f.sync_data()?;

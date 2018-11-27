@@ -3,20 +3,20 @@ use chrono::prelude::*;
 use glib;
 
 use gtk;
-use gtk::ContainerExt;
-use gtk::StackExt;
-use gtk::WidgetExt;
-use gtk::LabelExt;
 use gtk::BoxExt;
 use gtk::ButtonExt;
+use gtk::ContainerExt;
+use gtk::LabelExt;
+use gtk::StackExt;
+use gtk::WidgetExt;
 
 use gdk_pixbuf::Pixbuf;
-use gtk::ImageExt;
 use gdk_pixbuf::PixbufExt;
+use gtk::ImageExt;
 
 use std::sync::mpsc::channel;
-use std::sync::mpsc::{Sender, Receiver};
 use std::sync::mpsc::TryRecvError;
+use std::sync::mpsc::{Receiver, Sender};
 
 use std::cmp::Ordering;
 use std::collections::HashMap;
@@ -25,11 +25,10 @@ use app::InternalCommand;
 use appop::AppOp;
 
 use backend::BKCommand;
-use types::StickerGroup;
-use types::Sticker;
 use types::Message;
+use types::Sticker;
+use types::StickerGroup;
 use widgets;
-
 
 impl AppOp {
     pub fn stickers_loaded(&mut self, stickers: Vec<StickerGroup>) {
@@ -49,7 +48,9 @@ impl AppOp {
 
     #[allow(dead_code)]
     pub fn stickers_draw(&self) {
-        let stickers_box = self.ui.builder
+        let stickers_box = self
+            .ui
+            .builder
             .get_object::<gtk::Box>("stickers_box")
             .expect("Can't find room_name in ui file.");
 
@@ -60,24 +61,32 @@ impl AppOp {
         for sticker in self.stickers.iter() {
             let builder = gtk::Builder::new_from_resource("/org/gnome/Fractal/ui/sticker_group.ui");
 
-            let bx = builder.get_object::<gtk::Box>("widget").expect("Can't find widget in ui file.");
-            let container = builder.get_object::<gtk::Container>("container").expect("Can't find container in ui file.");
+            let bx = builder
+                .get_object::<gtk::Box>("widget")
+                .expect("Can't find widget in ui file.");
+            let container = builder
+                .get_object::<gtk::Container>("container")
+                .expect("Can't find container in ui file.");
 
-            builder.get_object::<gtk::Label>("name")
-                   .expect("Can't find name in ui file.")
-                   .set_text(&sticker.name[..]);
-            builder.get_object::<gtk::Label>("desc")
-                   .expect("Can't find desc in ui file.")
-                   .set_text(&sticker.description[..]);
+            builder
+                .get_object::<gtk::Label>("name")
+                .expect("Can't find name in ui file.")
+                .set_text(&sticker.name[..]);
+            builder
+                .get_object::<gtk::Label>("desc")
+                .expect("Can't find desc in ui file.")
+                .set_text(&sticker.description[..]);
 
             if sticker.purchased {
                 self.stickers_draw_imgs(&builder, sticker);
             } else {
-                let img = builder.get_object::<gtk::Image>("thumb")
-                       .expect("Can't find thumb in ui file.");
+                let img = builder
+                    .get_object::<gtk::Image>("thumb")
+                    .expect("Can't find thumb in ui file.");
                 self.sticker_thumbnail(sticker.thumbnail.clone(), &img);
-                let btn = builder.get_object::<gtk::Button>("btn")
-                   .expect("Can't find btn in ui file.");
+                let btn = builder
+                    .get_object::<gtk::Button>("btn")
+                    .expect("Can't find btn in ui file.");
                 let group = sticker.clone();
                 let internal = self.internal.clone();
                 btn.connect_clicked(move |_| {
@@ -93,7 +102,9 @@ impl AppOp {
     }
 
     pub fn stickers_loading(&self, loading: bool) {
-        let stack = self.ui.builder
+        let stack = self
+            .ui
+            .builder
             .get_object::<gtk::Stack>("stickers_stack")
             .expect("Can't find stickers_stack in ui file.");
 
@@ -160,15 +171,19 @@ impl AppOp {
 
             let backend = self.backend.clone();
             let image = widgets::image::Image::new(&backend, &img.thumbnail.clone())
-                            .size(Some((size, size)))
-                            .thumb(true).fixed(true).build();
+                .size(Some((size, size)))
+                .thumb(true)
+                .fixed(true)
+                .build();
             let eb = gtk::EventBox::new();
             eb.add(&image.widget);
             bx.add(&eb);
 
             let internal = self.internal.clone();
             let im = img.clone();
-            let popover: gtk::Popover = self.ui.builder
+            let popover: gtk::Popover = self
+                .ui
+                .builder
                 .get_object("stickers_popover")
                 .expect("Couldn't find stickers_popover in ui file.");
             eb.connect_button_press_event(move |_, _| {
@@ -184,7 +199,9 @@ impl AppOp {
 
     pub fn send_sticker(&mut self, sticker: Sticker) {
         let roomid = self.active_room.clone().unwrap_or_default();
-        self.backend.send(BKCommand::SendSticker(roomid.clone(), sticker.clone())).unwrap();
+        self.backend
+            .send(BKCommand::SendSticker(roomid.clone(), sticker.clone()))
+            .unwrap();
 
         let msg = Message {
             sender: self.uid.clone().unwrap_or_default(),
@@ -208,7 +225,9 @@ impl AppOp {
     }
 
     pub fn purchase_sticker(&self, group: StickerGroup) {
-        self.backend.send(BKCommand::PurchaseSticker(group)).unwrap();
+        self.backend
+            .send(BKCommand::PurchaseSticker(group))
+            .unwrap();
         self.stickers_loading(true);
     }
 }

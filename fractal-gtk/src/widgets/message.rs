@@ -1,32 +1,32 @@
-use itertools::Itertools;
 use app::App;
 use i18n::i18n;
+use itertools::Itertools;
 
-use pango;
+use chrono::prelude::*;
 use glib;
 use gtk;
 use gtk::prelude::*;
-use chrono::prelude::*;
+use pango;
 
 use backend::BKCommand;
 
 use util::markup_text;
 
 use std::sync::mpsc::channel;
-use std::sync::mpsc::{Sender, Receiver};
 use std::sync::mpsc::TryRecvError;
+use std::sync::mpsc::{Receiver, Sender};
 
 use cache::download_to_cache;
 use cache::download_to_cache_username;
 use cache::download_to_cache_username_emote;
 
 use globals;
-use widgets;
-use widgets::AvatarExt;
-use widgets::message_menu::MessageMenu;
-use uitypes::RowType;
-use uitypes::MessageContent as Message;
 use uibuilder::UI;
+use uitypes::MessageContent as Message;
+use uitypes::RowType;
+use widgets;
+use widgets::message_menu::MessageMenu;
+use widgets::AvatarExt;
 
 /* A message row in the room history */
 #[derive(Clone, Debug)]
@@ -67,16 +67,16 @@ impl MessageBox {
         /* This was moved from the new() to there */
         let backend = self.backend.clone();
         let ui = self.ui.clone();
-        self.widget.connect_button_press_event(clone!(msg => move |eb, btn| {
-            if btn.get_button() == 3 {
-                let menu = MessageMenu::new_message_menu(ui.clone(), backend.clone(),
-                                                         msg.clone(), None);
-                menu.show_menu_popover(eb.clone().upcast::<gtk::Widget>());
-            }
+        self.widget
+            .connect_button_press_event(clone!(msg => move |eb, btn| {
+                if btn.get_button() == 3 {
+                    let menu = MessageMenu::new_message_menu(ui.clone(), backend.clone(),
+                                                             msg.clone(), None);
+                    menu.show_menu_popover(eb.clone().upcast::<gtk::Widget>());
+                }
 
-            Inhibit(false)
-        }));
-
+                Inhibit(false)
+            }));
 
         let row = gtk::ListBoxRow::new();
         self.set_msg_styles(msg, &row);
@@ -216,7 +216,12 @@ impl MessageBox {
         }
 
         download_to_cache(self.backend.clone(), uid.clone(), data.clone());
-        download_to_cache_username(self.backend.clone(), &uid, self.username.clone(), Some(data.clone()));
+        download_to_cache_username(
+            self.backend.clone(),
+            &uid,
+            self.username.clone(),
+            Some(data.clone()),
+        );
 
         avatar
     }
@@ -240,7 +245,7 @@ impl MessageBox {
             match msg.mtype {
                 RowType::Mention => style.add_class("msg-mention"),
                 RowType::Emote => style.add_class("msg-emote"),
-                _ => {},
+                _ => {}
             }
         }
     }
@@ -264,24 +269,24 @@ impl MessageBox {
             for part in msg_parts.iter() {
                 let highlights = msg.highlights.clone();
                 part.connect_property_cursor_position_notify(move |w| {
-                if let Some(text) = w.get_text() {
-                    let attr = pango::AttrList::new();
-                    for light in highlights.clone() {
-                        highlight_username(w.clone(), &attr, &light, text.clone());
+                    if let Some(text) = w.get_text() {
+                        let attr = pango::AttrList::new();
+                        for light in highlights.clone() {
+                            highlight_username(w.clone(), &attr, &light, text.clone());
+                        }
+                        w.set_attributes(&attr);
                     }
-                    w.set_attributes(&attr);
-                }
                 });
 
                 let highlights = msg.highlights.clone();
                 part.connect_property_selection_bound_notify(move |w| {
-                if let Some(text) = w.get_text() {
-                    let attr = pango::AttrList::new();
-                    for light in highlights.clone() {
-                        highlight_username(w.clone(), &attr, &light, text.clone());
+                    if let Some(text) = w.get_text() {
+                        let attr = pango::AttrList::new();
+                        for light in highlights.clone() {
+                            highlight_username(w.clone(), &attr, &light, text.clone());
+                        }
+                        w.set_attributes(&attr);
                     }
-                    w.set_attributes(&attr);
-                }
                 });
 
                 if let Some(text) = part.get_text() {
@@ -344,7 +349,8 @@ impl MessageBox {
             None => msg.url.clone().unwrap_or_default(),
         };
         let image = widgets::image::Image::new(&self.backend, &img_path)
-                        .size(Some(globals::MAX_IMAGE_SIZE)).build();
+            .size(Some(globals::MAX_IMAGE_SIZE))
+            .build();
 
         if let Some(style) = image.widget.get_style_context() {
             style.add_class("image-widget");
@@ -359,9 +365,9 @@ impl MessageBox {
     fn build_room_msg_sticker(&self, msg: &Message) -> gtk::Box {
         let bx = gtk::Box::new(gtk::Orientation::Horizontal, 0);
         let backend = self.backend.clone();
-        let image = widgets::image::Image::new(&backend,
-                        &msg.url.clone().unwrap_or_default())
-                        .size(Some(globals::MAX_STICKER_SIZE)).build();
+        let image = widgets::image::Image::new(&backend, &msg.url.clone().unwrap_or_default())
+            .size(Some(globals::MAX_STICKER_SIZE))
+            .build();
         let w = image.widget.clone();
         w.set_tooltip_text(&msg.body[..]);
 
@@ -379,28 +385,31 @@ impl MessageBox {
         let backend = self.backend.clone();
 
         let (tx, rx): (Sender<String>, Receiver<String>) = channel();
-        backend.send(BKCommand::GetMediaUrl(url.clone(), tx)).unwrap();
+        backend
+            .send(BKCommand::GetMediaUrl(url.clone(), tx))
+            .unwrap();
 
-        gtk::timeout_add(50, clone!(player => move || {
-            match rx.try_recv() {
-                Err(TryRecvError::Empty) => gtk::Continue(true),
-                Err(TryRecvError::Disconnected) => {
-                    let msg = i18n("Could not retrieve file URI");
-                    APPOP!(show_error, (msg));
-                    gtk::Continue(true)
-                },
-                Ok(uri) => {
-                    info!("AUDIO URI: {}", &uri);
-                    player.initialize_stream(&uri);
-                    gtk::Continue(false)
+        gtk::timeout_add(
+            50,
+            clone!(player => move || {
+                match rx.try_recv() {
+                    Err(TryRecvError::Empty) => gtk::Continue(true),
+                    Err(TryRecvError::Disconnected) => {
+                        let msg = i18n("Could not retrieve file URI");
+                        APPOP!(show_error, (msg));
+                        gtk::Continue(true)
+                    },
+                    Ok(uri) => {
+                        info!("AUDIO URI: {}", &uri);
+                        player.initialize_stream(&uri);
+                        gtk::Continue(false)
+                    }
                 }
-            }
-        }));
-
-        let download_btn = gtk::Button::new_from_icon_name(
-            "document-save-symbolic",
-            gtk::IconSize::Button.into(),
+            }),
         );
+
+        let download_btn =
+            gtk::Button::new_from_icon_name("document-save-symbolic", gtk::IconSize::Button.into());
         download_btn.set_tooltip_text(i18n("Save").as_str());
 
         download_btn.connect_clicked(clone!(name, url, backend => move |_| {
@@ -445,10 +454,8 @@ impl MessageBox {
             style.add_class("msg-highlighted");
         }
 
-        let download_btn = gtk::Button::new_from_icon_name(
-            "document-save-symbolic",
-            gtk::IconSize::Button.into()
-        );
+        let download_btn =
+            gtk::Button::new_from_icon_name("document-save-symbolic", gtk::IconSize::Button.into());
         download_btn.set_tooltip_text(i18n("Save").as_str());
 
         download_btn.connect_clicked(clone!(name, url, backend => move |_| {
@@ -474,10 +481,8 @@ impl MessageBox {
             }));
         }));
 
-        let open_btn = gtk::Button::new_from_icon_name(
-            "document-open-symbolic",
-            gtk::IconSize::Button.into()
-        );
+        let open_btn =
+            gtk::Button::new_from_icon_name("document-open-symbolic", gtk::IconSize::Button.into());
         open_btn.set_tooltip_text(i18n("Open").as_str());
 
         open_btn.connect_clicked(clone!(url, backend => move |_| {
@@ -496,29 +501,29 @@ impl MessageBox {
     }
 
     fn build_room_msg_date(&self, dt: &DateTime<Local>) -> gtk::Label {
-	/* TODO: get system preference for 12h/24h */
-	let use_ampm = false;
-	let format = if use_ampm {
+        /* TODO: get system preference for 12h/24h */
+        let use_ampm = false;
+        let format = if use_ampm {
             /* Use 12h time format (AM/PM) */
-	    i18n("%l:%M %p")
-	} else {
+            i18n("%l:%M %p")
+        } else {
             /* Use 24 time format */
-	    i18n("%R")
-	};
+            i18n("%R")
+        };
 
-	let d = dt.format(&format).to_string();
+        let d = dt.format(&format).to_string();
 
-	let date = gtk::Label::new("");
-	date.set_markup(&format!("<span alpha=\"60%\">{}</span>", d.trim()));
-	date.set_line_wrap(true);
-	date.set_justify(gtk::Justification::Right);
-	date.set_valign(gtk::Align::Start);
-	date.set_halign(gtk::Align::End);
-	if let Some(style) = date.get_style_context() {
-	    style.add_class("timestamp");
-	}
+        let date = gtk::Label::new("");
+        date.set_markup(&format!("<span alpha=\"60%\">{}</span>", d.trim()));
+        date.set_line_wrap(true);
+        date.set_justify(gtk::Justification::Right);
+        date.set_valign(gtk::Align::Start);
+        date.set_halign(gtk::Align::End);
+        if let Some(style) = date.get_style_context() {
+            style.add_class("timestamp");
+        }
 
-	date
+        date
     }
 
     fn build_room_msg_info(&self, msg: &Message) -> gtk::Box {
@@ -542,12 +547,21 @@ impl MessageBox {
     fn build_room_msg_emote(&self, msg: &Message) -> gtk::Box {
         let bx = gtk::Box::new(gtk::Orientation::Horizontal, 0);
         /* Use MXID till we have a alias */
-        let sname = msg.sender_name.clone().unwrap_or(String::from(msg.sender.clone()));
+        let sname = msg
+            .sender_name
+            .clone()
+            .unwrap_or(String::from(msg.sender.clone()));
         let msg_label = gtk::Label::new("");
         let body: &str = &msg.body;
         let markup = markup_text(body);
 
-        download_to_cache_username_emote(self.backend.clone(), &sname, &markup, msg_label.clone(), None);
+        download_to_cache_username_emote(
+            self.backend.clone(),
+            &sname,
+            &markup,
+            msg_label.clone(),
+            None,
+        );
 
         self.connect_right_click_menu(msg, msg_label.clone().upcast::<gtk::Widget>());
         msg_label.set_markup(&format!("<b>{}</b> {}", sname, markup));
@@ -565,8 +579,12 @@ impl MessageBox {
 
         w.connect_button_press_event(move |w, btn| {
             if btn.get_button() == 3 {
-                let menu = MessageMenu::new_message_menu(ui.clone(), backend.clone(),
-                                                         msg.clone(), Some(w));
+                let menu = MessageMenu::new_message_menu(
+                    ui.clone(),
+                    backend.clone(),
+                    msg.clone(),
+                    Some(w),
+                );
                 menu.show_menu_popover(eb.clone().upcast::<gtk::Widget>());
                 Inhibit(true)
             } else {
@@ -576,7 +594,12 @@ impl MessageBox {
     }
 }
 
-fn highlight_username(label: gtk::Label, attr: &pango::AttrList, alias: &String, input: String) -> Option<()> {
+fn highlight_username(
+    label: gtk::Label,
+    attr: &pango::AttrList,
+    alias: &String,
+    input: String,
+) -> Option<()> {
     fn contains((start, end): (i32, i32), item: i32) -> bool {
         match start <= end {
             true => start <= item && end > item,
@@ -586,8 +609,8 @@ fn highlight_username(label: gtk::Label, attr: &pango::AttrList, alias: &String,
 
     let input = input.to_lowercase();
     let bounds = label.get_selection_bounds();
-    let context = gtk::Widget::get_style_context (&label.clone().upcast::<gtk::Widget>())?;
-    let fg  = gtk::StyleContext::lookup_color (&context, "theme_selected_bg_color")?;
+    let context = gtk::Widget::get_style_context(&label.clone().upcast::<gtk::Widget>())?;
+    let fg = gtk::StyleContext::lookup_color(&context, "theme_selected_bg_color")?;
     let red = fg.red * 65535. + 0.5;
     let green = fg.green * 65535. + 0.5;
     let blue = fg.blue * 65535. + 0.5;
@@ -608,24 +631,25 @@ fn highlight_username(label: gtk::Label, attr: &pango::AttrList, alias: &String,
         /* exclude selected text */
         if let Some((bounds_start, bounds_end)) = bounds {
             /* If the selection is within the alias */
-            if contains((mark_start, mark_end), bounds_start) &&
-                contains((mark_start, mark_end), bounds_end) {
-                    final_pos = Some((mark_start, bounds_start));
-                    /* Add blue color after a selection */
-                    let mut color = color.clone();
-                    color.set_start_index(bounds_end as u32);
-                    color.set_end_index(mark_end as u32);
-                    attr.insert(color);
-                } else {
-                    /* The alias starts inside a selection */
-                    if contains(bounds?, mark_start) {
-                        final_pos = Some((bounds_end, final_pos?.1));
-                    }
-                    /* The alias ends inside a selection */
-                    if contains(bounds?, mark_end - 1) {
-                        final_pos = Some((final_pos?.0, bounds_start));
-                    }
+            if contains((mark_start, mark_end), bounds_start)
+                && contains((mark_start, mark_end), bounds_end)
+            {
+                final_pos = Some((mark_start, bounds_start));
+                /* Add blue color after a selection */
+                let mut color = color.clone();
+                color.set_start_index(bounds_end as u32);
+                color.set_end_index(mark_end as u32);
+                attr.insert(color);
+            } else {
+                /* The alias starts inside a selection */
+                if contains(bounds?, mark_start) {
+                    final_pos = Some((bounds_end, final_pos?.1));
                 }
+                /* The alias ends inside a selection */
+                if contains(bounds?, mark_end - 1) {
+                    final_pos = Some((final_pos?.0, bounds_start));
+                }
+            }
         }
 
         if let Some((start, end)) = final_pos {

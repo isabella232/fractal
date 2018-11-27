@@ -1,13 +1,13 @@
-use std::sync::mpsc::Sender;
 use std::collections::HashMap;
+use std::sync::mpsc::Sender;
 
 use gio::ApplicationExt;
 use gtk;
 use gtk::prelude::*;
 
-use globals;
-use backend::BKCommand;
 use backend;
+use backend::BKCommand;
+use globals;
 
 use types::Member;
 use types::Room;
@@ -16,36 +16,36 @@ use types::StickerGroup;
 
 use passwd::PasswordStorage;
 
-use widgets;
 use cache;
 use uibuilder;
+use widgets;
 
 use app::InternalCommand;
 
+mod about;
+mod account;
+pub mod attach;
+mod directory;
+mod files;
+mod invite;
 mod login;
+mod media_viewer;
+mod member;
+mod message;
+mod notifications;
+mod notify;
+mod room;
+mod room_settings;
+mod start_chat;
+mod state;
+mod stickers;
 mod sync;
 mod user;
-mod account;
-mod room_settings;
-mod media_viewer;
-mod notifications;
-mod state;
-mod room;
-mod files;
-mod message;
-mod directory;
-mod notify;
-pub mod attach;
-mod member;
-mod invite;
-mod about;
-mod start_chat;
-mod stickers;
 
-pub use self::state::AppState;
+use self::member::SearchType;
 use self::message::TmpMsg;
 pub use self::room::RoomPanel;
-use self::member::SearchType;
+pub use self::state::AppState;
 
 pub struct AppOp {
     pub ui: uibuilder::UI,
@@ -91,12 +91,13 @@ pub struct AppOp {
 
 impl PasswordStorage for AppOp {}
 
-
 impl AppOp {
-    pub fn new(app: gtk::Application,
-               ui: uibuilder::UI,
-               tx: Sender<BKCommand>,
-               itx: Sender<InternalCommand>) -> AppOp {
+    pub fn new(
+        app: gtk::Application,
+        ui: uibuilder::UI,
+        tx: Sender<BKCommand>,
+        itx: Sender<InternalCommand>,
+    ) -> AppOp {
         AppOp {
             ui: ui,
             gtk_app: app,
@@ -161,7 +162,9 @@ impl AppOp {
     }
 
     pub fn activate(&self) {
-        let window: gtk::Window = self.ui.builder
+        let window: gtk::Window = self
+            .ui
+            .builder
             .get_object("main_window")
             .expect("Couldn't find main_window in ui file.");
         window.show();

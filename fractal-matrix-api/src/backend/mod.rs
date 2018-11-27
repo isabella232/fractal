@@ -1,10 +1,10 @@
-use std::sync::{Arc, Mutex, Condvar};
-use std::thread;
-use url::Url;
-use std::sync::mpsc::{Sender, Receiver};
+use std::collections::HashMap;
 use std::sync::mpsc::channel;
 use std::sync::mpsc::RecvError;
-use std::collections::HashMap;
+use std::sync::mpsc::{Receiver, Sender};
+use std::sync::{Arc, Condvar, Mutex};
+use std::thread;
+use url::Url;
 
 use util::client_url;
 
@@ -12,23 +12,22 @@ use error::Error;
 
 use cache::CacheMap;
 
-mod types;
-mod register;
-mod user;
-mod room;
-mod sync;
-mod media;
 mod directory;
+mod media;
+mod register;
+mod room;
 mod stickers;
+mod sync;
+mod types;
+mod user;
 
-pub use self::types::BKResponse;
 pub use self::types::BKCommand;
+pub use self::types::BKResponse;
 
 pub use self::types::Backend;
 pub use self::types::BackendData;
 
 pub use self::types::RoomType;
-
 
 impl Backend {
     pub fn new(tx: Sender<BKResponse>) -> Backend {
@@ -48,7 +47,7 @@ impl Backend {
             tx: tx,
             internal_tx: None,
             data: Arc::new(Mutex::new(data)),
-            user_info_cache: CacheMap::new().timeout(60*60),
+            user_info_cache: CacheMap::new().timeout(60 * 60),
             limit_threads: Arc::new((Mutex::new(0u8), Condvar::new())),
         }
     }
@@ -88,7 +87,6 @@ impl Backend {
 
         match cmd {
             // Register module
-
             Ok(BKCommand::Login(user, passwd, server)) => {
                 let r = register::login(self, user, passwd, server);
                 bkerror!(r, tx, BKResponse::LoginError);
@@ -111,7 +109,6 @@ impl Backend {
             }
 
             // User module
-
             Ok(BKCommand::GetUsername) => {
                 let r = user::get_username(self);
                 bkerror!(r, tx, BKResponse::UserNameError);
@@ -178,7 +175,6 @@ impl Backend {
             }
 
             // Sync module
-
             Ok(BKCommand::Sync(since, initial)) => {
                 let r = sync::sync(self, since, initial);
                 bkerror!(r, tx, BKResponse::SyncError);
@@ -189,7 +185,6 @@ impl Backend {
             }
 
             // Room module
-
             Ok(BKCommand::GetRoomMembers(room)) => {
                 let r = room::get_room_members(self, room);
                 bkerror!(r, tx, BKResponse::RoomMembersError);
@@ -280,7 +275,6 @@ impl Backend {
             }
 
             // Media module
-
             Ok(BKCommand::GetThumbAsync(media, ctx)) => {
                 let r = media::get_thumb_async(self, media, ctx);
                 bkerror!(r, tx, BKResponse::CommandError);
@@ -307,7 +301,6 @@ impl Backend {
             }
 
             // Directory module
-
             Ok(BKCommand::DirectoryProtocols) => {
                 let r = directory::protocols(self);
                 bkerror!(r, tx, BKResponse::DirectoryError);
@@ -333,7 +326,6 @@ impl Backend {
             }
 
             // Stickers module
-
             Ok(BKCommand::ListStickers) => {
                 let r = stickers::list(self);
                 bkerror!(r, tx, BKResponse::StickersError);

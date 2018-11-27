@@ -14,11 +14,13 @@ impl AppOp {
     }
 
     pub fn create_room_settings(&mut self) -> Option<()> {
-        let stack = self.ui
+        let stack = self
+            .ui
             .builder
             .get_object::<gtk::Stack>("main_content_stack")
             .expect("Can't find main_content_stack in ui file.");
-        let stack_header = self.ui
+        let stack_header = self
+            .ui
             .builder
             .get_object::<gtk::Stack>("headerbar_stack")
             .expect("Can't find headerbar_stack in ui file.");
@@ -57,11 +59,13 @@ impl AppOp {
     }
 
     pub fn close_room_settings(&mut self) {
-        let stack = self.ui
+        let stack = self
+            .ui
             .builder
             .get_object::<gtk::Stack>("main_content_stack")
             .expect("Can't find main_content_stack in ui file.");
-        let stack_header = self.ui
+        let stack_header = self
+            .ui
             .builder
             .get_object::<gtk::Stack>("headerbar_stack")
             .expect("Can't find headerbar_stack in ui file.");

@@ -1,17 +1,15 @@
 use cairo;
-use pango;
 use gdk;
 use gtk;
 use gtk::prelude::*;
+use pango;
 
 use types::Room;
 
 use widgets;
 use widgets::AvatarExt;
 
-
 const ICON_SIZE: i32 = 24;
-
 
 // Room row for the room sidebar. This widget shows the room avatar, the room name and the unread
 // messages in the room
@@ -129,7 +127,8 @@ impl RoomRow {
 
         let name = self.room.name.clone().unwrap_or("...".to_string());
 
-        self.icon.circle(self.room.id.clone(), Some(name), ICON_SIZE);
+        self.icon
+            .circle(self.room.id.clone(), Some(name), ICON_SIZE);
     }
 
     pub fn widget(&self) -> gtk::EventBox {
@@ -186,8 +185,9 @@ impl RoomRow {
         });
 
         let id = self.room.id.clone();
-        self.widget.connect_drag_data_get(move |_w, _, data, _x, _y| {
-            data.set_text(&id);
-        });
+        self.widget
+            .connect_drag_data_get(move |_w, _, data, _x, _y| {
+                data.set_text(&id);
+            });
     }
 }

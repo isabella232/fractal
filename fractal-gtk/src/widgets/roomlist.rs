@@ -1,38 +1,34 @@
 use i18n::i18n;
 
-use pango;
-use glib;
 use gdk;
 use gdk::DragContextExtManual;
+use glib;
+use pango;
 
-use url::Url;
-use std::collections::HashMap;
 use gtk;
 use gtk::prelude::*;
+use std::collections::HashMap;
+use url::Url;
 
 use globals;
-use widgets::roomrow::RoomRow;
-use types::Room;
-use types::Message;
 use std::sync::{Arc, Mutex, MutexGuard};
+use types::Message;
+use types::Room;
+use widgets::roomrow::RoomRow;
 
 use chrono::prelude::*;
-
 
 fn get_url(url: Option<String>) -> Url {
     let defurl = Url::parse(globals::DEFAULT_HOMESERVER).unwrap();
 
     match url {
-        Some(u) => {
-            match Url::parse(&u) {
-                Ok(url) => url,
-                Err(_) => defurl,
-            }
-        }
+        Some(u) => match Url::parse(&u) {
+            Ok(url) => url,
+            Err(_) => defurl,
+        },
         None => defurl,
     }
 }
-
 
 pub struct RoomUpdated {
     pub room: Room,
@@ -46,10 +42,7 @@ impl RoomUpdated {
             None => Message::default().date,
         };
 
-        RoomUpdated {
-            room,
-            updated,
-        }
+        RoomUpdated { room, updated }
     }
 
     pub fn up(&mut self) {
@@ -131,7 +124,7 @@ impl RoomListGroup {
         let wbox = gtk::Box::new(gtk::Orientation::Vertical, 0);
         widget.add(&wbox);
 
-        let filter= None;
+        let filter = None;
 
         RoomListGroup {
             list,
@@ -157,7 +150,10 @@ impl RoomListGroup {
         }
 
         let rid = r.id.clone();
-        self.roomvec.lock().unwrap().push(RoomUpdated::new(r.clone()));
+        self.roomvec
+            .lock()
+            .unwrap()
+            .push(RoomUpdated::new(r.clone()));
 
         let row = RoomRow::new(r);
         self.list.add(&row.widget());
@@ -211,7 +207,7 @@ impl RoomListGroup {
     pub fn remove_room(&mut self, room: String) -> Option<RoomUpdated> {
         self.rooms.remove(&room);
         let mut rv = self.roomvec.lock().unwrap();
-        if let Some(idx) = rv.iter().position(|x| { x.room.id == room}) {
+        if let Some(idx) = rv.iter().position(|x| x.room.id == room) {
             if let Some(row) = self.list.get_row_at_index(idx as i32) {
                 self.list.remove(&row);
             }
@@ -227,7 +223,9 @@ impl RoomListGroup {
             r.set_name(n);
         }
 
-        self.edit_room(&room, move |rv| { rv.room.name = newname.clone(); });
+        self.edit_room(&room, move |rv| {
+            rv.room.name = newname.clone();
+        });
     }
 
     pub fn set_room_avatar(&mut self, room: String, av: Option<String>) {
@@ -235,7 +233,9 @@ impl RoomListGroup {
             r.set_avatar(av.clone());
         }
 
-        self.edit_room(&room, move |rv| { rv.room.avatar = av.clone(); });
+        self.edit_room(&room, move |rv| {
+            rv.room.avatar = av.clone();
+        });
     }
 
     pub fn widget(&self) -> gtk::EventBox {
@@ -315,7 +315,7 @@ impl RoomListGroup {
         let room = room.unwrap();
 
         let rv = self.roomvec.lock().unwrap();
-        if let Some(idx) = rv.iter().position(|x| { x.room.id == room}) {
+        if let Some(idx) = rv.iter().position(|x| x.room.id == room) {
             if let Some(ref row) = self.list.get_row_at_index(idx as i32) {
                 self.list.select_row(row);
             }
@@ -323,11 +323,9 @@ impl RoomListGroup {
     }
 
     pub fn add_rooms(&mut self, mut array: Vec<Room>) {
-        array.sort_by_key(|ref x| {
-            match x.messages.last() {
-                Some(l) => l.date,
-                None => Message::default().date,
-            }
+        array.sort_by_key(|ref x| match x.messages.last() {
+            Some(l) => l.date,
+            None => Message::default().date,
         });
 
         for r in array.iter().rev() {
@@ -338,7 +336,9 @@ impl RoomListGroup {
     pub fn moveup(&mut self, room: String) {
         let s = self.get_selected();
 
-        self.edit_room(&room, move |rv| { rv.up(); });
+        self.edit_room(&room, move |rv| {
+            rv.up();
+        });
         if let Some(r) = self.remove_room(room) {
             self.add_room_up(r);
         }
@@ -356,7 +356,7 @@ impl RoomListGroup {
 
     fn edit_room<F: Fn(&mut RoomUpdated) + 'static>(&mut self, room: &str, cb: F) {
         let mut rv = self.roomvec.lock().unwrap();
-        if let Some(idx) = rv.iter().position(|x| { x.room.id == room}) {
+        if let Some(idx) = rv.iter().position(|x| x.room.id == room) {
             if let Some(ref mut m) = rv.get_mut(idx) {
                 cb(m);
             }
@@ -370,16 +370,16 @@ impl RoomListGroup {
             if let Some(row) = self.list.get_row_at_index(i as i32) {
                 match term {
                     &Some(ref t) if !t.is_empty() => {
-                        let rname = r.room.name.clone()
-                                     .unwrap_or("".to_string())
-                                     .to_lowercase();
+                        let rname = r.room.name.clone().unwrap_or("".to_string()).to_lowercase();
                         if rname.contains(&t.to_lowercase()) {
                             row.show();
                         } else {
                             row.hide();
                         }
                     }
-                    _ => { row.show(); }
+                    _ => {
+                        row.show();
+                    }
                 };
             }
         }
@@ -394,7 +394,9 @@ struct RGroup {
 impl RGroup {
     pub fn new(url: &Url, name: &str, empty_text: &str) -> RGroup {
         let r = RoomListGroup::new(url, name, empty_text);
-        RGroup{ g: Arc::new(Mutex::new(r)) }
+        RGroup {
+            g: Arc::new(Mutex::new(r)),
+        }
     }
 
     pub fn get(&self) -> MutexGuard<RoomListGroup> {
@@ -428,12 +430,21 @@ impl RoomList {
         let widget = gtk::Box::new(gtk::Orientation::Vertical, 6);
         let baseu = get_url(url);
 
-        let inv = RGroup::new(&baseu, i18n("Invites").as_str(),
-                              i18n("You don’t have any invitations").as_str());
-        let fav = RGroup::new(&baseu, i18n("Favorites").as_str(),
-                              i18n("Drag and drop rooms here to add them to your favorites").as_str());
-        let rooms = RGroup::new(&baseu, i18n("Rooms").as_str(),
-                                i18n("You don’t have any rooms yet").as_str());
+        let inv = RGroup::new(
+            &baseu,
+            i18n("Invites").as_str(),
+            i18n("You don’t have any invitations").as_str(),
+        );
+        let fav = RGroup::new(
+            &baseu,
+            i18n("Favorites").as_str(),
+            i18n("Drag and drop rooms here to add them to your favorites").as_str(),
+        );
+        let rooms = RGroup::new(
+            &baseu,
+            i18n("Rooms").as_str(),
+            i18n("You don’t have any rooms yet").as_str(),
+        );
 
         let rl = RoomList {
             baseu,
@@ -466,9 +477,27 @@ impl RoomList {
     }
 
     pub fn add_rooms(&mut self, array: Vec<Room>) {
-        self.inv.get().add_rooms(array.iter().filter(|r| r.inv).cloned().collect::<Vec<Room>>());
-        self.fav.get().add_rooms(array.iter().filter(|r| r.fav).cloned().collect::<Vec<Room>>());
-        self.rooms.get().add_rooms(array.iter().filter(|r| !r.fav && !r.inv).cloned().collect::<Vec<Room>>());
+        self.inv.get().add_rooms(
+            array
+                .iter()
+                .filter(|r| r.inv)
+                .cloned()
+                .collect::<Vec<Room>>(),
+        );
+        self.fav.get().add_rooms(
+            array
+                .iter()
+                .filter(|r| r.fav)
+                .cloned()
+                .collect::<Vec<Room>>(),
+        );
+        self.rooms.get().add_rooms(
+            array
+                .iter()
+                .filter(|r| !r.fav && !r.inv)
+                .cloned()
+                .collect::<Vec<Room>>(),
+        );
         self.show_and_hide();
     }
 

@@ -3,28 +3,30 @@ use url::Url;
 
 use globals;
 
-use std::thread;
-use error::Error;
 use backend::types::BKResponse;
 use backend::types::Backend;
+use error::Error;
+use std::thread;
 
-use util::json_q;
 use util::cache_path;
+use util::json_q;
 use util::media;
 
-use types::Room;
 use types::Protocol;
+use types::Room;
 
 pub fn protocols(bk: &Backend) -> Result<(), Error> {
     let baseu = bk.get_base_url()?;
     let tk = bk.data.lock().unwrap().access_token.clone();
     let mut url = baseu.join("/_matrix/client/unstable/thirdparty/protocols")?;
-    url.query_pairs_mut().clear()
+    url.query_pairs_mut()
+        .clear()
         .append_pair("access_token", &tk);
 
     let tx = bk.tx.clone();
     let s = bk.data.lock().unwrap().server_url.clone();
-    get!(&url,
+    get!(
+        &url,
         move |r: JsonValue| {
             let mut protocols: Vec<Protocol> = vec![];
 
@@ -37,7 +39,7 @@ pub fn protocols(bk: &Backend) -> Result<(), Error> {
                 for k in prs.keys() {
                     let ins = prs[k]["instances"].as_array();
                     for i in ins.unwrap_or(&vec![]) {
-                        let p = Protocol{
+                        let p = Protocol {
                             id: String::from(i["instance_id"].as_str().unwrap_or_default()),
                             desc: String::from(i["desc"].as_str().unwrap_or_default()),
                         };
@@ -48,19 +50,21 @@ pub fn protocols(bk: &Backend) -> Result<(), Error> {
 
             tx.send(BKResponse::DirectoryProtocols(protocols)).unwrap();
         },
-        |err| { tx.send(BKResponse::DirectoryError(err)).unwrap(); }
+        |err| {
+            tx.send(BKResponse::DirectoryError(err)).unwrap();
+        }
     );
 
     Ok(())
 }
 
-pub fn room_search(bk: &Backend,
-                   homeserver: Option<String>,
-                   query: Option<String>,
-                   third_party: Option<String>,
-                   more: bool)
-                   -> Result<(), Error> {
-
+pub fn room_search(
+    bk: &Backend,
+    homeserver: Option<String>,
+    query: Option<String>,
+    third_party: Option<String>,
+    more: bool,
+) -> Result<(), Error> {
     let mut params: Vec<(&str, String)> = Vec::new();
 
     if let Some(mut hs) = homeserver {
@@ -75,12 +79,10 @@ pub fn room_search(bk: &Backend,
     let url = bk.url("publicRooms", params)?;
     let base = bk.get_base_url()?;
 
-    let mut attrs = json!({"limit": globals::ROOM_DIRECTORY_LIMIT});
+    let mut attrs = json!({ "limit": globals::ROOM_DIRECTORY_LIMIT });
 
     if let Some(q) = query {
-        attrs["filter"] = json!({
-            "generic_search_term": q
-        });
+        attrs["filter"] = json!({ "generic_search_term": q });
     }
 
     if let Some(tp) = third_party {
@@ -94,7 +96,9 @@ pub fn room_search(bk: &Backend,
 
     let tx = bk.tx.clone();
     let data = bk.data.clone();
-    post!(&url, &attrs,
+    post!(
+        &url,
+        &attrs,
         move |r: JsonValue| {
             let next_branch = r["next_batch"].as_str().unwrap_or("");
             data.lock().unwrap().rooms_since = String::from(next_branch);
@@ -122,7 +126,9 @@ pub fn room_search(bk: &Backend,
 
             tx.send(BKResponse::DirectorySearch(rooms)).unwrap();
         },
-        |err| { tx.send(BKResponse::DirectoryError(err)).unwrap(); }
+        |err| {
+            tx.send(BKResponse::DirectoryError(err)).unwrap();
+        }
     );
 
     Ok(())

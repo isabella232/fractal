@@ -7,15 +7,14 @@ extern crate serde_derive;
 #[macro_use]
 extern crate log;
 
-extern crate urlencoding;
-extern crate reqwest;
-extern crate md5;
 extern crate cairo;
-extern crate regex;
-extern crate tree_magic;
 extern crate chrono;
 extern crate glib;
-
+extern crate md5;
+extern crate regex;
+extern crate reqwest;
+extern crate tree_magic;
+extern crate urlencoding;
 
 extern crate url;
 
@@ -24,10 +23,10 @@ pub mod util;
 pub mod error;
 pub mod globals;
 
+pub mod backend;
+pub mod cache;
 mod model;
 pub mod types;
-pub mod cache;
-pub mod backend;
 
 #[cfg(test)]
 mod tests {

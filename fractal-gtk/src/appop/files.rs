@@ -6,15 +6,17 @@ use gtk;
 use gtk::prelude::*;
 use gtk::ResponseType;
 
-use glib;
 use dirs;
+use glib;
 
 use app::App;
 use appop::AppOp;
 
 impl AppOp {
     pub fn save_file_as(&self, src: String, name: String) {
-        let main_window = self.ui.builder
+        let main_window = self
+            .ui
+            .builder
             .get_object::<gtk::ApplicationWindow>("main_window")
             .expect("Cant find main_window in ui file.");
 
@@ -23,7 +25,7 @@ impl AppOp {
             Some(&main_window),
             gtk::FileChooserAction::Save,
             Some(i18n("_Save").as_str()),
-            Some(i18n("_Cancel").as_str())
+            Some(i18n("_Cancel").as_str()),
         );
 
         file_chooser.set_current_folder(dirs::download_dir().unwrap_or_default());

@@ -4,7 +4,6 @@ use appop::AppOp;
 
 use backend::BKCommand;
 
-
 impl AppOp {
     pub fn initial_sync(&self, show: bool) {
         if show {
@@ -22,7 +21,10 @@ impl AppOp {
             // the since can be a very old value and following the spec we should
             // do the initial sync without a since:
             // https://matrix.org/docs/spec/client_server/latest.html#syncing
-            let since = match initial { true => None, _ => self.since.clone() };
+            let since = match initial {
+                true => None,
+                _ => self.since.clone(),
+            };
             self.backend.send(BKCommand::Sync(since, initial)).unwrap();
         }
     }

@@ -1,17 +1,17 @@
-use globals;
-use std::thread;
-use std::sync::mpsc::Sender;
-use error::Error;
 use backend::types::BKResponse;
 use backend::types::Backend;
+use error::Error;
+use globals;
+use std::sync::mpsc::Sender;
+use std::thread;
 
-use util::download_file;
+use util;
 use util::cache_dir_path;
+use util::download_file;
 use util::get_room_media_list;
 use util::resolve_media_url;
 use util::semaphore;
 use util::thumb;
-use util;
 
 use types::Message;
 
@@ -49,25 +49,29 @@ pub fn get_media_async(bk: &Backend, media: String, tx: Sender<String>) -> Resul
     Ok(())
 }
 
-pub fn get_media_list_async(bk: &Backend,
-                            roomid: String,
-                            first_media_id: Option<String>,
-                            prev_batch: Option<String>,
-                            tx: Sender<(Vec<Message>, String)>)
-                            -> Result<(), Error> {
+pub fn get_media_list_async(
+    bk: &Backend,
+    roomid: String,
+    first_media_id: Option<String>,
+    prev_batch: Option<String>,
+    tx: Sender<(Vec<Message>, String)>,
+) -> Result<(), Error> {
     let baseu = bk.get_base_url()?;
     let tk = bk.data.lock().unwrap().access_token.clone();
 
-    semaphore(bk.limit_threads.clone(), move || {
-        match get_room_media_list(&baseu, tk, roomid.clone(),
-                                  globals::PAGE_LIMIT,
-                                  first_media_id, prev_batch) {
-            Ok(media_list) => {
-                tx.send(media_list).unwrap();
-            }
-            Err(_) => {
-                tx.send((Vec::new(), String::new())).unwrap();
-            }
+    semaphore(bk.limit_threads.clone(), move || match get_room_media_list(
+        &baseu,
+        tk,
+        roomid.clone(),
+        globals::PAGE_LIMIT,
+        first_media_id,
+        prev_batch,
+    ) {
+        Ok(media_list) => {
+            tx.send(media_list).unwrap();
+        }
+        Err(_) => {
+            tx.send((Vec::new(), String::new())).unwrap();
         }
     });
 
@@ -118,8 +122,12 @@ pub fn get_file_async(url: String, tx: Sender<String>) -> Result<(), Error> {
 
     thread::spawn(move || {
         match download_file(&url, fname, None) {
-            Ok(fname) => { tx.send(fname).unwrap(); }
-            Err(_) => { tx.send(String::from("")).unwrap(); }
+            Ok(fname) => {
+                tx.send(fname).unwrap();
+            }
+            Err(_) => {
+                tx.send(String::from("")).unwrap();
+            }
         };
     });
 

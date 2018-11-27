@@ -3,14 +3,14 @@ use gdk;
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use gtk;
-use gtk::prelude::*;
-use gtk::ResponseType;
+use dirs;
 use gdk::*;
 use glib;
 use glib::signal;
+use gtk;
+use gtk::prelude::*;
+use gtk::ResponseType;
 use i18n::i18n;
-use dirs;
 
 use types::Message;
 use types::Room;
@@ -181,9 +181,11 @@ impl Data {
                 .parse::<f64>()
             {
                 Ok(zlvl) => self.set_zoom_level(zlvl / 100.0),
-                Err(_) => if let Some(zlvl) = *image.zoom_level.lock().unwrap() {
-                    update_zoom_entry(&self.builder, zlvl)
-                },
+                Err(_) => {
+                    if let Some(zlvl) = *image.zoom_level.lock().unwrap() {
+                        update_zoom_entry(&self.builder, zlvl)
+                    }
+                }
             }
         }
     }
@@ -509,46 +511,46 @@ impl MediaViewer {
             .expect("Can't find headerbar_revealer in ui file.");
 
         headerbar_revealer.connect_enter_notify_event(clone!(header_hovered => move |_, _| {
-			*(header_hovered.lock().unwrap()) = true;
+            *(header_hovered.lock().unwrap()) = true;
 
-			Inhibit(false)
-		}));
+            Inhibit(false)
+        }));
 
         headerbar_revealer.connect_leave_notify_event(clone!(header_hovered => move |_, _| {
-			*(header_hovered.lock().unwrap()) = false;
+            *(header_hovered.lock().unwrap()) = false;
 
-			Inhibit(false)
-		}));
+            Inhibit(false)
+        }));
 
         let previous_media_button = ui
             .get_object::<gtk::Button>("previous_media_button")
             .expect("Cant find previous_media_button in ui file.");
 
         previous_media_button.connect_enter_notify_event(clone!(nav_hovered => move |_, _| {
-			*(nav_hovered.lock().unwrap()) = true;
+            *(nav_hovered.lock().unwrap()) = true;
 
-			Inhibit(false)
-		}));
+            Inhibit(false)
+        }));
         previous_media_button.connect_leave_notify_event(clone!(nav_hovered => move |_, _| {
-			*(nav_hovered.lock().unwrap()) = false;
+            *(nav_hovered.lock().unwrap()) = false;
 
-			Inhibit(false)
-		}));
+            Inhibit(false)
+        }));
 
         let next_media_button = ui
             .get_object::<gtk::Button>("next_media_button")
             .expect("Cant find next_media_button in ui file.");
 
         next_media_button.connect_enter_notify_event(clone!(nav_hovered => move |_, _| {
-			*(nav_hovered.lock().unwrap()) = true;
+            *(nav_hovered.lock().unwrap()) = true;
 
-			Inhibit(false)
-		}));
+            Inhibit(false)
+        }));
         next_media_button.connect_leave_notify_event(clone!(nav_hovered => move |_, _| {
-			*(nav_hovered.lock().unwrap()) = false;
+            *(nav_hovered.lock().unwrap()) = false;
 
-			Inhibit(false)
-		}));
+            Inhibit(false)
+        }));
 
         let media_viewer_box = ui
             .get_object::<gtk::Box>("media_viewer_box")
@@ -589,28 +591,28 @@ impl MediaViewer {
             let sid = gtk::timeout_add(
                 1000,
                 clone!(ui, header_hovered, nav_hovered, source_id => move || {
-				if !*header_hovered.lock().unwrap() {
-					let headerbar_revealer = ui
-						.get_object::<gtk::Revealer>("headerbar_revealer")
-						.expect("Can't find headerbar_revealer in ui file.");
-					headerbar_revealer.set_reveal_child(false);
-				}
+                    if !*header_hovered.lock().unwrap() {
+                        let headerbar_revealer = ui
+                            .get_object::<gtk::Revealer>("headerbar_revealer")
+                            .expect("Can't find headerbar_revealer in ui file.");
+                        headerbar_revealer.set_reveal_child(false);
+                    }
 
-				if !*nav_hovered.lock().unwrap() {
-					let previous_media_revealer = ui
-						.get_object::<gtk::Revealer>("previous_media_revealer")
-						.expect("Cant find previous_media_revealer in ui file.");
-					previous_media_revealer.set_reveal_child(false);
+                    if !*nav_hovered.lock().unwrap() {
+                        let previous_media_revealer = ui
+                            .get_object::<gtk::Revealer>("previous_media_revealer")
+                            .expect("Cant find previous_media_revealer in ui file.");
+                        previous_media_revealer.set_reveal_child(false);
 
-					let next_media_revealer = ui
-						.get_object::<gtk::Revealer>("next_media_revealer")
-						.expect("Cant find next_media_revealer in ui file.");
-					next_media_revealer.set_reveal_child(false);
-				}
+                        let next_media_revealer = ui
+                            .get_object::<gtk::Revealer>("next_media_revealer")
+                            .expect("Cant find next_media_revealer in ui file.");
+                        next_media_revealer.set_reveal_child(false);
+                    }
 
-				*(source_id.lock().unwrap()) = None;
-				gtk::Continue(false)
-			}),
+                    *(source_id.lock().unwrap()) = None;
+                    gtk::Continue(false)
+                }),
             );
 
             *(source_id.lock().unwrap()) = Some(sid);
@@ -809,7 +811,7 @@ fn save_file_as(main_window: &gtk::Window, src: String, name: String) {
         Some(main_window),
         gtk::FileChooserAction::Save,
         Some(i18n("_Save").as_str()),
-        Some(i18n("_Cancel").as_str())
+        Some(i18n("_Cancel").as_str()),
     );
 
     file_chooser.set_current_folder(dirs::download_dir().unwrap_or_default());
