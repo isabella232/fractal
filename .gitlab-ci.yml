@@ -1,4 +1,5 @@
 stages:
+  - check
   - test
   - review
   - deploy
@@ -19,6 +20,13 @@ variables:
           - target_docs/
           - target_test/
 
+check:
+    image: "registry.gitlab.com/alatiera/rustfmt-oci-image/rustfmt:nightly"
+    stage: "check"
+    script:
+        - rustc -Vv && cargo -Vv
+        - cargo +nightly --version
+        - cargo +nightly fmt --all -- --check
 
 flatpak:
     image: "registry.gitlab.gnome.org/gnome/gnome-runtime-images/rust_bundle:master"
