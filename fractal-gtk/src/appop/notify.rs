@@ -52,10 +52,13 @@ impl AppOp {
 
         let notify_msg = match self.rooms.get(&m.room) {
             None => m.room.clone(),
-            Some(ref r) => match r.direct {
-                true => i18n("{name} (direct message)"),
-                false => format!("{{name}} ({})", r.name.clone().unwrap_or_default()),
-            },
+            Some(ref r) => {
+                if r.direct {
+                    i18n("{name} (direct message)")
+                } else {
+                    format!("{{name}} ({})", r.name.clone().unwrap_or_default())
+                }
+            }
         };
 
         gtk::timeout_add(50, move || match rx.try_recv() {

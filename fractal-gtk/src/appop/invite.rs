@@ -213,15 +213,14 @@ impl AppOp {
 
     pub fn accept_inv(&mut self, accept: bool) {
         if let Some(ref rid) = self.invitation_roomid {
-            match accept {
-                true => self
-                    .backend
+            if accept {
+                self.backend
                     .send(BKCommand::AcceptInv(rid.clone()))
-                    .unwrap(),
-                false => self
-                    .backend
+                    .unwrap();
+            } else {
+                self.backend
                     .send(BKCommand::RejectInv(rid.clone()))
-                    .unwrap(),
+                    .unwrap();
             }
             self.internal
                 .send(InternalCommand::RemoveInv(rid.clone()))

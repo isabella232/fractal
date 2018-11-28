@@ -38,9 +38,10 @@ impl AppOp {
                 return x.name.cmp(&y.name);
             }
 
-            match x.purchased {
-                true => Ordering::Less,
-                false => Ordering::Greater,
+            if x.purchased {
+                Ordering::Less
+            } else {
+                Ordering::Greater
             }
         });
         self.stickers_loading(false);
@@ -108,9 +109,10 @@ impl AppOp {
             .get_object::<gtk::Stack>("stickers_stack")
             .expect("Can't find stickers_stack in ui file.");
 
-        match loading {
-            true => stack.set_visible_child_name("loading"),
-            false => stack.set_visible_child_name("view"),
+        if loading {
+            stack.set_visible_child_name("loading")
+        } else {
+            stack.set_visible_child_name("view")
         };
     }
 

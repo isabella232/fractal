@@ -270,9 +270,10 @@ impl Image {
         if self.path.starts_with("mxc:") {
             // asyn load
             let (tx, rx): (Sender<String>, Receiver<String>) = channel();
-            let command = match self.thumb {
-                false => BKCommand::GetMediaAsync(self.path.to_string(), tx),
-                true => BKCommand::GetThumbAsync(self.path.to_string(), tx),
+            let command = if self.thumb {
+                BKCommand::GetThumbAsync(self.path.to_string(), tx)
+            } else {
+                BKCommand::GetMediaAsync(self.path.to_string(), tx)
             };
             self.backend.send(command).unwrap();
             let local_path = self.local_path.clone();

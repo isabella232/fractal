@@ -610,10 +610,7 @@ pub fn add_to_fav(bk: &Backend, roomid: String, tofav: bool) -> Result<(), Error
     });
 
     let tx = bk.tx.clone();
-    let method = match tofav {
-        true => "put",
-        false => "delete",
-    };
+    let method = if tofav { "put" } else { "delete" };
     query!(
         method,
         &url,

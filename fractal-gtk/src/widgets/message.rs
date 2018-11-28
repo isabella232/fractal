@@ -601,9 +601,10 @@ fn highlight_username(
     input: String,
 ) -> Option<()> {
     fn contains((start, end): (i32, i32), item: i32) -> bool {
-        match start <= end {
-            true => start <= item && end > item,
-            false => start <= item || end > item,
+        if start <= end {
+            start <= item && end > item
+        } else {
+            start <= item || end > item
         }
     }
 

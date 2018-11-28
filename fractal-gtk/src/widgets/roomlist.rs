@@ -99,22 +99,19 @@ impl RoomListGroup {
         let title_eb = gtk::EventBox::new();
 
         title_eb.connect_button_press_event(clone!(list, arrow, rev, expanded => move |_, _| {
-            match *expanded.lock().unwrap() {
-                true => {
-                    arrow.set_from_icon_name("pan-end-symbolic", 2);
-                    rev.set_reveal_child(false);
-                    if let Some(style) = list.get_style_context() {
-                        style.add_class("collapsed");
-                    }
+            if *expanded.lock().unwrap() {
+                arrow.set_from_icon_name("pan-end-symbolic", 2);
+                rev.set_reveal_child(false);
+                if let Some(style) = list.get_style_context() {
+                    style.add_class("collapsed");
                 }
-                false => {
-                    arrow.set_from_icon_name("pan-down-symbolic", 2);
-                    rev.set_reveal_child(true);
-                    if let Some(style) = list.get_style_context() {
-                        style.remove_class("collapsed");
-                    }
+            } else {
+                arrow.set_from_icon_name("pan-down-symbolic", 2);
+                rev.set_reveal_child(true);
+                if let Some(style) = list.get_style_context() {
+                    style.remove_class("collapsed");
                 }
-            };
+            }
             let exp = !(*expanded.lock().unwrap());
             *expanded.lock().unwrap() = exp;
             glib::signal::Inhibit(true)

@@ -286,9 +286,10 @@ impl AppOp {
         let n = name.get_text().unwrap_or(String::from(""));
 
         // Since the switcher
-        let p = match private.get_active() {
-            true => backend::RoomType::Private,
-            false => backend::RoomType::Public,
+        let p = if private.get_active() {
+            backend::RoomType::Private
+        } else {
+            backend::RoomType::Public
         };
 
         let internal_id: String = thread_rng().sample_iter(&Alphanumeric).take(10).collect();

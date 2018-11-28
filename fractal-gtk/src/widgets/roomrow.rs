@@ -43,9 +43,10 @@ impl RoomRow {
 
         let n = room.notifications;
         let h = room.highlight;
-        let ntext = match room.inv {
-            true => String::from("•"),
-            false => format!("{}", n),
+        let ntext = if room.inv {
+            String::from("•")
+        } else {
+            format!("{}", n)
         };
         let notifications = gtk::Label::new(&ntext[..]);
         if let Some(style) = notifications.get_style_context() {
@@ -101,9 +102,10 @@ impl RoomRow {
 
     pub fn set_bold(&self, bold: bool) {
         if let Some(style) = self.text.get_style_context() {
-            match bold {
-                false => style.remove_class("notify-bold"),
-                true => style.add_class("notify-bold"),
+            if bold {
+                style.add_class("notify-bold");
+            } else {
+                style.remove_class("notify-bold");
             }
         }
     }

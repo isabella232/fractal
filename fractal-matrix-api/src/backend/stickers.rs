@@ -72,10 +72,7 @@ pub fn get_sticker_widget_id(bk: &Backend, then: BKCommand) -> Result<(), Error>
                     id = i.to_string();
                 }
 
-                let widget_id = match id.is_empty() {
-                    true => None,
-                    false => Some(id),
-                };
+                let widget_id = if id.is_empty() { None } else { Some(id) };
                 d.lock().unwrap().sticker_widget = widget_id;
             }
             Err(Error::MatrixError(js)) => {
