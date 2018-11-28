@@ -55,7 +55,9 @@ impl Default for SVEntry {
         */
 
         let entry_box = gtk::Box::new(gtk::Orientation::Vertical, 0);
-        entry_box.get_style_context().map(|c| c.add_class("message-input"));
+        entry_box
+            .get_style_context()
+            .map(|c| c.add_class("message-input"));
 
         let scroll = gtk::ScrolledWindow::new(None, None);
 

@@ -1,15 +1,15 @@
-use globals;
-use std::{thread, time};
-use error::Error;
-use util::json_q;
-use util::get_rooms_from_json;
-use util::get_rooms_timeline_from_json;
-use util::get_rooms_notifies_from_json;
-use util::parse_sync_events;
-use util::parse_m_direct;
 use backend::types::BKResponse;
 use backend::types::Backend;
+use error::Error;
+use globals;
+use std::{thread, time};
 use types::Room;
+use util::get_rooms_from_json;
+use util::get_rooms_notifies_from_json;
+use util::get_rooms_timeline_from_json;
+use util::json_q;
+use util::parse_m_direct;
+use util::parse_sync_events;
 
 pub fn sync(bk: &Backend, new_since: Option<String>, initial: bool) -> Result<(), Error> {
     let tk = bk.data.lock().unwrap().access_token.clone();
@@ -83,9 +83,10 @@ pub fn sync(bk: &Backend, new_since: Option<String>, initial: bool) -> Result<()
                     match get_rooms_notifies_from_json(&r) {
                         Ok(notifies) => {
                             for (r, n, h) in notifies {
-                                tx.send(BKResponse::RoomNotifications(r.clone(), n, h)).unwrap();
+                                tx.send(BKResponse::RoomNotifications(r.clone(), n, h))
+                                    .unwrap();
                             }
-                        },
+                        }
                         Err(_) => {}
                     };
                     // Other events
@@ -95,15 +96,20 @@ pub fn sync(bk: &Backend, new_since: Option<String>, initial: bool) -> Result<()
                             for ev in events {
                                 match ev.stype.as_ref() {
                                     "m.room.name" => {
-                                        let name = String::from(ev.content["name"].as_str().unwrap_or(""));
-                                        tx.send(BKResponse::RoomName(ev.room.clone(), name)).unwrap();
+                                        let name =
+                                            String::from(ev.content["name"].as_str().unwrap_or(""));
+                                        tx.send(BKResponse::RoomName(ev.room.clone(), name))
+                                            .unwrap();
                                     }
                                     "m.room.topic" => {
-                                        let t = String::from(ev.content["topic"].as_str().unwrap_or(""));
+                                        let t = String::from(
+                                            ev.content["topic"].as_str().unwrap_or(""),
+                                        );
                                         tx.send(BKResponse::RoomTopic(ev.room.clone(), t)).unwrap();
                                     }
                                     "m.room.avatar" => {
-                                        tx.send(BKResponse::NewRoomAvatar(ev.room.clone())).unwrap();
+                                        tx.send(BKResponse::NewRoomAvatar(ev.room.clone()))
+                                            .unwrap();
                                     }
                                     "m.room.member" => {
                                         tx.send(BKResponse::RoomMemberEvent(ev)).unwrap();
@@ -119,7 +125,7 @@ pub fn sync(bk: &Backend, new_since: Option<String>, initial: bool) -> Result<()
                         }
                     };
                 } else {
-                   data.lock().unwrap().m_direct = parse_m_direct(&r);
+                    data.lock().unwrap().m_direct = parse_m_direct(&r);
 
                     let rooms = match get_rooms_from_json(&r, &userid, &baseu) {
                         Ok(rs) => rs,
@@ -145,7 +151,7 @@ pub fn sync(bk: &Backend, new_since: Option<String>, initial: bool) -> Result<()
                 } else {
                     None
                 }
-            },
+            }
             Err(err) => {
                 // we wait if there's an error to avoid 100% CPU
                 error!("Sync Error, waiting 10 seconds to respond for the next sync");

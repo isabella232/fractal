@@ -6,11 +6,15 @@ use app::App;
 impl App {
     #[allow(dead_code)]
     pub fn connect_stickers(&self) {
-        let popover_btn: gtk::MenuButton = self.ui.builder
+        let popover_btn: gtk::MenuButton = self
+            .ui
+            .builder
             .get_object("stickers_button")
             .expect("Couldn't find stickers_button in ui file.");
 
-        let popover: gtk::Popover = self.ui.builder
+        let popover: gtk::Popover = self
+            .ui
+            .builder
             .get_object("stickers_popover")
             .expect("Couldn't find stickers_popover in ui file.");
 

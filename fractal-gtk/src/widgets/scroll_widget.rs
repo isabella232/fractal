@@ -150,7 +150,8 @@ impl ScrollWidget {
                         adj.set_value(adj.get_value() + diff);
                     }
                     Some(())
-                }().is_some(),
+                }()
+                .is_some(),
                 "Upper notify callback couldn't acquire a strong pointer"
             );
         });
@@ -180,7 +181,8 @@ impl ScrollWidget {
                         autoscroll.set(false);
                     }
                     Some(())
-                }().is_some(),
+                }()
+                .is_some(),
                 "Value changed callback couldn't acquire a strong pointer"
             );
         });
@@ -198,7 +200,8 @@ impl ScrollWidget {
                     autoscroll.set(true);
                     scroll_down(&s, true);
                     Some(())
-                }().is_some(),
+                }()
+                .is_some(),
                 "Scroll down button onclick callback couldn't acquire a strong pointer"
             );
         });

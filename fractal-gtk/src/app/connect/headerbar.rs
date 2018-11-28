@@ -8,7 +8,9 @@ use app::App;
 impl App {
     pub fn connect_headerbars(&self) {
         let op = self.op.clone();
-        let btn = self.ui.builder
+        let btn = self
+            .ui
+            .builder
             .get_object::<gtk::Button>("back_button")
             .expect("Can't find back_button in ui file.");
         btn.connect_clicked(move |_| {
@@ -16,17 +18,22 @@ impl App {
         });
 
         if let Some(set) = gtk::Settings::get_default() {
-            let left_header: gtk::HeaderBar = self.ui.builder
+            let left_header: gtk::HeaderBar = self
+                .ui
+                .builder
                 .get_object("left-header")
                 .expect("Can't find left-header in ui file.");
 
-            let right_header: gtk::HeaderBar = self.ui.builder
+            let right_header: gtk::HeaderBar = self
+                .ui
+                .builder
                 .get_object("room_header_bar")
                 .expect("Can't find room_header_bar in ui file.");
 
             if let Some(decor) = set.get_property_gtk_decoration_layout() {
                 let decor = decor.to_string();
-                let decor_split: Vec<String> = decor.splitn(2,':').map(|s| s.to_string()).collect();
+                let decor_split: Vec<String> =
+                    decor.splitn(2, ':').map(|s| s.to_string()).collect();
                 // Check if the close button is to the right; If not,
                 // change the headerbar controls
                 if !decor_split[1].contains("close") {
@@ -50,8 +57,6 @@ impl App {
                     }
                 };
             }));
-
-
         };
     }
 }

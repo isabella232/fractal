@@ -3,62 +3,96 @@ use gtk::prelude::*;
 
 use glib;
 
-use i18n::i18n;
 use app::App;
+use i18n::i18n;
 
 impl App {
     pub fn connect_account_settings(&self) {
         let op = &self.op;
         let builder = &self.ui.builder;
-        let back = self.ui.builder
+        let back = self
+            .ui
+            .builder
             .get_object::<gtk::Button>("account_settings_back_button")
             .expect("Can't find account_settings_back_button in ui file.");
-        let cancel_password = self.ui.builder
+        let cancel_password = self
+            .ui
+            .builder
             .get_object::<gtk::Button>("password-dialog-cancel")
             .expect("Can't find password-dialog-cancel in ui file.");
-        let confirm_password = self.ui.builder
+        let confirm_password = self
+            .ui
+            .builder
             .get_object::<gtk::Button>("password-dialog-apply")
             .expect("Can't find password-dialog-apply in ui file.");
-        let password_dialog = self.ui.builder
+        let password_dialog = self
+            .ui
+            .builder
             .get_object::<gtk::Dialog>("password_dialog")
             .expect("Can't find password_dialog in ui file.");
-        let advanced_toggle = self.ui.builder
+        let advanced_toggle = self
+            .ui
+            .builder
             .get_object::<gtk::EventBox>("account_settings_advanced_toggle")
             .expect("Can't find account_settings_advanced_toggle in ui file.");
-        let delete_toggle = self.ui.builder
+        let delete_toggle = self
+            .ui
+            .builder
             .get_object::<gtk::EventBox>("account_settings_delete_toggle")
             .expect("Can't find account_settings_delete_toggle in ui file.");
-        let delete_revealer = self.ui.builder
+        let delete_revealer = self
+            .ui
+            .builder
             .get_object::<gtk::Revealer>("account_settings_delete")
             .expect("Can't find account_settings_advanced_delete in ui file.");
-        let advanced_revealer = self.ui.builder
+        let advanced_revealer = self
+            .ui
+            .builder
             .get_object::<gtk::Revealer>("account_settings_advanced")
             .expect("Can't find account_settings_advanced_advanced in ui file.");
-        let avatar_btn = self.ui.builder
+        let avatar_btn = self
+            .ui
+            .builder
             .get_object::<gtk::Button>("account_settings_avatar_button")
             .expect("Can't find account_settings_avatar_button in ui file.");
-        let name_entry = self.ui.builder
+        let name_entry = self
+            .ui
+            .builder
             .get_object::<gtk::Entry>("account_settings_name")
             .expect("Can't find account_settings_name in ui file.");
-        let name_btn = self.ui.builder
+        let name_btn = self
+            .ui
+            .builder
             .get_object::<gtk::Button>("account_settings_name_button")
             .expect("Can't find account_settings_name_button in ui file.");
-        let password_btn = self.ui.builder
+        let password_btn = self
+            .ui
+            .builder
             .get_object::<gtk::Button>("account_settings_password")
             .expect("Can't find account_settings_password in ui file.");
-        let old_password = self.ui.builder
+        let old_password = self
+            .ui
+            .builder
             .get_object::<gtk::Entry>("password-dialog-old-entry")
             .expect("Can't find password-dialog-old-entry in ui file.");
-        let new_password = self.ui.builder
+        let new_password = self
+            .ui
+            .builder
             .get_object::<gtk::Entry>("password-dialog-entry")
             .expect("Can't find password-dialog-entry in ui file.");
-        let verify_password = self.ui.builder
+        let verify_password = self
+            .ui
+            .builder
             .get_object::<gtk::Entry>("password-dialog-verify-entry")
             .expect("Can't find password-dialog-verify-entry in ui file.");
-        let destruction_entry = self.ui.builder
+        let destruction_entry = self
+            .ui
+            .builder
             .get_object::<gtk::Entry>("account_settings_delete_password_confirm")
             .expect("Can't find account_settings_delete_password_confirm in ui file.");
-        let destruction_btn = self.ui.builder
+        let destruction_btn = self
+            .ui
+            .builder
             .get_object::<gtk::Button>("account_settings_delete_btn")
             .expect("Can't find account_settings_delete_btn in ui file.");
 
@@ -124,18 +158,18 @@ impl App {
         }));
 
         /*
-           fn update_password_strength(builder: &gtk::Builder) {
-           let bar = builder
-           .get_object::<gtk::LevelBar>("password-dialog-strength-indicator")
-           .expect("Can't find password-dialog-strength-indicator in ui file.");
-           let label = builder
-           .get_object::<gtk::Label>("password-dialog-hint")
-           .expect("Can't find password-dialog-hint in ui file.");
-           let strength_level = 10f64;
-           bar.set_value(strength_level);
-           label.set_label("text");
-           }
-           */
+        fn update_password_strength(builder: &gtk::Builder) {
+        let bar = builder
+        .get_object::<gtk::LevelBar>("password-dialog-strength-indicator")
+        .expect("Can't find password-dialog-strength-indicator in ui file.");
+        let label = builder
+        .get_object::<gtk::Label>("password-dialog-hint")
+        .expect("Can't find password-dialog-hint in ui file.");
+        let strength_level = 10f64;
+        bar.set_value(strength_level);
+        label.set_label("text");
+        }
+        */
 
         fn validate_password_input(builder: &gtk::Builder) {
             let hint = builder
@@ -170,8 +204,7 @@ impl App {
             }
             if matching {
                 hint.hide();
-            }
-            else {
+            } else {
                 hint.show();
             }
 

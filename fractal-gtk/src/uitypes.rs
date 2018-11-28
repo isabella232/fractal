@@ -22,7 +22,7 @@ pub struct MessageContent {
     pub highlights: Vec<String>,
     pub redactable: bool,
     pub last_viewed: bool,
-    pub widget: Option<widgets::MessageBox>
+    pub widget: Option<widgets::MessageBox>,
 }
 
 /* To-Do: this should be moved to a file collecting all structs used in the UI */

@@ -1,6 +1,6 @@
 use gio;
-use gio::SimpleActionExt;
 use gio::ActionMapExt;
+use gio::SimpleActionExt;
 
 use appop::AppState;
 
@@ -47,16 +47,26 @@ impl App {
         quit.connect_activate(clone!(op => move |_, _| op.lock().unwrap().quit() ));
         about.connect_activate(clone!(op => move |_, _| op.lock().unwrap().about_dialog() ));
 
-        settings.connect_activate(move |_, _| { info!("SETTINGS"); });
+        settings.connect_activate(move |_, _| {
+            info!("SETTINGS");
+        });
         settings.set_enabled(false);
 
-        account.connect_activate(clone!(op => move |_, _| op.lock().unwrap().show_account_settings_dialog()) );
+        account.connect_activate(
+            clone!(op => move |_, _| op.lock().unwrap().show_account_settings_dialog()),
+        );
 
-        dir.connect_activate(clone!(op => move |_, _| op.lock().unwrap().set_state(AppState::Directory) ));
+        dir.connect_activate(
+            clone!(op => move |_, _| op.lock().unwrap().set_state(AppState::Directory) ),
+        );
         logout.connect_activate(clone!(op => move |_, _| op.lock().unwrap().logout() ));
         room.connect_activate(clone!(op => move |_, _| op.lock().unwrap().show_room_settings() ));
-        inv.connect_activate(clone!(op => move |_, _| op.lock().unwrap().show_invite_user_dialog() ));
-        chat.connect_activate(clone!(op => move |_, _| op.lock().unwrap().show_direct_chat_dialog() ));
+        inv.connect_activate(
+            clone!(op => move |_, _| op.lock().unwrap().show_invite_user_dialog() ),
+        );
+        chat.connect_activate(
+            clone!(op => move |_, _| op.lock().unwrap().show_direct_chat_dialog() ),
+        );
         leave.connect_activate(clone!(op => move |_, _| op.lock().unwrap().leave_active_room() ));
         newr.connect_activate(clone!(op => move |_, _| op.lock().unwrap().new_room_dialog() ));
         joinr.connect_activate(clone!(op => move |_, _| op.lock().unwrap().join_to_room_dialog() ));

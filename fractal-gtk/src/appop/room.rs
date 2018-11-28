@@ -3,23 +3,23 @@ use i18n::{i18n, i18n_k};
 use gtk;
 use gtk::prelude::*;
 
+use app::InternalCommand;
 use appop::AppOp;
 use appop::AppState;
-use app::InternalCommand;
 
 use backend;
 use backend::BKCommand;
 
-use globals;
 use cache;
+use globals;
 use widgets;
 
 use types::Room;
 
 use util::markup_text;
 
-use rand::{thread_rng, Rng};
 use rand::distributions::Alphanumeric;
+use rand::{thread_rng, Rng};
 
 pub struct Force(pub bool);
 
@@ -36,13 +36,18 @@ impl AppOp {
 
         // uploading each room avatar
         for r in rooms.iter() {
-            self.backend.send(BKCommand::GetRoomAvatar(r.id.clone())).unwrap();
+            self.backend
+                .send(BKCommand::GetRoomAvatar(r.id.clone()))
+                .unwrap();
         }
     }
 
     pub fn new_rooms(&mut self, rooms: Vec<Room>) {
         // ignoring existing rooms
-        let rs: Vec<&Room> = rooms.iter().filter(|x| !self.rooms.contains_key(&x.id) && !x.left).collect();
+        let rs: Vec<&Room> = rooms
+            .iter()
+            .filter(|x| !self.rooms.contains_key(&x.id) && !x.left)
+            .collect();
 
         for r in rs {
             self.rooms.insert(r.id.clone(), r.clone());
@@ -68,7 +73,9 @@ impl AppOp {
     }
 
     pub fn set_rooms(&mut self, rooms: &Vec<Room>, def: Option<Room>) {
-        let container: gtk::Box = self.ui.builder
+        let container: gtk::Box = self
+            .ui
+            .builder
             .get_object("room_container")
             .expect("Couldn't find room_container in ui file.");
 
@@ -83,7 +90,9 @@ impl AppOp {
             if let None = r.name {
                 // This will force the room name calculation for 1:1 rooms and other rooms with no
                 // name
-                self.backend.send(BKCommand::GetRoomMembers(r.id.clone())).unwrap();
+                self.backend
+                    .send(BKCommand::GetRoomMembers(r.id.clone()))
+                    .unwrap();
             }
 
             self.rooms.insert(r.id.clone(), r.clone());
@@ -100,7 +109,8 @@ impl AppOp {
         });
         let bk = self.backend.clone();
         self.roomlist.connect_fav(move |room, tofav| {
-            bk.send(BKCommand::AddToFav(room.id.clone(), tofav)).unwrap();
+            bk.send(BKCommand::AddToFav(room.id.clone(), tofav))
+                .unwrap();
         });
 
         let mut godef = def;
@@ -157,7 +167,8 @@ impl AppOp {
                         let iter = buffer.get_iter_at_mark(&mark);
                         let msg_position = iter.get_offset();
 
-                        self.unsent_messages.insert(active_room_id, (msg, msg_position));
+                        self.unsent_messages
+                            .insert(active_room_id, (msg, msg_position));
                     }
                 } else {
                     self.unsent_messages.remove(&active_room_id);
@@ -196,7 +207,9 @@ impl AppOp {
             self.internal.send(InternalCommand::LoadMore).unwrap();
         }
 
-        self.internal.send(InternalCommand::AppendTmpMessages).unwrap();
+        self.internal
+            .send(InternalCommand::AppendTmpMessages)
+            .unwrap();
 
         if let Some(msg) = room.messages.iter().last() {
             self.mark_as_read(msg, Force(false));
@@ -207,7 +220,9 @@ impl AppOp {
 
         self.set_room_topic_label(room.topic.clone());
 
-        let name_label = self.ui.builder
+        let name_label = self
+            .ui
+            .builder
             .get_object::<gtk::Label>("room_name")
             .expect("Can't find room_name in ui file.");
 
@@ -237,22 +252,34 @@ impl AppOp {
     }
 
     pub fn leave_active_room(&self) {
-        let dialog = self.ui.builder
+        let dialog = self
+            .ui
+            .builder
             .get_object::<gtk::MessageDialog>("leave_room_dialog")
             .expect("Can't find leave_room_dialog in ui file.");
 
-        if let Some(r) = self.rooms.get(&self.active_room.clone().unwrap_or_default()) {
-            let text = i18n_k("Leave {room_name}?", &[("room_name", &r.name.clone().unwrap_or_default())]);
+        if let Some(r) = self
+            .rooms
+            .get(&self.active_room.clone().unwrap_or_default())
+        {
+            let text = i18n_k(
+                "Leave {room_name}?",
+                &[("room_name", &r.name.clone().unwrap_or_default())],
+            );
             dialog.set_property_text(Some(&text));
             dialog.present();
         }
     }
 
     pub fn create_new_room(&mut self) {
-        let name = self.ui.builder
+        let name = self
+            .ui
+            .builder
             .get_object::<gtk::Entry>("new_room_name")
             .expect("Can't find new_room_name in ui file.");
-        let private = self.ui.builder
+        let private = self
+            .ui
+            .builder
             .get_object::<gtk::ToggleButton>("private_visibility_button")
             .expect("Can't find private_visibility_button in ui file.");
 
@@ -265,7 +292,9 @@ impl AppOp {
         };
 
         let internal_id: String = thread_rng().sample_iter(&Alphanumeric).take(10).collect();
-        self.backend.send(BKCommand::NewRoom(n.clone(), p, internal_id.clone())).unwrap();
+        self.backend
+            .send(BKCommand::NewRoom(n.clone(), p, internal_id.clone()))
+            .unwrap();
 
         let fakeroom = Room::new(internal_id.clone(), Some(n));
         self.new_room(fakeroom, None);
@@ -275,10 +304,14 @@ impl AppOp {
     }
 
     pub fn room_panel(&self, t: RoomPanel) {
-        let s = self.ui.builder
+        let s = self
+            .ui
+            .builder
             .get_object::<gtk::Stack>("room_view_stack")
             .expect("Can't find room_view_stack in ui file.");
-        let headerbar = self.ui.builder
+        let headerbar = self
+            .ui
+            .builder
             .get_object::<gtk::HeaderBar>("room_header_bar")
             .expect("Can't find room_header_bar in ui file.");
 
@@ -295,7 +328,7 @@ impl AppOp {
                     ch.hide();
                 }
                 self.roomlist.set_selected(None);
-            },
+            }
             "room_view" => {
                 for ch in headerbar.get_children().iter() {
                     ch.show();
@@ -304,8 +337,10 @@ impl AppOp {
                 self.ui.sventry.view.grab_focus();
 
                 let active_room_id = self.active_room.clone().unwrap_or_default();
-                let msg = self.unsent_messages
-                    .get(&active_room_id).cloned()
+                let msg = self
+                    .unsent_messages
+                    .get(&active_room_id)
+                    .cloned()
                     .unwrap_or((String::new(), 0));
                 if let Some(buffer) = self.ui.sventry.view.get_buffer() {
                     buffer.set_text(&msg.0);
@@ -313,7 +348,7 @@ impl AppOp {
                     let iter = buffer.get_iter_at_offset(msg.1);
                     buffer.place_cursor(&iter);
                 }
-            },
+            }
             _ => {
                 for ch in headerbar.get_children().iter() {
                     ch.show();
@@ -339,8 +374,12 @@ impl AppOp {
         if let Some(r) = self.rooms.get_mut(&roomid) {
             let k: &str = &key;
             match k {
-                "m.room.name" => { r.name = value.clone(); }
-                "m.room.topic" => { r.topic = value.clone(); }
+                "m.room.name" => {
+                    r.name = value.clone();
+                }
+                "m.room.topic" => {
+                    r.topic = value.clone();
+                }
                 _ => {}
             };
         }
@@ -353,7 +392,8 @@ impl AppOp {
     pub fn set_room_avatar(&mut self, roomid: String, avatar: Option<String>) {
         if let Some(r) = self.rooms.get_mut(&roomid) {
             r.avatar = avatar.clone();
-            self.roomlist.set_room_avatar(roomid.clone(), r.avatar.clone());
+            self.roomlist
+                .set_room_avatar(roomid.clone(), r.avatar.clone());
         }
 
         if roomid == self.active_room.clone().unwrap_or_default() {
@@ -372,7 +412,9 @@ impl AppOp {
         let k: &str = &key;
         match k {
             "m.room.name" => {
-                let name_label = self.ui.builder
+                let name_label = self
+                    .ui
+                    .builder
                     .get_object::<gtk::Label>("room_name")
                     .expect("Can't find room_name in ui file.");
 
@@ -385,18 +427,21 @@ impl AppOp {
         };
     }
 
-    pub fn set_current_room_avatar(&self, _avatar: Option<String>, _size: i32) {
-    }
+    pub fn set_current_room_avatar(&self, _avatar: Option<String>, _size: i32) {}
 
     pub fn filter_rooms(&self, term: Option<String>) {
         self.roomlist.filter_rooms(term);
     }
 
     pub fn new_room_dialog(&self) {
-        let dialog = self.ui.builder
+        let dialog = self
+            .ui
+            .builder
             .get_object::<gtk::Dialog>("new_room_dialog")
             .expect("Can't find new_room_dialog in ui file.");
-        let btn = self.ui.builder
+        let btn = self
+            .ui
+            .builder
             .get_object::<gtk::Button>("new_room_button")
             .expect("Can't find new_room_button in ui file.");
         btn.set_sensitive(false);
@@ -404,17 +449,22 @@ impl AppOp {
     }
 
     pub fn join_to_room_dialog(&mut self) {
-        let dialog = self.ui.builder
+        let dialog = self
+            .ui
+            .builder
             .get_object::<gtk::Dialog>("join_room_dialog")
             .expect("Can't find join_room_dialog in ui file.");
-        self.ui.builder
+        self.ui
+            .builder
             .get_object::<gtk::Button>("join_room_button")
             .map(|btn| btn.set_sensitive(false));
         dialog.present();
     }
 
     pub fn join_to_room(&mut self) {
-        let name = self.ui.builder
+        let name = self
+            .ui
+            .builder
             .get_object::<gtk::Entry>("join_room_name")
             .expect("Can't find join_room_name in ui file.");
 
@@ -501,7 +551,8 @@ impl AppOp {
         }
 
         if roomid == self.active_room.clone().unwrap_or_default() {
-            self.ui.builder
+            self.ui
+                .builder
                 .get_object::<gtk::Label>("room_name")
                 .expect("Can't find room_name in ui file.")
                 .set_text(&name.clone().unwrap_or_default());
@@ -526,10 +577,14 @@ impl AppOp {
     }
 
     pub fn set_room_topic_label(&self, topic: Option<String>) {
-        let t = self.ui.builder
+        let t = self
+            .ui
+            .builder
             .get_object::<gtk::Label>("room_topic")
             .expect("Can't find room_topic in ui file.");
-        let n = self.ui.builder
+        let n = self
+            .ui
+            .builder
             .get_object::<gtk::Label>("room_name")
             .expect("Can't find room_name in ui file.");
 
@@ -538,12 +593,12 @@ impl AppOp {
                 t.set_tooltip_text("");
                 n.set_tooltip_text("");
                 t.hide();
-            },
+            }
             Some(ref topic) if topic.is_empty() => {
                 t.set_tooltip_text("");
                 n.set_tooltip_text("");
                 t.hide();
-            },
+            }
             Some(ref topic) => {
                 n.set_tooltip_text(&topic[..]);
                 t.set_markup(&markup_text(&topic.split('\n').next().unwrap_or_default()));

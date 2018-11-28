@@ -1,26 +1,29 @@
 use gtk;
 use gtk::prelude::*;
 use notify_rust::Notification;
-use std::sync::mpsc::TryRecvError;
-use std::thread;
-use std::sync::mpsc::{Sender, Receiver};
 use std::sync::mpsc::channel;
+use std::sync::mpsc::TryRecvError;
+use std::sync::mpsc::{Receiver, Sender};
+use std::thread;
 
 use i18n::i18n;
 
-use appop::AppOp;
 use app::InternalCommand;
+use appop::AppOp;
 use backend::BKCommand;
 
 use types::Message;
 
-
 impl AppOp {
     pub fn inapp_notify(&self, msg: &str) {
-        let inapp: gtk::Revealer = self.ui.builder
+        let inapp: gtk::Revealer = self
+            .ui
+            .builder
             .get_object("inapp_revealer")
             .expect("Can't find inapp_revealer in ui file.");
-        let label: gtk::Label = self.ui.builder
+        let label: gtk::Label = self
+            .ui
+            .builder
             .get_object("inapp_label")
             .expect("Can't find inapp_label in ui file.");
         label.set_text(msg);
@@ -28,7 +31,9 @@ impl AppOp {
     }
 
     pub fn hide_inapp_notify(&self) {
-        let inapp: gtk::Revealer = self.ui.builder
+        let inapp: gtk::Revealer = self
+            .ui
+            .builder
             .get_object("inapp_revealer")
             .expect("Can't find inapp_revealer in ui file.");
         inapp.set_reveal_child(false);
@@ -39,18 +44,18 @@ impl AppOp {
         body.truncate(80);
 
         let (tx, rx): (Sender<(String, String)>, Receiver<(String, String)>) = channel();
-        self.backend.send(BKCommand::GetUserInfoAsync(msg.sender.clone(), Some(tx))).unwrap();
+        self.backend
+            .send(BKCommand::GetUserInfoAsync(msg.sender.clone(), Some(tx)))
+            .unwrap();
         let bk = self.internal.clone();
         let m = msg.clone();
 
         let notify_msg = match self.rooms.get(&m.room) {
             None => m.room.clone(),
-            Some(ref r) => {
-                match r.direct {
-                    true => i18n("{name} (direct message)"),
-                    false => format!("{{name}} ({})", r.name.clone().unwrap_or_default()),
-                }
-            }
+            Some(ref r) => match r.direct {
+                true => i18n("{name} (direct message)"),
+                false => format!("{{name}} ({})", r.name.clone().unwrap_or_default()),
+            },
         };
 
         gtk::timeout_add(50, move || match rx.try_recv() {
@@ -71,12 +76,12 @@ impl AppOp {
 
                     if let Ok(n) = notification.show() {
                         #[cfg(all(unix, not(target_os = "macos")))]
-                        n.wait_for_action({|action|
-                            match action {
+                        n.wait_for_action({
+                            |action| match action {
                                 "default" => {
                                     bk.send(InternalCommand::NotifyClicked(m)).unwrap();
-                                },
-                                _ => ()
+                                }
+                                _ => (),
                             }
                         });
                     }
@@ -88,16 +93,22 @@ impl AppOp {
     }
 
     pub fn show_error(&self, msg: String) {
-        let window: gtk::Window = self.ui.builder
+        let window: gtk::Window = self
+            .ui
+            .builder
             .get_object("main_window")
             .expect("Couldn't find main_window in ui file.");
-        let dialog = gtk::MessageDialog::new(Some(&window),
-                                             gtk::DialogFlags::MODAL,
-                                             gtk::MessageType::Warning,
-                                             gtk::ButtonsType::Ok,
-                                             &msg);
+        let dialog = gtk::MessageDialog::new(
+            Some(&window),
+            gtk::DialogFlags::MODAL,
+            gtk::MessageType::Warning,
+            gtk::ButtonsType::Ok,
+            &msg,
+        );
         dialog.show();
-        dialog.connect_response(move |d, _| { d.destroy(); });
+        dialog.connect_response(move |d, _| {
+            d.destroy();
+        });
     }
 
     pub fn notification_cliked(&mut self, msg: Message) {

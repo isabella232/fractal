@@ -1,11 +1,11 @@
-use md5;
 use chrono::prelude::*;
-use std::cmp::Ordering;
-use std::collections::HashMap;
+use chrono::DateTime;
+use chrono::TimeZone;
+use md5;
 use serde_json;
 use serde_json::Value as JsonValue;
-use chrono::TimeZone;
-use chrono::DateTime;
+use std::cmp::Ordering;
+use std::collections::HashMap;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Message {
@@ -87,10 +87,7 @@ impl Message {
     /// other events that we want to show in the message history so we map other event types to our
     /// Message struct, like stickers
     pub fn types() -> [&'static str; 2] {
-        [
-            "m.room.message",
-            "m.sticker",
-        ]
+        ["m.room.message", "m.sticker"]
     }
 
     /// Helper function to use in iterator filter of a matrix.org json response to filter supported
@@ -168,14 +165,14 @@ impl Message {
 
                 msg.url = Some(url);
                 msg.thumb = Some(t);
-            },
+            }
             "m.text" => {
                 // Only m.text messages can be replies for backward compatability
                 // https://matrix.org/docs/spec/client_server/r0.4.0.html#rich-replies
-                msg.in_reply_to =
-                    c["m.relates_to"]["m.in_reply_to"]["event_id"]
-                    .as_str().map(String::from)
-            },
+                msg.in_reply_to = c["m.relates_to"]["m.in_reply_to"]["event_id"]
+                    .as_str()
+                    .map(String::from)
+            }
             _ => {}
         };
 
@@ -204,7 +201,9 @@ impl Message {
     /// * `roomid` - The messages room id
     /// * `events` - An iterator to the json events
     pub fn from_json_events_iter<'a, I>(roomid: String, events: I) -> Vec<Message>
-        where I: Iterator<Item=&'a JsonValue> {
+    where
+        I: Iterator<Item = &'a JsonValue>,
+    {
         let mut ms = vec![];
 
         let evs = events.filter(Message::supported_event);

@@ -1,19 +1,18 @@
-use i18n::i18n;
 use app::App;
+use i18n::i18n;
 
-use appop::RoomPanel;
 use appop::AppState;
+use appop::RoomPanel;
 
-use std::thread;
-use std::sync::mpsc::Receiver;
-use std::process::Command;
 use glib;
+use std::process::Command;
+use std::sync::mpsc::Receiver;
+use std::thread;
 
 use backend::BKResponse;
 use fractal_api::error::Error;
 
 use std::sync::mpsc::RecvError;
-
 
 pub fn backend_loop(rx: Receiver<BKResponse>) {
     thread::spawn(move || {
@@ -32,8 +31,12 @@ pub fn backend_loop(rx: Receiver<BKResponse>) {
             }
 
             match recv {
-                Err(RecvError) => { break; }
-                Ok(BKResponse::ShutDown) => { shutting_down = true; }
+                Err(RecvError) => {
+                    break;
+                }
+                Ok(BKResponse::ShutDown) => {
+                    shutting_down = true;
+                }
                 Ok(BKResponse::Token(uid, tk, dev)) => {
                     APPOP!(bk_login, (uid, tk, dev));
                 }
@@ -58,19 +61,19 @@ pub fn backend_loop(rx: Receiver<BKResponse>) {
                     let secret = Some(secret);
                     APPOP!(get_token_phone, (sid, secret));
                 }
-                Ok(BKResponse:: GetTokenEmailUsed) => {
+                Ok(BKResponse::GetTokenEmailUsed) => {
                     let error = i18n("Email is already in use");
                     APPOP!(show_three_pid_error_dialog, (error));
                 }
-                Ok(BKResponse:: GetTokenPhoneUsed) => {
+                Ok(BKResponse::GetTokenPhoneUsed) => {
                     let error = i18n("Phone number is already in use");
                     APPOP!(show_three_pid_error_dialog, (error));
                 }
-                Ok(BKResponse:: SubmitPhoneToken(sid, secret)) => {
+                Ok(BKResponse::SubmitPhoneToken(sid, secret)) => {
                     let secret = Some(secret);
                     APPOP!(valid_phone_token, (sid, secret));
                 }
-                Ok(BKResponse:: AddThreePID(list)) => {
+                Ok(BKResponse::AddThreePID(list)) => {
                     let l = Some(list);
                     APPOP!(added_three_pid, (l));
                 }
@@ -138,7 +141,7 @@ pub fn backend_loop(rx: Receiver<BKResponse>) {
                 Ok(BKResponse::JoinRoom) => {
                     APPOP!(reload_rooms);
                 }
-                Ok(BKResponse::LeaveRoom) => { }
+                Ok(BKResponse::LeaveRoom) => {}
                 Ok(BKResponse::SetRoomName) => {
                     APPOP!(show_new_room_name);
                 }
@@ -171,9 +174,9 @@ pub fn backend_loop(rx: Receiver<BKResponse>) {
                 }
                 Ok(BKResponse::Media(fname)) => {
                     Command::new("xdg-open")
-                                .arg(&fname)
-                                .spawn()
-                                .expect("failed to execute process");
+                        .arg(&fname)
+                        .spawn()
+                        .expect("failed to execute process");
                 }
                 Ok(BKResponse::AttachedFile(msg)) => {
                     APPOP!(attached_file, (msg));
@@ -197,22 +200,22 @@ pub fn backend_loop(rx: Receiver<BKResponse>) {
                     let error = i18n("Couldn’t delete the account");
                     error!("{:?}", err);
                     APPOP!(show_error_dialog, (error));
-                },
+                }
                 Ok(BKResponse::ChangePasswordError(err)) => {
                     let error = i18n("Couldn’t change the password");
                     error!("{:?}", err);
                     APPOP!(show_password_error_dialog, (error));
-                },
+                }
                 Ok(BKResponse::GetTokenEmailError(err)) => {
                     let error = i18n("Couldn’t add the email address.");
                     error!("{:?}", err);
                     APPOP!(show_three_pid_error_dialog, (error));
-                },
+                }
                 Ok(BKResponse::GetTokenPhoneError(err)) => {
                     let error = i18n("Couldn’t add the phone number.");
                     error!("{:?}", err);
                     APPOP!(show_three_pid_error_dialog, (error));
-                },
+                }
                 Ok(BKResponse::NewRoomError(err, internal_id)) => {
                     error!("{:?}", err);
 
@@ -221,36 +224,34 @@ pub fn backend_loop(rx: Receiver<BKResponse>) {
                     APPOP!(remove_room, (internal_id));
                     APPOP!(show_error, (error));
                     APPOP!(room_panel, (panel));
-                },
+                }
                 Ok(BKResponse::JoinRoomError(err)) => {
                     error!("{:?}", err);
                     let error = format!("{}", i18n("Can’t join the room, try again."));
                     let panel = RoomPanel::NoRoom;
                     APPOP!(show_error, (error));
                     APPOP!(room_panel, (panel));
-                },
+                }
                 Ok(BKResponse::LoginError(_)) => {
                     let error = i18n("Can’t login, try again");
                     let st = AppState::Login;
                     APPOP!(show_error, (error));
                     APPOP!(set_state, (st));
-                },
+                }
                 Ok(BKResponse::AttachFileError(err)) => {
                     error!("attaching {:?}: retrying send", err);
                     APPOP!(retry_send);
                 }
-                Ok(BKResponse::SendMsgError(err)) => {
-                    match err {
-                        Error::SendMsgError(txid) => {
-                            error!("sending {}: retrying send", txid);
-                            APPOP!(retry_send);
-                        },
-                        _ => {
-                            let error = i18n("Error sending message");
-                            APPOP!(show_error, (error));
-                        }
+                Ok(BKResponse::SendMsgError(err)) => match err {
+                    Error::SendMsgError(txid) => {
+                        error!("sending {}: retrying send", txid);
+                        APPOP!(retry_send);
                     }
-                }
+                    _ => {
+                        let error = i18n("Error sending message");
+                        APPOP!(show_error, (error));
+                    }
+                },
                 Ok(BKResponse::SendMsgRedactionError(_)) => {
                     let error = i18n("Error deleting message");
                     APPOP!(show_error, (error));

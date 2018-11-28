@@ -42,7 +42,10 @@ impl StickerGroup {
                 description: img["description"].as_str().unwrap_or_default().to_string(),
                 body: c["body"].as_str().unwrap_or_default().to_string(),
                 url: c["url"].as_str().unwrap_or_default().to_string(),
-                thumbnail: c["info"]["thumbnail_url"].as_str().unwrap_or_default().to_string(),
+                thumbnail: c["info"]["thumbnail_url"]
+                    .as_str()
+                    .unwrap_or_default()
+                    .to_string(),
                 size: (w as i32, h as i32),
             });
         }

@@ -1,13 +1,13 @@
-use pango;
 use gtk;
 use gtk::prelude::*;
+use pango;
 
 use types::Member;
 
 use appop::AppOp;
 
-use globals;
 use cache::download_to_cache;
+use globals;
 use widgets;
 use widgets::AvatarExt;
 
@@ -54,7 +54,11 @@ impl<'a> MemberBox<'a> {
         }
 
         let avatar = widgets::Avatar::avatar_new(Some(globals::USERLIST_ICON_SIZE));
-        let data = avatar.circle(self.member.uid.clone(), Some(alias.clone()), globals::USERLIST_ICON_SIZE);
+        let data = avatar.circle(
+            self.member.uid.clone(),
+            Some(alias.clone()),
+            globals::USERLIST_ICON_SIZE,
+        );
         let member_id = self.member.uid.clone();
         download_to_cache(backend.clone(), member_id.clone(), data.clone());
 
@@ -104,11 +108,12 @@ impl<'a> MemberBox<'a> {
             style.add_class("msg-highlighted");
         }
 
-        let avatar =
-            widgets::Avatar::avatar_new(Some(globals::PILL_ICON_SIZE));
-        let data = avatar.circle(self.member.uid.clone(),
-                                 Some(self.member.get_alias()),
-                                 globals::PILL_ICON_SIZE);
+        let avatar = widgets::Avatar::avatar_new(Some(globals::PILL_ICON_SIZE));
+        let data = avatar.circle(
+            self.member.uid.clone(),
+            Some(self.member.get_alias()),
+            globals::PILL_ICON_SIZE,
+        );
         let member_id = self.member.uid.clone();
         download_to_cache(backend.clone(), member_id.clone(), data.clone());
 

@@ -1,10 +1,10 @@
+use chrono::DateTime;
+use chrono::Datelike;
+use chrono::Local;
 use std::cell::RefCell;
+use std::collections::VecDeque;
 use std::rc::Rc;
 use std::sync::mpsc::Sender;
-use std::collections::VecDeque;
-use chrono::DateTime;
-use chrono::Local;
-use chrono::Datelike;
 
 use appop::AppOp;
 use backend::BKCommand;
@@ -15,11 +15,11 @@ use uitypes::MessageContent;
 use uitypes::RowType;
 use App;
 
-use gtk;
-use gtk::prelude::*;
 use glib;
 use glib::source;
 use globals;
+use gtk;
+use gtk::prelude::*;
 use widgets;
 
 struct List {
@@ -42,11 +42,12 @@ impl List {
         /* insert position is 1 because at position 0 is the spinner */
         match element {
             Element::Message(ref message) => {
-                self.listbox.insert(message.widget.as_ref()?.get_listbox_row()?, 1);
-            },
+                self.listbox
+                    .insert(message.widget.as_ref()?.get_listbox_row()?, 1);
+            }
             Element::NewDivider(ref divider) => {
                 self.listbox.insert(divider.get_widget(), 1);
-            },
+            }
             Element::DayDivider(ref divider) => {
                 self.listbox.insert(divider, 1);
             }
@@ -60,11 +61,12 @@ impl List {
     pub fn add_bottom(&mut self, element: Element) -> Option<()> {
         match element {
             Element::Message(ref message) => {
-                self.listbox.insert(message.widget.as_ref()?.get_listbox_row()?, -1);
-            },
+                self.listbox
+                    .insert(message.widget.as_ref()?.get_listbox_row()?, -1);
+            }
             Element::NewDivider(ref divider) => {
                 self.listbox.insert(divider.get_widget(), -1);
-            },
+            }
             Element::DayDivider(ref divider) => {
                 self.listbox.insert(divider, -1);
             }
@@ -98,7 +100,9 @@ pub struct RoomHistory {
 
 impl RoomHistory {
     pub fn new(room: Room, op: &AppOp) -> RoomHistory {
-        let history_container = op.ui.builder
+        let history_container = op
+            .ui
+            .builder
             .get_object::<gtk::Box>("history_container")
             .expect("Can't find history_container in ui file.");
         let mut scroll = widgets::ScrollWidget::new();
@@ -131,7 +135,7 @@ impl RoomHistory {
             if item.last_viewed {
                 position = i + 1;
             }
-        };
+        }
         let bottom = messages.split_off(position);
         messages.reverse();
         self.add_old_messages_in_batch(messages);
@@ -153,43 +157,45 @@ impl RoomHistory {
          * self.listbox.set_size_request(-1, 52 * messages.len() as i32); */
 
         if self.source_id.borrow().is_some() {
-           /* We don't need a new loop, just keeping the old one */
+            /* We don't need a new loop, just keeping the old one */
         } else {
-        /* Lacy load initial messages */
-        let source_id = self.source_id.clone();
-        *self.source_id.borrow_mut() = Some(gtk::idle_add(move || {
-            let mut data = queue.borrow_mut();
-            if let Some(mut item) = data.pop_front() {
-                let last = data.front();
-                let mut day_divider = None;
-                let has_header = {
-                    if let Some(last) = last {
-                        if item.date.day() != last.date.day() {
-                            day_divider = Some(Element::DayDivider(create_day_divider(item.date)));
+            /* Lacy load initial messages */
+            let source_id = self.source_id.clone();
+            *self.source_id.borrow_mut() = Some(gtk::idle_add(move || {
+                let mut data = queue.borrow_mut();
+                if let Some(mut item) = data.pop_front() {
+                    let last = data.front();
+                    let mut day_divider = None;
+                    let has_header = {
+                        if let Some(last) = last {
+                            if item.date.day() != last.date.day() {
+                                day_divider =
+                                    Some(Element::DayDivider(create_day_divider(item.date)));
+                            }
+                            last.mtype == RowType::Emote || !should_group_message(&item, &last)
+                        } else {
+                            true
                         }
-                        last.mtype == RowType::Emote || !should_group_message(&item, &last)
-                    } else {
-                        true
-                    }
-                };
+                    };
 
-                if item.last_viewed && !rows.borrow().list.is_empty() {
-                    let divider = Element::NewDivider(create_new_message_divider());
-                    rows.borrow_mut().add_top(divider);
+                    if item.last_viewed && !rows.borrow().list.is_empty() {
+                        let divider = Element::NewDivider(create_new_message_divider());
+                        rows.borrow_mut().add_top(divider);
+                    }
+                    let b =
+                        create_row(item.clone(), &room, has_header, backend.clone(), ui.clone());
+                    item.widget = b;
+                    rows.borrow_mut().add_top(Element::Message(item));
+                    if let Some(day_divider) = day_divider {
+                        rows.borrow_mut().add_top(day_divider);
+                    }
+                } else {
+                    /* Remove the source id, since the closure is destoryed */
+                    source_id.borrow_mut().take();
+                    return gtk::Continue(false);
                 }
-                let b = create_row(item.clone(), &room, has_header, backend.clone(), ui.clone());
-                item.widget = b;
-                rows.borrow_mut().add_top(Element::Message(item));
-                if let Some(day_divider) = day_divider {
-                    rows.borrow_mut().add_top(day_divider);
-                }
-            } else {
-                /* Remove the source id, since the closure is destoryed */
-                source_id.borrow_mut().take();
-                return gtk::Continue(false);
-            }
-            return gtk::Continue(true);
-        }));
+                return gtk::Continue(true);
+            }));
         }
         None
     }
@@ -227,13 +233,12 @@ impl RoomHistory {
                         }
                         message.mtype == RowType::Emote || !should_group_message(&item, &message)
                     }
-                    _ => false
+                    _ => false,
                 }
             } else {
                 true
             }
         };
-
 
         if item.last_viewed {
             let divider = Element::NewDivider(create_new_message_divider());
@@ -243,11 +248,13 @@ impl RoomHistory {
             rows.add_bottom(day_divider);
         }
 
-        let b = create_row(item.clone(),
-        &self.room.clone(),
-        has_header,
-        self.backend.clone(),
-            self.ui.clone());
+        let b = create_row(
+            item.clone(),
+            &self.room.clone(),
+            has_header,
+            self.backend.clone(),
+            self.ui.clone(),
+        );
         item.widget = b;
         rows.add_bottom(Element::Message(item));
         None
@@ -264,7 +271,9 @@ impl RoomHistory {
 
     pub fn add_old_messages_in_batch(&mut self, messages: Vec<MessageContent>) -> Option<()> {
         /* TODO: Try if extend would be faster then append */
-        self.queue.borrow_mut().append(&mut VecDeque::from(messages));
+        self.queue
+            .borrow_mut()
+            .append(&mut VecDeque::from(messages));
         self.run_queue();
 
         None
@@ -277,7 +286,7 @@ fn create_row(
     has_header: bool,
     backend: Sender<BKCommand>,
     ui: UI,
-    ) -> Option<widgets::MessageBox> {
+) -> Option<widgets::MessageBox> {
     /* we need to create a message with the username, so that we don't have to pass
      * all information to the widget creating each row */
     let mut mb = widgets::MessageBox::new(backend, ui);

@@ -1,27 +1,26 @@
-use gtk;
-use gtk::prelude::*;
 use gdk;
-use gettextrs::{setlocale, LocaleCategory, bindtextdomain, textdomain};
-use std::sync::{Arc, Mutex};
-use std::sync::mpsc::channel;
-use std::sync::mpsc::{Sender, Receiver};
+use gettextrs::{bindtextdomain, setlocale, textdomain, LocaleCategory};
 use gio;
-use glib;
 use gio::ApplicationExt;
 use gio::ApplicationExtManual;
+use glib;
+use gtk;
+use gtk::prelude::*;
+use std::sync::mpsc::channel;
+use std::sync::mpsc::{Receiver, Sender};
+use std::sync::{Arc, Mutex};
 
-use backend::Backend;
-use backend::BKResponse;
 use appop::AppOp;
+use backend::BKResponse;
+use backend::Backend;
 
 use globals;
 use uibuilder;
 
-mod connect;
 mod actions;
+mod connect;
 
 pub use self::appop_loop::InternalCommand;
-
 
 static mut OP: Option<Arc<Mutex<AppOp>>> = None;
 #[macro_export]
@@ -43,9 +42,8 @@ macro_rules! APPOP {
 mod appop_loop;
 mod backend_loop;
 
-pub use self::backend_loop::backend_loop;
 use self::appop_loop::appop_loop;
-
+pub use self::backend_loop::backend_loop;
 
 /// State for the main thread.
 ///
@@ -60,7 +58,9 @@ pub struct App {
 impl App {
     /// Create an App instance
     pub fn new() {
-        let appid = globals::APP_ID.unwrap_or("org.gnome.FractalDevel").to_string();
+        let appid = globals::APP_ID
+            .unwrap_or("org.gnome.FractalDevel")
+            .to_string();
 
         let gtk_app = gtk::Application::new(Some(&appid[..]), gio::ApplicationFlags::empty())
             .expect("Failed to initialize GtkApplication");
@@ -82,9 +82,9 @@ impl App {
             bindtextdomain("fractal", globals::LOCALEDIR.unwrap_or("./fractal-gtk/po"));
             textdomain("fractal");
 
-
             let ui = uibuilder::UI::new();
-            let window: gtk::Window = ui.builder
+            let window: gtk::Window = ui
+                .builder
                 .get_object("main_window")
                 .expect("Couldn't find main_window in ui file.");
             window.set_application(gtk_app);
@@ -93,26 +93,33 @@ impl App {
                 window.get_style_context().map(|c| c.add_class("devel"));
             }
 
-            let stack = ui.builder
+            let stack = ui
+                .builder
                 .get_object::<gtk::Stack>("main_content_stack")
                 .expect("Can't find main_content_stack in ui file.");
-            let stack_header = ui.builder
+            let stack_header = ui
+                .builder
                 .get_object::<gtk::Stack>("headerbar_stack")
                 .expect("Can't find headerbar_stack in ui file.");
 
             /* Add account settings view to the main stack */
-            let child = ui.builder
+            let child = ui
+                .builder
                 .get_object::<gtk::Box>("account_settings_box")
                 .expect("Can't find account_settings_box in ui file.");
-            let child_header = ui.builder
+            let child_header = ui
+                .builder
                 .get_object::<gtk::Box>("account_settings_headerbar")
                 .expect("Can't find account_settings_headerbar in ui file.");
             stack.add_named(&child, "account-settings");
             stack_header.add_named(&child_header, "account-settings");
 
-            let op = Arc::new(Mutex::new(
-                AppOp::new(gtk_app.clone(), ui.clone(), apptx, itx)
-            ));
+            let op = Arc::new(Mutex::new(AppOp::new(
+                gtk_app.clone(),
+                ui.clone(),
+                apptx,
+                itx,
+            )));
 
             unsafe {
                 OP = Some(op.clone());
@@ -126,7 +133,7 @@ impl App {
                 op: op.clone(),
             };
 
-            gtk_app.connect_activate(move |_| { op.lock().unwrap().activate() });
+            gtk_app.connect_activate(move |_| op.lock().unwrap().activate());
 
             app.connect_gtk();
             app.run();
@@ -143,7 +150,11 @@ impl App {
 
         let provider = gtk::CssProvider::new();
         provider.load_from_resource("/org/gnome/Fractal/app.css");
-        gtk::StyleContext::add_provider_for_screen(&gdk::Screen::get_default().unwrap(), &provider, 600);
+        gtk::StyleContext::add_provider_for_screen(
+            &gdk::Screen::get_default().unwrap(),
+            &provider,
+            600,
+        );
     }
 
     pub fn get_op() -> Option<Arc<Mutex<AppOp>>> {

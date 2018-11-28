@@ -1,9 +1,9 @@
 use serde_json::Value as JsonValue;
 
-use std::collections::HashMap;
-use model::message::Message;
-use model::member::MemberList;
 use model::member::Member;
+use model::member::MemberList;
+use model::message::Message;
+use std::collections::HashMap;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Room {
@@ -57,23 +57,26 @@ impl Room {
     }
 
     pub fn add_receipt_from_json(&mut self, mut events: Vec<&JsonValue>) {
-        let receipts = events.pop().and_then(|ev| ev["content"].as_object()).and_then(|content| {
-            let mut msgs: HashMap<String, HashMap<String, i64>> = HashMap::new();
+        let receipts = events
+            .pop()
+            .and_then(|ev| ev["content"].as_object())
+            .and_then(|content| {
+                let mut msgs: HashMap<String, HashMap<String, i64>> = HashMap::new();
 
-            for (mid, obj) in content.iter() {
-                if let Some(reads) = obj["m.read"].as_object() {
-                    let mut receipts: HashMap<String, i64> = HashMap::new();
+                for (mid, obj) in content.iter() {
+                    if let Some(reads) = obj["m.read"].as_object() {
+                        let mut receipts: HashMap<String, i64> = HashMap::new();
 
-                    for (uid, ts) in reads.iter() {
-                        receipts.insert(uid.to_string(), ts["ts"].as_i64().unwrap());
+                        for (uid, ts) in reads.iter() {
+                            receipts.insert(uid.to_string(), ts["ts"].as_i64().unwrap());
+                        }
+
+                        msgs.insert(mid.to_string(), receipts);
                     }
-
-                    msgs.insert(mid.to_string(), receipts);
                 }
-            }
 
-            Some(msgs)
-        });
+                Some(msgs)
+            });
 
         if let Some(receipts) = receipts.clone() {
             for msg in self.messages.iter_mut() {
@@ -85,7 +88,11 @@ impl Room {
     }
 
     pub fn add_receipt_from_fully_read(&mut self, uid: &str, evid: &str) {
-        for msg in self.messages.iter_mut().filter(|m| m.id == Some(evid.to_string())) {
+        for msg in self
+            .messages
+            .iter_mut()
+            .filter(|m| m.id == Some(evid.to_string()))
+        {
             msg.receipt.insert(uid.to_string(), 0);
         }
     }

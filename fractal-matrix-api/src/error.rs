@@ -1,11 +1,11 @@
-use reqwest;
 use cairo;
-use regex;
-use url;
 use glib;
+use regex;
+use reqwest;
+use std::ffi::OsString;
 use std::io;
 use std::time::SystemTimeError;
-use std::ffi::OsString;
+use url;
 
 use serde_json;
 use serde_json::Value as JsonValue;

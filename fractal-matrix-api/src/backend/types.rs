@@ -1,16 +1,16 @@
-use std::sync::{Arc, Mutex, Condvar};
-use std::sync::mpsc::Sender;
 use std::collections::HashMap;
+use std::sync::mpsc::Sender;
+use std::sync::{Arc, Condvar, Mutex};
 
 use error::Error;
 
-use types::Message;
+use types::Event;
 use types::Member;
+use types::Message;
 use types::Protocol;
 use types::Room;
-use types::Event;
-use types::StickerGroup;
 use types::Sticker;
+use types::StickerGroup;
 use types::UserInfo;
 
 use cache::CacheMap;
@@ -46,7 +46,12 @@ pub enum BKCommand {
     GetRoomAvatar(String),
     GetThumbAsync(String, Sender<String>),
     GetMediaAsync(String, Sender<String>),
-    GetMediaListAsync(String, Option<String>, Option<String>, Sender<(Vec<Message>, String)>),
+    GetMediaListAsync(
+        String,
+        Option<String>,
+        Option<String>,
+        Sender<(Vec<Message>, String)>,
+    ),
     GetFileAsync(String, Sender<String>),
     GetAvatarAsync(Option<Member>, Sender<String>),
     GetMedia(String),
