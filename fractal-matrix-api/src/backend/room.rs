@@ -131,7 +131,7 @@ pub fn get_room_messages(bk: &Backend, roomid: String, from: String) -> Result<(
         ("limit", format!("{}", globals::PAGE_LIMIT)),
         (
             "filter",
-            "{\"filter_json\": { \"types\": [\"m.room.message\", \"m.sticker\"] } }".to_string(),
+            "{ \"types\": [\"m.room.message\", \"m.sticker\"] }".to_string(),
         ),
     ];
     let url = bk.url(&format!("rooms/{}/messages", roomid), params)?;
