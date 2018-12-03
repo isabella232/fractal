@@ -255,7 +255,7 @@ impl MessageBox {
         }
 
         for part in msg_parts {
-            self.connect_right_click_menu_label(msg, part.clone().upcast::<gtk::Widget>());
+            self.connect_right_click_menu_label(msg, &part);
             bx.add(&part);
         }
         bx
@@ -518,7 +518,7 @@ impl MessageBox {
             None,
         );
 
-        self.connect_right_click_menu_label(msg, msg_label.clone().upcast::<gtk::Widget>());
+        self.connect_right_click_menu_label(msg, &msg_label);
         msg_label.set_markup(&format!("<b>{}</b> {}", sname, markup));
         self.set_label_styles(&msg_label);
 
@@ -526,13 +526,13 @@ impl MessageBox {
         bx
     }
 
-    fn connect_right_click_menu_label(&self, msg: &Message, w: gtk::Widget) {
+    fn connect_right_click_menu_label(&self, msg: &Message, w: &gtk::Label) {
         let eb = self.eventbox.clone();
         let backend = self.backend.clone();
         let ui = self.ui.clone();
         let msg = msg.clone();
 
-        w.connect_button_press_event(move |w, btn| {
+        gtk::WidgetExt::connect_button_press_event(w, move |w, btn| {
             if btn.get_button() == 3 {
                 let menu = MessageMenu::new_message_menu(
                     ui.clone(),
