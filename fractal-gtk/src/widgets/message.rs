@@ -36,7 +36,7 @@ pub struct MessageBox {
     ui: UI,
     username: gtk::Label,
     pub username_event_box: gtk::EventBox,
-    widget: gtk::EventBox,
+    eventbox: gtk::EventBox,
     row: Option<gtk::ListBoxRow>,
     pub image: Option<gtk::DrawingArea>,
     header: bool,
@@ -46,7 +46,7 @@ impl MessageBox {
     pub fn new(backend: Sender<BKCommand>, ui: UI) -> MessageBox {
         let username = gtk::Label::new("");
         let eb = gtk::EventBox::new();
-        let row_eb = gtk::EventBox::new();
+        let eventbox = gtk::EventBox::new();
 
         username.set_ellipsize(pango::EllipsizeMode::End);
 
@@ -55,7 +55,7 @@ impl MessageBox {
             ui: ui,
             username: username,
             username_event_box: eb,
-            widget: row_eb,
+            eventbox,
             row: None,
             image: None,
             header: true,
@@ -64,20 +64,6 @@ impl MessageBox {
 
     /* create the message row with or without a header */
     pub fn create(&mut self, msg: &Message, has_header: bool) {
-        /* This was moved from the new() to there */
-        let backend = self.backend.clone();
-        let ui = self.ui.clone();
-        self.widget
-            .connect_button_press_event(clone!(msg => move |eb, btn| {
-                if btn.get_button() == 3 {
-                    let menu = MessageMenu::new_message_menu(ui.clone(), backend.clone(),
-                                                             msg.clone(), None);
-                    menu.show_menu_popover(eb.clone().upcast::<gtk::Widget>());
-                }
-
-                Inhibit(false)
-            }));
-
         let row = gtk::ListBoxRow::new();
         self.set_msg_styles(msg, &row);
         row.set_selectable(false);
@@ -93,46 +79,15 @@ impl MessageBox {
             self.small_widget(msg)
         };
 
-        self.widget.add(&w);
-        row.add(&self.widget);
+        self.eventbox.add(&w);
+        row.add(&self.eventbox);
         row.show_all();
         self.row = Some(row);
+        self.connect_right_click_menu(msg);
     }
 
     pub fn get_listbox_row(&self) -> Option<&gtk::ListBoxRow> {
         self.row.as_ref()
-    }
-
-    /* Updates the header of a message row */
-    #[allow(dead_code)]
-    pub fn update(&mut self, msg: &Message, has_header: bool) -> Option<()> {
-        /* Update only if some thing changed */
-        if has_header != self.header {
-            self.username.destroy();
-            self.username = gtk::Label::new("");
-            self.username_event_box.destroy();
-            self.username_event_box = gtk::EventBox::new();
-            let row = self.row.clone()?;
-            let child = self.widget.get_child()?;
-            self.widget.remove(&child);
-            let w = if has_header && msg.mtype != RowType::Emote {
-                row.set_margin_top(12);
-                self.header = true;
-                self.widget(msg)
-            } else {
-                /* we need to reset the margin */
-                match msg.mtype {
-                    RowType::Emote => row.set_margin_top(12),
-                    _ => row.set_margin_top(0),
-                }
-                self.header = false;
-                self.small_widget(msg)
-            };
-
-            self.widget.add(&w);
-            row.show_all();
-        }
-        None
     }
 
     pub fn tmpwidget(mut self, msg: &Message) -> Option<MessageBox> {
@@ -300,7 +255,7 @@ impl MessageBox {
         }
 
         for part in msg_parts {
-            self.connect_right_click_menu(msg, part.clone().upcast::<gtk::Widget>());
+            self.connect_right_click_menu_label(msg, part.clone().upcast::<gtk::Widget>());
             bx.add(&part);
         }
         bx
@@ -563,7 +518,7 @@ impl MessageBox {
             None,
         );
 
-        self.connect_right_click_menu(msg, msg_label.clone().upcast::<gtk::Widget>());
+        self.connect_right_click_menu_label(msg, msg_label.clone().upcast::<gtk::Widget>());
         msg_label.set_markup(&format!("<b>{}</b> {}", sname, markup));
         self.set_label_styles(&msg_label);
 
@@ -571,8 +526,8 @@ impl MessageBox {
         bx
     }
 
-    fn connect_right_click_menu(&self, msg: &Message, w: gtk::Widget) {
-        let eb = self.widget.clone();
+    fn connect_right_click_menu_label(&self, msg: &Message, w: gtk::Widget) {
+        let eb = self.eventbox.clone();
         let backend = self.backend.clone();
         let ui = self.ui.clone();
         let msg = msg.clone();
@@ -591,6 +546,21 @@ impl MessageBox {
                 Inhibit(false)
             }
         });
+    }
+
+    fn connect_right_click_menu(&self, msg: &Message) {
+        let backend = self.backend.clone();
+        let ui = self.ui.clone();
+        self.eventbox
+            .connect_button_press_event(clone!(msg => move |eb, btn| {
+                if btn.get_button() == 3 {
+                    let menu = MessageMenu::new_message_menu(ui.clone(), backend.clone(),
+                    msg.clone(), None);
+                    menu.show_menu_popover(eb.clone().upcast::<gtk::Widget>());
+                }
+
+                Inhibit(false)
+            }));
     }
 }
 
