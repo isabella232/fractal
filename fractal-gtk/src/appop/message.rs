@@ -48,14 +48,15 @@ impl AppOp {
         }
     }
 
-    pub fn add_room_message(&mut self, msg: Message) {
-        if msg.room == self.active_room.clone().unwrap_or_default() && !msg.redacted {
-            if let Some(ui_msg) = self.create_new_room_message(&msg) {
+    pub fn add_room_message(&mut self, msg: &Message) -> Option<()> {
+        if &msg.room == self.active_room.as_ref()? && !msg.redacted {
+            if let Some(ui_msg) = self.create_new_room_message(msg) {
                 if let Some(ref mut history) = self.history {
                     history.add_new_message(ui_msg);
                 }
             }
         }
+        None
     }
 
     pub fn add_tmp_room_message(&mut self, msg: Message) -> Option<()> {
@@ -419,6 +420,7 @@ impl AppOp {
         None
     }
 
+    /* TODO: find a better name for this function */
     pub fn show_room_messages(&mut self, newmsgs: Vec<Message>) -> Option<()> {
         let mut msgs = vec![];
 
@@ -441,22 +443,19 @@ impl AppOp {
                 self.notify(msg);
             }
 
-            let command = InternalCommand::AddRoomMessage(msg.clone());
-            self.internal.send(command).unwrap();
-
+            self.add_room_message(&msg);
             self.roomlist.moveup(msg.room.clone());
             self.roomlist.set_bold(msg.room.clone(), true);
         }
 
         if !msgs.is_empty() {
-            let active_room = self.active_room.clone().unwrap_or_default();
+            let active_room = self.active_room.clone()?;
             let fs = msgs.iter().filter(|x| x.room == active_room);
-            if let Some(msg) = fs.last() {
-                self.mark_as_read(msg, Force(false));
-            }
+            let msg = fs.last()?;
+            self.mark_as_read(msg, Force(false));
         }
 
-        Some(())
+        None
     }
 
     /* TODO: find a better name for this function */
