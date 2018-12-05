@@ -78,13 +78,13 @@ pub fn set_markdown_schema(md: bool) {
  *
  * This works for glib/gtk objects as well as anything else providing an upgrade method */
 macro_rules! upgrade_weak {
-    ($x:ident, $r:expr) => {{
+    ($x:expr, $r:expr) => {{
         match $x.upgrade() {
             Some(o) => o,
             None => return $r,
         }
     }};
-    ($x:ident) => {
+    ($x:expr) => {
         upgrade_weak!($x, ())
     };
 }

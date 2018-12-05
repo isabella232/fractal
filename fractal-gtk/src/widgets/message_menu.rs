@@ -162,11 +162,9 @@ impl MessageMenu {
         let s = get_selected_text(label)?;
         self.widgets.copy_selected_button.show();
         self.widgets.copy_selected_button.connect_clicked(move |_| {
-            let widget_weak = &s.widget;
-            let widget = upgrade_weak!(widget_weak);
+            let widget = upgrade_weak!(&s.widget);
             let atom = gdk::Atom::intern("CLIPBOARD");
             let clipboard = gtk::Clipboard::get(&atom);
-            /* FIXME: upgrade_weak! doesn't accept s.widget */
             clipboard.set_text(&s.text);
             /* FIXME: for some reason we have to set the selection again */
             widget.select_region(s.start, s.end);
