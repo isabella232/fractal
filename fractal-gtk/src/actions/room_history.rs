@@ -1,3 +1,4 @@
+use std::fs;
 use std::sync::mpsc::channel;
 use std::sync::mpsc::TryRecvError;
 use std::sync::mpsc::{Receiver, Sender};
@@ -9,6 +10,7 @@ use gio::SimpleActionExt;
 use gio::SimpleActionGroup;
 use gtk;
 use gtk::prelude::*;
+use gtk::ResponseType;
 use i18n::i18n;
 use types::Message;
 use uibuilder::UI;
@@ -107,9 +109,8 @@ pub fn new(backend: Sender<BKCommand>, ui: UI) -> gio::SimpleActionGroup {
                         gtk::Continue(true)
                     },
                     Ok(fname) => {
-                        let name = name.clone();
-                        /* FIXME: this should be an action */
-                        APPOP!(save_file_as, (fname, name));
+                        let parent = upgrade_weak!(parent_weak, gtk::Continue(true));
+                        open_save_as_dialog(&parent, fname, &name);
 
                         gtk::Continue(false)
                     }
@@ -186,4 +187,30 @@ fn open_viewer(data: &Option<glib::Variant>) -> Option<()> {
     let mut op = op.lock().unwrap();
     op.create_media_viewer(msg);
     None
+}
+
+fn open_save_as_dialog(parent: &gtk::Window, src: String, name: &str) {
+    let file_chooser = gtk::FileChooserNative::new(
+        Some(i18n("Save media as").as_str()),
+        Some(parent),
+        gtk::FileChooserAction::Save,
+        Some(i18n("_Save").as_str()),
+        Some(i18n("_Cancel").as_str()),
+    );
+
+    file_chooser.set_current_folder(dirs::download_dir().unwrap_or_default());
+    file_chooser.set_current_name(name);
+
+    let parent_weak = parent.downgrade();
+    file_chooser.connect_response(move |fcd, res| {
+        if ResponseType::from(res) == ResponseType::Accept {
+            if let Err(_) = fs::copy(src.clone(), fcd.get_filename().unwrap_or_default()) {
+                let msg = i18n("Could not save the file");
+                let parent = upgrade_weak!(parent_weak);
+                ErrorDialog::new(&parent, &msg);
+            }
+        }
+    });
+
+    file_chooser.run();
 }
