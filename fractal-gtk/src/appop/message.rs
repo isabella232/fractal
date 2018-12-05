@@ -7,13 +7,11 @@ use std::fs;
 use std::path::Path;
 use tree_magic;
 
-use app::App;
 use app::InternalCommand;
 use appop::room::Force;
 use appop::AppOp;
 
 use backend::BKCommand;
-use glib;
 use uitypes::MessageContent;
 use uitypes::RowType;
 use widgets;
@@ -28,6 +26,14 @@ pub struct TmpMsg {
 }
 
 impl AppOp {
+    pub fn get_message_by_id(&self, room_id: &str, id: &str) -> Option<Message> {
+        let room = self.rooms.get(room_id)?;
+        room.messages
+            .iter()
+            .find(|m| m.id == Some(id.to_string()))
+            .cloned()
+    }
+
     /// This function is used to mark as read the last message of a room when the focus comes in,
     /// so we need to force the mark_as_read because the window isn't active yet
     pub fn mark_active_room_messages(&mut self) {
@@ -62,31 +68,10 @@ impl AppOp {
     pub fn add_tmp_room_message(&mut self, msg: Message) -> Option<()> {
         let messages = self.history.as_ref()?.get_listbox();
         if let Some(ui_msg) = self.create_new_room_message(&msg) {
-            if let Some(r) = self
-                .rooms
-                .get(&self.active_room.clone().unwrap_or_default())
-            {
-                let backend = self.backend.clone();
-                let ui = self.ui.clone();
-                let mb = widgets::MessageBox::new(backend, ui).tmpwidget(&ui_msg)?;
-                let m = mb.get_listbox_row()?;
-                if let Some(ref image) = mb.image {
-                    let msg = msg.clone();
-                    let room = r.clone();
-                    image.connect_button_press_event(move |_, btn| {
-                        if btn.get_button() != 3 {
-                            let msg = msg.clone();
-                            let room = room.clone();
-                            APPOP!(create_media_viewer, (msg, room));
-
-                            Inhibit(true)
-                        } else {
-                            Inhibit(false)
-                        }
-                    });
-                }
-                messages.add(m);
-            }
+            let backend = self.backend.clone();
+            let mb = widgets::MessageBox::new(backend).tmpwidget(&ui_msg)?;
+            let m = mb.get_listbox_row()?;
+            messages.add(m);
 
             if let Some(w) = messages.get_children().iter().last() {
                 self.msg_queue.insert(
@@ -113,44 +98,23 @@ impl AppOp {
     pub fn append_tmp_msgs(&mut self) -> Option<()> {
         let messages = self.history.as_ref()?.get_listbox();
 
-        if let Some(r) = self
-            .rooms
-            .get(&self.active_room.clone().unwrap_or_default())
-        {
-            let mut widgets = vec![];
-            for t in self.msg_queue.iter().rev().filter(|m| m.msg.room == r.id) {
-                if let Some(ui_msg) = self.create_new_room_message(&t.msg) {
-                    let backend = self.backend.clone();
-                    let ui = self.ui.clone();
-                    let mb = widgets::MessageBox::new(backend, ui).tmpwidget(&ui_msg)?;
-                    let m = mb.get_listbox_row()?;
-                    if let Some(ref image) = mb.image {
-                        info!("i have a image");
-                        let msg = t.msg.clone();
-                        let room = r.clone();
-                        image.connect_button_press_event(move |_, btn| {
-                            if btn.get_button() != 3 {
-                                let msg = msg.clone();
-                                let room = room.clone();
-                                APPOP!(create_media_viewer, (msg, room));
+        let r = self.rooms.get(self.active_room.as_ref()?)?;
+        let mut widgets = vec![];
+        for t in self.msg_queue.iter().rev().filter(|m| m.msg.room == r.id) {
+            if let Some(ui_msg) = self.create_new_room_message(&t.msg) {
+                let backend = self.backend.clone();
+                let mb = widgets::MessageBox::new(backend).tmpwidget(&ui_msg)?;
+                let m = mb.get_listbox_row()?;
+                messages.add(m);
 
-                                Inhibit(true)
-                            } else {
-                                Inhibit(false)
-                            }
-                        });
-                    }
-                    messages.add(m);
-
-                    if let Some(w) = messages.get_children().iter().last() {
-                        widgets.push(w.clone());
-                    }
+                if let Some(w) = messages.get_children().iter().last() {
+                    widgets.push(w.clone());
                 }
             }
+        }
 
-            for (t, w) in self.msg_queue.iter_mut().rev().zip(widgets.iter()) {
-                t.widget = Some(w.clone());
-            }
+        for (t, w) in self.msg_queue.iter_mut().rev().zip(widgets.iter()) {
+            t.widget = Some(w.clone());
         }
         None
     }
