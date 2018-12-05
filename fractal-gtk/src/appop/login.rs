@@ -19,6 +19,8 @@ use app::backend_loop;
 
 use passwd::PasswordStorage;
 
+use widgets::ErrorDialog;
+
 impl AppOp {
     pub fn bk_login(&mut self, uid: String, token: String, device: Option<String>) {
         self.logged_in = true;
@@ -217,7 +219,13 @@ impl AppOp {
         };
 
         if password != passconf {
-            self.show_error(i18n("Passwords didn’t match, try again"));
+            let parent: gtk::Window = self
+                .ui
+                .builder
+                .get_object("main_window")
+                .expect("Can't find main_window in ui file.");
+            let msg = i18n("Passwords didn’t match, try again");
+            ErrorDialog::new(&parent, &msg);
             return;
         }
 

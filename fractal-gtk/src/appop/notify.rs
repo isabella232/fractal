@@ -13,6 +13,7 @@ use appop::AppOp;
 use backend::BKCommand;
 
 use types::Message;
+use widgets::ErrorDialog;
 
 impl AppOp {
     pub fn inapp_notify(&self, msg: &str) {
@@ -96,22 +97,12 @@ impl AppOp {
     }
 
     pub fn show_error(&self, msg: String) {
-        let window: gtk::Window = self
+        let parent: gtk::Window = self
             .ui
             .builder
             .get_object("main_window")
             .expect("Couldn't find main_window in ui file.");
-        let dialog = gtk::MessageDialog::new(
-            Some(&window),
-            gtk::DialogFlags::MODAL,
-            gtk::MessageType::Warning,
-            gtk::ButtonsType::Ok,
-            &msg,
-        );
-        dialog.show();
-        dialog.connect_response(move |d, _| {
-            d.destroy();
-        });
+        ErrorDialog::new(&parent, &msg);
     }
 
     pub fn notification_cliked(&mut self, msg: Message) {

@@ -7,17 +7,16 @@ use gtk::prelude::*;
 use gtk::ResponseType;
 
 use dirs;
-use glib;
 
-use app::App;
 use appop::AppOp;
+use widgets::ErrorDialog;
 
 impl AppOp {
     pub fn save_file_as(&self, src: String, name: String) {
         let main_window = self
             .ui
             .builder
-            .get_object::<gtk::ApplicationWindow>("main_window")
+            .get_object::<gtk::Window>("main_window")
             .expect("Cant find main_window in ui file.");
 
         let file_chooser = gtk::FileChooserNative::new(
@@ -31,11 +30,13 @@ impl AppOp {
         file_chooser.set_current_folder(dirs::download_dir().unwrap_or_default());
         file_chooser.set_current_name(&name);
 
+        let parent_weak = main_window.downgrade();
         file_chooser.connect_response(move |fcd, res| {
             if ResponseType::from(res) == ResponseType::Accept {
                 if let Err(_) = fs::copy(src.clone(), fcd.get_filename().unwrap_or_default()) {
                     let msg = i18n("Could not save the file");
-                    APPOP!(show_error, (msg));
+                    let parent = upgrade_weak!(parent_weak);
+                    ErrorDialog::new(&parent, &msg);
                 }
             }
         });

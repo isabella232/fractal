@@ -14,6 +14,7 @@ use types::Message;
 use uibuilder::UI;
 use App;
 
+use widgets::ErrorDialog;
 use widgets::SourceDialog;
 
 /* This creates all actions the room history can perform */
@@ -41,9 +42,9 @@ pub fn new(backend: Sender<BKCommand>, ui: UI) -> gio::SimpleActionGroup {
         .builder
         .get_object("main_window")
         .expect("Can't find main_window in ui file.");
-    let parent = parent.downgrade();
+    let parent_weak = parent.downgrade();
     show_source.connect_activate(move |_, data| {
-        let parent = upgrade_weak!(parent);
+        let parent = upgrade_weak!(parent_weak);
         let viewer = SourceDialog::new();
         viewer.set_parent_window(&parent);
         if let Some(m) = get_message(data) {
@@ -84,6 +85,7 @@ pub fn new(backend: Sender<BKCommand>, ui: UI) -> gio::SimpleActionGroup {
     });
 
     let b = backend.clone();
+    let parent_weak = parent.downgrade();
     save_as.connect_activate(move |_, data| {
         if let Some(m) = get_message(data) {
             let name = m.body;
@@ -92,14 +94,15 @@ pub fn new(backend: Sender<BKCommand>, ui: UI) -> gio::SimpleActionGroup {
             let (tx, rx): (Sender<String>, Receiver<String>) = channel();
             let _ = b.send(BKCommand::GetMediaAsync(url, tx));
 
+            let parent_weak = parent_weak.clone();
             gtk::timeout_add(
                 50,
                 clone!(name => move || match rx.try_recv() {
                     Err(TryRecvError::Empty) => gtk::Continue(true),
                     Err(TryRecvError::Disconnected) => {
                         let msg = i18n("Could not download the file");
-                        /* FIXME: this should be an action */
-                        APPOP!(show_error, (msg));
+                        let parent = upgrade_weak!(parent_weak, gtk::Continue(true));
+                        ErrorDialog::new(&parent, &msg);
 
                         gtk::Continue(true)
                     },
@@ -116,6 +119,7 @@ pub fn new(backend: Sender<BKCommand>, ui: UI) -> gio::SimpleActionGroup {
     });
 
     let b = backend.clone();
+    let parent_weak = parent.downgrade();
     copy_image.connect_activate(move |_, data| {
         if let Some(m) = get_message(data) {
             let url = m.url.unwrap_or_default();
@@ -124,12 +128,13 @@ pub fn new(backend: Sender<BKCommand>, ui: UI) -> gio::SimpleActionGroup {
 
             let _ = b.send(BKCommand::GetMediaAsync(url.clone(), tx));
 
+            let parent_weak = parent_weak.clone();
             gtk::timeout_add(50, move || match rx.try_recv() {
                 Err(TryRecvError::Empty) => gtk::Continue(true),
                 Err(TryRecvError::Disconnected) => {
                     let msg = i18n("Could not download the file");
-                    /*FIXME: this should be an action */
-                    APPOP!(show_error, (msg));
+                    let parent = upgrade_weak!(parent_weak, gtk::Continue(true));
+                    ErrorDialog::new(&parent, &msg);
 
                     gtk::Continue(true)
                 }

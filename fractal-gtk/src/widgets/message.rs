@@ -359,6 +359,7 @@ impl MessageBox {
                     Err(TryRecvError::Empty) => gtk::Continue(true),
                     Err(TryRecvError::Disconnected) => {
                         let msg = i18n("Could not retrieve file URI");
+                        /* FIXME: don't use APPOP! */
                         APPOP!(show_error, (msg));
                         gtk::Continue(true)
                     },
