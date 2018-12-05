@@ -58,28 +58,6 @@ running some daemon that give that service. If you're using GNOME or KDE
 this should work for you out of the box with gnome-keyring or
 ksecretservice.
 
-There's a way to avoid the need of secret service and store the password in
-a unsecure way, in a plain json file. We don't recommend to use this form,
-but if you want, it's possible to configure using gsettings:
-
-```
-$ gsettings set org.gnome.Fractal password-storage 'Plain text'
-```
-
-Or if you're using flatpak
-
-```
-$ flatpak run --command="bash" org.gnome.Fractal
-$ gsettings set org.gnome.Fractal password-storage 'Plain text'
-$ exit
-```
-
-To go back to use Secret service:
-
-```
-$ gsettings set org.gnome.Fractal password-storage 'Secret Service'
-```
-
 ## Supported m.room.message (msgtypes)
 
 msgtypes          | Recv                | Send
