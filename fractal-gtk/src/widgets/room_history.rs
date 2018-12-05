@@ -111,6 +111,9 @@ impl RoomHistory {
         let listbox = scroll.get_listbox();
         let loading_spinner = scroll.get_loading_spinner();
 
+        /* Add the action groupe to the room_history */
+        listbox.insert_action_group("room_history", Some(&actions));
+
         RoomHistory {
             rows: Rc::new(RefCell::new(List::new(scroll, listbox.clone()))),
             listbox: listbox,

@@ -21,7 +21,7 @@ pub fn new(backend: Sender<BKCommand>, ui: UI) -> gio::SimpleActionGroup {
     let actions = SimpleActionGroup::new();
     let reply = SimpleAction::new("reply", glib::VariantTy::new("s").ok());
     let open_with = SimpleAction::new("open_with", glib::VariantTy::new("s").ok());
-    let save_image_as = SimpleAction::new("save_image_as", glib::VariantTy::new("s").ok());
+    let save_as = SimpleAction::new("save_as", glib::VariantTy::new("s").ok());
     let copy_image = SimpleAction::new("copy_image", glib::VariantTy::new("s").ok());
     let copy_text = SimpleAction::new("copy_text", glib::VariantTy::new("s").ok());
     let delete = SimpleAction::new("delete", glib::VariantTy::new("s").ok());
@@ -30,7 +30,7 @@ pub fn new(backend: Sender<BKCommand>, ui: UI) -> gio::SimpleActionGroup {
 
     actions.add_action(&reply);
     actions.add_action(&open_with);
-    actions.add_action(&save_image_as);
+    actions.add_action(&save_as);
     actions.add_action(&copy_image);
     actions.add_action(&copy_text);
     actions.add_action(&delete);
@@ -84,7 +84,7 @@ pub fn new(backend: Sender<BKCommand>, ui: UI) -> gio::SimpleActionGroup {
     });
 
     let b = backend.clone();
-    save_image_as.connect_activate(move |_, data| {
+    save_as.connect_activate(move |_, data| {
         if let Some(m) = get_message(data) {
             let name = m.body;
             let url = m.url.unwrap_or_default();

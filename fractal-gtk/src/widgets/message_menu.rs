@@ -20,12 +20,7 @@ struct Widgets {
 }
 
 impl Widgets {
-    pub fn new(
-        actions: &gio::SimpleActionGroup,
-        id: &str,
-        mtype: &RowType,
-        redactable: &bool,
-    ) -> Widgets {
+    pub fn new(id: &str, mtype: &RowType, redactable: &bool) -> Widgets {
         let builder = gtk::Builder::new();
         builder
             .add_from_resource("/org/gnome/Fractal/ui/message_menu.ui")
@@ -90,9 +85,6 @@ impl Widgets {
         copy_image_button.set_action_target_value(&data);
         copy_text_button.set_action_target_value(&data);
 
-        /* Add the action groupe to the parent of all ModelButtons */
-        popover.insert_action_group("message_menu", Some(actions));
-
         Widgets {
             popover,
             reply_button,
@@ -125,12 +117,11 @@ impl MessageMenu {
         id: &str,
         mtype: &RowType,
         redactable: &bool,
-        actions: gio::SimpleActionGroup,
         widget: &gtk::EventBox,
         label: &gtk::Widget,
     ) -> MessageMenu {
         let menu = MessageMenu {
-            widgets: Widgets::new(&actions, id, mtype, redactable),
+            widgets: Widgets::new(id, mtype, redactable),
         };
         /* Copy selected text works a little different then the other actions, because it need the
          * label */
