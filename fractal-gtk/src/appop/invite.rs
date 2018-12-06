@@ -14,7 +14,6 @@ use globals;
 use widgets;
 
 use types::Member;
-use types::Room;
 
 impl AppOp {
     pub fn add_to_invite(&mut self, u: Member) {
@@ -229,17 +228,19 @@ impl AppOp {
         self.invitation_roomid = None;
     }
 
-    pub fn show_inv_dialog(&mut self, r: &Room) {
+    /* FIXME: move to a widget */
+    pub fn show_inv_dialog(&self, sender: Option<&Member>, room_name: Option<&String>) {
         let dialog = self
             .ui
             .builder
             .get_object::<gtk::MessageDialog>("invite_dialog")
             .expect("Can't find invite_dialog in ui file.");
 
-        let room_name = r.name.clone().unwrap_or_default();
+        let empty = String::from("");
+        let room_name = room_name.unwrap_or(&empty);
         let title = i18n_k("Join {room_name}?", &[("room_name", &room_name)]);
         let secondary;
-        if let Some(ref sender) = r.inv_sender {
+        if let Some(ref sender) = sender {
             let sender_name = sender.get_alias();
             secondary = i18n_k(
                 "You’ve been invited to join to <b>{room_name}</b> room by <b>{sender_name}</b>",
@@ -256,7 +257,6 @@ impl AppOp {
         dialog.set_property_secondary_use_markup(true);
         dialog.set_property_secondary_text(Some(&secondary));
 
-        self.invitation_roomid = Some(r.id.clone());
         dialog.present();
     }
 

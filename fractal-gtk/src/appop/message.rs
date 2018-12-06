@@ -37,29 +37,13 @@ impl AppOp {
     /// This function is used to mark as read the last message of a room when the focus comes in,
     /// so we need to force the mark_as_read because the window isn't active yet
     pub fn mark_active_room_messages(&mut self) {
-        let mut msg: Option<Message> = None;
-
-        if let Some(ref active_room_id) = self.active_room {
-            if let Some(ref r) = self.rooms.get(active_room_id) {
-                if let Some(m) = r.messages.last() {
-                    msg = Some(m.clone());
-                }
-            }
-        }
-
-        // this is done here because in the above we've a reference to self and mark as read needs
-        // a mutable reference to self so we can't do it inside
-        if let Some(m) = msg {
-            self.mark_as_read(&m, Force(true));
-        }
+        self.mark_last_message_as_read(Force(true));
     }
 
     pub fn add_room_message(&mut self, msg: &Message) -> Option<()> {
-        if &msg.room == self.active_room.as_ref()? && !msg.redacted {
-            if let Some(ui_msg) = self.create_new_room_message(msg) {
-                if let Some(ref mut history) = self.history {
-                    history.add_new_message(ui_msg);
-                }
+        if let Some(ui_msg) = self.create_new_room_message(msg) {
+            if let Some(ref mut history) = self.history {
+                history.add_new_message(ui_msg);
             }
         }
         None
@@ -119,7 +103,7 @@ impl AppOp {
         None
     }
 
-    pub fn mark_as_read(&mut self, msg: &Message, Force(force): Force) -> Option<()> {
+    pub fn mark_last_message_as_read(&mut self, Force(force): Force) -> Option<()> {
         let window: gtk::Window = self
             .ui
             .builder
@@ -140,8 +124,8 @@ impl AppOp {
 
             self.backend
                 .send(BKCommand::MarkAsRead(
-                    msg.room.clone(),
-                    msg.id.clone().unwrap_or_default(),
+                    last_message.room.clone(),
+                    last_message.id.clone()?,
                 ))
                 .unwrap();
         }
@@ -397,6 +381,7 @@ impl AppOp {
             }
         }
 
+        let mut msg_in_active = false;
         let uid = self.uid.clone()?;
         for msg in msgs.iter() {
             let should_notify = msg.sender != uid
@@ -407,16 +392,16 @@ impl AppOp {
                 self.notify(msg);
             }
 
-            self.add_room_message(&msg);
+            if &msg.room == self.active_room.as_ref()? && !msg.redacted {
+                self.add_room_message(&msg);
+                msg_in_active = true;
+            }
             self.roomlist.moveup(msg.room.clone());
             self.roomlist.set_bold(msg.room.clone(), true);
         }
 
-        if !msgs.is_empty() {
-            let active_room = self.active_room.clone()?;
-            let fs = msgs.iter().filter(|x| x.room == active_room);
-            let msg = fs.last()?;
-            self.mark_as_read(msg, Force(false));
+        if msg_in_active {
+            self.mark_last_message_as_read(Force(false));
         }
 
         None

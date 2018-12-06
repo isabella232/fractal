@@ -133,23 +133,14 @@ impl AppOp {
         self.set_state(AppState::Chat);
     }
 
-    pub fn set_active_room_by_id(&mut self, roomid: String) {
-        let mut room = None;
-        if let Some(r) = self.rooms.get(&roomid) {
-            room = Some(r.clone());
-        }
-
-        if let Some(r) = room {
-            if r.inv {
-                self.show_inv_dialog(&r);
+    pub fn set_active_room_by_id(&mut self, id: String) {
+        if let Some(room) = self.rooms.get(&id) {
+            if room.inv {
+                self.show_inv_dialog(room.inv_sender.as_ref(), room.name.as_ref());
+                self.invitation_roomid = Some(room.id.clone());
                 return;
             }
-
-            self.set_active_room(&r);
         }
-    }
-
-    pub fn set_active_room(&mut self, room: &Room) {
         self.room_panel(RoomPanel::Room);
 
         let msg_entry = self.ui.sventry.view.clone();
@@ -158,35 +149,55 @@ impl AppOp {
             let end = buffer.get_end_iter();
 
             if let Some(msg) = buffer.get_text(&start, &end, false) {
-                let active_room_id = self.active_room.clone().unwrap_or_default();
-                if msg.len() > 0 {
-                    if let Some(mark) = buffer.get_insert() {
-                        let iter = buffer.get_iter_at_mark(&mark);
-                        let msg_position = iter.get_offset();
+                if let Some(ref active_room) = self.active_room {
+                    if msg.len() > 0 {
+                        if let Some(mark) = buffer.get_insert() {
+                            let iter = buffer.get_iter_at_mark(&mark);
+                            let msg_position = iter.get_offset();
 
-                        self.unsent_messages
-                            .insert(active_room_id, (msg, msg_position));
+                            self.unsent_messages
+                                .insert(active_room.clone(), (msg, msg_position));
+                        }
+                    } else {
+                        self.unsent_messages.remove(active_room);
                     }
-                } else {
-                    self.unsent_messages.remove(&active_room_id);
                 }
             }
         }
 
-        self.active_room = Some(room.id.clone());
         self.clear_tmp_msgs();
 
+        /* Transform id into the active_room */
+        let active_room = id;
+
+        // getting room details
+        self.backend
+            .send(BKCommand::SetRoom(active_room.clone()))
+            .unwrap();
+
         /* create the intitial list of messages to fill the new room history */
-        let active_room = self.active_room.clone().unwrap_or_default();
         let mut messages = vec![];
-        for msg in room.messages.iter() {
-            /* Make sure the message is from this room and not redacted */
-            if msg.room == active_room && !msg.redacted {
-                let row = self.create_new_room_message(msg);
-                if let Some(row) = row {
-                    messages.push(row);
+        if let Some(room) = self.rooms.get(&active_room) {
+            for msg in room.messages.iter() {
+                /* Make sure the message is from this room and not redacted */
+                if msg.room == active_room && !msg.redacted {
+                    let row = self.create_new_room_message(msg);
+                    if let Some(row) = row {
+                        messages.push(row);
+                    }
                 }
             }
+            let l = room.messages.len();
+            if l > 0 && l < globals::INITIAL_MESSAGES {
+                self.internal.send(InternalCommand::LoadMore).unwrap();
+            }
+
+            self.internal
+                .send(InternalCommand::AppendTmpMessages)
+                .unwrap();
+
+            self.set_current_room_detail(String::from("m.room.name"), room.name.clone());
+            self.set_current_room_detail(String::from("m.room.topic"), room.topic.clone());
         }
 
         /* make sure we remove the old room history first, because the lazy loading could try to
@@ -200,42 +211,9 @@ impl AppOp {
         history.create(messages);
         self.history = Some(history);
 
-        let l = room.messages.len();
-        if l > 0 && l < globals::INITIAL_MESSAGES {
-            self.internal.send(InternalCommand::LoadMore).unwrap();
-        }
-
-        self.internal
-            .send(InternalCommand::AppendTmpMessages)
-            .unwrap();
-
-        if let Some(msg) = room.messages.iter().last() {
-            self.mark_as_read(msg, Force(false));
-        }
-
-        // getting room details
-        self.backend.send(BKCommand::SetRoom(room.clone())).unwrap();
-
-        self.set_room_topic_label(room.topic.clone());
-
-        let name_label = self
-            .ui
-            .builder
-            .get_object::<gtk::Label>("room_name")
-            .expect("Can't find room_name in ui file.");
-
-        name_label.set_text(&room.name.clone().unwrap_or_default());
-
-        let mut size = 24;
-        if let Some(r) = room.topic.clone() {
-            if !r.is_empty() {
-                size = 16;
-            }
-        }
-
-        self.set_current_room_avatar(room.avatar.clone(), size);
-        self.set_current_room_detail(String::from("m.room.name"), room.name.clone());
-        self.set_current_room_detail(String::from("m.room.topic"), room.topic.clone());
+        self.active_room = Some(active_room);
+        /* Mark the new active room as read */
+        self.mark_last_message_as_read(Force(false));
     }
 
     pub fn really_leave_active_room(&mut self) {
@@ -394,16 +372,6 @@ impl AppOp {
             self.roomlist
                 .set_room_avatar(roomid.clone(), r.avatar.clone());
         }
-
-        if roomid == self.active_room.clone().unwrap_or_default() {
-            let mut size = 24;
-            if let Some(r) = self.rooms.get_mut(&roomid) {
-                if !r.clone().topic.unwrap_or_default().is_empty() {
-                    size = 16;
-                }
-            }
-            self.set_current_room_avatar(avatar, size);
-        }
     }
 
     pub fn set_current_room_detail(&self, key: String, value: Option<String>) {
@@ -425,8 +393,6 @@ impl AppOp {
             _ => warn!("no key {}", key),
         };
     }
-
-    pub fn set_current_room_avatar(&self, _avatar: Option<String>, _size: i32) {}
 
     pub fn filter_rooms(&self, term: Option<String>) {
         self.roomlist.filter_rooms(term);
