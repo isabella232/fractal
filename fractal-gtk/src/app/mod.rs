@@ -17,7 +17,6 @@ use backend::Backend;
 use globals;
 use uibuilder;
 
-mod actions;
 mod connect;
 
 pub use self::appop_loop::InternalCommand;
@@ -64,8 +63,6 @@ impl App {
 
         let gtk_app = gtk::Application::new(Some(&appid[..]), gio::ApplicationFlags::empty())
             .expect("Failed to initialize GtkApplication");
-
-        gtk_app.set_accels_for_action("app.quit", &["<Ctrl>Q"]);
 
         let path = "/org/gnome/Fractal".to_string();
         gtk_app.set_property_resource_base_path(Some(&path));

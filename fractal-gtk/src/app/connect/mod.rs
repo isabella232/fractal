@@ -18,6 +18,7 @@ mod roomlist_search;
 mod send;
 mod stickers;
 
+use actions;
 use app::App;
 
 impl App {
@@ -56,8 +57,7 @@ impl App {
             }
         });
 
-        self.create_actions();
-
+        actions::Global::new(self.op.clone());
         self.connect_headerbars();
         self.connect_login_view();
 
