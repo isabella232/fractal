@@ -15,7 +15,6 @@ use types::StickerGroup;
 pub enum InternalCommand {
     SetView(AppState),
     NotifyClicked(Message),
-    LoadMore,
     RemoveInv(String),
     AppendTmpMessages,
     ForceDequeueMessage,
@@ -44,9 +43,6 @@ pub fn appop_loop(rx: Receiver<InternalCommand>) {
             }
             Ok(InternalCommand::NotifyClicked(msg)) => {
                 APPOP!(notification_cliked, (msg));
-            }
-            Ok(InternalCommand::LoadMore) => {
-                APPOP!(load_more_messages);
             }
             Ok(InternalCommand::RemoveInv(rid)) => {
                 APPOP!(remove_inv, (rid));

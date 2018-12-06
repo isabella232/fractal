@@ -12,7 +12,6 @@ use backend::BKCommand;
 
 use actions;
 use cache;
-use globals;
 use widgets;
 
 use types::Room;
@@ -187,10 +186,6 @@ impl AppOp {
                     }
                 }
             }
-            let l = room.messages.len();
-            if l > 0 && l < globals::INITIAL_MESSAGES {
-                self.internal.send(InternalCommand::LoadMore).unwrap();
-            }
 
             self.internal
                 .send(InternalCommand::AppendTmpMessages)
@@ -207,7 +202,7 @@ impl AppOp {
         }
 
         let actions = actions::RoomHistory::new(self.backend.clone(), self.ui.clone());
-        let mut history = widgets::RoomHistory::new(actions, self);
+        let mut history = widgets::RoomHistory::new(actions, active_room.clone(), self);
         history.create(messages);
         self.history = Some(history);
 
