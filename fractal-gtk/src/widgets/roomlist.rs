@@ -286,14 +286,6 @@ impl RoomListGroup {
         self.widget.hide();
     }
 
-    pub fn connect<F: Fn(Room) + 'static>(&self, cb: F) {
-        let rs = self.roomvec.clone();
-        self.list.connect_row_activated(move |_, row| {
-            let idx = row.get_index();
-            cb(rs.lock().unwrap()[idx as usize].room.clone());
-        });
-    }
-
     pub fn get_selected(&self) -> Option<String> {
         let rv = self.roomvec.lock().unwrap();
         match self.list.get_selected_row() {
@@ -496,17 +488,6 @@ impl RoomList {
                 .collect::<Vec<Room>>(),
         );
         self.show_and_hide();
-    }
-
-    pub fn connect<F: Fn(Room) + 'static>(&self, cb: F) {
-        let acb = Arc::new(cb);
-
-        let cb = acb.clone();
-        self.inv.get().connect(move |room| cb(room));
-        let cb = acb.clone();
-        self.fav.get().connect(move |room| cb(room));
-        let cb = acb.clone();
-        self.rooms.get().connect(move |room| cb(room));
     }
 
     pub fn connect_fav<F: Fn(Room, bool) + 'static>(&self, cb: F) {

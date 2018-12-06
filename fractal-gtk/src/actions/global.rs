@@ -2,30 +2,32 @@ use std::sync::{Arc, Mutex};
 
 use appop::AppOp;
 use appop::AppState;
-use gio::ActionMapExt;
-use gio::SimpleActionExt;
+use gio::prelude::*;
+use gio::SimpleAction;
 use gtk::prelude::*;
 
 /* This creates globale actions which are connected to the application */
 /* TODO: Remove op */
 pub fn new(op: Arc<Mutex<AppOp>>) {
     let app = op.lock().unwrap().gtk_app.clone();
-    let settings = gio::SimpleAction::new("settings", None);
-    let account = gio::SimpleAction::new("account_settings", None);
-    let dir = gio::SimpleAction::new("directory", None);
-    let chat = gio::SimpleAction::new("start_chat", None);
-    let newr = gio::SimpleAction::new("new_room", None);
-    let joinr = gio::SimpleAction::new("join_room", None);
-    let logout = gio::SimpleAction::new("logout", None);
+    let settings = SimpleAction::new("settings", None);
+    let account = SimpleAction::new("account_settings", None);
+    let dir = SimpleAction::new("directory", None);
+    let chat = SimpleAction::new("start_chat", None);
+    let newr = SimpleAction::new("new_room", None);
+    let joinr = SimpleAction::new("join_room", None);
+    let logout = SimpleAction::new("logout", None);
 
-    let room = gio::SimpleAction::new("room_details", None);
-    let inv = gio::SimpleAction::new("room_invite", None);
-    let search = gio::SimpleAction::new("search", None);
-    let leave = gio::SimpleAction::new("leave_room", None);
+    let room = SimpleAction::new("room_details", None);
+    let inv = SimpleAction::new("room_invite", None);
+    let search = SimpleAction::new("search", None);
+    let leave = SimpleAction::new("leave_room", None);
 
-    let quit = gio::SimpleAction::new("quit", None);
-    let shortcuts = gio::SimpleAction::new("shortcuts", None);
-    let about = gio::SimpleAction::new("about", None);
+    let quit = SimpleAction::new("quit", None);
+    let shortcuts = SimpleAction::new("shortcuts", None);
+    let about = SimpleAction::new("about", None);
+
+    let open_room = SimpleAction::new("open_room", glib::VariantTy::new("s").ok());
 
     app.add_action(&settings);
     app.add_action(&account);
@@ -43,6 +45,7 @@ pub fn new(op: Arc<Mutex<AppOp>>) {
     app.add_action(&quit);
     app.add_action(&shortcuts);
     app.add_action(&about);
+    app.add_action(&open_room);
 
     quit.connect_activate(clone!(op => move |_, _| op.lock().unwrap().quit() ));
     about.connect_activate(clone!(op => move |_, _| op.lock().unwrap().about_dialog() ));
@@ -67,6 +70,16 @@ pub fn new(op: Arc<Mutex<AppOp>>) {
     newr.connect_activate(clone!(op => move |_, _| op.lock().unwrap().new_room_dialog() ));
     joinr.connect_activate(clone!(op => move |_, _| op.lock().unwrap().join_to_room_dialog() ));
 
+    open_room.connect_activate(clone!(op => move |_, data| {
+        if let Some(id) = get_room_id(data) {
+                op.lock().unwrap().set_active_room_by_id(id.to_string());
+        }
+    }));
+
     /* Add Keybindings to actions */
     app.set_accels_for_action("app.quit", &["<Ctrl>Q"]);
+}
+
+fn get_room_id(data: &Option<glib::Variant>) -> Option<&str> {
+    data.as_ref()?.get_str()
 }

@@ -104,10 +104,6 @@ impl AppOp {
         container.add(&self.roomlist.widget());
         self.roomlist.set_selected(selected_room);
 
-        let bk = self.internal.clone();
-        self.roomlist.connect(move |room| {
-            bk.send(InternalCommand::SelectRoom(room)).unwrap();
-        });
         let bk = self.backend.clone();
         self.roomlist.connect_fav(move |room, tofav| {
             bk.send(BKCommand::AddToFav(room.id.clone(), tofav))

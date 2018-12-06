@@ -133,7 +133,7 @@ impl RoomRow {
             .circle(self.room.id.clone(), Some(name), ICON_SIZE);
     }
 
-    pub fn widget(&self) -> gtk::EventBox {
+    pub fn widget(&self) -> gtk::ListBoxRow {
         let b = gtk::Box::new(gtk::Orientation::Horizontal, 5);
 
         for ch in self.widget.get_children() {
@@ -159,7 +159,12 @@ impl RoomRow {
             self.notifications.hide();
         }
 
-        self.widget.clone()
+        let row = gtk::ListBoxRow::new();
+        row.add(&self.widget);
+        let data = glib::Variant::from(&self.room.id);
+        row.set_action_target_value(&data);
+        row.set_action_name("app.open_room");
+        row
     }
 
     pub fn connect_dnd(&self) {
