@@ -4,6 +4,7 @@ fractal-gtk/res/gtk/help-overlay.ui
 fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in
 fractal-gtk/res/org.gnome.Fractal.desktop.in.in
 fractal-gtk/res/org.gnome.Fractal.gschema.xml
+
 # ui files
 fractal-gtk/res/ui/account_settings.ui
 fractal-gtk/res/ui/add_room_menu.ui
@@ -18,8 +19,8 @@ fractal-gtk/res/ui/leave_room.ui
 fractal-gtk/res/ui/main_menu.ui
 fractal-gtk/res/ui/main_window.ui
 fractal-gtk/res/ui/markdown_popover.ui
-fractal-gtk/res/ui/media_viewer_menu.ui
 fractal-gtk/res/ui/media_viewer.ui
+fractal-gtk/res/ui/media_viewer_menu.ui
 fractal-gtk/res/ui/members.ui
 fractal-gtk/res/ui/message_menu.ui
 fractal-gtk/res/ui/msg_src_window.ui
@@ -33,6 +34,9 @@ fractal-gtk/res/ui/sticker_group.ui
 fractal-gtk/res/ui/stickers_popover.ui
 
 # rust files
+fractal-gtk/src/actions/global.rs
+fractal-gtk/src/actions/mod.rs
+fractal-gtk/src/actions/room_history.rs
 fractal-gtk/src/app/appop_loop.rs
 fractal-gtk/src/app/backend_loop.rs
 fractal-gtk/src/app/connect/account.rs
@@ -56,7 +60,6 @@ fractal-gtk/src/appop/about.rs
 fractal-gtk/src/appop/account.rs
 fractal-gtk/src/appop/attach.rs
 fractal-gtk/src/appop/directory.rs
-fractal-gtk/src/appop/files.rs
 fractal-gtk/src/appop/invite.rs
 fractal-gtk/src/appop/login.rs
 fractal-gtk/src/appop/media_viewer.rs
@@ -73,21 +76,19 @@ fractal-gtk/src/appop/stickers.rs
 fractal-gtk/src/appop/sync.rs
 fractal-gtk/src/appop/user.rs
 fractal-gtk/src/cache/mod.rs
+fractal-gtk/src/cache/state.rs
 fractal-gtk/src/globals.rs
 fractal-gtk/src/main.rs
 fractal-gtk/src/passwd.rs
 fractal-gtk/src/static_resources.rs
 fractal-gtk/src/uibuilder.rs
-fractal-gtk/src/util.rs
 fractal-gtk/src/uitypes.rs
-fractal-gtk/src/actions/global.rs
-fractal-gtk/src/actions/mod.rs
-fractal-gtk/src/actions/room_history.rs
+fractal-gtk/src/util.rs
 fractal-gtk/src/widgets/address.rs
-fractal-gtk/src/widgets/room_history.rs
 fractal-gtk/src/widgets/autocomplete.rs
 fractal-gtk/src/widgets/avatar.rs
 fractal-gtk/src/widgets/divider.rs
+fractal-gtk/src/widgets/error_dialog.rs
 fractal-gtk/src/widgets/image.rs
 fractal-gtk/src/widgets/inline_player.rs
 fractal-gtk/src/widgets/media_viewer.rs
@@ -97,8 +98,10 @@ fractal-gtk/src/widgets/message.rs
 fractal-gtk/src/widgets/message_menu.rs
 fractal-gtk/src/widgets/mod.rs
 fractal-gtk/src/widgets/room.rs
+fractal-gtk/src/widgets/room_history.rs
 fractal-gtk/src/widgets/room_settings.rs
 fractal-gtk/src/widgets/roomlist.rs
 fractal-gtk/src/widgets/roomrow.rs
 fractal-gtk/src/widgets/scroll_widget.rs
 fractal-gtk/src/widgets/source_dialog.rs
+fractal-gtk/src/widgets/sourceview_entry.rs
