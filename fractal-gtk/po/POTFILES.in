@@ -33,7 +33,6 @@ fractal-gtk/res/ui/sticker_group.ui
 fractal-gtk/res/ui/stickers_popover.ui
 
 # rust files
-fractal-gtk/src/app/actions.rs
 fractal-gtk/src/app/appop_loop.rs
 fractal-gtk/src/app/backend_loop.rs
 fractal-gtk/src/app/connect/account.rs
@@ -81,8 +80,9 @@ fractal-gtk/src/static_resources.rs
 fractal-gtk/src/uibuilder.rs
 fractal-gtk/src/util.rs
 fractal-gtk/src/uitypes.rs
-fractal-gtk/src/actions/room_history.rs
+fractal-gtk/src/actions/global.rs
 fractal-gtk/src/actions/mod.rs
+fractal-gtk/src/actions/room_history.rs
 fractal-gtk/src/widgets/address.rs
 fractal-gtk/src/widgets/room_history.rs
 fractal-gtk/src/widgets/autocomplete.rs

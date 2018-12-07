@@ -209,8 +209,8 @@ impl Backend {
                 let r = room::redact_msg(self, msg);
                 bkerror!(r, tx, BKResponse::SendMsgRedactionError);
             }
-            Ok(BKCommand::SetRoom(room)) => {
-                let r = room::set_room(self, room);
+            Ok(BKCommand::SetRoom(id)) => {
+                let r = room::set_room(self, id);
                 bkerror!(r, tx, BKResponse::SetRoomError);
             }
             Ok(BKCommand::GetRoomAvatar(room)) => {

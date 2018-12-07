@@ -60,7 +60,7 @@ pub enum BKCommand {
     GetUserNameAsync(String, Sender<String>),
     SendMsg(Message),
     SendMsgRedaction(Message),
-    SetRoom(Room),
+    SetRoom(String),
     ShutDown,
     DirectoryProtocols,
     DirectorySearch(String, String, String, bool),

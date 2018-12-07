@@ -28,10 +28,11 @@ use types::Room;
 
 use serde_json::Value as JsonValue;
 
-pub fn set_room(bk: &Backend, room: Room) -> Result<(), Error> {
-    get_room_detail(bk, room.id.clone(), String::from("m.room.topic"))?;
-    get_room_avatar(bk, room.id.clone())?;
-    get_room_members(bk, room.id.clone())?;
+pub fn set_room(bk: &Backend, id: String) -> Result<(), Error> {
+    /* FIXME: remove clone and pass id by reference */
+    get_room_detail(bk, id.clone(), String::from("m.room.topic"))?;
+    get_room_avatar(bk, id.clone())?;
+    get_room_members(bk, id)?;
 
     Ok(())
 }
