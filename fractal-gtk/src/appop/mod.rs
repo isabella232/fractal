@@ -26,7 +26,6 @@ mod about;
 mod account;
 pub mod attach;
 mod directory;
-mod files;
 mod invite;
 mod login;
 mod media_viewer;

@@ -24,6 +24,7 @@ use std::sync::mpsc::{Receiver, Sender};
 use std::sync::Arc;
 use std::sync::Mutex;
 use widgets::image;
+use widgets::ErrorDialog;
 
 const FLOATING_POINT_ERROR: f64 = 0.01;
 const ZOOM_LEVELS: [f64; 7] = [0.025, 0.05, 0.1, 0.25, 0.5, 0.75, 1.0];
@@ -768,7 +769,7 @@ fn load_more_media(data: Rc<RefCell<Data>>, builder: gtk::Builder, backend: Send
         Err(TryRecvError::Disconnected) => {
             data.borrow_mut().loading_error = true;
             let err = i18n("Error while loading previous media");
-            show_error(&data.borrow().main_window, err);
+            ErrorDialog::new(&data.borrow().main_window, &err);
 
             gtk::Continue(false)
         }
@@ -823,24 +824,10 @@ fn save_file_as(main_window: &gtk::Window, src: String, name: String) {
         if ResponseType::from(res) == ResponseType::Accept {
             if let Err(_) = fs::copy(src.clone(), fcd.get_filename().unwrap_or_default()) {
                 let err = i18n("Could not save the file");
-                show_error(&main_window, err);
+                ErrorDialog::new(&main_window, &err);
             }
         }
     });
 
     file_chooser.run();
-}
-
-fn show_error(window: &gtk::Window, msg: String) {
-    let dialog = gtk::MessageDialog::new(
-        Some(window),
-        gtk::DialogFlags::MODAL,
-        gtk::MessageType::Warning,
-        gtk::ButtonsType::Ok,
-        &msg,
-    );
-    dialog.show();
-    dialog.connect_response(move |d, _| {
-        d.destroy();
-    });
 }

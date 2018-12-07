@@ -1,3 +1,4 @@
+use std::fs;
 use std::sync::mpsc::channel;
 use std::sync::mpsc::TryRecvError;
 use std::sync::mpsc::{Receiver, Sender};
@@ -9,11 +10,13 @@ use gio::SimpleActionExt;
 use gio::SimpleActionGroup;
 use gtk;
 use gtk::prelude::*;
+use gtk::ResponseType;
 use i18n::i18n;
 use types::Message;
 use uibuilder::UI;
 use App;
 
+use widgets::ErrorDialog;
 use widgets::SourceDialog;
 
 /* This creates all actions the room history can perform */
@@ -21,7 +24,7 @@ pub fn new(backend: Sender<BKCommand>, ui: UI) -> gio::SimpleActionGroup {
     let actions = SimpleActionGroup::new();
     let reply = SimpleAction::new("reply", glib::VariantTy::new("s").ok());
     let open_with = SimpleAction::new("open_with", glib::VariantTy::new("s").ok());
-    let save_image_as = SimpleAction::new("save_image_as", glib::VariantTy::new("s").ok());
+    let save_as = SimpleAction::new("save_as", glib::VariantTy::new("s").ok());
     let copy_image = SimpleAction::new("copy_image", glib::VariantTy::new("s").ok());
     let copy_text = SimpleAction::new("copy_text", glib::VariantTy::new("s").ok());
     let delete = SimpleAction::new("delete", glib::VariantTy::new("s").ok());
@@ -30,7 +33,7 @@ pub fn new(backend: Sender<BKCommand>, ui: UI) -> gio::SimpleActionGroup {
 
     actions.add_action(&reply);
     actions.add_action(&open_with);
-    actions.add_action(&save_image_as);
+    actions.add_action(&save_as);
     actions.add_action(&copy_image);
     actions.add_action(&copy_text);
     actions.add_action(&delete);
@@ -41,9 +44,9 @@ pub fn new(backend: Sender<BKCommand>, ui: UI) -> gio::SimpleActionGroup {
         .builder
         .get_object("main_window")
         .expect("Can't find main_window in ui file.");
-    let parent = parent.downgrade();
+    let parent_weak = parent.downgrade();
     show_source.connect_activate(move |_, data| {
-        let parent = upgrade_weak!(parent);
+        let parent = upgrade_weak!(parent_weak);
         let viewer = SourceDialog::new();
         viewer.set_parent_window(&parent);
         if let Some(m) = get_message(data) {
@@ -84,7 +87,8 @@ pub fn new(backend: Sender<BKCommand>, ui: UI) -> gio::SimpleActionGroup {
     });
 
     let b = backend.clone();
-    save_image_as.connect_activate(move |_, data| {
+    let parent_weak = parent.downgrade();
+    save_as.connect_activate(move |_, data| {
         if let Some(m) = get_message(data) {
             let name = m.body;
             let url = m.url.unwrap_or_default();
@@ -92,21 +96,21 @@ pub fn new(backend: Sender<BKCommand>, ui: UI) -> gio::SimpleActionGroup {
             let (tx, rx): (Sender<String>, Receiver<String>) = channel();
             let _ = b.send(BKCommand::GetMediaAsync(url, tx));
 
+            let parent_weak = parent_weak.clone();
             gtk::timeout_add(
                 50,
                 clone!(name => move || match rx.try_recv() {
                     Err(TryRecvError::Empty) => gtk::Continue(true),
                     Err(TryRecvError::Disconnected) => {
                         let msg = i18n("Could not download the file");
-                        /* FIXME: this should be an action */
-                        APPOP!(show_error, (msg));
+                        let parent = upgrade_weak!(parent_weak, gtk::Continue(true));
+                        ErrorDialog::new(&parent, &msg);
 
                         gtk::Continue(true)
                     },
                     Ok(fname) => {
-                        let name = name.clone();
-                        /* FIXME: this should be an action */
-                        APPOP!(save_file_as, (fname, name));
+                        let parent = upgrade_weak!(parent_weak, gtk::Continue(true));
+                        open_save_as_dialog(&parent, fname, &name);
 
                         gtk::Continue(false)
                     }
@@ -116,6 +120,7 @@ pub fn new(backend: Sender<BKCommand>, ui: UI) -> gio::SimpleActionGroup {
     });
 
     let b = backend.clone();
+    let parent_weak = parent.downgrade();
     copy_image.connect_activate(move |_, data| {
         if let Some(m) = get_message(data) {
             let url = m.url.unwrap_or_default();
@@ -124,12 +129,13 @@ pub fn new(backend: Sender<BKCommand>, ui: UI) -> gio::SimpleActionGroup {
 
             let _ = b.send(BKCommand::GetMediaAsync(url.clone(), tx));
 
+            let parent_weak = parent_weak.clone();
             gtk::timeout_add(50, move || match rx.try_recv() {
                 Err(TryRecvError::Empty) => gtk::Continue(true),
                 Err(TryRecvError::Disconnected) => {
                     let msg = i18n("Could not download the file");
-                    /*FIXME: this should be an action */
-                    APPOP!(show_error, (msg));
+                    let parent = upgrade_weak!(parent_weak, gtk::Continue(true));
+                    ErrorDialog::new(&parent, &msg);
 
                     gtk::Continue(true)
                 }
@@ -181,4 +187,30 @@ fn open_viewer(data: &Option<glib::Variant>) -> Option<()> {
     let mut op = op.lock().unwrap();
     op.create_media_viewer(msg);
     None
+}
+
+fn open_save_as_dialog(parent: &gtk::Window, src: String, name: &str) {
+    let file_chooser = gtk::FileChooserNative::new(
+        Some(i18n("Save media as").as_str()),
+        Some(parent),
+        gtk::FileChooserAction::Save,
+        Some(i18n("_Save").as_str()),
+        Some(i18n("_Cancel").as_str()),
+    );
+
+    file_chooser.set_current_folder(dirs::download_dir().unwrap_or_default());
+    file_chooser.set_current_name(name);
+
+    let parent_weak = parent.downgrade();
+    file_chooser.connect_response(move |fcd, res| {
+        if ResponseType::from(res) == ResponseType::Accept {
+            if let Err(_) = fs::copy(src.clone(), fcd.get_filename().unwrap_or_default()) {
+                let msg = i18n("Could not save the file");
+                let parent = upgrade_weak!(parent_weak);
+                ErrorDialog::new(&parent, &msg);
+            }
+        }
+    });
+
+    file_chooser.run();
 }

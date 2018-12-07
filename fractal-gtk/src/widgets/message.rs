@@ -328,13 +328,14 @@ impl MessageBox {
     fn build_room_msg_sticker(&self, msg: &Message) -> gtk::Box {
         let bx = gtk::Box::new(gtk::Orientation::Horizontal, 0);
         let backend = self.backend.clone();
-        let image = widgets::image::Image::new(&backend, &msg.url.clone().unwrap_or_default())
-            .size(Some(globals::MAX_STICKER_SIZE))
-            .build();
-        let w = image.widget.clone();
-        w.set_tooltip_text(&msg.body[..]);
+        if let Some(url) = msg.url.as_ref() {
+            let image = widgets::image::Image::new(&backend, url)
+                .size(Some(globals::MAX_STICKER_SIZE))
+                .build();
+            image.widget.set_tooltip_text(&msg.body[..]);
 
-        bx.add(&w);
+            bx.add(&image.widget);
+        }
 
         bx
     }
@@ -343,7 +344,6 @@ impl MessageBox {
         let bx = gtk::Box::new(gtk::Orientation::Horizontal, 6);
         let player = widgets::AudioPlayerWidget::new();
 
-        let name = msg.body.clone();
         let url = msg.url.clone().unwrap_or_default();
         let backend = self.backend.clone();
 
@@ -359,6 +359,7 @@ impl MessageBox {
                     Err(TryRecvError::Empty) => gtk::Continue(true),
                     Err(TryRecvError::Disconnected) => {
                         let msg = i18n("Could not retrieve file URI");
+                        /* FIXME: don't use APPOP! */
                         APPOP!(show_error, (msg));
                         gtk::Continue(true)
                     },
@@ -375,27 +376,9 @@ impl MessageBox {
             gtk::Button::new_from_icon_name("document-save-symbolic", gtk::IconSize::Button.into());
         download_btn.set_tooltip_text(i18n("Save").as_str());
 
-        download_btn.connect_clicked(clone!(name, url, backend => move |_| {
-            let (tx, rx): (Sender<String>, Receiver<String>) = channel();
-
-            backend.send(BKCommand::GetMediaAsync(url.clone(), tx)).unwrap();
-
-            gtk::timeout_add(50, clone!(name => move || match rx.try_recv() {
-                Err(TryRecvError::Empty) => gtk::Continue(true),
-                Err(TryRecvError::Disconnected) => {
-                    let msg = i18n("Could not download the file");
-                    APPOP!(show_error, (msg));
-
-                    gtk::Continue(true)
-                },
-                Ok(fname) => {
-                    let name = name.clone();
-                    APPOP!(save_file_as, (fname, name));
-
-                    gtk::Continue(false)
-                }
-            }));
-        }));
+        let data = glib::Variant::from(msg.id.as_str());
+        download_btn.set_action_target_value(&data);
+        download_btn.set_action_name("room_history.save_as");
 
         bx.pack_start(&player.container, false, true, 0);
         bx.pack_start(&download_btn, false, false, 3);
@@ -406,11 +389,9 @@ impl MessageBox {
         let bx = gtk::Box::new(gtk::Orientation::Horizontal, 12);
         let btn_bx = gtk::Box::new(gtk::Orientation::Horizontal, 0);
 
-        let name = msg.body.clone();
-        let url = msg.url.clone().unwrap_or_default();
-        let backend = self.backend.clone();
-        let name_lbl = gtk::Label::new(name.as_str());
-        name_lbl.set_tooltip_text(name.as_str());
+        let name = msg.body.as_str();
+        let name_lbl = gtk::Label::new(name);
+        name_lbl.set_tooltip_text(name);
         name_lbl.set_ellipsize(pango::EllipsizeMode::End);
 
         if let Some(style) = name_lbl.get_style_context() {
@@ -421,36 +402,17 @@ impl MessageBox {
             gtk::Button::new_from_icon_name("document-save-symbolic", gtk::IconSize::Button.into());
         download_btn.set_tooltip_text(i18n("Save").as_str());
 
-        download_btn.connect_clicked(clone!(name, url, backend => move |_| {
-            let (tx, rx): (Sender<String>, Receiver<String>) = channel();
-
-
-            backend.send(BKCommand::GetMediaAsync(url.clone(), tx)).unwrap();
-
-            gtk::timeout_add(50, clone!(name => move || match rx.try_recv() {
-                Err(TryRecvError::Empty) => gtk::Continue(true),
-                Err(TryRecvError::Disconnected) => {
-                    let msg = i18n("Could not download the file");
-                    APPOP!(show_error, (msg));
-
-                    gtk::Continue(true)
-                },
-                Ok(fname) => {
-                    let name = name.clone();
-                    APPOP!(save_file_as, (fname, name));
-
-                    gtk::Continue(false)
-                }
-            }));
-        }));
+        let data = glib::Variant::from(msg.id.as_str());
+        download_btn.set_action_target_value(&data);
+        download_btn.set_action_name("room_history.save_as");
 
         let open_btn =
             gtk::Button::new_from_icon_name("document-open-symbolic", gtk::IconSize::Button.into());
         open_btn.set_tooltip_text(i18n("Open").as_str());
 
-        open_btn.connect_clicked(clone!(url, backend => move |_| {
-            backend.send(BKCommand::GetMedia(url.clone())).unwrap();
-        }));
+        let data = glib::Variant::from(msg.id.as_str());
+        open_btn.set_action_target_value(&data);
+        open_btn.set_action_name("room_history.open_with");
 
         btn_bx.pack_start(&open_btn, false, false, 0);
         btn_bx.pack_start(&download_btn, false, false, 0);
@@ -535,7 +497,6 @@ impl MessageBox {
     }
 
     fn connect_right_click_menu(&self, msg: &Message, label: Option<&gtk::Label>) -> Option<()> {
-        let actions = self.actions.as_ref()?.downgrade();
         let id = msg.id.clone();
         let mtype = msg.mtype.clone();
         let redactable = msg.redactable.clone();
@@ -547,9 +508,8 @@ impl MessageBox {
         };
         widget.connect_button_press_event(move |w, e| {
             if e.get_button() == 3 {
-                let actions = upgrade_weak!(actions, gtk::Inhibit(false));
                 let eventbox = upgrade_weak!(eventbox_weak, gtk::Inhibit(false));
-                MessageMenu::new(id.as_str(), &mtype, &redactable, actions, &eventbox, w);
+                MessageMenu::new(id.as_str(), &mtype, &redactable, &eventbox, w);
                 Inhibit(true)
             } else {
                 Inhibit(false)
