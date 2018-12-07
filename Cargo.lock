@@ -424,7 +424,6 @@ dependencies = [
  "libhandy 0.2.0 (git+https://gitlab.gnome.org/jsparber/libhandy-rs)",
  "log 0.4.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "mdl 1.0.4 (registry+https://github.com/rust-lang/crates.io-index)",
- "notify-rust 3.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "pango 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "pangocairo 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "rand 0.5.5 (registry+https://github.com/rust-lang/crates.io-index)",
