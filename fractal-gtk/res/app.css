@@ -303,5 +303,5 @@ stack.titlebar:not(headerbar) > box > separator {
 }
 
 .msg-emoji {
-  font-size: xx-large;
+  font-size: 3em;
 }
