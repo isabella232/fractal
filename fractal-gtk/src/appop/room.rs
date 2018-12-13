@@ -78,8 +78,6 @@ impl AppOp {
             .get_object("room_container")
             .expect("Couldn't find room_container in ui file.");
 
-        let selected_room = self.roomlist.get_selected();
-
         self.rooms.clear();
         for ch in container.get_children().iter() {
             container.remove(ch);
@@ -100,7 +98,6 @@ impl AppOp {
         self.roomlist = widgets::RoomList::new(Some(self.server_url.clone()));
         self.roomlist.add_rooms(rooms.iter().cloned().collect());
         container.add(self.roomlist.widget());
-        self.roomlist.set_selected(selected_room);
 
         let bk = self.backend.clone();
         self.roomlist.connect_fav(move |room, tofav| {
@@ -269,7 +266,6 @@ impl AppOp {
 
         let fakeroom = Room::new(internal_id.clone(), Some(n));
         self.new_room(fakeroom, None);
-        self.roomlist.set_selected(Some(internal_id.clone()));
         self.set_active_room_by_id(internal_id);
         self.room_panel(RoomPanel::Room);
     }
@@ -297,8 +293,10 @@ impl AppOp {
             "noroom" => {
                 for ch in headerbar.get_children().iter() {
                     ch.hide();
+
+                    // Select new active room in the sidebar
+                    self.roomlist.unselect();
                 }
-                self.roomlist.set_selected(None);
             }
             "room_view" => {
                 for ch in headerbar.get_children().iter() {
@@ -447,7 +445,6 @@ impl AppOp {
 
         self.roomlist.add_room(r.clone());
         self.roomlist.moveup(r.id.clone());
-        self.roomlist.set_selected(Some(r.id.clone()));
 
         self.set_active_room_by_id(r.id);
     }

@@ -29,7 +29,6 @@ impl AppOp {
         fakeroom.direct = true;
 
         self.new_room(fakeroom, None);
-        self.roomlist.set_selected(Some(internal_id.clone()));
         self.set_active_room_by_id(internal_id);
         self.room_panel(RoomPanel::Room);
     }

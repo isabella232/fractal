@@ -451,23 +451,10 @@ impl RoomList {
         run_in_group!(self, &r.to_string(), set_selected, Some(r.to_string()));
     }
 
-    pub fn set_selected(&self, room: Option<String>) {
+    pub fn unselect(&self) {
         self.inv.get().set_selected(None);
         self.fav.get().set_selected(None);
         self.rooms.get().set_selected(None);
-
-        if let Some(r) = room {
-            run_in_group!(self, &r, set_selected, Some(r.clone()));
-        }
-    }
-
-    pub fn get_selected(&self) -> Option<String> {
-        for i in [&self.inv, &self.fav, &self.rooms].iter() {
-            if let Some(s) = i.get().get_selected() {
-                return Some(s.clone());
-            }
-        }
-        None
     }
 
     pub fn add_rooms(&mut self, array: Vec<Room>) {
