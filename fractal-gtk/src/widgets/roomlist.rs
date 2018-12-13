@@ -446,6 +446,11 @@ impl RoomList {
         rl
     }
 
+    pub fn select(&self, r: &str) {
+        //FIXME don't use to_string(), pass &str
+        run_in_group!(self, &r.to_string(), set_selected, Some(r.to_string()));
+    }
+
     pub fn set_selected(&self, room: Option<String>) {
         self.inv.get().set_selected(None);
         self.fav.get().set_selected(None);

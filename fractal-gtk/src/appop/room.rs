@@ -167,6 +167,8 @@ impl AppOp {
 
         /* Transform id into the active_room */
         let active_room = id;
+        // Select new active room in the sidebar
+        self.roomlist.select(&active_room);
 
         // getting room details
         self.backend
