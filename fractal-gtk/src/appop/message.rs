@@ -1,5 +1,8 @@
 use comrak::{markdown_to_html, ComrakOptions};
+use gdk_pixbuf::Pixbuf;
 use gio::prelude::{FileExt, FileInfoExt};
+use gstreamer_editing_services::prelude::*;
+use gstreamer_editing_services::UriClipAsset;
 use gtk;
 use gtk::prelude::*;
 use lazy_static::lazy_static;
@@ -17,7 +20,7 @@ use crate::uitypes::RowType;
 use crate::widgets;
 
 use crate::types::Message;
-use gdk_pixbuf::Pixbuf;
+
 use serde_json::json;
 use serde_json::Value as JsonValue;
 
@@ -167,7 +170,7 @@ impl AppOp {
         if let Some(next) = self.msg_queue.last() {
             let msg = next.msg.clone();
             match &next.msg.mtype[..] {
-                "m.image" | "m.file" => {
+                "m.image" | "m.file" | "m.audio" => {
                     self.backend.send(BKCommand::AttachFile(msg)).unwrap();
                 }
                 _ => {
@@ -247,6 +250,18 @@ impl AppOp {
                         "image/png" => "m.image",
                         "image/jpeg" => "m.image",
                         "image/jpg" => "m.image",
+                        "audio/mp4" => "m.audio",
+                        "audio/webm" => "m.audio",
+                        "audio/aac" => "m.audio",
+                        "audio/mpeg" => "m.audio",
+                        "audio/ogg" => "m.audio",
+                        "audio/wave" => "m.audio",
+                        "audio/wav" => "m.audio",
+                        "audio/x-wav" => "m.audio",
+                        "audio/x-pn-wav" => "m.audio",
+                        "audio/flac" => "m.audio",
+                        "audio/x-flac" => "m.audio",
+                        "application/x-riff" => "m.audio",
                         _ => "m.file",
                     };
                     let body = path
@@ -256,9 +271,15 @@ impl AppOp {
                     let path_string = path.to_str().unwrap_or_default();
 
                     let mut m = Message::new(room, sender, body.to_string(), mtype.to_string());
-                    if mtype == "m.image" {
-                        m.extra_content = get_image_media_info(path_string, mime.as_ref());
-                    }
+                    let info = match mtype {
+                        "m.image" => get_image_media_info(path_string, mime.as_ref()),
+                        "m.audio" => get_audio_media_info(path_string, mime.as_ref()),
+                        _ => None,
+                    };
+
+                    m.extra_content = info;
+                    m.url = Some(path_string.to_string());
+
                     self.add_tmp_room_message(m);
                     self.dequeue_message();
                 } else {
@@ -489,6 +510,23 @@ fn get_image_media_info(file: &str, mimetype: &str) -> Option<JsonValue> {
             "size": size,
             "mimetype": mimetype,
             "orientation": 0,
+        }
+    });
+
+    Some(info)
+}
+
+fn get_audio_media_info(file: &str, mimetype: &str) -> Option<JsonValue> {
+    let nfile = format!("file://{}", file);
+    let uri = UriClipAsset::request_sync(&nfile).ok()?;
+    let duration = uri?.get_duration().mseconds()?;
+    let size = fs::metadata(file).ok()?.len();
+
+    let info = json!({
+        "info": {
+            "size": size,
+            "mimetype": mimetype,
+            "duration": duration,
         }
     });
 
