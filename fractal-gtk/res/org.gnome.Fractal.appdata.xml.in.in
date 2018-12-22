@@ -18,7 +18,7 @@
     </screenshot>
   </screenshots>
   <releases>
-    <release version="4.0.0" type="stable" date="2018-12-20" urgency="high">
+    <release version="4.0.0" type="stable" date="2018-12-22" urgency="high">
       <description>
         <p>This new major release is the result of 3 months of hard work by 25 contributors pushing over 340 commits.</p>
         <p>New features:</p>
