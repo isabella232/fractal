@@ -11,8 +11,8 @@ keywords = [
     "matrix", "fractal"
 ]
 license = "GPL-3.0"
-repository = "https://gitlab.gnome.org/World/fractal"
-documentation = "https://world.pages.gitlab.gnome.org/fractal/fractal_matrix_api/index.html"
+repository = "https://gitlab.gnome.org/GNOME/fractal"
+documentation = "https://gnome.pages.gitlab.gnome.org/fractal/fractal_matrix_api/index.html"
 
 [dependencies]
 log = "0.4.6"

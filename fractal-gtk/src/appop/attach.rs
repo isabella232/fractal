@@ -105,7 +105,7 @@ fn store_pixbuf(pixb: &Pixbuf) -> Result<String, Error> {
 /// problems because we call to wait_is_image_available that makes that
 /// tries to continue the loop and that give us to a deadlock so
 /// this function minimize the lock and avoid that kind of problems
-/// See: https://gitlab.gnome.org/World/fractal/issues/284
+/// See: https://gitlab.gnome.org/GNOME/fractal/issues/284
 pub fn paste(op: Arc<Mutex<AppOp>>) {
     if let Some(display) = gdk::Display::get_default() {
         if let Some(clipboard) = gtk::Clipboard::get_default(&display) {
