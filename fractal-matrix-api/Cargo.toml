@@ -27,6 +27,7 @@ tree_magic = "0.2.1"
 url = "1.7.2"
 urlencoding = "1.0.0"
 md5 = "0.6.1"
+lazy_static = "1.2.0"
 
 [dependencies.cairo-rs]
 features = ["png"]

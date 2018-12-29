@@ -6,6 +6,8 @@ extern crate serde_json;
 extern crate serde_derive;
 #[macro_use]
 extern crate log;
+#[macro_use]
+extern crate lazy_static;
 
 extern crate cairo;
 extern crate chrono;
