@@ -534,8 +534,9 @@ pub fn dw_media(
     w: i32,
     h: i32,
 ) -> Result<String, Error> {
-    let re = Regex::new(r"mxc://(?P<server>[^/]+)/(?P<media>.+)")?;
-    let caps = re.captures(url).ok_or(Error::BackendError)?;
+    let caps = globals::MATRIX_RE
+        .captures(url)
+        .ok_or(Error::BackendError)?;
     let server = String::from(&caps["server"]);
     let media = String::from(&caps["media"]);
 
