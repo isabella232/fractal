@@ -14,7 +14,7 @@ use crate::actions::AppState;
 use crate::cache;
 use crate::widgets;
 
-use crate::types::Room;
+use crate::types::{Room, RoomMembership, RoomTag};
 
 use crate::util::markup_text;
 
@@ -42,7 +42,7 @@ impl AppOp {
         }
         let mut roomlist = vec![];
         while let Some(room) = rooms.pop() {
-            if room.left {
+            if room.membership.is_left() {
                 // removing left rooms
                 if self.active_room.as_ref().map_or(false, |x| x == &room.id) {
                     self.really_leave_active_room();
@@ -106,8 +106,8 @@ impl AppOp {
 
     pub fn set_active_room_by_id(&mut self, id: String) {
         if let Some(room) = self.rooms.get(&id) {
-            if room.inv {
-                self.show_inv_dialog(room.inv_sender.as_ref(), room.name.as_ref());
+            if let RoomMembership::Invited(ref sender) = room.membership {
+                self.show_inv_dialog(Some(sender), room.name.as_ref());
                 self.invitation_roomid = Some(room.id.clone());
                 return;
             }
@@ -240,7 +240,8 @@ impl AppOp {
             .send(BKCommand::NewRoom(n.clone(), p, internal_id.clone()))
             .unwrap();
 
-        let fakeroom = Room::new(internal_id.clone(), Some(n));
+        let mut fakeroom = Room::new(internal_id.clone(), RoomMembership::Joined(RoomTag::None));
+        fakeroom.name = Some(n);
         self.new_room(fakeroom, None);
         self.set_active_room_by_id(internal_id);
         self.room_panel(RoomPanel::Room);
@@ -423,7 +424,12 @@ impl AppOp {
 
     pub fn added_to_fav(&mut self, roomid: String, tofav: bool) {
         if let Some(ref mut r) = self.rooms.get_mut(&roomid) {
-            r.fav = tofav;
+            let tag = if tofav {
+                RoomTag::Favourite
+            } else {
+                RoomTag::None
+            };
+            r.membership = RoomMembership::Joined(tag);
         }
     }
 
