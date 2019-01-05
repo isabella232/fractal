@@ -6,7 +6,6 @@ project(
 
 dependency('openssl', version: '>= 1.0')
 dependency('dbus-1')
-dependency('libsecret-1')
 
 dependency('glib-2.0', version: '>= 2.56')
 dependency('gio-2.0', version: '>= 2.56')
