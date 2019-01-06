@@ -321,7 +321,7 @@ impl AppOp {
             let result = file_chooser.run();
             if gtk::ResponseType::from(result) == gtk::ResponseType::Accept {
                 if let Some(fname) = file_chooser.get_filename() {
-                    let f = String::from(fname.to_str().unwrap_or(""));
+                    let f = String::from(fname.to_str().unwrap_or_default());
                     APPOP!(attach_message, (f));
                 }
             }
@@ -494,7 +494,7 @@ fn create_ui_message(
 ) -> MessageContent {
     MessageContent {
         msg: msg.clone(),
-        id: msg.id.unwrap_or(String::new()),
+        id: msg.id.unwrap_or_default(),
         sender: msg.sender,
         sender_name: name,
         mtype: t,

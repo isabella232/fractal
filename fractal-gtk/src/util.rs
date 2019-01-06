@@ -63,7 +63,7 @@ pub fn get_markdown_schema() -> bool {
             let settings: Settings = Settings::new("org.gnome.Fractal");
             Some(settings.get_boolean("markdown-active"))
         })
-        .unwrap_or(false)
+        .unwrap_or_default()
 }
 
 pub fn set_markdown_schema(md: bool) {

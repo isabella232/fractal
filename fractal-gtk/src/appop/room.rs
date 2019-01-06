@@ -226,7 +226,7 @@ impl AppOp {
             .get_object::<gtk::ToggleButton>("private_visibility_button")
             .expect("Can't find private_visibility_button in ui file.");
 
-        let n = name.get_text().unwrap_or(String::new());
+        let n = name.get_text().unwrap_or_default();
 
         // Since the switcher
         let p = if private.get_active() {
@@ -286,7 +286,7 @@ impl AppOp {
                     .unsent_messages
                     .get(&active_room_id)
                     .cloned()
-                    .unwrap_or((String::new(), 0));
+                    .unwrap_or_default();
                 if let Some(buffer) = self.ui.sventry.view.get_buffer() {
                     buffer.set_text(&msg.0);
 
@@ -401,7 +401,7 @@ impl AppOp {
             .get_object::<gtk::Entry>("join_room_name")
             .expect("Can't find join_room_name in ui file.");
 
-        let n = name.get_text().unwrap_or(String::new()).trim().to_string();
+        let n = name.get_text().unwrap_or_default().trim().to_string();
 
         self.backend.send(BKCommand::JoinRoom(n.clone())).unwrap();
     }

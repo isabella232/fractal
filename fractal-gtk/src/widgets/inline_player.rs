@@ -75,7 +75,7 @@ impl Deref for Position {
 impl PlayerTimes {
     /// Update the duration `gtk::Label` and the max range of the `gtk::SclaeBar`.
     fn on_duration_changed(&self, duration: Duration) {
-        let seconds = duration.seconds().map(|v| v as f64).unwrap_or(0.0);
+        let seconds = duration.seconds().map(|v| v as f64).unwrap_or_default();
 
         self.slider.block_signal(&self.slider_update);
         self.slider.set_range(0.0, seconds);
@@ -86,7 +86,7 @@ impl PlayerTimes {
 
     /// Update the `gtk::SclaeBar` when the pipeline position is changed.
     fn on_position_updated(&self, position: Position) {
-        let seconds = position.seconds().map(|v| v as f64).unwrap_or(0.0);
+        let seconds = position.seconds().map(|v| v as f64).unwrap_or_default();
 
         self.slider.block_signal(&self.slider_update);
         self.slider.set_value(seconds);
