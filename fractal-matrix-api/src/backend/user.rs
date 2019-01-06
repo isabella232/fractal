@@ -75,7 +75,7 @@ pub fn get_threepid(bk: &Backend) -> Result<(), Error> {
             if let Some(arr) = r["threepids"].as_array() {
                 for pid in arr.iter() {
                     let address = match pid["address"].as_str() {
-                        None => "".to_string(),
+                        None => String::new(),
                         Some(a) => a.to_string(),
                     };
                     let add = match pid["added_at"].as_u64() {
@@ -83,7 +83,7 @@ pub fn get_threepid(bk: &Backend) -> Result<(), Error> {
                         Some(a) => a,
                     };
                     let medium = match pid["medium"].as_str() {
-                        None => "".to_string(),
+                        None => String::new(),
                         Some(a) => a.to_string(),
                     };
                     let val = match pid["validated_at"].as_u64() {

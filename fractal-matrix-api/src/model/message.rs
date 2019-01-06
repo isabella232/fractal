@@ -126,7 +126,7 @@ impl Message {
             room: String::from(roomid),
             id: Some(id.to_string()),
             mtype: type_.to_string(),
-            body: "".to_string(),
+            body: String::new(),
             url: None,
             thumb: None,
             formatted_body: None,

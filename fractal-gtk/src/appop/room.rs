@@ -226,7 +226,7 @@ impl AppOp {
             .get_object::<gtk::ToggleButton>("private_visibility_button")
             .expect("Can't find private_visibility_button in ui file.");
 
-        let n = name.get_text().unwrap_or(String::from(""));
+        let n = name.get_text().unwrap_or(String::new());
 
         // Since the switcher
         let p = if private.get_active() {
@@ -401,11 +401,7 @@ impl AppOp {
             .get_object::<gtk::Entry>("join_room_name")
             .expect("Can't find join_room_name in ui file.");
 
-        let n = name
-            .get_text()
-            .unwrap_or(String::from(""))
-            .trim()
-            .to_string();
+        let n = name.get_text().unwrap_or(String::new()).trim().to_string();
 
         self.backend.send(BKCommand::JoinRoom(n.clone())).unwrap();
     }
@@ -454,12 +450,12 @@ impl AppOp {
 
             let m1 = match members.next() {
                 Some((_uid, m)) => m.get_alias(),
-                None => "".to_string(),
+                None => String::new(),
             };
 
             let m2 = match members.next() {
                 Some((_uid, m)) => m.get_alias(),
-                None => "".to_string(),
+                None => String::new(),
             };
 
             let name = match n {

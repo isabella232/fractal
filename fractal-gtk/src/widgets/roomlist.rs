@@ -360,7 +360,7 @@ impl RoomListGroup {
             if let Some(row) = self.list.get_row_at_index(i as i32) {
                 match term {
                     &Some(ref t) if !t.is_empty() => {
-                        let rname = r.room.name.clone().unwrap_or("".to_string()).to_lowercase();
+                        let rname = r.room.name.clone().unwrap_or(String::new()).to_lowercase();
                         if rname.contains(&t.to_lowercase()) {
                             row.show();
                         } else {

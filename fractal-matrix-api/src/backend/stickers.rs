@@ -64,7 +64,7 @@ pub fn get_sticker_widget_id(bk: &Backend, then: BKCommand) -> Result<(), Error>
         let url = vurl(&d, "widgets/request", &[]).unwrap();
         match json_q("post", &url, &data, globals::TIMEOUT) {
             Ok(r) => {
-                let mut id = "".to_string();
+                let mut id = String::new();
                 if let Some(i) = r["id"].as_str() {
                     id = i.to_string();
                 }
