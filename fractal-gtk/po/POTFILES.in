@@ -37,7 +37,6 @@ fractal-gtk/src/actions/mod.rs
 fractal-gtk/src/actions/room_history.rs
 fractal-gtk/src/app/backend_loop.rs
 fractal-gtk/src/app/connect/account.rs
-fractal-gtk/src/app/connect/attach.rs
 fractal-gtk/src/app/connect/autocomplete.rs
 fractal-gtk/src/app/connect/direct.rs
 fractal-gtk/src/app/connect/directory.rs
