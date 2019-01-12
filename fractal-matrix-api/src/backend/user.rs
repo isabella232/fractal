@@ -256,7 +256,7 @@ pub fn delete_three_pid(bk: &Backend, medium: &str, address: &str) {
     let baseu = bk.get_base_url();
     let tk = bk.data.lock().unwrap().access_token.clone();
     let mut url = baseu
-        .join("/_matrix/client/unstable/account/3pid/delete")
+        .join("/_matrix/client/r0/account/3pid/delete")
         .expect("Wrong URL in delete_three_pid()");
     url.query_pairs_mut()
         .clear()

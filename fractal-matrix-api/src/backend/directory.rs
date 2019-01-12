@@ -21,7 +21,7 @@ pub fn protocols(bk: &Backend) {
     let baseu = bk.get_base_url();
     let tk = bk.data.lock().unwrap().access_token.clone();
     let mut url = baseu
-        .join("/_matrix/client/unstable/thirdparty/protocols")
+        .join("/_matrix/client/r0/thirdparty/protocols")
         .expect("Wrong URL in protocols()");
     url.query_pairs_mut()
         .clear()
