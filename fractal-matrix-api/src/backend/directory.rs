@@ -13,7 +13,8 @@ use crate::util::cache_path;
 use crate::util::json_q;
 use crate::util::media;
 
-use crate::types::{Room, RoomMembership};
+use crate::types::PublicRoomsResponse;
+use crate::types::Room;
 use crate::types::SupportedProtocols;
 
 pub fn protocols(bk: &Backend) {
@@ -89,35 +90,23 @@ pub fn room_search(
         &url,
         &attrs,
         move |r: JsonValue| {
-            let next_branch = r["next_batch"].as_str().unwrap_or_default();
-            data.lock().unwrap().rooms_since = String::from(next_branch);
+            let rooms = serde_json::from_value(r)
+                .map(|pr: PublicRoomsResponse| {
+                    data.lock().unwrap().rooms_since = pr.next_batch.unwrap_or_default();
 
-            let mut rooms: Vec<Room> = vec![];
-            for room in r["chunk"].as_array().unwrap() {
-                // Panic when we have rooms without an id
-                let id = room["room_id"]
-                    .as_str()
-                    .expect("Couldn't handle room: no valid id");
-                let alias = room["canonical_alias"].as_str();
-                let name = room["name"].as_str();
-                let avatar = room["avatar_url"].as_str();
-                /* download the avatar for the room */
-                if let Some(avatar) = avatar {
-                    if let Ok(dest) = cache_path(id) {
-                        let _ = media(&base.clone(), avatar, Some(&dest));
-                    }
-                }
-
-                let mut r = Room::new(id.to_string(), RoomMembership::None);
-                r.name = name.map(String::from);
-                r.alias = alias.map(String::from);
-                r.avatar = avatar.map(String::from);
-                r.topic = room["topic"].as_str().map(String::from);
-                r.n_members = room["num_joined_members"].as_i64().unwrap_or(0) as i32;
-                r.world_readable = room["world_readable"].as_bool().unwrap_or(false);
-                r.guest_can_join = room["guest_can_join"].as_bool().unwrap_or(false);
-                rooms.push(r);
-            }
+                    pr.chunk
+                        .into_iter()
+                        .map(Into::into)
+                        .inspect(|r: &Room| {
+                            if let Some(avatar) = r.avatar.clone() {
+                                if let Ok(dest) = cache_path(&r.id) {
+                                    media(&base.clone(), &avatar, Some(&dest)).unwrap_or_default();
+                                }
+                            }
+                        })
+                        .collect()
+                })
+                .unwrap_or_default();
 
             tx.send(BKResponse::DirectorySearch(rooms)).unwrap();
         },
