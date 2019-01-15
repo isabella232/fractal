@@ -1,8 +1,8 @@
-use gtk::{self, prelude::*};
+use gtk::prelude::*;
 use libhandy::{Column, ColumnExt};
-use sourceview::{self, ViewExt};
+use sourceview::ViewExt;
 // This alias is necessary to avoid conflict with gtk's TextViewExt
-use gspell::{self, TextViewExt as GspellTextViewExt};
+use gspell::TextViewExt as GspellTextViewExt;
 
 #[derive(Debug, Clone)]
 pub struct SVEntry {
