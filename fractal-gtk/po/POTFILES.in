@@ -32,9 +32,11 @@ fractal-gtk/res/ui/scroll_widget.ui
 fractal-gtk/res/ui/server_chooser_menu.ui
 
 # rust files
+fractal-gtk/src/actions/account_settings.rs
 fractal-gtk/src/actions/global.rs
 fractal-gtk/src/actions/mod.rs
 fractal-gtk/src/actions/room_history.rs
+fractal-gtk/src/actions/room_settings.rs
 fractal-gtk/src/app/backend_loop.rs
 fractal-gtk/src/app/connect/account.rs
 fractal-gtk/src/app/connect/autocomplete.rs
