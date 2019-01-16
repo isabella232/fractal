@@ -34,7 +34,7 @@ pub fn new(window: &gtk::Window, backend: &Sender<BKCommand>) -> gio::SimpleActi
                 a.change_state(&ButtonState::Insensitive.into());
                 let _ = backend.send(BKCommand::SetUserAvatar(file.to_string()));
             } else {
-                ErrorDialog::new(false, &i18n("Couldn't open file"));
+                ErrorDialog::new(false, &i18n("Couldn’t open file"));
             }
         }
     });
