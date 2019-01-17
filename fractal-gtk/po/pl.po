@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2019-01-15 14:59+0000\n"
-"PO-Revision-Date: 2019-01-15 21:05+0100\n"
+"POT-Creation-Date: 2019-01-16 18:03+0000\n"
+"PO-Revision-Date: 2019-01-17 11:25+0100\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -527,9 +527,8 @@ msgid "Private"
 msgstr "Prywatny"
 
 #: fractal-gtk/res/ui/password_dialog.ui:22
-#: fractal-gtk/src/actions/room_history.rs:196
 #: fractal-gtk/src/widgets/file_dialog.rs:13
-#: fractal-gtk/src/widgets/file_dialog.rs:31
+#: fractal-gtk/src/widgets/file_dialog.rs:34
 #: fractal-gtk/src/widgets/media_viewer.rs:797
 msgid "_Cancel"
 msgstr "_Anuluj"
@@ -686,6 +685,21 @@ msgstr "Inny serwer domowy"
 msgid "Homeserver URL"
 msgstr "Adres serwera domowego"
 
+#: fractal-gtk/src/actions/account_settings.rs:31
+#: fractal-gtk/src/actions/room_settings.rs:35
+msgid "Images"
+msgstr "Obrazy"
+
+#: fractal-gtk/src/actions/account_settings.rs:32
+#: fractal-gtk/src/actions/room_settings.rs:37
+msgid "Select a new avatar"
+msgstr "Wybór nowego awatara"
+
+#: fractal-gtk/src/actions/account_settings.rs:37
+#: fractal-gtk/src/actions/room_settings.rs:42
+msgid "Couldn’t open file"
+msgstr "Nie można otworzyć pliku"
+
 #: fractal-gtk/src/actions/global.rs:220
 msgid "Select a file"
 msgstr "Wybór pliku"
@@ -695,25 +709,12 @@ msgid "This message has no source."
 msgstr "Ta wiadomość nie ma źródła."
 
 #: fractal-gtk/src/actions/room_history.rs:110
-#: fractal-gtk/src/actions/room_history.rs:138
+#: fractal-gtk/src/actions/room_history.rs:142
 msgid "Could not download the file"
 msgstr "Nie można pobrać pliku"
 
-#: fractal-gtk/src/actions/room_history.rs:192
-#: fractal-gtk/src/widgets/file_dialog.rs:9
-#: fractal-gtk/src/widgets/media_viewer.rs:793
-msgid "Save media as"
-msgstr "Zapis multimediów jako"
-
-#: fractal-gtk/src/actions/room_history.rs:195
-#: fractal-gtk/src/widgets/file_dialog.rs:12
-#: fractal-gtk/src/widgets/media_viewer.rs:796
-msgid "_Save"
-msgstr "_Zapisz"
-
-#: fractal-gtk/src/actions/room_history.rs:205
-#: fractal-gtk/src/widgets/media_viewer.rs:806
-msgid "Could not save the file"
+#: fractal-gtk/src/actions/room_history.rs:120
+msgid "Couldn’t save file"
 msgstr "Nie można zapisać pliku"
 
 #: fractal-gtk/src/app/backend_loop.rs:66
@@ -764,15 +765,6 @@ msgstr "Błąd podczas usuwania wiadomości"
 msgid "Error searching for rooms"
 msgstr "Błąd podczas wyszukiwania pokoi"
 
-#: fractal-gtk/src/app/connect/account.rs:101
-msgid "Pick a new avatar"
-msgstr "Wybór nowego awatara"
-
-#: fractal-gtk/src/app/connect/account.rs:104
-#: fractal-gtk/src/widgets/room_settings.rs:149
-msgid "Select"
-msgstr "Wybierz"
-
 #: fractal-gtk/src/appop/about.rs:24
 msgid "A Matrix.org client for GNOME"
 msgstr "Klient sieci Matrix.org dla środowiska GNOME"
@@ -820,7 +812,7 @@ msgstr ""
 msgid "OK"
 msgstr "OK"
 
-#: fractal-gtk/src/appop/account.rs:708
+#: fractal-gtk/src/appop/account.rs:690
 msgid "Are you sure you want to delete your account?"
 msgstr "Na pewno usunąć konto?"
 
@@ -882,13 +874,27 @@ msgstr "{m1} i inni"
 msgid "Syncing, this could take a while"
 msgstr "Synchronizowanie. Może to chwilę zająć."
 
-#: fractal-gtk/src/widgets/file_dialog.rs:30
+#: fractal-gtk/src/widgets/file_dialog.rs:9
+#: fractal-gtk/src/widgets/media_viewer.rs:793
+msgid "Save media as"
+msgstr "Zapis multimediów jako"
+
+#: fractal-gtk/src/widgets/file_dialog.rs:12
+#: fractal-gtk/src/widgets/media_viewer.rs:796
+msgid "_Save"
+msgstr "_Zapisz"
+
+#: fractal-gtk/src/widgets/file_dialog.rs:33
 msgid "_Select"
 msgstr "_Wybierz"
 
 #: fractal-gtk/src/widgets/media_viewer.rs:753
 msgid "Error while loading previous media"
 msgstr "Błąd podczas wczytywania poprzednich multimediów"
+
+#: fractal-gtk/src/widgets/media_viewer.rs:806
+msgid "Could not save the file"
+msgstr "Nie można zapisać pliku"
 
 #: fractal-gtk/src/widgets/members_list.rs:42
 msgid "No matching members found"
@@ -931,18 +937,14 @@ msgstr "%-d %B %Y"
 msgid "New Messages"
 msgstr "Nowe wiadomości"
 
-#: fractal-gtk/src/widgets/room_settings.rs:146
-msgid "Pick a new room avatar"
-msgstr "Wybór nowego awatara pokoju"
-
-#: fractal-gtk/src/widgets/room_settings.rs:185
+#: fractal-gtk/src/widgets/room_settings.rs:196
 msgid "Room · {} member"
 msgid_plural "Room · {} members"
 msgstr[0] "Pokój · {} członek"
 msgstr[1] "Pokój · {} członków"
 msgstr[2] "Pokój · {} członków"
 
-#: fractal-gtk/src/widgets/room_settings.rs:629
+#: fractal-gtk/src/widgets/room_settings.rs:612
 msgid "{} member"
 msgid_plural "{} members"
 msgstr[0] "{} członek"
