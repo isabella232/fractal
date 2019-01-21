@@ -128,6 +128,8 @@ fn load_row_content(member: Member) -> gtk::Box {
     let username = gtk::Label::new(Some(member.get_alias().as_str()));
     let uid = gtk::Label::new(Some(member.uid.as_str()));
     username.set_xalign(0.);
+    username.set_margin_end(5);
+    username.set_ellipsize(pango::EllipsizeMode::End);
     uid.set_xalign(0.);
     if let Some(style) = uid.get_style_context() {
         style.add_class("small-font");
