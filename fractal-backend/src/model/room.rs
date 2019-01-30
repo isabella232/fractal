@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-pub use api::types::Room;
+pub use api::types::{Room, RoomMembership};
 use failure::err_msg;
 use failure::Error;
 
@@ -33,9 +33,7 @@ impl Model for Room {
             "n_members",
             "notifications",
             "highlight",
-            "fav",
-            "left",
-            "inv",
+            "membership",
             "direct",
             "prev_batch",
             "power_levels",
@@ -43,8 +41,6 @@ impl Model for Room {
     }
 
     fn create_sql() -> String {
-        //TODO: implements relations for:
-        //  inv_sender: Option<Member>,
         format!(
             "
         CREATE TABLE if not exists {} (
@@ -58,9 +54,7 @@ impl Model for Room {
             n_members NUMBER NOT NULL,
             notifications NUMBER NOT NULL,
             highlight NUMBER NOT NULL,
-            fav BOOLEAN NOT NULL,
-            left BOOLEAN NOT NULL,
-            inv BOOLEAN NOT NULL,
+            membership TEXT NOT NULL,
             direct BOOLEAN NOT NULL,
             prev_batch TEXT,
             power_levels TEXT NOT NULL
@@ -85,6 +79,7 @@ impl Model for Room {
         );
 
         let power_levels = serde_json::to_string(&self.power_levels)?;
+        let membership = serde_json::to_string(&self.membership)?;
 
         conn(
             move |c| {
@@ -101,9 +96,7 @@ impl Model for Room {
                         &self.n_members,
                         &self.notifications,
                         &self.highlight,
-                        &self.fav,
-                        &self.left,
-                        &self.inv,
+                        &membership,
                         &self.direct,
                         &self.prev_batch,
                         &power_levels,
@@ -117,7 +110,10 @@ impl Model for Room {
     }
 
     fn map_row(row: &Row) -> Self {
-        let strp: String = row.get(15);
+        let strp: String = row.get(10);
+        let membership: RoomMembership = serde_json::from_str(&strp).unwrap_or_default();
+
+        let strp: String = row.get(13);
         let power_levels: HashMap<String, i32> = serde_json::from_str(&strp).unwrap_or_default();
 
         Self {
@@ -131,14 +127,11 @@ impl Model for Room {
             n_members: row.get(7),
             notifications: row.get(8),
             highlight: row.get(9),
-            fav: row.get(10),
-            left: row.get(11),
-            inv: row.get(12),
-            direct: row.get(13),
-            prev_batch: row.get(14),
+            membership: membership,
+            direct: row.get(11),
+            prev_batch: row.get(12),
             power_levels: power_levels,
 
-            inv_sender: None,
             messages: vec![],
             members: HashMap::new(),
         }

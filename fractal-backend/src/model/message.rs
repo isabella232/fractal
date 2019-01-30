@@ -21,12 +21,8 @@ impl Model for Message {
         "message"
     }
 
-    // TODO: we need a non optional id here
     fn get_id(&self) -> &str {
-        match self.id.as_ref() {
-            Some(r) => r,
-            None => "",
-        }
+        &self.id
     }
 
     fn fields() -> Vec<&'static str> {

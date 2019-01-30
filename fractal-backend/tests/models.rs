@@ -1,5 +1,6 @@
 extern crate chrono;
 extern crate fractal_backend;
+extern crate fractal_matrix_api as api;
 
 use fractal_backend::init_local as init;
 use fractal_backend::model::Member;
@@ -9,7 +10,18 @@ use fractal_backend::model::MessageModel;
 use fractal_backend::model::Model;
 use fractal_backend::model::Room;
 
+use api::types::{RoomMembership, RoomTag};
+
 use chrono::prelude::*;
+
+fn defmsg() -> Message {
+    Message::new(
+        "ROOM".to_string(),
+        "SENDER".to_string(),
+        "BODY".to_string(),
+        "m.text".to_string(),
+    )
+}
 
 #[test]
 fn room_model() {
@@ -18,7 +30,7 @@ fn room_model() {
     let created = Room::create_table();
     assert!(created.is_ok());
 
-    let mut r = Room::new("ROOM ID".to_string(), Some("ROOM NAME".to_string()));
+    let mut r = Room::new("ROOM ID".to_string(), RoomMembership::Joined(RoomTag::None));
     let stored = r.store();
     assert!(stored.is_ok());
 
@@ -51,8 +63,8 @@ fn message_model() {
     let created = Message::create_table();
     assert!(created.is_ok());
 
-    let mut msg = Message::default();
-    msg.id = Some("MSGID".to_string());
+    let mut msg = defmsg();
+    msg.id = "MSGID".to_string();
     let stored = msg.store();
     assert!(stored.is_ok());
 
@@ -75,22 +87,22 @@ fn message_room_relation() {
     let created = Message::create_table();
     assert!(created.is_ok());
 
-    let r = Room::new("ROOM ID".to_string(), Some("ROOM NAME".to_string()));
+    let r = Room::new("ROOM ID".to_string(), RoomMembership::Joined(RoomTag::None));
     let stored = r.store();
     assert!(stored.is_ok());
 
-    let mut msg = Message::default();
+    let mut msg = defmsg();
     msg.room = r.id.clone();
 
     for i in 0..100 {
-        msg.id = Some(format!("MSG {}", i));
+        msg.id = format!("MSG {}", i);
         msg.date = Local.ymd(1970, 1, 1).and_hms(0, i / 60, i % 60);
         let _ = msg.store();
     }
 
     msg.room = "ROOM ID 2".to_string();
     for i in 0..100 {
-        msg.id = Some(format!("MSG ROOM2 {}", i));
+        msg.id = format!("MSG ROOM2 {}", i);
         msg.date = Local.ymd(1970, 1, 1).and_hms(0, i / 60, i % 60);
         let _ = msg.store();
     }
@@ -99,7 +111,7 @@ fn message_room_relation() {
         let items = Message::get_range(&r.id, Some(10), Some(i * 10)).unwrap();
         for (j, m) in items.iter().enumerate() {
             let idx = 99 - (10 * i as usize + j);
-            assert_eq!(m.id, Some(format!("MSG {}", idx)));
+            assert_eq!(m.id, format!("MSG {}", idx));
         }
     }
 
@@ -157,7 +169,7 @@ fn member_room_relation() {
     assert!(created.is_ok());
     assert!(Member::create_relation_table().is_ok());
 
-    let r = Room::new("ROOM ID".to_string(), Some("ROOM NAME".to_string()));
+    let r = Room::new("ROOM ID".to_string(), RoomMembership::Joined(RoomTag::None));
     let stored = r.store();
     assert!(stored.is_ok());
 
