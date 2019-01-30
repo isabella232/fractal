@@ -233,26 +233,29 @@ impl AppOp {
     pub fn attach_message(&mut self, path: PathBuf) {
         if let Some(room) = self.active_room.clone() {
             if let Some(sender) = self.uid.clone() {
-                let mime = tree_magic::from_filepath(&path);
-                let mtype = match mime.as_ref() {
-                    "image/gif" => "m.image",
-                    "image/png" => "m.image",
-                    "image/jpeg" => "m.image",
-                    "image/jpg" => "m.image",
-                    _ => "m.file",
-                };
-                let body = path
-                    .file_name()
-                    .and_then(|s| s.to_str())
-                    .unwrap_or_default();
-                let path_string = path.to_str().unwrap_or_default();
+                if let Some(mime) = tree_magic::from_filepath(&path) {
+                    let mtype = match mime.as_ref() {
+                        "image/gif" => "m.image",
+                        "image/png" => "m.image",
+                        "image/jpeg" => "m.image",
+                        "image/jpg" => "m.image",
+                        _ => "m.file",
+                    };
+                    let body = path
+                        .file_name()
+                        .and_then(|s| s.to_str())
+                        .unwrap_or_default();
+                    let path_string = path.to_str().unwrap_or_default();
 
-                let mut m = Message::new(room, sender, body.to_string(), mtype.to_string());
-                if mtype == "m.image" {
-                    m.extra_content = get_image_media_info(path_string, mime.as_ref());
+                    let mut m = Message::new(room, sender, body.to_string(), mtype.to_string());
+                    if mtype == "m.image" {
+                        m.extra_content = get_image_media_info(path_string, mime.as_ref());
+                    }
+                    self.add_tmp_room_message(m);
+                    self.dequeue_message();
+                } else {
+                    error!("Can't send message: could not load tree from filepath");
                 }
-                self.add_tmp_room_message(m);
-                self.dequeue_message();
             } else {
                 error!("Can't send message: No user is logged in");
             }
