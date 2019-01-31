@@ -374,7 +374,7 @@ pub fn is_gif(fname: &str) -> bool {
         return false;
     }
     let result = tree_magic::from_filepath(p);
-    result == Some("image/gif".to_string())
+    result == "image/gif"
 }
 
 /// Adjust the `w` x `h` to `maxw` x `maxh` keeping the Aspect ratio
