@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2019-01-16 12:06+0000\n"
-"PO-Revision-Date: 2019-01-16 19:52+0200\n"
+"POT-Creation-Date: 2019-01-16 18:03+0000\n"
+"PO-Revision-Date: 2019-02-10 19:59+0200\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: Finnish <lokalisointi-lista@googlegroups.com>\n"
 "Language: fi\n"
@@ -682,6 +682,21 @@ msgstr "Muu kotipalvelin"
 msgid "Homeserver URL"
 msgstr "Kotipalvelimen osoite"
 
+#: fractal-gtk/src/actions/account_settings.rs:31
+#: fractal-gtk/src/actions/room_settings.rs:35
+msgid "Images"
+msgstr "Kuvat"
+
+#: fractal-gtk/src/actions/account_settings.rs:32
+#: fractal-gtk/src/actions/room_settings.rs:37
+msgid "Select a new avatar"
+msgstr "Valitse uusi avatar"
+
+#: fractal-gtk/src/actions/account_settings.rs:37
+#: fractal-gtk/src/actions/room_settings.rs:42
+msgid "Couldn’t open file"
+msgstr "Tiedostoa ei voitu avata"
+
 #: fractal-gtk/src/actions/global.rs:220
 msgid "Select a file"
 msgstr "Valitse tiedosto"
@@ -696,7 +711,7 @@ msgid "Could not download the file"
 msgstr "Tiedostoa ei voitu ladata"
 
 #: fractal-gtk/src/actions/room_history.rs:120
-msgid "Couldn't save file"
+msgid "Couldn’t save file"
 msgstr "Tiedostoa ei voitu tallentaa"
 
 #: fractal-gtk/src/app/backend_loop.rs:66
@@ -896,22 +911,22 @@ msgstr "Avaa"
 #. Use 12h time format (AM/PM)
 #: fractal-gtk/src/widgets/message.rs:426
 msgid "%l∶%M %p"
-msgstr ""
+msgstr "%l∶%M %p"
 
 #. Use 24 time format
 #: fractal-gtk/src/widgets/message.rs:429
 msgid "%R"
-msgstr ""
+msgstr "%R"
 
 #. Translators: This is a date format in the day divider without the year
 #: fractal-gtk/src/widgets/room_history.rs:298
 msgid "%B %e"
-msgstr ""
+msgstr "%e. %Bta"
 
 #. Translators: This is a date format in the day divider with the year
 #: fractal-gtk/src/widgets/room_history.rs:301
 msgid "%B %e, %Y"
-msgstr ""
+msgstr "%e. %Bta %Y"
 
 #: fractal-gtk/src/widgets/room_history.rs:325
 msgid "New Messages"
@@ -964,9 +979,6 @@ msgstr "Sinulla ei ole vielä yhtäkään huonetta"
 
 #~ msgid "Stickers"
 #~ msgstr "Tarrat"
-
-#~ msgid "Pick a new avatar"
-#~ msgstr "Valitse uusi avatar"
 
 #~ msgid "Pick a new room avatar"
 #~ msgstr "Valitse uusi huoneavatar"
