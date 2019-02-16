@@ -1,0 +1,975 @@
+# Ukrainian translation for fractal.
+# Copyright (C) 2019 fractal's COPYRIGHT HOLDER
+# This file is distributed under the same license as the fractal package.
+# Artem Polishchuk <ego.cordatus@gmail.com>, 2019.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: fractal master\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
+"POT-Creation-Date: 2019-02-12 03:06+0000\n"
+"PO-Revision-Date: 2019-02-14 20:42+0200\n"
+"Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
+"Language: uk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
+"%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Last-Translator: Artem Polishchuk <ego.cordatus@gmail.com>\n"
+"X-Generator: Poedit 2.2.1\n"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:13
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Головне"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:18
+msgctxt "shortcut window"
+msgid "Close the active room"
+msgstr "Закрити активну кімнату"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:25
+msgctxt "shortcut window"
+msgid "Open / close the room sidebar search"
+msgstr "Відкрити / закрити пошук кімнат в бічній панелі"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:31
+msgctxt "shortcut window"
+msgid "Keyboard Shortcuts"
+msgstr "Комбінації клавіш"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:38
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Завершити"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:47
+msgctxt "shortcut message"
+msgid "Composing a new message"
+msgstr "Створення нового повідомлення"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:52
+msgctxt "shortcut message"
+msgid "Write on a new line"
+msgstr "Написати на новому рядку"
+
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:4
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:3
+msgid "Fractal"
+msgstr "Fractal"
+
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:7
+msgid "Daniel García Moreno"
+msgstr "Daniel García Moreno"
+
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:8
+msgid "Matrix group messaging app"
+msgstr "Програма для обміну груповими повідомленнями Matrix"
+
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:10
+msgid ""
+"Fractal is a Matrix messaging app for GNOME written in Rust. Its interface "
+"is optimized for collaboration in large groups, such as free software "
+"projects."
+msgstr ""
+"Fractal - Matrix програма обміну повідомленнями для GNOME, написана на Rust. "
+"Інтерфейс оптимізований для спільної роботи у великих групах, таких як "
+"проекти вільного програмного забезпечення."
+
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:4
+msgid ""
+"Fractal is a decentralized, secure messaging client for collaborative group "
+"communication."
+msgstr ""
+"Fractal - це децентралізований, безпечний клієнт обміну повідомленнями для "
+"спільного групового спілкування."
+
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:5
+msgid "Fractal group messaging"
+msgstr "Fractal груповий обмін повідомленнями"
+
+#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:8
+msgid "@icon@"
+msgstr "@icon@"
+
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:14
+msgid "Matrix;matrix.org;chat;irc;communications;talk;riot;"
+msgstr "Matrix;matrix.org;chat;irc;communications;talk;riot;"
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:13
+msgid "Type of password and token storage"
+msgstr ""
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:14
+msgid "Type of password and token storage, default value is: Secret Service"
+msgstr ""
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:21
+msgid "If markdown sending is active"
+msgstr ""
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:22
+msgid "Whether support for sending markdown messages is on"
+msgstr ""
+
+#: fractal-gtk/res/ui/account_settings.ui:71
+msgid "Other people can find you by searching for any of these identifiers."
+msgstr "Інші люди зможуть знайти вас по одному з цих ідентифікаторів."
+
+#: fractal-gtk/res/ui/account_settings.ui:99
+msgid "Name"
+msgstr "Ім'я"
+
+#: fractal-gtk/res/ui/account_settings.ui:122
+msgid "Type in your name"
+msgstr "Введіть своє ім'я"
+
+#: fractal-gtk/res/ui/account_settings.ui:151
+msgid "Email"
+msgstr "Електронна пошта"
+
+#: fractal-gtk/res/ui/account_settings.ui:180
+msgid "Phone"
+msgstr "Телефон"
+
+#: fractal-gtk/res/ui/account_settings.ui:209
+#: fractal-gtk/res/ui/main_window.ui:463
+msgid "Password"
+msgstr "Пароль"
+
+#: fractal-gtk/res/ui/account_settings.ui:283
+msgid "Advanced Information"
+msgstr "Додаткова інформація"
+
+#: fractal-gtk/res/ui/account_settings.ui:338
+msgid "Homeserver"
+msgstr ""
+
+#: fractal-gtk/res/ui/account_settings.ui:353
+#: fractal-gtk/res/ui/account_settings.ui:381
+#: fractal-gtk/res/ui/account_settings.ui:409
+msgid "None"
+msgstr ""
+
+#: fractal-gtk/res/ui/account_settings.ui:366
+msgid "Matrix ID"
+msgstr "Matrix ID"
+
+#: fractal-gtk/res/ui/account_settings.ui:394
+msgid "Device ID"
+msgstr "ID пристрою"
+
+#: fractal-gtk/res/ui/account_settings.ui:463
+#: fractal-gtk/res/ui/account_settings.ui:569
+msgid "Deactivate Account"
+msgstr "Деактивувати обліковий запис"
+
+#: fractal-gtk/res/ui/account_settings.ui:515
+msgid ""
+"Deactivating your account means that you will lose all your messages, "
+"contacts, and files."
+msgstr ""
+"Деактивация вашого облікового запису означає, що ви втратите всі свої "
+"повідомлення, контакти і файли."
+
+#: fractal-gtk/res/ui/account_settings.ui:530
+msgid ""
+"To confirm that you really want to deactivate this account type in your "
+"password:"
+msgstr ""
+"Щоб підтвердити, що ви дійсно хочете деактивувати цей обліковий запис "
+"введіть свій пароль:"
+
+#: fractal-gtk/res/ui/account_settings.ui:555
+msgid "Also erase all messages"
+msgstr "Також видалити всі повідомлення"
+
+#: fractal-gtk/res/ui/account_settings.ui:661
+#: fractal-gtk/res/ui/main_menu.ui:109
+msgid "Account Settings"
+msgstr "Налаштування облікового запису"
+
+#: fractal-gtk/res/ui/account_settings.ui:677
+#: fractal-gtk/res/ui/main_window.ui:870 fractal-gtk/res/ui/main_window.ui:1006
+#: fractal-gtk/res/ui/main_window.ui:1074
+#: fractal-gtk/res/ui/media_viewer.ui:250
+#: fractal-gtk/res/ui/room_settings.ui:1034
+msgid "Back"
+msgstr "Назад"
+
+#: fractal-gtk/res/ui/account_settings.ui:698
+msgid "Check your email"
+msgstr "Перевірте свою електронну пошту"
+
+#: fractal-gtk/res/ui/account_settings.ui:701
+#: fractal-gtk/res/ui/direct_chat.ui:128 fractal-gtk/res/ui/invite_user.ui:128
+#: fractal-gtk/res/ui/join_room.ui:92 fractal-gtk/res/ui/leave_room.ui:32
+#: fractal-gtk/res/ui/new_room.ui:41 fractal-gtk/src/appop/account.rs:68
+#: fractal-gtk/src/appop/account.rs:127 fractal-gtk/src/appop/attach.rs:58
+msgid "Cancel"
+msgstr "Скасувати"
+
+#: fractal-gtk/res/ui/account_settings.ui:709
+msgid "Apply"
+msgstr "_Застосувати"
+
+#: fractal-gtk/res/ui/add_room_menu.ui:22
+msgid "Room Directory"
+msgstr "Список кімнат"
+
+#: fractal-gtk/res/ui/add_room_menu.ui:36
+msgid "Join Room"
+msgstr "Увійти в кімнату"
+
+#: fractal-gtk/res/ui/add_room_menu.ui:63
+msgid "New Room"
+msgstr "Нова кімната"
+
+#: fractal-gtk/res/ui/add_room_menu.ui:77
+msgid "New Direct Chat"
+msgstr "Новий чат"
+
+#: fractal-gtk/res/ui/audio_player.ui:34 fractal-gtk/res/ui/audio_player.ui:50
+msgid "Play"
+msgstr "Відтворити"
+
+#: fractal-gtk/res/ui/direct_chat.ui:125
+msgid "New direct chat"
+msgstr "Новий чат"
+
+#: fractal-gtk/res/ui/direct_chat.ui:136
+msgid "Start chat"
+msgstr "Почати чат"
+
+#: fractal-gtk/res/ui/filechooser.ui:61
+msgid "Select room image file"
+msgstr "Виберіть файл зображення для кімнати"
+
+#: fractal-gtk/res/ui/invite.ui:18
+msgid "Invitation"
+msgstr "Запрошення"
+
+#: fractal-gtk/res/ui/invite.ui:19
+msgid "You’ve been invited to join \"\", you can accept or reject"
+msgstr "Ви були запрошені увійти в \"\", ви можете прийняти або відхилити"
+
+#: fractal-gtk/res/ui/invite.ui:32
+msgid "Reject"
+msgstr "Відхилити"
+
+#: fractal-gtk/res/ui/invite.ui:45
+msgid "Accept"
+msgstr "Прийняти"
+
+#: fractal-gtk/res/ui/invite_user.ui:125 fractal-gtk/res/ui/invite_user.ui:136
+#: fractal-gtk/src/appop/invite.rs:146
+msgid "Invite"
+msgstr "Запросити"
+
+#: fractal-gtk/res/ui/join_room.ui:52
+msgid "ID or Alias"
+msgstr "Ідентифікатор або псевдонім"
+
+#: fractal-gtk/res/ui/join_room.ui:89
+msgid "Join room"
+msgstr "Увійти в кімнату"
+
+#: fractal-gtk/res/ui/join_room.ui:100 fractal-gtk/src/widgets/room.rs:117
+msgid "Join"
+msgstr "Увійти"
+
+#: fractal-gtk/res/ui/leave_room.ui:18
+msgid "Leave?"
+msgstr "Покинути?"
+
+#: fractal-gtk/res/ui/leave_room.ui:19
+msgid ""
+"Once you leave, you won’t be able to interact with people in the room "
+"anymore."
+msgstr ""
+"Після того, як ви покинете, ви більше не зможете спілкуватися з людьми в "
+"кімнаті."
+
+#: fractal-gtk/res/ui/leave_room.ui:45
+msgid "Leave room"
+msgstr "Покинути кімнату"
+
+#: fractal-gtk/res/ui/main_menu.ui:123
+msgid "Log Out"
+msgstr "Вийти"
+
+#: fractal-gtk/res/ui/main_menu.ui:150
+msgid "Keyboard _Shortcuts"
+msgstr "Комбінації _клавіш"
+
+#: fractal-gtk/res/ui/main_menu.ui:164
+msgid "_About Fractal"
+msgstr "_Про Fractal"
+
+#: fractal-gtk/res/ui/main_window.ui:183
+msgid "No room selected"
+msgstr "Не вибрано жодної кімнати"
+
+#: fractal-gtk/res/ui/main_window.ui:198
+msgid "Join a room to start chatting"
+msgstr "Увійдіть в кімнату, щоб почати чат"
+
+#: fractal-gtk/res/ui/main_window.ui:208
+msgid "No room"
+msgstr "Немає кімнати"
+
+#: fractal-gtk/res/ui/main_window.ui:289
+msgid "Chat"
+msgstr "Чат"
+
+#: fractal-gtk/res/ui/main_window.ui:341
+msgid "Directory"
+msgstr "Каталог"
+
+#: fractal-gtk/res/ui/main_window.ui:365
+msgid "Loading"
+msgstr "Завантаження"
+
+#: fractal-gtk/res/ui/main_window.ui:391
+msgctxt "big label"
+msgid "Log In"
+msgstr "Авторизуватися"
+
+#: fractal-gtk/res/ui/main_window.ui:413
+msgid "Username"
+msgstr "Ім'я користувача"
+
+#: fractal-gtk/res/ui/main_window.ui:430
+msgid "Matrix username, email or phone number"
+msgstr "Ім'я користувача Matrix, адреса електронної пошти або номер телефону"
+
+#: fractal-gtk/res/ui/main_window.ui:443
+msgctxt "login button"
+msgid "Log In"
+msgstr "Авторизуватися"
+
+#: fractal-gtk/res/ui/main_window.ui:508
+msgid "Home server URL"
+msgstr "URL домашнього сервера"
+
+#: fractal-gtk/res/ui/main_window.ui:526
+msgid "Identity server URL"
+msgstr "URL сервера ідентифікації"
+
+#: fractal-gtk/res/ui/main_window.ui:543
+msgid "Matrix Server"
+msgstr "Сервер Matrix"
+
+#: fractal-gtk/res/ui/main_window.ui:562
+msgid "Identity server"
+msgstr "Сервер ідентифікації"
+
+#: fractal-gtk/res/ui/main_window.ui:599
+msgid "Advanced"
+msgstr "Додатково"
+
+#: fractal-gtk/res/ui/main_window.ui:614 fractal-gtk/src/appop/login.rs:138
+msgid "Invalid username or password"
+msgstr "Неправильне ім'я користувача або пароль"
+
+#: fractal-gtk/res/ui/main_window.ui:668
+msgid "Reset Password"
+msgstr "Скидання пароля"
+
+#: fractal-gtk/res/ui/main_window.ui:682
+msgid "Create Account"
+msgstr "Створити обліковий запис"
+
+#: fractal-gtk/res/ui/main_window.ui:696
+msgid "Log In as Guest"
+msgstr "Ввійти як гість"
+
+#: fractal-gtk/res/ui/main_window.ui:718
+msgid "Login"
+msgstr "Авторизуватися"
+
+#: fractal-gtk/res/ui/main_window.ui:763
+msgid "User"
+msgstr "Користувач"
+
+#: fractal-gtk/res/ui/main_window.ui:790
+msgid "Add"
+msgstr "Додати"
+
+#: fractal-gtk/res/ui/main_window.ui:820
+msgid "Room search"
+msgstr "Пошук кімнати"
+
+#: fractal-gtk/res/ui/main_window.ui:894 fractal-gtk/res/ui/new_room.ui:107
+msgid "Room name"
+msgstr "Назва кімнати"
+
+#: fractal-gtk/res/ui/main_window.ui:909
+msgid "Room topic"
+msgstr "Тема кімнати"
+
+#: fractal-gtk/res/ui/main_window.ui:942
+msgid "Room Menu"
+msgstr "Меню кімнати"
+
+#: fractal-gtk/res/ui/main_window.ui:1036
+#: fractal-gtk/res/ui/server_chooser_menu.ui:65
+#: fractal-gtk/src/app/connect/directory.rs:127
+msgid "Default Matrix Server"
+msgstr "Типовий Matrix-сервер"
+
+#: fractal-gtk/res/ui/markdown_popover.ui:23
+msgid "Markdown"
+msgstr "Markdown"
+
+#: fractal-gtk/res/ui/markdown_popover.ui:67
+msgid "> quote"
+msgstr "> цитата"
+
+#: fractal-gtk/res/ui/markdown_popover.ui:78
+msgid "**bold**"
+msgstr "**жирний**"
+
+#: fractal-gtk/res/ui/markdown_popover.ui:93
+msgid "`code`"
+msgstr "`моноширинний`"
+
+#: fractal-gtk/res/ui/markdown_popover.ui:105
+msgid "*italic*"
+msgstr "*курсив*"
+
+#: fractal-gtk/res/ui/media_viewer.ui:185
+msgid "Loading more media"
+msgstr "Завантажити ще медіа"
+
+#: fractal-gtk/res/ui/media_viewer.ui:233
+msgid "Media viewer"
+msgstr "Медіа-переглядач"
+
+#: fractal-gtk/res/ui/media_viewer_menu.ui:26
+msgid "Save as…"
+msgstr "Зберегти як..."
+
+#: fractal-gtk/res/ui/members.ui:25 fractal-gtk/res/ui/room_settings.ui:940
+msgid "Search for room members"
+msgstr "Пошук учасників в кімнаті"
+
+#: fractal-gtk/res/ui/message_menu.ui:22
+msgid "Reply"
+msgstr "Відповісти"
+
+#: fractal-gtk/res/ui/message_menu.ui:34
+msgid "Open With…"
+msgstr "Відкрити з допомогою..."
+
+#: fractal-gtk/res/ui/message_menu.ui:47
+msgid "Save Image As…"
+msgstr "Зберегти зображення як..."
+
+#: fractal-gtk/res/ui/message_menu.ui:60
+msgid "Copy Image"
+msgstr "Копіювати зображення"
+
+#: fractal-gtk/res/ui/message_menu.ui:73
+msgid "Copy Selection"
+msgstr "Копіювати виділене"
+
+#: fractal-gtk/res/ui/message_menu.ui:86
+msgid "Copy Text"
+msgstr "Копіювати текст"
+
+#: fractal-gtk/res/ui/message_menu.ui:101
+msgid "View Source"
+msgstr "Переглянути вихідний код"
+
+#: fractal-gtk/res/ui/message_menu.ui:125
+msgid "Delete Message"
+msgstr "Видалити повідомлення"
+
+#: fractal-gtk/res/ui/msg_src_window.ui:21
+msgid "Message Source"
+msgstr "Джерело повідомлення"
+
+#: fractal-gtk/res/ui/msg_src_window.ui:24
+msgid "Copy To Clipboard"
+msgstr "Скопіювати в буфер обміну"
+
+#: fractal-gtk/res/ui/msg_src_window.ui:32
+msgid "Close"
+msgstr "Закрити"
+
+#: fractal-gtk/res/ui/new_room.ui:14
+msgid "Private Chat"
+msgstr "Приватний чат"
+
+#: fractal-gtk/res/ui/new_room.ui:18 fractal-gtk/res/ui/new_room.ui:186
+msgid "Public"
+msgstr "Загальнодоступна"
+
+#: fractal-gtk/res/ui/new_room.ui:38
+msgid "Create new room"
+msgstr "Створити нову кімнату"
+
+#: fractal-gtk/res/ui/new_room.ui:49
+msgid "Create"
+msgstr "Створити"
+
+#: fractal-gtk/res/ui/new_room.ui:151
+msgid "Visibility"
+msgstr "Видимість"
+
+#: fractal-gtk/res/ui/new_room.ui:170
+msgid "Private"
+msgstr "Приватна"
+
+#: fractal-gtk/res/ui/password_dialog.ui:22
+#: fractal-gtk/src/widgets/file_dialog.rs:13
+#: fractal-gtk/src/widgets/file_dialog.rs:34
+#: fractal-gtk/src/widgets/media_viewer.rs:790
+msgid "_Cancel"
+msgstr "_Скасувати"
+
+#: fractal-gtk/res/ui/password_dialog.ui:35
+msgid "Ch_ange"
+msgstr "_Змінити"
+
+#: fractal-gtk/res/ui/password_dialog.ui:133
+msgid "The passwords do not match."
+msgstr "Паролі не збігаються."
+
+#: fractal-gtk/res/ui/password_dialog.ui:151
+msgid "_Verify New Password"
+msgstr "_Перевірити новий пароль"
+
+#: fractal-gtk/res/ui/password_dialog.ui:168
+msgid "_New Password"
+msgstr "_Новий пароль"
+
+#: fractal-gtk/res/ui/password_dialog.ui:212
+msgid "Current _Password"
+msgstr "По_точний пароль"
+
+#: fractal-gtk/res/ui/room_menu.ui:22
+msgid "Room Details"
+msgstr "Інформація про кімнату"
+
+#: fractal-gtk/res/ui/room_menu.ui:36
+msgid "Invite to This Room"
+msgstr "Запросити в цю кімнату"
+
+#: fractal-gtk/res/ui/room_menu.ui:63
+msgid "Leave Room"
+msgstr "Покинути кімнату"
+
+#: fractal-gtk/res/ui/room_settings.ui:92
+msgid "Unknown"
+msgstr "Невідомий"
+
+#: fractal-gtk/res/ui/room_settings.ui:118
+msgid "Add name"
+msgstr "Додати ім'я"
+
+#: fractal-gtk/res/ui/room_settings.ui:150
+msgid "Add topic"
+msgstr "Додати тему"
+
+#: fractal-gtk/res/ui/room_settings.ui:174
+msgid "Type in your room topic"
+msgstr "Введіть тему вашої кімнати"
+
+#: fractal-gtk/res/ui/room_settings.ui:202
+msgid "No room description"
+msgstr "Опис кімнати відсутній"
+
+#: fractal-gtk/res/ui/room_settings.ui:239
+msgid "Notifications"
+msgstr "Повідомлення"
+
+#: fractal-gtk/res/ui/room_settings.ui:280
+msgid "Notification sounds"
+msgstr "Звуки повідомлень"
+
+#: fractal-gtk/res/ui/room_settings.ui:325
+msgid "For all messages"
+msgstr "Для всіх повідомлень"
+
+#: fractal-gtk/res/ui/room_settings.ui:366
+msgid "Only for mentions"
+msgstr "Тільки для згадок"
+
+#: fractal-gtk/res/ui/room_settings.ui:397
+msgid "Shared Media"
+msgstr "Загальні медіа"
+
+#: fractal-gtk/res/ui/room_settings.ui:444
+msgid "photos"
+msgstr "фотографії"
+
+#: fractal-gtk/res/ui/room_settings.ui:484
+msgid "videos"
+msgstr "відео"
+
+#: fractal-gtk/res/ui/room_settings.ui:524
+msgid "documents"
+msgstr "документи"
+
+#: fractal-gtk/res/ui/room_settings.ui:555
+msgid "New members can see"
+msgstr "Нові учасники можуть бачити"
+
+#: fractal-gtk/res/ui/room_settings.ui:600
+msgid "All room history"
+msgstr "Вся історія кімнати"
+
+#: fractal-gtk/res/ui/room_settings.ui:641
+#, fuzzy
+msgid "History after they were invited"
+msgstr "Історія після їх запрошення"
+
+#: fractal-gtk/res/ui/room_settings.ui:672
+msgid "Room Visibility"
+msgstr "Видимість кімнати"
+
+#: fractal-gtk/res/ui/room_settings.ui:719
+msgid "Allow guests"
+msgstr "Дозволяти гостей"
+
+#: fractal-gtk/res/ui/room_settings.ui:759
+msgid "Allow joining without invite"
+msgstr "Дозволити вхід без запрошення"
+
+#: fractal-gtk/res/ui/room_settings.ui:799
+msgid "Publish in room directory"
+msgstr "Опублікувати в каталозі кімнат"
+
+#: fractal-gtk/res/ui/room_settings.ui:830
+msgid "Join addresses"
+msgstr ""
+
+#: fractal-gtk/res/ui/room_settings.ui:889
+msgid "members"
+msgstr "учасники"
+
+#: fractal-gtk/res/ui/room_settings.ui:905
+msgid "Invite New Member"
+msgstr "Запросити нового користувача"
+
+#: fractal-gtk/res/ui/room_settings.ui:1018
+msgid "Details"
+msgstr "Подробиці"
+
+#: fractal-gtk/res/ui/scroll_widget.ui:63
+msgid "Scroll to bottom"
+msgstr "Прокрутіть донизу"
+
+#: fractal-gtk/res/ui/server_chooser_menu.ui:34
+msgid "Show rooms from:"
+msgstr "Показати кімнати з:"
+
+#: fractal-gtk/res/ui/server_chooser_menu.ui:90
+msgid "Your homeserver"
+msgstr "Ваш homeserver"
+
+#: fractal-gtk/res/ui/server_chooser_menu.ui:134
+msgid "Other Protocol"
+msgstr "Інший протокол"
+
+#: fractal-gtk/res/ui/server_chooser_menu.ui:207
+msgid "Other Homeserver"
+msgstr "Інший Homeserver"
+
+#: fractal-gtk/res/ui/server_chooser_menu.ui:235
+msgid "Homeserver URL"
+msgstr ""
+
+#: fractal-gtk/src/actions/account_settings.rs:31
+#: fractal-gtk/src/actions/room_settings.rs:35
+msgid "Images"
+msgstr "Зображення"
+
+#: fractal-gtk/src/actions/account_settings.rs:32
+#: fractal-gtk/src/actions/room_settings.rs:37
+msgid "Select a new avatar"
+msgstr "Виберіть новий аватар"
+
+#: fractal-gtk/src/actions/account_settings.rs:37
+#: fractal-gtk/src/actions/room_settings.rs:42
+msgid "Couldn’t open file"
+msgstr "Не вдалося відкрити файл"
+
+#: fractal-gtk/src/actions/global.rs:220
+msgid "Select a file"
+msgstr "Виберіть файл"
+
+#: fractal-gtk/src/actions/room_history.rs:58
+msgid "This message has no source."
+msgstr "У цьому повідомленні немає джерела."
+
+#: fractal-gtk/src/actions/room_history.rs:110
+#: fractal-gtk/src/actions/room_history.rs:142
+msgid "Could not download the file"
+msgstr "Не вдалося завантажити файл"
+
+#: fractal-gtk/src/actions/room_history.rs:120
+msgid "Couldn’t save file"
+msgstr "Не вдалося зберегти файл"
+
+#: fractal-gtk/src/app/backend_loop.rs:65
+msgid "Email is already in use"
+msgstr "Ця електронна адреса вже використовується"
+
+#: fractal-gtk/src/app/backend_loop.rs:69
+msgid "Phone number is already in use"
+msgstr "Цей номер телефону вже використовується"
+
+#: fractal-gtk/src/app/backend_loop.rs:203
+msgid "Couldn’t delete the account"
+msgstr "Не вдалося видалити обліковий запис"
+
+#: fractal-gtk/src/app/backend_loop.rs:208
+msgid "Couldn’t change the password"
+msgstr "Не вдалося змінити пароль"
+
+#: fractal-gtk/src/app/backend_loop.rs:213
+msgid "Couldn’t add the email address."
+msgstr "Не вдалося додати адресу електронної пошти."
+
+#: fractal-gtk/src/app/backend_loop.rs:218
+msgid "Couldn’t add the phone number."
+msgstr "Не вдалося додати номер телефону."
+
+#: fractal-gtk/src/app/backend_loop.rs:225
+msgid "Can’t create the room, try again"
+msgstr "Неможливо створити кімнату, спробуйте ще раз"
+
+#: fractal-gtk/src/app/backend_loop.rs:233
+msgid "Can’t join the room, try again."
+msgstr "Неможливо увійти в кімнату, спробуйте ще раз."
+
+#: fractal-gtk/src/app/backend_loop.rs:239
+msgid "Can’t login, try again"
+msgstr "Не можна увійти, спробуйте ще раз"
+
+#: fractal-gtk/src/app/backend_loop.rs:254
+msgid "Error sending message"
+msgstr "Помилка при відправці повідомлення"
+
+#: fractal-gtk/src/app/backend_loop.rs:259
+msgid "Error deleting message"
+msgstr "Помилка при видаленні повідомлення"
+
+#: fractal-gtk/src/app/backend_loop.rs:263
+msgid "Error searching for rooms"
+msgstr "Помилка при пошуку кімнат"
+
+#: fractal-gtk/src/appop/about.rs:24
+msgid "A Matrix.org client for GNOME"
+msgstr "Matrix.org клієнт для GNOME"
+
+#: fractal-gtk/src/appop/about.rs:25
+msgid "© 2017–2018 Daniel García Moreno, et al."
+msgstr "© 2017–2018 Daniel García Moreno, та ін."
+
+#: fractal-gtk/src/appop/about.rs:31
+msgid "Learn more about Fractal"
+msgstr "Дізнайтеся більше про Fractal"
+
+#: fractal-gtk/src/appop/about.rs:32
+msgid "translator-credits"
+msgstr "Artem Polishchuk <ego.cordatus@gmail.com>, 2019."
+
+#: fractal-gtk/src/appop/about.rs:47
+msgid "Name by"
+msgstr ""
+
+#: fractal-gtk/src/appop/account.rs:40
+msgid "The validation code is not correct."
+msgstr "Код перевірки невірний."
+
+#: fractal-gtk/src/appop/account.rs:53
+msgid "Enter the code received via SMS"
+msgstr "Введіть код отриманий в SMS"
+
+#: fractal-gtk/src/appop/account.rs:69 fractal-gtk/src/appop/account.rs:128
+msgid "Continue"
+msgstr "Продовжити"
+
+#: fractal-gtk/src/appop/account.rs:116
+msgid ""
+"In order to add this email address, go to your inbox and follow the link you "
+"received. Once you’ve done that, click Continue."
+msgstr ""
+"Щоб додати цю адресу електронної пошти, перейдіть до своєї поштової скриньки "
+"та перейдіть за отриманим вами посиланням. Після цього, натисніть "
+"«Продовжити»."
+
+#: fractal-gtk/src/appop/account.rs:166
+msgid "OK"
+msgstr "OK"
+
+#: fractal-gtk/src/appop/account.rs:690
+msgid "Are you sure you want to delete your account?"
+msgstr "Ви дійсно хочете видалити свій обліковий запис?"
+
+#: fractal-gtk/src/appop/attach.rs:43
+msgid "Image from Clipboard"
+msgstr "Зображення з буфера обміну"
+
+#: fractal-gtk/src/appop/attach.rs:59
+msgid "Send"
+msgstr "Надіслати"
+
+#: fractal-gtk/src/appop/invite.rs:144
+msgid "Invite to {name}"
+msgstr "Запросити в {name}"
+
+#: fractal-gtk/src/appop/invite.rs:237
+msgid "Join {room_name}?"
+msgstr "Увійти в {room_name}?"
+
+#: fractal-gtk/src/appop/invite.rs:242
+msgid ""
+"You’ve been invited to join <b>{room_name}</b> room by <b>{sender_name}</b>"
+msgstr "<b>{sender_name}</b> запросив вас увійти в <b>{room_name}</b>"
+
+#: fractal-gtk/src/appop/invite.rs:247
+msgid "You’ve been invited to join <b>{room_name}</b>"
+msgstr "Вас запросили увійти в <b>{room_name}</b>"
+
+#: fractal-gtk/src/appop/login.rs:142
+msgid "Unknown Error"
+msgstr "Невідома помилка"
+
+#: fractal-gtk/src/appop/login.rs:223
+msgid "Passwords didn’t match, try again"
+msgstr "Невірний пароль, спробуйте ще раз"
+
+#: fractal-gtk/src/appop/notify.rs:49
+msgid " (direct message)"
+msgstr " (приватне повідомлення)"
+
+#: fractal-gtk/src/appop/room.rs:206
+msgid "Leave {room_name}?"
+msgstr "Покинути {room_name}?"
+
+#: fractal-gtk/src/appop/room.rs:429
+msgid "EMPTY ROOM"
+msgstr "ПОРОЖНЯ КІМНАТА"
+
+#: fractal-gtk/src/appop/room.rs:431
+msgid "{m1} and {m2}"
+msgstr "{m1} та {m2}"
+
+#: fractal-gtk/src/appop/room.rs:432
+msgid "{m1} and Others"
+msgstr "{m1} і інші"
+
+#: fractal-gtk/src/appop/sync.rs:10
+msgid "Syncing, this could take a while"
+msgstr "Синхронізація, це може зайняти деякий час"
+
+#: fractal-gtk/src/widgets/file_dialog.rs:9
+#: fractal-gtk/src/widgets/media_viewer.rs:786
+msgid "Save media as"
+msgstr "Збережіть медіа як"
+
+#: fractal-gtk/src/widgets/file_dialog.rs:12
+#: fractal-gtk/src/widgets/media_viewer.rs:789
+msgid "_Save"
+msgstr "_Зберегти"
+
+#: fractal-gtk/src/widgets/file_dialog.rs:33
+msgid "_Select"
+msgstr "_Виберіть"
+
+#: fractal-gtk/src/widgets/media_viewer.rs:746
+msgid "Error while loading previous media"
+msgstr "Помилка при завантаженні попереднього медіа"
+
+#: fractal-gtk/src/widgets/media_viewer.rs:799
+msgid "Could not save the file"
+msgstr "Не вдалося зберегти файл"
+
+#: fractal-gtk/src/widgets/members_list.rs:42
+msgid "No matching members found"
+msgstr "Не знайдено жодного відповідного учасника"
+
+#: fractal-gtk/src/widgets/message.rs:359
+msgid "Could not retrieve file URI"
+msgstr "Не вдалося отримати URI файлу"
+
+#: fractal-gtk/src/widgets/message.rs:375
+#: fractal-gtk/src/widgets/message.rs:401
+msgid "Save"
+msgstr "Зберегти"
+
+#: fractal-gtk/src/widgets/message.rs:409
+msgid "Open"
+msgstr "Відкрити"
+
+#. Use 12h time format (AM/PM)
+#: fractal-gtk/src/widgets/message.rs:431
+msgid "%l∶%M %p"
+msgstr ""
+
+#. Use 24 time format
+#: fractal-gtk/src/widgets/message.rs:434
+msgid "%R"
+msgstr ""
+
+#. Translators: This is a date format in the day divider without the year
+#: fractal-gtk/src/widgets/room_history.rs:298
+msgid "%B %e"
+msgstr ""
+
+#. Translators: This is a date format in the day divider with the year
+#: fractal-gtk/src/widgets/room_history.rs:301
+msgid "%B %e, %Y"
+msgstr ""
+
+#: fractal-gtk/src/widgets/room_history.rs:325
+msgid "New Messages"
+msgstr "Нові повідомлення"
+
+#: fractal-gtk/src/widgets/room_settings.rs:196
+msgid "Room · {} member"
+msgid_plural "Room · {} members"
+msgstr[0] "Кімната · {} учасник"
+msgstr[1] "Кімната · {} учасника"
+msgstr[2] "Кімната · {} учасників"
+msgstr[3] "Кімната · {} учасник"
+
+#: fractal-gtk/src/widgets/room_settings.rs:612
+msgid "{} member"
+msgid_plural "{} members"
+msgstr[0] "{} учасник"
+msgstr[1] "{} учасника"
+msgstr[2] "{} учасників"
+msgstr[3] "{} учасник"
+
+#: fractal-gtk/src/widgets/roomlist.rs:424
+msgid "Invites"
+msgstr "Запрошення"
+
+#: fractal-gtk/src/widgets/roomlist.rs:425
+msgid "You don’t have any invitations"
+msgstr "У вас немає запрошень"
+
+#: fractal-gtk/src/widgets/roomlist.rs:429
+msgid "Favorites"
+msgstr "Обране"
+
+#: fractal-gtk/src/widgets/roomlist.rs:430
+msgid "Drag and drop rooms here to add them to your favorites"
+msgstr "Перетягніть сюди кімнати, щоб додати їх в обране"
+
+#: fractal-gtk/src/widgets/roomlist.rs:434
+msgid "Rooms"
+msgstr "кімнати"
+
+#: fractal-gtk/src/widgets/roomlist.rs:435
+msgid "You don’t have any rooms yet"
+msgstr "У вас поки немає кімнат"
