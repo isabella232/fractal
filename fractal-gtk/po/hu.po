@@ -1,0 +1,937 @@
+# Hungarian translation for fractal.
+# Copyright (C) 2019 Free Software Foundation, Inc.
+# This file is distributed under the same license as the fractal package.
+#
+# Balázs Meskó <mesko.balazs at fsf dot hu>, 2019.
+# Balázs Úr <ur.balazs at fsf dot hu>, 2019.
+msgid ""
+msgstr ""
+"Project-Id-Version: fractal master\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
+"POT-Creation-Date: 2019-01-04 20:49+0000\n"
+"PO-Revision-Date: 2019-02-18 00:41+0100\n"
+"Last-Translator: Balázs Úr <ur.balazs at fsf dot hu>\n"
+"Language-Team: Hungarian <gnome-hu-list at gnome dot org>\n"
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 2.0\n"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:13
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Általános"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:18
+msgctxt "shortcut window"
+msgid "Close the active room"
+msgstr "Az aktív szoba bezárása"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:25
+msgctxt "shortcut window"
+msgid "Open / close the room sidebar search"
+msgstr "A szoba oldalsáv keresés megnyitása / bezárása"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:31
+msgctxt "shortcut window"
+msgid "Keyboard Shortcuts"
+msgstr "Gyorsbillentyűk"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:38
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Kilépés"
+
+#: fractal-gtk/res/gtk/menus.ui:6
+msgid "Keyboard _Shortcuts"
+msgstr "Gyorsbillentyű_k"
+
+#: fractal-gtk/res/gtk/menus.ui:10
+msgid "_About"
+msgstr "_Névjegy"
+
+#: fractal-gtk/res/gtk/menus.ui:14
+msgid "_Quit"
+msgstr "_Kilépés"
+
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:4
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:3
+msgid "Fractal"
+msgstr "Fractal"
+
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:7
+msgid "Daniel García Moreno"
+msgstr "Daniel García Moreno"
+
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:8
+msgid "Matrix group messaging app"
+msgstr "Matrix csoportos üzenetküldő alkalmazás"
+
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:11
+msgid ""
+"Fractal is a Matrix messaging app for GNOME written in Rust. Its interface "
+"is optimized for collaboration in large groups, such as free software "
+"projects."
+msgstr ""
+"A Fractal egy Rust nyelven írt Matrix üzenetküldő alkalmazás. A felülete nagy "
+"csoportok közti együttműködésre lett optimalizálva, mint például a szabad "
+"szoftveres projektek."
+
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:4
+msgid ""
+"Fractal is a decentralized, secure messaging client for collaborative group "
+"communication."
+msgstr ""
+"A Fractal egy decentralizált, biztonságos üzenetküldő kliens együttműködő "
+"csoportos kommunikációhoz."
+
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:5
+msgid "Fractal group messaging"
+msgstr "Fractal csoportos üzenetküldés"
+
+#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:8
+msgid "@icon@"
+msgstr "@icon@"
+
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:14
+msgid "Matrix;matrix.org;chat;irc;communications;talk;riot;"
+msgstr "Matrix;matrix.org;csevegés;irc;kommunikáció;beszélgetés;riot;"
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:13
+msgid "Type of password and token storage"
+msgstr "A jelszó- és tokentároló típusa"
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:14
+msgid "Type of password and token storage, default value is: Secret Service"
+msgstr "A jelszó- és tokentároló típusa, alapértelmezett érték: Secret Service"
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:21
+msgid "If markdown sending is active"
+msgstr "Aktív-e a markdown küldés"
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:22
+msgid "Whether support for sending markdown messages is on"
+msgstr "A markdown üzenetek küldésének támogatása be van-e kapcsolva"
+
+#: fractal-gtk/res/ui/account_settings.ui:71
+msgid "Other people can find you by searching for any of these identifiers."
+msgstr "Mások ezen azonosítók egyikének keresésével találhatják meg Önt."
+
+#: fractal-gtk/res/ui/account_settings.ui:99
+msgid "Name"
+msgstr "Név"
+
+#: fractal-gtk/res/ui/account_settings.ui:122
+msgid "Type in your name"
+msgstr "Írja be a nevét"
+
+#: fractal-gtk/res/ui/account_settings.ui:151
+msgid "Email"
+msgstr "E-mail"
+
+#: fractal-gtk/res/ui/account_settings.ui:180
+msgid "Phone"
+msgstr "Telefon"
+
+#: fractal-gtk/res/ui/account_settings.ui:209
+#: fractal-gtk/res/ui/main_window.ui:660
+msgid "Password"
+msgstr "Jelszó"
+
+#: fractal-gtk/res/ui/account_settings.ui:283
+msgid "Advanced Information"
+msgstr "Speciális információk"
+
+#: fractal-gtk/res/ui/account_settings.ui:338
+msgid "Homeserver"
+msgstr "Gazdakiszolgáló"
+
+#: fractal-gtk/res/ui/account_settings.ui:353
+#: fractal-gtk/res/ui/account_settings.ui:381
+#: fractal-gtk/res/ui/account_settings.ui:409
+msgid "None"
+msgstr "Nincs"
+
+#: fractal-gtk/res/ui/account_settings.ui:366
+msgid "Matrix ID"
+msgstr "Matrix-azonosító"
+
+#: fractal-gtk/res/ui/account_settings.ui:394
+msgid "Device ID"
+msgstr "Eszközazonosító"
+
+#: fractal-gtk/res/ui/account_settings.ui:463
+#: fractal-gtk/res/ui/account_settings.ui:569
+msgid "Deactivate Account"
+msgstr "Fiók deaktiválása"
+
+#: fractal-gtk/res/ui/account_settings.ui:515
+msgid ""
+"Deactivating your account means that you will lose all your messages, "
+"contacts, and files."
+msgstr ""
+"A fiók deaktiválása azt jelenti, hogy elveszíti az összes üzenetét, "
+"névjegyét és fájlját."
+
+#: fractal-gtk/res/ui/account_settings.ui:530
+msgid ""
+"To confirm that you really want to deactivate this account type in your "
+"password:"
+msgstr ""
+"Annak megerősítéséhez, hogy valóban deaktiválni szeretné ezt a fiókot, írja "
+"be a jelszavát:"
+
+#: fractal-gtk/res/ui/account_settings.ui:555
+msgid "Also erase all messages"
+msgstr "Az összes üzenet törlése"
+
+#: fractal-gtk/res/ui/account_settings.ui:661
+#: fractal-gtk/res/ui/user_menu.ui:109
+msgid "Account Settings"
+msgstr "Fiókbeállítások"
+
+#: fractal-gtk/res/ui/account_settings.ui:676
+#: fractal-gtk/res/ui/main_window.ui:1154
+#: fractal-gtk/res/ui/main_window.ui:1222
+#: fractal-gtk/res/ui/media_viewer.ui:249
+#: fractal-gtk/res/ui/room_settings.ui:1028
+msgid "Back"
+msgstr "Vissza"
+
+#: fractal-gtk/res/ui/account_settings.ui:697
+msgid "Check your email"
+msgstr "Nézze meg az e-mailjét"
+
+#: fractal-gtk/res/ui/account_settings.ui:700
+#: fractal-gtk/res/ui/direct_chat.ui:118 fractal-gtk/res/ui/invite_user.ui:121
+#: fractal-gtk/res/ui/join_room.ui:93 fractal-gtk/res/ui/leave_room.ui:33
+#: fractal-gtk/res/ui/new_room.ui:42 fractal-gtk/src/appop/account.rs:56
+#: fractal-gtk/src/appop/account.rs:102 fractal-gtk/src/appop/attach.rs:74
+msgid "Cancel"
+msgstr "Mégse"
+
+#: fractal-gtk/res/ui/account_settings.ui:708
+msgid "Apply"
+msgstr "Alkalmaz"
+
+#: fractal-gtk/res/ui/add_room_menu.ui:22
+msgid "Room Directory"
+msgstr "Szobajegyzék"
+
+#: fractal-gtk/res/ui/add_room_menu.ui:36
+msgid "Join Room"
+msgstr "Csatlakozás szobához"
+
+#: fractal-gtk/res/ui/add_room_menu.ui:63
+msgid "New Room"
+msgstr "Új szoba"
+
+#: fractal-gtk/res/ui/add_room_menu.ui:77
+msgid "New Direct Chat"
+msgstr "Új közvetlen csevegés"
+
+#: fractal-gtk/res/ui/audio_player.ui:34 fractal-gtk/res/ui/audio_player.ui:50
+msgid "Play"
+msgstr "Lejátszás"
+
+#: fractal-gtk/res/ui/direct_chat.ui:64 fractal-gtk/res/ui/invite_user.ui:64
+#: fractal-gtk/res/ui/main_window.ui:627
+msgid "Matrix username, email or phone number"
+msgstr "Matrix felhasználónév, e-mail vagy telefonszám"
+
+#: fractal-gtk/res/ui/direct_chat.ui:115
+msgid "New direct chat"
+msgstr "Új közvetlen csevegés"
+
+#: fractal-gtk/res/ui/direct_chat.ui:126
+msgid "Start chat"
+msgstr "Csevegés indítása"
+
+#: fractal-gtk/res/ui/filechooser.ui:62
+msgid "Select room image file"
+msgstr "Válasszon szobaképfájlt"
+
+#: fractal-gtk/res/ui/invite.ui:19
+msgid "Invitation"
+msgstr "Meghívás"
+
+#: fractal-gtk/res/ui/invite.ui:20
+msgid "You’ve been invited to join \"\", you can accept or reject"
+msgstr "Meghívták ide: \"\", elfogadhatja vagy elutasíthatja"
+
+#: fractal-gtk/res/ui/invite.ui:33
+msgid "Reject"
+msgstr "Elutasítás"
+
+#: fractal-gtk/res/ui/invite.ui:46
+msgid "Accept"
+msgstr "Elfogadás"
+
+#: fractal-gtk/res/ui/invite_user.ui:137 fractal-gtk/res/ui/invite_user.ui:150
+#: fractal-gtk/src/appop/invite.rs:139
+msgid "Invite"
+msgstr "Meghívás"
+
+#: fractal-gtk/res/ui/join_room.ui:53
+msgid "ID or Alias"
+msgstr "Azonosító vagy álnév"
+
+#: fractal-gtk/res/ui/join_room.ui:90
+msgid "Join room"
+msgstr "Csatlakozás szobához"
+
+#: fractal-gtk/res/ui/join_room.ui:101 fractal-gtk/src/widgets/room.rs:111
+msgid "Join"
+msgstr "Csatlakozás"
+
+#: fractal-gtk/res/ui/leave_room.ui:19
+msgid "Leave?"
+msgstr "Kilép?"
+
+#: fractal-gtk/res/ui/leave_room.ui:20
+msgid ""
+"Once you leave, you won’t be able to interact with people in the room "
+"anymore."
+msgstr ""
+"Ha kilép, akkor többé nem fog tudni kapcsolatba lépni a szobában lévő "
+"emberekkel."
+
+#: fractal-gtk/res/ui/leave_room.ui:46
+msgid "Leave room"
+msgstr "Szoba elhagyása"
+
+#: fractal-gtk/res/ui/main_window.ui:179
+msgid "Scroll to bottom"
+msgstr "Görgetés az aljára"
+
+#: fractal-gtk/res/ui/main_window.ui:225
+msgid "Attach files"
+msgstr "Fájlok csatolása"
+
+#: fractal-gtk/res/ui/main_window.ui:253
+msgid "Text formatting"
+msgstr "Szövegformázás"
+
+#: fractal-gtk/res/ui/main_window.ui:373
+msgid "No room selected"
+msgstr "Nincs szoba kiválasztva"
+
+#: fractal-gtk/res/ui/main_window.ui:388
+msgid "Join a room to start chatting"
+msgstr "Csatlakozzon egy szobához a csevegés elkezdéséhez"
+
+#: fractal-gtk/res/ui/main_window.ui:398
+msgid "No room"
+msgstr "Nincs szoba"
+
+#: fractal-gtk/res/ui/main_window.ui:445
+msgid "This is an app-notification"
+msgstr "Ez egy alkalmazásértesítés"
+
+#: fractal-gtk/res/ui/main_window.ui:483
+msgid "Chat"
+msgstr "Csevegés"
+
+#: fractal-gtk/res/ui/main_window.ui:541
+msgid "Directory"
+msgstr "Jegyzék"
+
+#: fractal-gtk/res/ui/main_window.ui:565
+msgid "Loading"
+msgstr "Betöltés"
+
+#: fractal-gtk/res/ui/main_window.ui:591
+msgctxt "big label"
+msgid "Log In"
+msgstr "Bejelentkezés"
+
+#: fractal-gtk/res/ui/main_window.ui:610
+msgid "Username"
+msgstr "Felhasználónév"
+
+#: fractal-gtk/res/ui/main_window.ui:640
+msgctxt "login button"
+msgid "Log In"
+msgstr "Bejelentkezés"
+
+#: fractal-gtk/res/ui/main_window.ui:705
+msgid "Home server URL"
+msgstr "Gazdakiszolgáló URL"
+
+#: fractal-gtk/res/ui/main_window.ui:723
+msgid "Identity server URL"
+msgstr "Személyazonosság-kiszolgáló URL-e"
+
+#: fractal-gtk/res/ui/main_window.ui:740
+msgid "Matrix Server"
+msgstr "Matrix-kiszolgáló"
+
+#: fractal-gtk/res/ui/main_window.ui:759
+msgid "Identity server"
+msgstr "Személyazonosság-kiszolgáló"
+
+#: fractal-gtk/res/ui/main_window.ui:796
+msgid "Advanced"
+msgstr "Speciális"
+
+#: fractal-gtk/res/ui/main_window.ui:811 fractal-gtk/src/appop/login.rs:113
+msgid "Invalid username or password"
+msgstr "Érvénytelen felhasználónév vagy jelszó"
+
+#: fractal-gtk/res/ui/main_window.ui:865
+msgid "Reset Password"
+msgstr "Jelszó visszaállítása"
+
+#: fractal-gtk/res/ui/main_window.ui:879
+msgid "Create Account"
+msgstr "Fiók létrehozása"
+
+#: fractal-gtk/res/ui/main_window.ui:893
+msgid "Log In as Guest"
+msgstr "Bejelentkezés vendégként"
+
+#: fractal-gtk/res/ui/main_window.ui:915
+msgid "Login"
+msgstr "Bejelentkezés"
+
+#: fractal-gtk/res/ui/main_window.ui:952
+msgid "User"
+msgstr "Felhasználó"
+
+#: fractal-gtk/res/ui/main_window.ui:975 fractal-gtk/res/ui/sticker_group.ui:74
+msgid "Add"
+msgstr "Hozzáadás"
+
+#: fractal-gtk/res/ui/main_window.ui:1006
+msgid "Room search"
+msgstr "Szoba keresése"
+
+#: fractal-gtk/res/ui/main_window.ui:1039 fractal-gtk/res/ui/new_room.ui:108
+msgid "Room name"
+msgstr "Szoba neve"
+
+#: fractal-gtk/res/ui/main_window.ui:1054
+msgid "Room topic"
+msgstr "Szoba témája"
+
+#: fractal-gtk/res/ui/main_window.ui:1085
+msgid "Room Menu"
+msgstr "Szoba menü"
+
+#: fractal-gtk/res/ui/main_window.ui:1184
+#: fractal-gtk/res/ui/server_chooser_menu.ui:65
+#: fractal-gtk/src/app/connect/directory.rs:65
+msgid "Default Matrix Server"
+msgstr "Alapértelmezett Matrix-kiszolgáló"
+
+#: fractal-gtk/res/ui/markdown_popover.ui:28
+msgid "Markdown"
+msgstr "Markdown"
+
+#: fractal-gtk/res/ui/markdown_popover.ui:76
+msgid "> quote"
+msgstr "> idézet"
+
+#: fractal-gtk/res/ui/markdown_popover.ui:88
+msgid "**bold**"
+msgstr "**félkövér**"
+
+#: fractal-gtk/res/ui/markdown_popover.ui:104
+msgid "`code`"
+msgstr "`kód`"
+
+#: fractal-gtk/res/ui/markdown_popover.ui:116
+msgid "*italic*"
+msgstr "*dőlt*"
+
+#: fractal-gtk/res/ui/media_viewer_menu.ui:26
+msgid "Save As"
+msgstr "Mentés másként"
+
+#: fractal-gtk/res/ui/media_viewer.ui:185
+msgid "Loading more media"
+msgstr "További média betöltése"
+
+#: fractal-gtk/res/ui/media_viewer.ui:233
+msgid "Media viewer"
+msgstr "Médiamegjelenítő"
+
+#: fractal-gtk/res/ui/members.ui:25 fractal-gtk/res/ui/room_settings.ui:937
+msgid "Search for room members"
+msgstr "Szobatagok keresése"
+
+#: fractal-gtk/res/ui/message_menu.ui:21
+msgid "Reply"
+msgstr "Válasz"
+
+#: fractal-gtk/res/ui/message_menu.ui:33
+msgid "Copy Selection"
+msgstr "Kijelölés másolása"
+
+#: fractal-gtk/res/ui/message_menu.ui:46
+msgid "Copy Text"
+msgstr "Szöveg másolása"
+
+#: fractal-gtk/res/ui/message_menu.ui:59
+msgid "View Source"
+msgstr "Forrás megtekintése"
+
+#: fractal-gtk/res/ui/message_menu.ui:83
+msgid "Delete Message"
+msgstr "Üzenet törlése"
+
+#: fractal-gtk/res/ui/msg_src_window.ui:25
+msgid "Copy To Clipboard"
+msgstr "Másolás a vágólapra"
+
+#: fractal-gtk/res/ui/msg_src_window.ui:36
+msgid "Message Source"
+msgstr "Üzenet forrása"
+
+#: fractal-gtk/res/ui/msg_src_window.ui:44
+msgid "Close"
+msgstr "Bezárás"
+
+#: fractal-gtk/res/ui/new_room.ui:14
+msgid "Private Chat"
+msgstr "Privát csevegés"
+
+#: fractal-gtk/res/ui/new_room.ui:18 fractal-gtk/res/ui/new_room.ui:187
+msgid "Public"
+msgstr "Nyilvános"
+
+#: fractal-gtk/res/ui/new_room.ui:39
+msgid "Create new room"
+msgstr "Új szoba létrehozása"
+
+#: fractal-gtk/res/ui/new_room.ui:50
+msgid "Create"
+msgstr "Létrehozás"
+
+#: fractal-gtk/res/ui/new_room.ui:152
+msgid "Visibility"
+msgstr "Láthatóság"
+
+#: fractal-gtk/res/ui/new_room.ui:171
+msgid "Private"
+msgstr "Privát"
+
+#: fractal-gtk/res/ui/password_dialog.ui:23 fractal-gtk/src/appop/files.rs:30
+msgid "_Cancel"
+msgstr "_Mégse"
+
+#: fractal-gtk/res/ui/password_dialog.ui:36
+msgid "Ch_ange"
+msgstr "Mó_dosítás"
+
+#: fractal-gtk/res/ui/password_dialog.ui:134
+msgid "The passwords do not match."
+msgstr "A jelszavak nem egyeznek."
+
+#: fractal-gtk/res/ui/password_dialog.ui:152
+msgid "_Verify New Password"
+msgstr "Új j_elszó ellenőrzése"
+
+#: fractal-gtk/res/ui/password_dialog.ui:169
+msgid "_New Password"
+msgstr "Új _jelszó"
+
+#: fractal-gtk/res/ui/password_dialog.ui:213
+msgid "Current _Password"
+msgstr "Jele_nlegi jelszó"
+
+#: fractal-gtk/res/ui/room_menu.ui:22
+msgid "Room Details"
+msgstr "Szoba részletei"
+
+#: fractal-gtk/res/ui/room_menu.ui:36
+msgid "Invite to This Room"
+msgstr "Meghívás ebbe a szobába"
+
+#: fractal-gtk/res/ui/room_menu.ui:63
+msgid "Leave Room"
+msgstr "Szoba elhagyása"
+
+#: fractal-gtk/res/ui/room_settings.ui:89
+msgid "Unknown"
+msgstr "Ismeretlen"
+
+#: fractal-gtk/res/ui/room_settings.ui:115
+msgid "Add name"
+msgstr "Név hozzáadása"
+
+#: fractal-gtk/res/ui/room_settings.ui:147
+msgid "Add topic"
+msgstr "Téma hozzáadása"
+
+#: fractal-gtk/res/ui/room_settings.ui:171
+msgid "Type in your room topic"
+msgstr "Írja be a szoba témáját"
+
+#: fractal-gtk/res/ui/room_settings.ui:199
+msgid "No room description"
+msgstr "Nincs szobaleírás"
+
+#: fractal-gtk/res/ui/room_settings.ui:236
+msgid "Notifications"
+msgstr "Értesítések"
+
+#: fractal-gtk/res/ui/room_settings.ui:277
+msgid "Notification sounds"
+msgstr "Értesítési hangok"
+
+#: fractal-gtk/res/ui/room_settings.ui:322
+msgid "For all messages"
+msgstr "Az összes üzenetnél"
+
+#: fractal-gtk/res/ui/room_settings.ui:363
+msgid "Only for mentions"
+msgstr "Csak az említéseknél"
+
+#: fractal-gtk/res/ui/room_settings.ui:394
+msgid "Shared Media"
+msgstr "Megosztott média"
+
+#: fractal-gtk/res/ui/room_settings.ui:441
+msgid "photos"
+msgstr "fényképek"
+
+#: fractal-gtk/res/ui/room_settings.ui:481
+msgid "videos"
+msgstr "videók"
+
+#: fractal-gtk/res/ui/room_settings.ui:521
+msgid "documents"
+msgstr "dokumentumok"
+
+#: fractal-gtk/res/ui/room_settings.ui:552
+msgid "New members can see"
+msgstr "Az új tagok láthatják"
+
+#: fractal-gtk/res/ui/room_settings.ui:597
+msgid "All room history"
+msgstr "Összes szobaelőzmény"
+
+#: fractal-gtk/res/ui/room_settings.ui:638
+msgid "History after they were invited"
+msgstr "Előzmények a meghívás óta"
+
+#: fractal-gtk/res/ui/room_settings.ui:669
+msgid "Room Visibility"
+msgstr "Szoba láthatósága"
+
+#: fractal-gtk/res/ui/room_settings.ui:716
+msgid "Allow guests"
+msgstr "Vendégek engedélyezése"
+
+#: fractal-gtk/res/ui/room_settings.ui:756
+msgid "Allow joining without invite"
+msgstr "Meghívás nélküli csatlakozás engedélyezése"
+
+#: fractal-gtk/res/ui/room_settings.ui:796
+msgid "Publish in room directory"
+msgstr "Közzététel a szobajegyzékben"
+
+#: fractal-gtk/res/ui/room_settings.ui:827
+msgid "Join addresses"
+msgstr "Csatlakozási címek"
+
+#: fractal-gtk/res/ui/room_settings.ui:886
+msgid "members"
+msgstr "tagok"
+
+#: fractal-gtk/res/ui/room_settings.ui:902
+msgid "Invite New Member"
+msgstr "Új tag meghívása"
+
+#: fractal-gtk/res/ui/room_settings.ui:1013
+msgid "Details"
+msgstr "Részletek"
+
+#: fractal-gtk/res/ui/server_chooser_menu.ui:34
+msgid "Show rooms from:"
+msgstr "Szobák megjelenítése innen:"
+
+#: fractal-gtk/res/ui/server_chooser_menu.ui:90
+msgid "Your homeserver"
+msgstr "Az Ön gazdakiszolgálója"
+
+#: fractal-gtk/res/ui/server_chooser_menu.ui:134
+msgid "Other Protocol"
+msgstr "Egyéb protokoll"
+
+#: fractal-gtk/res/ui/server_chooser_menu.ui:207
+msgid "Other Homeserver"
+msgstr "Egyéb gazdakiszolgáló"
+
+#: fractal-gtk/res/ui/server_chooser_menu.ui:235
+msgid "Homeserver URL"
+msgstr "Gazdakiszolgáló URL"
+
+#: fractal-gtk/res/ui/stickers_popover.ui:22
+msgid "Stickers"
+msgstr "Matricák"
+
+#: fractal-gtk/res/ui/user_menu.ui:136
+msgid "Log Out"
+msgstr "Kijelentkezés"
+
+#: fractal-gtk/src/app/backend_loop.rs:65
+msgid "Email is already in use"
+msgstr "Az e-mail cím már használatban van"
+
+#: fractal-gtk/src/app/backend_loop.rs:69
+msgid "Phone number is already in use"
+msgstr "A telefonszám már használatban van"
+
+#: fractal-gtk/src/app/backend_loop.rs:204
+msgid "Couldn’t delete the account"
+msgstr "Nem sikerült törölni a fiókot"
+
+#: fractal-gtk/src/app/backend_loop.rs:209
+msgid "Couldn’t change the password"
+msgstr "Nem sikerült megváltoztatni a jelszót"
+
+#: fractal-gtk/src/app/backend_loop.rs:214
+msgid "Couldn’t add the email address."
+msgstr "Nem sikerült hozzáadni az e-mail címet."
+
+#: fractal-gtk/src/app/backend_loop.rs:219
+msgid "Couldn’t add the phone number."
+msgstr "Nem sikerült hozzáadni a telefonszámot."
+
+#: fractal-gtk/src/app/backend_loop.rs:226
+msgid "Can’t create the room, try again"
+msgstr "A szoba nem hozható létre, próbálja újra"
+
+#: fractal-gtk/src/app/backend_loop.rs:234
+msgid "Can’t join the room, try again."
+msgstr "Nem lehet csatlakozni a szobához, próbálja újra."
+
+#: fractal-gtk/src/app/backend_loop.rs:240
+msgid "Can’t login, try again"
+msgstr "Nem lehet bejelentkezni, próbálja újra"
+
+#: fractal-gtk/src/app/backend_loop.rs:256
+msgid "Error sending message"
+msgstr "Hiba az üzenet küldésekor"
+
+#: fractal-gtk/src/app/backend_loop.rs:262
+msgid "Error deleting message"
+msgstr "Hiba az üzenet törlésekor"
+
+#: fractal-gtk/src/app/backend_loop.rs:266
+msgid "Error searching for rooms"
+msgstr "Hiba a szobák keresésekor"
+
+#: fractal-gtk/src/app/connect/account.rs:76
+msgid "Pick a new avatar"
+msgstr "Új avatár választása"
+
+#: fractal-gtk/src/app/connect/account.rs:79
+#: fractal-gtk/src/widgets/room_settings.rs:148
+msgid "Select"
+msgstr "Kiválasztás"
+
+#: fractal-gtk/src/appop/about.rs:21
+msgid "A Matrix.org client for GNOME"
+msgstr "Egy Matrix.org kliens a GNOME-hoz"
+
+#: fractal-gtk/src/appop/about.rs:22
+msgid "© 2017–2018 Daniel García Moreno, et al."
+msgstr "© 2017–2018 Daniel García Moreno, et al."
+
+#: fractal-gtk/src/appop/about.rs:28
+msgid "Learn more about Fractal"
+msgstr "Tudjon meg többet a Fractalról"
+
+#: fractal-gtk/src/appop/about.rs:29
+msgid "translator-credits"
+msgstr "Meskó Balázs <mesko.balazs at fsf dot hu>"
+
+#: fractal-gtk/src/appop/about.rs:45
+msgid "Name by"
+msgstr "Elnevezés:"
+
+#: fractal-gtk/src/appop/account.rs:36
+msgid "The validation code is not correct."
+msgstr "Az ellenőrzőkód helytelen."
+
+#: fractal-gtk/src/appop/account.rs:47
+msgid "Enter the code received via SMS"
+msgstr "Adja meg az SMS-ben kapott kódot"
+
+#: fractal-gtk/src/appop/account.rs:57 fractal-gtk/src/appop/account.rs:103
+msgid "Continue"
+msgstr "Folytatás"
+
+#: fractal-gtk/src/appop/account.rs:97
+msgid ""
+"In order to add this email address, go to your inbox and follow the link you "
+"received. Once you’ve done that, click Continue."
+msgstr ""
+"Az e-mail cím hozzáadásához menjen a bejövő üzeneteihez, és kövesse a kapott "
+"hivatkozást. Ha végzett, kattintson a Folytatás gombra."
+
+#: fractal-gtk/src/appop/account.rs:129
+msgid "OK"
+msgstr "Rendben"
+
+#: fractal-gtk/src/appop/account.rs:550
+msgid "Are you sure you want to delete your account?"
+msgstr "Biztosan törölni szeretné a fiókját?"
+
+#: fractal-gtk/src/appop/attach.rs:60
+msgid "Image from Clipboard"
+msgstr "Kép a vágólapról"
+
+#: fractal-gtk/src/appop/attach.rs:75
+msgid "Send"
+msgstr "Küldés"
+
+#: fractal-gtk/src/appop/files.rs:23
+msgid "Save media as"
+msgstr "Média mentése másként"
+
+#: fractal-gtk/src/appop/files.rs:31
+msgid "_Save"
+msgstr "_Mentés"
+
+#: fractal-gtk/src/appop/files.rs:44
+msgid "Do you want to overwrite the file?"
+msgstr "Szeretné felülírni a fájlt?"
+
+#: fractal-gtk/src/appop/files.rs:50 fractal-gtk/src/appop/files.rs:63
+msgid "Could not save the file"
+msgstr "Nem sikerült elmenteni a fájlt"
+
+#: fractal-gtk/src/appop/invite.rs:137
+msgid "Invite to {name}"
+msgstr "Meghívás ide: {name}"
+
+#: fractal-gtk/src/appop/invite.rs:208
+msgid "Join {room_name}?"
+msgstr "Csatlakozik ide: {room_name}?"
+
+#: fractal-gtk/src/appop/invite.rs:212
+msgid ""
+"You’ve been invited to join to <b>{room_name}</b> room by <b>{sender_name}</"
+"b>"
+msgstr ""
+"<b>{sender_name}</b> meghívta, hogy csatlakozzon a(z) <b>{room_name}</b> "
+"szobához"
+
+#: fractal-gtk/src/appop/invite.rs:215
+msgid "You’ve been invited to join to <b>{room_name}</b>"
+msgstr "Meghívták, hogy csatlakozzon a(z) <b>{room_name}</b> szobához"
+
+#: fractal-gtk/src/appop/login.rs:117
+msgid "Unknown Error"
+msgstr "Ismeretlen hiba"
+
+#: fractal-gtk/src/appop/login.rs:180
+msgid "Passwords didn’t match, try again"
+msgstr "A jelszavak nem egyeztek, próbálja újra"
+
+#: fractal-gtk/src/appop/media_viewer.rs:147
+msgid "Error while loading previous media"
+msgstr "Hiba az előző média betöltésekor"
+
+#: fractal-gtk/src/appop/message.rs:207 fractal-gtk/src/appop/message.rs:215
+msgid "New Messages"
+msgstr "Új üzenetek"
+
+#: fractal-gtk/src/appop/notify.rs:52
+msgid "{name} (direct message)"
+msgstr "{name} (közvetlen üzenet)"
+
+#: fractal-gtk/src/appop/room.rs:269
+msgid "Leave {room_name}?"
+msgstr "Kilép a(z) {room_name} szobából?"
+
+#: fractal-gtk/src/appop/room.rs:502
+msgid "EMPTY ROOM"
+msgstr "ÜRES SZOBA"
+
+#: fractal-gtk/src/appop/room.rs:504
+msgid "{m1} and {m2}"
+msgstr "{m1} és {m2}"
+
+#: fractal-gtk/src/appop/room.rs:505
+msgid "{m1} and Others"
+msgstr "{m1} és mások"
+
+#: fractal-gtk/src/appop/sync.rs:11
+msgid "Syncing, this could take a while"
+msgstr "Szinkronizálás, ez eltarthat egy ideig"
+
+#: fractal-gtk/src/widgets/members_list.rs:42
+msgid "No matching members found"
+msgstr "Nem találhatóak megfelelő tagok"
+
+#: fractal-gtk/src/widgets/message.rs:382
+msgid "Could not retrieve file URI"
+msgstr "Nem sikerült lekérni a fájl URI-t"
+
+#: fractal-gtk/src/widgets/message.rs:398
+#: fractal-gtk/src/widgets/message.rs:447
+msgid "Save"
+msgstr "Mentés"
+
+#: fractal-gtk/src/widgets/message.rs:408
+#: fractal-gtk/src/widgets/message.rs:458
+msgid "Could not download the file"
+msgstr "Nem sikerült letölteni a fájlt"
+
+#: fractal-gtk/src/widgets/message.rs:476
+msgid "Open"
+msgstr "Megnyitás"
+
+#: fractal-gtk/src/widgets/room_settings.rs:145
+msgid "Pick a new room avatar"
+msgstr "Új szoba avatár választása"
+
+#. we don't have private groups yet
+#. let description = Some(format!("Private Group · {} members", members.len()));
+#.
+#. Some(format!("Public Room · {} members", members.len()))
+#: fractal-gtk/src/widgets/room_settings.rs:183
+msgid "Room · {} member"
+msgid_plural "Room · {} members"
+msgstr[0] "Szoba · {} tag"
+msgstr[1] "Szoba · {} tag"
+
+#: fractal-gtk/src/widgets/room_settings.rs:583
+msgid "{} member"
+msgid_plural "{} members"
+msgstr[0] "{} tag"
+msgstr[1] "{} tag"
+
+#: fractal-gtk/src/widgets/roomlist.rs:434
+msgid "Invites"
+msgstr "Meghívások"
+
+#: fractal-gtk/src/widgets/roomlist.rs:435
+msgid "You don’t have any invitations"
+msgstr "Nincsenek meghívásai"
+
+#: fractal-gtk/src/widgets/roomlist.rs:436
+msgid "Favorites"
+msgstr "Kedvencek"
+
+#: fractal-gtk/src/widgets/roomlist.rs:437
+msgid "Drag and drop rooms here to add them to your favorites"
+msgstr "Húzzon és ejtsen ide szobákat, hogy hozzáadja a kedvenceihez"
+
+#: fractal-gtk/src/widgets/roomlist.rs:438
+msgid "Rooms"
+msgstr "Szobák"
+
+#: fractal-gtk/src/widgets/roomlist.rs:439
+msgid "You don’t have any rooms yet"
+msgstr "Még nincsenek szobái"
+
