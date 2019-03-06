@@ -39,7 +39,7 @@ flatpak install --user flathub org.freedesktop.Sdk.Extension.rust-stable//18.08
 Then you go ahead and build Fractal.
 
 ```
-flatpak-builder --user --install fractal org.gnome.Fractal.json
+flatpak-builder --user --install fractal flatpak/org.gnome.Fractal.json
 ```
 
 ### GNU/Linux
