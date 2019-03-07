@@ -1,4 +1,4 @@
-use crate::i18n::{i18n, i18n_k};
+use crate::i18n::{i18n, i18n_k, ni18n_f};
 use log::{error, warn};
 use std::fs::remove_file;
 use std::os::unix::fs;
@@ -18,12 +18,14 @@ use crate::actions::AppState;
 use crate::cache;
 use crate::widgets;
 
-use crate::types::{Room, RoomMembership, RoomTag};
+use crate::types::{Member, Room, RoomMembership, RoomTag};
 
 use crate::util::markup_text;
 
 use rand::distributions::Alphanumeric;
 use rand::{thread_rng, Rng};
+
+use glib::functions::markup_escape_text;
 
 pub struct Force(pub bool);
 
@@ -49,6 +51,14 @@ impl AppOp {
                 }
             } else if self.rooms.contains_key(&room.id) {
                 // TODO: update the existing rooms
+                let update_room = self.rooms.get_mut(&room.id).unwrap();
+                let typing_users: Vec<Member> = room
+                    .typing_users
+                    .iter()
+                    .map(|u| update_room.members.get(&u.uid).unwrap_or(&u).to_owned())
+                    .collect();
+                update_room.typing_users = typing_users;
+                self.update_typing_notification();
             } else {
                 // Request all joined members for each new room
                 self.backend
@@ -178,6 +188,7 @@ impl AppOp {
         self.active_room = Some(active_room);
         /* Mark the new active room as read */
         self.mark_last_message_as_read(Force(false));
+        self.update_typing_notification();
     }
 
     pub fn really_leave_active_room(&mut self) {
@@ -513,5 +524,36 @@ impl AppOp {
         }
 
         self.backend.send(BKCommand::GetRoomAvatar(roomid)).unwrap();
+    }
+
+    pub fn update_typing_notification(&mut self) {
+        if let Some(active_room) = &self
+            .rooms
+            .get(&self.active_room.clone().unwrap_or_default())
+        {
+            if let Some(ref mut history) = self.history {
+                let typing_users = &active_room.typing_users;
+                if typing_users.len() == 0 {
+                    history.typing_notification("");
+                } else if typing_users.len() > 2 {
+                    history.typing_notification(&i18n("Several users are typing…"));
+                } else {
+                    let typing_string = ni18n_f(
+                        "<b>{}</b> is typing…",
+                        "<b>{}</b> and {} are typing…",
+                        typing_users.len() as u32,
+                        typing_users
+                            .iter()
+                            .map(|user| markup_escape_text(&user.get_alias()))
+                            .collect::<Vec<String>>()
+                            .iter()
+                            .map(std::ops::Deref::deref)
+                            .collect::<Vec<&str>>()
+                            .as_slice(),
+                    );
+                    history.typing_notification(&typing_string);
+                }
+            }
+        }
     }
 }

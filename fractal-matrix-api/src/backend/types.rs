@@ -105,7 +105,7 @@ pub enum BKResponse {
     SetUserAvatar(String),
     Sync(String),
     Rooms(Vec<Room>, Option<Room>),
-    NewRooms(Vec<Room>),
+    UpdateRooms(Vec<Room>),
     RoomDetail(String, String, String),
     RoomAvatar(String, Option<Url>),
     NewRoomAvatar(String),

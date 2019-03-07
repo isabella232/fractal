@@ -310,3 +310,10 @@ stack.titlebar:not(headerbar) > box > separator {
 .scrollarea-top-border {
   border-top: 1px solid @borders;
 }
+
+.typing_label {
+  margin: 6px;
+  margin-left: 78px;
+  margin-bottom: 8px;
+  color: @theme_selected_bg_color;
+}
