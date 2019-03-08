@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2019-02-25 11:01+0000\n"
-"PO-Revision-Date: 2019-02-26 09:02+0100\n"
+"POT-Creation-Date: 2019-03-07 08:40+0000\n"
+"PO-Revision-Date: 2019-03-08 12:45+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: es <gnome-es-list@gnome.org>\n"
 "Language: es\n"
@@ -877,21 +877,31 @@ msgstr "La contraseña no coincide, pruebe otra vez"
 msgid " (direct message)"
 msgstr " (mensaje directo)"
 
-#: fractal-gtk/src/appop/room.rs:206
+#: fractal-gtk/src/appop/room.rs:217
 msgid "Leave {room_name}?"
 msgstr "¿Abandonar {room_name}?"
 
-#: fractal-gtk/src/appop/room.rs:429
+#: fractal-gtk/src/appop/room.rs:440
 msgid "EMPTY ROOM"
 msgstr "SALA VACÍA"
 
-#: fractal-gtk/src/appop/room.rs:431
+#: fractal-gtk/src/appop/room.rs:442
 msgid "{m1} and {m2}"
 msgstr "{m1} y {m2}"
 
-#: fractal-gtk/src/appop/room.rs:432
+#: fractal-gtk/src/appop/room.rs:443
 msgid "{m1} and Others"
 msgstr "{m1} y Otros"
+
+#: fractal-gtk/src/appop/room.rs:539
+msgid "Several users are typing…"
+msgstr "Hay varios usuarios escribiendo…"
+
+#: fractal-gtk/src/appop/room.rs:542
+msgid "<b>{}</b> is typing…"
+msgid_plural "<b>{}</b> and {} are typing…"
+msgstr[0] "<b>{}</b> está escribiendo…"
+msgstr[1] "<b>{}</b> y {} están escribiendo…"
 
 #: fractal-gtk/src/appop/sync.rs:10
 msgid "Syncing, this could take a while"
@@ -947,16 +957,16 @@ msgid "%R"
 msgstr "%R"
 
 #. Translators: This is a date format in the day divider without the year
-#: fractal-gtk/src/widgets/room_history.rs:298
+#: fractal-gtk/src/widgets/room_history.rs:318
 msgid "%B %e"
 msgstr "%e %B"
 
 #. Translators: This is a date format in the day divider with the year
-#: fractal-gtk/src/widgets/room_history.rs:301
+#: fractal-gtk/src/widgets/room_history.rs:321
 msgid "%B %e, %Y"
 msgstr "%e %B, %Y"
 
-#: fractal-gtk/src/widgets/room_history.rs:325
+#: fractal-gtk/src/widgets/room_history.rs:345
 msgid "New Messages"
 msgstr "Mensajes nuevos"
 
