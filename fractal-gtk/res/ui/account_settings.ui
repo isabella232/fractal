@@ -31,7 +31,7 @@
                     <child>
                       <object class="GtkButton" id="account_settings_avatar_button">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
                         <property name="halign">center</property>
                         <property name="margin_bottom">18</property>
@@ -229,7 +229,7 @@
                                 <child>
                                   <object class="GtkLabel" id="account_settings_password_button_label">
                                     <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
+                                    <property name="can_focus">False</property>
                                     <property name="label">●●●●●</property>
                                   </object>
                                   <packing>
@@ -239,7 +239,7 @@
                                 <child>
                                   <object class="GtkSpinner" id="account_settings_password_button_spinner">
                                     <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
+                                    <property name="can_focus">False</property>
                                     <property name="active">True</property>
                                   </object>
                                   <packing>
@@ -316,7 +316,7 @@
                                 <child>
                                   <object class="GtkLabel" id="account_settings_homeserver">
                                     <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
+                                    <property name="can_focus">False</property>
                                     <property name="halign">start</property>
                                     <property name="label" translatable="yes">None</property>
                                   </object>
@@ -344,7 +344,7 @@
                                 <child>
                                   <object class="GtkLabel" id="account_settings_uid">
                                     <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
+                                    <property name="can_focus">False</property>
                                     <property name="halign">start</property>
                                     <property name="label" translatable="yes">None</property>
                                   </object>
@@ -372,7 +372,7 @@
                                 <child>
                                   <object class="GtkLabel" id="account_settings_device_id">
                                     <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
+                                    <property name="can_focus">False</property>
                                     <property name="halign">start</property>
                                     <property name="label" translatable="yes">None</property>
                                   </object>
@@ -405,7 +405,7 @@
                     <child>
                       <object class="GtkBox" id="account_settings_delete_box">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
+                        <property name="can_focus">False</property>
                         <property name="margin_top">36</property>
                         <property name="orientation">vertical</property>
                         <property name="spacing">12</property>
@@ -438,7 +438,7 @@
                                 <child>
                                   <object class="GtkLabel">
                                     <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
+                                    <property name="can_focus">False</property>
                                     <property name="label" translatable="yes">Deactivating your account means that you will lose all your messages, contacts, and files.</property>
                                     <property name="wrap">True</property>
                                     <property name="max_width_chars">35</property>
@@ -453,7 +453,7 @@
                                 <child>
                                   <object class="GtkLabel">
                                     <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
+                                    <property name="can_focus">False</property>
                                     <property name="label" translatable="yes">To confirm that you really want to deactivate this account type in your password:</property>
                                     <property name="wrap">True</property>
                                     <property name="max_width_chars">35</property>
@@ -657,7 +657,7 @@
         <child>
           <object class="GtkLabel" id="account_settings_email_dialog_label">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
+            <property name="can_focus">False</property>
             <property name="wrap">True</property>
             <property name="max_width_chars">35</property>
           </object>
