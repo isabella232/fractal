@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2019-03-07 08:40+0000\n"
-"PO-Revision-Date: 2019-03-07 11:58+0100\n"
+"POT-Creation-Date: 2019-03-15 11:32+0000\n"
+"PO-Revision-Date: 2019-03-16 11:33+0100\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -138,67 +138,67 @@ msgstr "Wysokość głównego okna podczas uruchamiania"
 msgid "Whether the main window is maximized on startup"
 msgstr "Czy główne okno jest zmaksymalizowane podczas uruchamiania"
 
-#: fractal-gtk/res/ui/account_settings.ui:71
+#: fractal-gtk/res/ui/account_settings.ui:73
 msgid "Other people can find you by searching for any of these identifiers."
 msgstr ""
 "Inni mogą odnajdywać użytkownika wyszukując dowolne z tych identyfikatorów."
 
-#: fractal-gtk/res/ui/account_settings.ui:99
+#: fractal-gtk/res/ui/account_settings.ui:101
 msgid "Name"
 msgstr "Nazwa"
 
-#: fractal-gtk/res/ui/account_settings.ui:122
+#: fractal-gtk/res/ui/account_settings.ui:124
 msgid "Type in your name"
 msgstr "Nazwa użytkownika"
 
-#: fractal-gtk/res/ui/account_settings.ui:151
+#: fractal-gtk/res/ui/account_settings.ui:153
 msgid "Email"
 msgstr "Adres e-mail"
 
-#: fractal-gtk/res/ui/account_settings.ui:180
+#: fractal-gtk/res/ui/account_settings.ui:182
 msgid "Phone"
 msgstr "Telefon"
 
-#: fractal-gtk/res/ui/account_settings.ui:209
+#: fractal-gtk/res/ui/account_settings.ui:211
 #: fractal-gtk/res/ui/main_window.ui:463
 msgid "Password"
 msgstr "Hasło"
 
-#: fractal-gtk/res/ui/account_settings.ui:283
+#: fractal-gtk/res/ui/account_settings.ui:278
 msgid "Advanced Information"
 msgstr "Zaawansowane informacje"
 
-#: fractal-gtk/res/ui/account_settings.ui:338
+#: fractal-gtk/res/ui/account_settings.ui:308
 msgid "Homeserver"
 msgstr "Serwer domowy"
 
-#: fractal-gtk/res/ui/account_settings.ui:353
-#: fractal-gtk/res/ui/account_settings.ui:381
-#: fractal-gtk/res/ui/account_settings.ui:409
+#: fractal-gtk/res/ui/account_settings.ui:323
+#: fractal-gtk/res/ui/account_settings.ui:351
+#: fractal-gtk/res/ui/account_settings.ui:379
 msgid "None"
 msgstr "Brak"
 
-#: fractal-gtk/res/ui/account_settings.ui:366
+#: fractal-gtk/res/ui/account_settings.ui:336
 msgid "Matrix ID"
 msgstr "Identyfikator Matrix"
 
-#: fractal-gtk/res/ui/account_settings.ui:394
+#: fractal-gtk/res/ui/account_settings.ui:364
 msgid "Device ID"
 msgstr "Identyfikator urządzenia"
 
-#: fractal-gtk/res/ui/account_settings.ui:463
-#: fractal-gtk/res/ui/account_settings.ui:569
+#: fractal-gtk/res/ui/account_settings.ui:418
+#: fractal-gtk/res/ui/account_settings.ui:499
 msgid "Deactivate Account"
 msgstr "Dezaktywuj konto"
 
-#: fractal-gtk/res/ui/account_settings.ui:515
+#: fractal-gtk/res/ui/account_settings.ui:444
 msgid ""
 "Deactivating your account means that you will lose all your messages, "
 "contacts, and files."
 msgstr ""
 "Dezaktywacja konta oznacza utratę wszystkich wiadomości, kontaktów i plików."
 
-#: fractal-gtk/res/ui/account_settings.ui:530
+#: fractal-gtk/res/ui/account_settings.ui:459
 msgid ""
 "To confirm that you really want to deactivate this account type in your "
 "password:"
@@ -206,16 +206,16 @@ msgstr ""
 "Aby potwierdzić, że na pewno to konto ma zostać dezaktywowane, należy wpisać "
 "hasło:"
 
-#: fractal-gtk/res/ui/account_settings.ui:555
+#: fractal-gtk/res/ui/account_settings.ui:484
 msgid "Also erase all messages"
 msgstr "Usunięcie także wszystkich wiadomości"
 
-#: fractal-gtk/res/ui/account_settings.ui:661
+#: fractal-gtk/res/ui/account_settings.ui:583
 #: fractal-gtk/res/ui/main_menu.ui:109
 msgid "Account Settings"
 msgstr "Ustawienia konta"
 
-#: fractal-gtk/res/ui/account_settings.ui:677
+#: fractal-gtk/res/ui/account_settings.ui:599
 #: fractal-gtk/res/ui/main_window.ui:870 fractal-gtk/res/ui/main_window.ui:1006
 #: fractal-gtk/res/ui/main_window.ui:1074
 #: fractal-gtk/res/ui/media_viewer.ui:250
@@ -223,11 +223,11 @@ msgstr "Ustawienia konta"
 msgid "Back"
 msgstr "Wstecz"
 
-#: fractal-gtk/res/ui/account_settings.ui:698
+#: fractal-gtk/res/ui/account_settings.ui:620
 msgid "Check your email"
 msgstr "Proszę sprawdzić pocztę"
 
-#: fractal-gtk/res/ui/account_settings.ui:701
+#: fractal-gtk/res/ui/account_settings.ui:623
 #: fractal-gtk/res/ui/direct_chat.ui:129 fractal-gtk/res/ui/invite_user.ui:129
 #: fractal-gtk/res/ui/join_room.ui:93 fractal-gtk/res/ui/leave_room.ui:32
 #: fractal-gtk/res/ui/new_room.ui:42 fractal-gtk/src/appop/account.rs:69
@@ -235,7 +235,7 @@ msgstr "Proszę sprawdzić pocztę"
 msgid "Cancel"
 msgstr "Anuluj"
 
-#: fractal-gtk/res/ui/account_settings.ui:709
+#: fractal-gtk/res/ui/account_settings.ui:631
 msgid "Apply"
 msgstr "Zastosuj"
 
@@ -833,7 +833,7 @@ msgstr ""
 msgid "OK"
 msgstr "OK"
 
-#: fractal-gtk/src/appop/account.rs:694
+#: fractal-gtk/src/appop/account.rs:652
 msgid "Are you sure you want to delete your account?"
 msgstr "Na pewno usunąć konto?"
 
@@ -897,10 +897,10 @@ msgstr "Kilku użytkowników pisze…"
 
 #: fractal-gtk/src/appop/room.rs:542
 msgid "<b>{}</b> is typing…"
-msgid_plural "<b>{}</b> and {} are typing…"
+msgid_plural "<b>{}</b> and <b>{}</b> are typing…"
 msgstr[0] "<b>{}</b> pisze…"
-msgstr[1] "<b>{}</b> i {} piszą…"
-msgstr[2] "<b>{}</b> i {} piszą…"
+msgstr[1] "<b>{}</b> i <b>{}</b> piszą…"
+msgstr[2] "<b>{}</b> i <b>{}</b> piszą…"
 
 #: fractal-gtk/src/appop/sync.rs:10
 msgid "Syncing, this could take a while"
@@ -956,16 +956,16 @@ msgid "%R"
 msgstr "%H∶%M"
 
 #. Translators: This is a date format in the day divider without the year
-#: fractal-gtk/src/widgets/room_history.rs:318
+#: fractal-gtk/src/widgets/room_history.rs:319
 msgid "%B %e"
 msgstr "%-d %B"
 
 #. Translators: This is a date format in the day divider with the year
-#: fractal-gtk/src/widgets/room_history.rs:321
+#: fractal-gtk/src/widgets/room_history.rs:322
 msgid "%B %e, %Y"
 msgstr "%-d %B %Y"
 
-#: fractal-gtk/src/widgets/room_history.rs:345
+#: fractal-gtk/src/widgets/room_history.rs:346
 msgid "New Messages"
 msgstr "Nowe wiadomości"
 
