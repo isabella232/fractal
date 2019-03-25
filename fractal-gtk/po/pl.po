@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2019-03-15 11:32+0000\n"
-"PO-Revision-Date: 2019-03-16 11:33+0100\n"
+"POT-Creation-Date: 2019-03-23 17:06+0000\n"
+"PO-Revision-Date: 2019-03-25 12:55+0100\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -89,11 +89,6 @@ msgstr ""
 #: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:5
 msgid "Fractal group messaging"
 msgstr "Wiadomości grupowe Fractal"
-
-#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
-#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:8
-msgid "@icon@"
-msgstr "@icon@"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:14
@@ -928,30 +923,42 @@ msgstr "Błąd podczas wczytywania poprzednich multimediów"
 msgid "Could not save the file"
 msgstr "Nie można zapisać pliku"
 
-#: fractal-gtk/src/widgets/members_list.rs:42
+#: fractal-gtk/src/widgets/members_list.rs:53
 msgid "No matching members found"
 msgstr "Nie odnaleziono pasujących członków"
 
-#: fractal-gtk/src/widgets/message.rs:359
+#: fractal-gtk/src/widgets/members_list.rs:169
+msgid "Admin"
+msgstr "Administrator"
+
+#: fractal-gtk/src/widgets/members_list.rs:170
+msgid "Moderator"
+msgstr "Moderator"
+
+#: fractal-gtk/src/widgets/members_list.rs:171
+msgid "Privileged"
+msgstr "Z uprawnieniami"
+
+#: fractal-gtk/src/widgets/message.rs:365
 msgid "Could not retrieve file URI"
 msgstr "Nie można odebrać adresu URI pliku"
 
-#: fractal-gtk/src/widgets/message.rs:375
-#: fractal-gtk/src/widgets/message.rs:401
+#: fractal-gtk/src/widgets/message.rs:381
+#: fractal-gtk/src/widgets/message.rs:407
 msgid "Save"
 msgstr "Zapisuje"
 
-#: fractal-gtk/src/widgets/message.rs:409
+#: fractal-gtk/src/widgets/message.rs:415
 msgid "Open"
 msgstr "Otwiera"
 
 #. Use 12h time format (AM/PM)
-#: fractal-gtk/src/widgets/message.rs:431
+#: fractal-gtk/src/widgets/message.rs:437
 msgid "%l∶%M %p"
 msgstr "%-l∶%M %p"
 
 #. Use 24 time format
-#: fractal-gtk/src/widgets/message.rs:434
+#: fractal-gtk/src/widgets/message.rs:440
 msgid "%R"
 msgstr "%H∶%M"
 
@@ -976,7 +983,7 @@ msgstr[0] "Pokój · {} członek"
 msgstr[1] "Pokój · {} członków"
 msgstr[2] "Pokój · {} członków"
 
-#: fractal-gtk/src/widgets/room_settings.rs:612
+#: fractal-gtk/src/widgets/room_settings.rs:618
 msgid "{} member"
 msgid_plural "{} members"
 msgstr[0] "{} członek"
