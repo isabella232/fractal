@@ -126,7 +126,9 @@ impl MessageBox {
         // +--------+---------+
         let msg_widget = gtk::Box::new(gtk::Orientation::Horizontal, 5);
         let content = self.build_room_msg_content(msg, true);
-        msg_widget.pack_start(&content, true, true, 50);
+        content.set_margin_start(50);
+
+        msg_widget.pack_start(&content, true, true, 0);
 
         msg_widget
     }
@@ -221,7 +223,7 @@ impl MessageBox {
         w.set_justify(gtk::Justification::Left);
         w.set_xalign(0.0);
         w.set_valign(gtk::Align::Start);
-        w.set_halign(gtk::Align::Start);
+        w.set_halign(gtk::Align::Fill);
         w.set_selectable(true);
     }
 
