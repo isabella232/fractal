@@ -438,7 +438,7 @@ impl Autocomplete {
                     .alias
                     .clone()
                     .unwrap_or_default()
-                    .trim_right_matches(" (IRC)")
+                    .trim_end_matches(" (IRC)")
                     .to_owned();
                 let widget;
                 {

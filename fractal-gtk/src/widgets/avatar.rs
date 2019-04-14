@@ -107,7 +107,7 @@ impl AvatarExt for gtk::Overlay {
         let uname = username.clone();
         /* remove IRC postfix from the username */
         let username = if let Some(u) = username {
-            Some(u.trim_right_matches(" (IRC)").to_owned())
+            Some(u.trim_end_matches(" (IRC)").to_owned())
         } else {
             None
         };

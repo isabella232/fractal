@@ -53,7 +53,7 @@ impl ProxySettings {
 
 // gio::ProxyResolver can't be sent or shared
 thread_local! {
-    static proxy_resolver: gio::ProxyResolver =
+    static PROXY_RESOLVER: gio::ProxyResolver =
         gio::ProxyResolver::get_default().expect("Couldn't get proxy resolver");
 }
 
@@ -82,8 +82,8 @@ impl Client {
         // Lock first so we don't overwrite proxy settings with outdated information
         let mut inner = self.inner.lock().unwrap();
 
-        let http_proxy = proxy_resolver.with(|resolver| resolver.lookup("http://", None))?;
-        let https_proxy = proxy_resolver.with(|resolver| resolver.lookup("https://", None))?;
+        let http_proxy = PROXY_RESOLVER.with(|resolver| resolver.lookup("http://", None))?;
+        let https_proxy = PROXY_RESOLVER.with(|resolver| resolver.lookup("https://", None))?;
 
         let new_proxy_settings = ProxySettings::new(http_proxy, https_proxy);
 

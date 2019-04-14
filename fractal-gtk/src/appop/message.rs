@@ -197,7 +197,7 @@ impl AppOp {
                 let mut m = Message::new(room, sender, body, mtype);
 
                 if msg.starts_with("/me ") {
-                    m.body = msg.trim_left_matches("/me ").to_owned();
+                    m.body = msg.trim_start_matches("/me ").to_owned();
                     m.mtype = String::from("m.emote");
                 }
 
@@ -390,7 +390,7 @@ impl AppOp {
     pub fn create_new_room_message(&self, msg: &Message) -> Option<MessageContent> {
         let mut highlights = vec![];
         lazy_static! {
-            static ref emoji_regex: regex::Regex = regex::Regex::new(r"(?x)
+            static ref EMOJI_REGEX: regex::Regex = regex::Regex::new(r"(?x)
                 ^
                 [\p{White_Space}\p{Emoji}\p{Emoji_Presentation}\p{Emoji_Modifier}\p{Emoji_Modifier_Base}\p{Emoji_Component}]*
                 [\p{Emoji}]+
@@ -426,7 +426,7 @@ impl AppOp {
                     highlights.push(String::from("message_menu"));
 
                     RowType::Mention
-                } else if emoji_regex.is_match(&msg.body) {
+                } else if EMOJI_REGEX.is_match(&msg.body) {
                     RowType::Emoji
                 } else {
                     RowType::Message
