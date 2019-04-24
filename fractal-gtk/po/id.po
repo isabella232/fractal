@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2019-04-04 08:11+0000\n"
-"PO-Revision-Date: 2019-04-12 17:28+0700\n"
+"POT-Creation-Date: 2019-04-17 06:39+0000\n"
+"PO-Revision-Date: 2019-04-24 18:38+0700\n"
 "Last-Translator: Kukuh Syafaat <kukuhsyafaat@gnome.org>\n"
 "Language-Team: Indonesian <gnome-l10n-id@googlegroups.com>\n"
 "Language: id\n"
@@ -55,6 +55,7 @@ msgstr "Tulis di baris baru"
 
 #: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:4
 #: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:3
+#: fractal-gtk/res/ui/login_flow.ui:294
 msgid "Fractal"
 msgstr "Fractal"
 
@@ -154,7 +155,6 @@ msgid "Phone"
 msgstr "Telepon"
 
 #: fractal-gtk/res/ui/account_settings.ui:211
-#: fractal-gtk/res/ui/main_window.ui:463
 msgid "Password"
 msgstr "Kata Sandi"
 
@@ -211,9 +211,8 @@ msgid "Account Settings"
 msgstr "Pengaturan Akun"
 
 #: fractal-gtk/res/ui/account_settings.ui:599
-#: fractal-gtk/res/ui/main_window.ui:870 fractal-gtk/res/ui/main_window.ui:1006
-#: fractal-gtk/res/ui/main_window.ui:1074
-#: fractal-gtk/res/ui/media_viewer.ui:247
+#: fractal-gtk/res/ui/main_window.ui:517 fractal-gtk/res/ui/main_window.ui:653
+#: fractal-gtk/res/ui/main_window.ui:721 fractal-gtk/res/ui/media_viewer.ui:247
 #: fractal-gtk/res/ui/room_settings.ui:1034
 msgid "Back"
 msgstr "Kembali"
@@ -317,6 +316,62 @@ msgstr ""
 msgid "Leave room"
 msgstr "Tinggalkan ruang"
 
+#: fractal-gtk/res/ui/login_flow.ui:33
+msgid "Welcome to Fractal"
+msgstr "Selamat datang di Fractal"
+
+#: fractal-gtk/res/ui/login_flow.ui:59
+msgid "_Create Account"
+msgstr "Buat _Akun"
+
+#: fractal-gtk/res/ui/login_flow.ui:95
+msgid "What is your Provider?"
+msgstr "Apa Penyedia Anda?"
+
+#: fractal-gtk/res/ui/login_flow.ui:124
+msgid "Matrix provider domain, e.g. myserver.co"
+msgstr "Domain penyedia matriks, mis. myserver.co"
+
+#: fractal-gtk/res/ui/login_flow.ui:140
+msgid "The domain may not be empty."
+msgstr "Domain tidak boleh kosong."
+
+#: fractal-gtk/res/ui/login_flow.ui:166
+msgid "_User ID"
+msgstr "ID Pengg_una"
+
+#: fractal-gtk/res/ui/login_flow.ui:182
+msgid "_Password"
+msgstr "Kata _Sandi"
+
+#: fractal-gtk/res/ui/login_flow.ui:214
+msgid "User name, email, or phone number"
+msgstr "Nama pengguna, surel, atau nomor telepon"
+
+#: fractal-gtk/res/ui/login_flow.ui:247
+msgid "_Forgot Password?"
+msgstr "Lupa Kata Sa_ndi?"
+
+#: fractal-gtk/res/ui/login_flow.ui:265
+msgid "Invalid username or password"
+msgstr "Nama pengguna atau kata sandi tidak valid"
+
+#: fractal-gtk/res/ui/login_flow.ui:306
+msgid "Choose Provider"
+msgstr "Pilih Penyedia"
+
+#: fractal-gtk/res/ui/login_flow.ui:329
+msgid "_Next"
+msgstr "Sela_njutnya"
+
+#: fractal-gtk/res/ui/login_flow.ui:348
+msgid "Log In"
+msgstr "Masuk"
+
+#: fractal-gtk/res/ui/login_flow.ui:371
+msgid "_Log In"
+msgstr "Masu_k"
+
 #: fractal-gtk/res/ui/main_menu.ui:123
 msgid "Log Out"
 msgstr "Keluar"
@@ -353,89 +408,31 @@ msgstr "Direktori"
 msgid "Loading"
 msgstr "Sedang Memuat"
 
-#: fractal-gtk/res/ui/main_window.ui:391
-msgctxt "big label"
-msgid "Log In"
-msgstr "Masuk"
-
-#: fractal-gtk/res/ui/main_window.ui:413
-msgid "Username"
-msgstr "Nama Pengguna"
-
-#: fractal-gtk/res/ui/main_window.ui:430
-msgid "Matrix username, email or phone number"
-msgstr "Nama pengguna, surel, atau nomor telepon Matrix"
-
-#: fractal-gtk/res/ui/main_window.ui:443
-msgctxt "login button"
-msgid "Log In"
-msgstr "Masuk"
-
-#: fractal-gtk/res/ui/main_window.ui:508
-msgid "Home server URL"
-msgstr "URL server rumah"
-
-#: fractal-gtk/res/ui/main_window.ui:526
-msgid "Identity server URL"
-msgstr "URL server identitas"
-
-#: fractal-gtk/res/ui/main_window.ui:543
-msgid "Matrix Server"
-msgstr "Server Matrix"
-
-#: fractal-gtk/res/ui/main_window.ui:562
-msgid "Identity server"
-msgstr "Server identitas"
-
-#: fractal-gtk/res/ui/main_window.ui:599
-msgid "Advanced"
-msgstr "Tingkat Lanjut"
-
-#: fractal-gtk/res/ui/main_window.ui:614 fractal-gtk/src/appop/login.rs:138
-msgid "Invalid username or password"
-msgstr "Nama pengguna atau kata sandi tidak valid"
-
-#: fractal-gtk/res/ui/main_window.ui:668
-msgid "Reset Password"
-msgstr "Atur Ulang Kata Sandi"
-
-#: fractal-gtk/res/ui/main_window.ui:682
-msgid "Create Account"
-msgstr "Buat Akun"
-
-#: fractal-gtk/res/ui/main_window.ui:696
-msgid "Log In as Guest"
-msgstr "Masuk sebagai Tamu"
-
-#: fractal-gtk/res/ui/main_window.ui:718
-msgid "Login"
-msgstr "Masuk"
-
-#: fractal-gtk/res/ui/main_window.ui:763
+#: fractal-gtk/res/ui/main_window.ui:410
 msgid "User"
 msgstr "Pengguna"
 
-#: fractal-gtk/res/ui/main_window.ui:790
+#: fractal-gtk/res/ui/main_window.ui:437
 msgid "Add"
 msgstr "Tambah"
 
-#: fractal-gtk/res/ui/main_window.ui:820
+#: fractal-gtk/res/ui/main_window.ui:467
 msgid "Room search"
 msgstr "Pencarian ruang"
 
-#: fractal-gtk/res/ui/main_window.ui:894 fractal-gtk/res/ui/new_room.ui:108
+#: fractal-gtk/res/ui/main_window.ui:541 fractal-gtk/res/ui/new_room.ui:108
 msgid "Room name"
 msgstr "Nama ruang"
 
-#: fractal-gtk/res/ui/main_window.ui:909
+#: fractal-gtk/res/ui/main_window.ui:556
 msgid "Room topic"
 msgstr "Topik ruang"
 
-#: fractal-gtk/res/ui/main_window.ui:942
+#: fractal-gtk/res/ui/main_window.ui:589
 msgid "Room Menu"
 msgstr "Menu Ruang"
 
-#: fractal-gtk/res/ui/main_window.ui:1036
+#: fractal-gtk/res/ui/main_window.ui:683
 #: fractal-gtk/res/ui/server_chooser_menu.ui:65
 #: fractal-gtk/src/app/connect/directory.rs:127
 msgid "Default Matrix Server"
@@ -772,15 +769,15 @@ msgstr "Tidak dapat bergabung dengan ruang, coba lagi."
 msgid "Can’t login, try again"
 msgstr "Tidak dapat masuk, coba lagi"
 
-#: fractal-gtk/src/app/backend_loop.rs:254
+#: fractal-gtk/src/app/backend_loop.rs:255
 msgid "Error sending message"
 msgstr "Galat mengirim pesan"
 
-#: fractal-gtk/src/app/backend_loop.rs:259
+#: fractal-gtk/src/app/backend_loop.rs:260
 msgid "Error deleting message"
 msgstr "Galat menghapus pesan"
 
-#: fractal-gtk/src/app/backend_loop.rs:263
+#: fractal-gtk/src/app/backend_loop.rs:264
 msgid "Error searching for rooms"
 msgstr "Galat mencari ruang"
 
@@ -859,11 +856,7 @@ msgstr ""
 msgid "You’ve been invited to join <b>{room_name}</b>"
 msgstr "Anda telah diundang untuk bergabung dengan <b>{nama_ruang}</b>"
 
-#: fractal-gtk/src/appop/login.rs:142
-msgid "Unknown Error"
-msgstr "Galat Tak Dikenal"
-
-#: fractal-gtk/src/appop/login.rs:223
+#: fractal-gtk/src/appop/login.rs:116
 msgid "Passwords didn’t match, try again"
 msgstr "Kata sandi tidak cocok, coba lagi"
 
@@ -980,13 +973,13 @@ msgstr "Pesan Baru"
 msgid "Room · {} member"
 msgid_plural "Room · {} members"
 msgstr[0] "Ruang · {} anggota"
-msgstr[1] ""
+msgstr[1] "Ruang · {} anggota"
 
 #: fractal-gtk/src/widgets/room_settings.rs:618
 msgid "{} member"
 msgid_plural "{} members"
 msgstr[0] "{} anggota"
-msgstr[1] ""
+msgstr[1] "{} anggota"
 
 #: fractal-gtk/src/widgets/roomlist.rs:424
 msgid "Invites"
@@ -1011,6 +1004,40 @@ msgstr "Ruang"
 #: fractal-gtk/src/widgets/roomlist.rs:435
 msgid "You don’t have any rooms yet"
 msgstr "Anda belum memiliki ruang"
+
+#~ msgid "Username"
+#~ msgstr "Nama Pengguna"
+
+#~ msgctxt "login button"
+#~ msgid "Log In"
+#~ msgstr "Masuk"
+
+#~ msgid "Home server URL"
+#~ msgstr "URL server rumah"
+
+#~ msgid "Identity server URL"
+#~ msgstr "URL server identitas"
+
+#~ msgid "Matrix Server"
+#~ msgstr "Server Matrix"
+
+#~ msgid "Identity server"
+#~ msgstr "Server identitas"
+
+#~ msgid "Advanced"
+#~ msgstr "Tingkat Lanjut"
+
+#~ msgid "Reset Password"
+#~ msgstr "Atur Ulang Kata Sandi"
+
+#~ msgid "Log In as Guest"
+#~ msgstr "Masuk sebagai Tamu"
+
+#~ msgid "Login"
+#~ msgstr "Masuk"
+
+#~ msgid "Unknown Error"
+#~ msgstr "Galat Tak Dikenal"
 
 #~ msgid "@icon@"
 #~ msgstr "@icon@"
