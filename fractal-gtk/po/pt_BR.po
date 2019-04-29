@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2019-03-23 17:06+0000\n"
-"PO-Revision-Date: 2019-04-05 09:30-0300\n"
+"POT-Creation-Date: 2019-04-17 06:39+0000\n"
+"PO-Revision-Date: 2019-04-29 17:48-0300\n"
 "Last-Translator: Rafael Fontenelle <rafaelff@gnome.org>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "Language: pt_BR\n"
@@ -56,6 +56,7 @@ msgstr "Escreve em uma nova linha"
 
 #: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:4
 #: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:3
+#: fractal-gtk/res/ui/login_flow.ui:294
 msgid "Fractal"
 msgstr "Fractal"
 
@@ -154,7 +155,6 @@ msgid "Phone"
 msgstr "Telefone"
 
 #: fractal-gtk/res/ui/account_settings.ui:211
-#: fractal-gtk/res/ui/main_window.ui:463
 msgid "Password"
 msgstr "Senha"
 
@@ -211,9 +211,8 @@ msgid "Account Settings"
 msgstr "Configurações de conta"
 
 #: fractal-gtk/res/ui/account_settings.ui:599
-#: fractal-gtk/res/ui/main_window.ui:870 fractal-gtk/res/ui/main_window.ui:1006
-#: fractal-gtk/res/ui/main_window.ui:1074
-#: fractal-gtk/res/ui/media_viewer.ui:250
+#: fractal-gtk/res/ui/main_window.ui:517 fractal-gtk/res/ui/main_window.ui:653
+#: fractal-gtk/res/ui/main_window.ui:721 fractal-gtk/res/ui/media_viewer.ui:247
 #: fractal-gtk/res/ui/room_settings.ui:1034
 msgid "Back"
 msgstr "Voltar"
@@ -314,6 +313,72 @@ msgstr "Depois de sair, você não poderá mais interagir com pessoas na sala."
 msgid "Leave room"
 msgstr "Sair da sala"
 
+#: fractal-gtk/res/ui/login_flow.ui:33
+#| msgid "_About Fractal"
+msgid "Welcome to Fractal"
+msgstr "Bem-vindo ao Fractal"
+
+#: fractal-gtk/res/ui/login_flow.ui:59
+#| msgid "Create Account"
+msgid "_Create Account"
+msgstr "_Criar conta"
+
+#: fractal-gtk/res/ui/login_flow.ui:95
+msgid "What is your Provider?"
+msgstr "Qual é o seu provedor?"
+
+#: fractal-gtk/res/ui/login_flow.ui:124
+msgid "Matrix provider domain, e.g. myserver.co"
+msgstr "Domínio do provedor de Matrix como, p.ex., meuservidor.co"
+
+#: fractal-gtk/res/ui/login_flow.ui:140
+msgid "The domain may not be empty."
+msgstr "O domínio não pode estar vazio."
+
+#: fractal-gtk/res/ui/login_flow.ui:166
+#| msgid "User"
+msgid "_User ID"
+msgstr "ID de _usuário"
+
+#: fractal-gtk/res/ui/login_flow.ui:182
+#| msgid "Password"
+msgid "_Password"
+msgstr "_Senha"
+
+#: fractal-gtk/res/ui/login_flow.ui:214
+#| msgid "Matrix username, email or phone number"
+msgid "User name, email, or phone number"
+msgstr "Nome de usuário, e-mail ou número de telefone"
+
+#: fractal-gtk/res/ui/login_flow.ui:247
+#| msgid "_New Password"
+msgid "_Forgot Password?"
+msgstr "_Esqueceu sua senha?"
+
+#: fractal-gtk/res/ui/login_flow.ui:265
+msgid "Invalid username or password"
+msgstr "Usuário ou senha inválida"
+
+#: fractal-gtk/res/ui/login_flow.ui:306
+msgid "Choose Provider"
+msgstr "Escolha o provedor"
+
+#: fractal-gtk/res/ui/login_flow.ui:329
+msgid "_Next"
+msgstr "_Próximo"
+
+#: fractal-gtk/res/ui/login_flow.ui:348
+#| msgctxt "big label"
+#| msgid "Log In"
+msgid "Log In"
+msgstr "Iniciar sessão"
+
+#: fractal-gtk/res/ui/login_flow.ui:371
+#| msgctxt "big label"
+#| msgid "Log In"
+msgid "_Log In"
+msgstr "_Iniciar sessão"
+
 #: fractal-gtk/res/ui/main_menu.ui:123
 msgid "Log Out"
 msgstr "Encerrar sessão"
@@ -350,89 +415,31 @@ msgstr "Diretório"
 msgid "Loading"
 msgstr "Carregando"
 
-#: fractal-gtk/res/ui/main_window.ui:391
-msgctxt "big label"
-msgid "Log In"
-msgstr "Autenticar"
-
-#: fractal-gtk/res/ui/main_window.ui:413
-msgid "Username"
-msgstr "Nome de usuário"
-
-#: fractal-gtk/res/ui/main_window.ui:430
-msgid "Matrix username, email or phone number"
-msgstr "Nome de usuário Matrix, e-mail ou número de telefone"
-
-#: fractal-gtk/res/ui/main_window.ui:443
-msgctxt "login button"
-msgid "Log In"
-msgstr "Autenticar"
-
-#: fractal-gtk/res/ui/main_window.ui:508
-msgid "Home server URL"
-msgstr "URL do servidor base"
-
-#: fractal-gtk/res/ui/main_window.ui:526
-msgid "Identity server URL"
-msgstr "URL do servidor de identidade"
-
-#: fractal-gtk/res/ui/main_window.ui:543
-msgid "Matrix Server"
-msgstr "Servidor Matrix"
-
-#: fractal-gtk/res/ui/main_window.ui:562
-msgid "Identity server"
-msgstr "Servidor de identidade"
-
-#: fractal-gtk/res/ui/main_window.ui:599
-msgid "Advanced"
-msgstr "Avançado"
-
-#: fractal-gtk/res/ui/main_window.ui:614 fractal-gtk/src/appop/login.rs:138
-msgid "Invalid username or password"
-msgstr "Usuário ou senha inválida"
-
-#: fractal-gtk/res/ui/main_window.ui:668
-msgid "Reset Password"
-msgstr "Redefinir senha"
-
-#: fractal-gtk/res/ui/main_window.ui:682
-msgid "Create Account"
-msgstr "Criar conta"
-
-#: fractal-gtk/res/ui/main_window.ui:696
-msgid "Log In as Guest"
-msgstr "Autenticar como convidado"
-
-#: fractal-gtk/res/ui/main_window.ui:718
-msgid "Login"
-msgstr "Autenticação"
-
-#: fractal-gtk/res/ui/main_window.ui:763
+#: fractal-gtk/res/ui/main_window.ui:410
 msgid "User"
 msgstr "Usuário"
 
-#: fractal-gtk/res/ui/main_window.ui:790
+#: fractal-gtk/res/ui/main_window.ui:437
 msgid "Add"
 msgstr "Adicionar"
 
-#: fractal-gtk/res/ui/main_window.ui:820
+#: fractal-gtk/res/ui/main_window.ui:467
 msgid "Room search"
 msgstr "Pesquisa de sala"
 
-#: fractal-gtk/res/ui/main_window.ui:894 fractal-gtk/res/ui/new_room.ui:108
+#: fractal-gtk/res/ui/main_window.ui:541 fractal-gtk/res/ui/new_room.ui:108
 msgid "Room name"
 msgstr "Nome da sala"
 
-#: fractal-gtk/res/ui/main_window.ui:909
+#: fractal-gtk/res/ui/main_window.ui:556
 msgid "Room topic"
 msgstr "Tópico da sala"
 
-#: fractal-gtk/res/ui/main_window.ui:942
+#: fractal-gtk/res/ui/main_window.ui:589
 msgid "Room Menu"
 msgstr "Menu da sala"
 
-#: fractal-gtk/res/ui/main_window.ui:1036
+#: fractal-gtk/res/ui/main_window.ui:683
 #: fractal-gtk/res/ui/server_chooser_menu.ui:65
 #: fractal-gtk/src/app/connect/directory.rs:127
 msgid "Default Matrix Server"
@@ -462,7 +469,7 @@ msgstr "*itálico*"
 msgid "Loading more media"
 msgstr "Carregando mais mídia"
 
-#: fractal-gtk/res/ui/media_viewer.ui:233
+#: fractal-gtk/res/ui/media_viewer.ui:230
 msgid "Media viewer"
 msgstr "Vizualizador de mídia"
 
@@ -545,7 +552,7 @@ msgstr "Privado"
 #: fractal-gtk/res/ui/password_dialog.ui:22
 #: fractal-gtk/src/widgets/file_dialog.rs:13
 #: fractal-gtk/src/widgets/file_dialog.rs:34
-#: fractal-gtk/src/widgets/media_viewer.rs:790
+#: fractal-gtk/src/widgets/media_viewer.rs:652
 msgid "_Cancel"
 msgstr "_Cancelar"
 
@@ -768,17 +775,17 @@ msgstr "Não foi possível entrar a sala, tente novamente."
 
 #: fractal-gtk/src/app/backend_loop.rs:239
 msgid "Can’t login, try again"
-msgstr "Não foi possível se autenticar, tente novamente"
+msgstr "Não foi possível iniciar a sessão, tente novamente"
 
-#: fractal-gtk/src/app/backend_loop.rs:254
+#: fractal-gtk/src/app/backend_loop.rs:255
 msgid "Error sending message"
 msgstr "Erro ao enviar mensagem"
 
-#: fractal-gtk/src/app/backend_loop.rs:259
+#: fractal-gtk/src/app/backend_loop.rs:260
 msgid "Error deleting message"
 msgstr "Erro ao excluir mensagem"
 
-#: fractal-gtk/src/app/backend_loop.rs:263
+#: fractal-gtk/src/app/backend_loop.rs:264
 msgid "Error searching for rooms"
 msgstr "Erro ao pesquisar por salas"
 
@@ -865,11 +872,7 @@ msgstr ""
 msgid "You’ve been invited to join <b>{room_name}</b>"
 msgstr "Você foi convidado a se juntar à sala <b>{room_name}</b>"
 
-#: fractal-gtk/src/appop/login.rs:142
-msgid "Unknown Error"
-msgstr "Erro desconhecido"
-
-#: fractal-gtk/src/appop/login.rs:223
+#: fractal-gtk/src/appop/login.rs:116
 msgid "Passwords didn’t match, try again"
 msgstr "As senhas são diferentes, tente novamente"
 
@@ -902,8 +905,6 @@ msgid "Several users are typing…"
 msgstr "Vários usuários estão digitando…"
 
 #: fractal-gtk/src/appop/room.rs:542
-#| msgid "<b>{}</b> is typing…"
-#| msgid_plural "<b>{}</b> and {} are typing…"
 msgid "<b>{}</b> is typing…"
 msgid_plural "<b>{}</b> and <b>{}</b> are typing…"
 msgstr[0] "<b>{}</b> está digitando…"
@@ -914,12 +915,12 @@ msgid "Syncing, this could take a while"
 msgstr "Sincronizando, isso pode levar um tempo"
 
 #: fractal-gtk/src/widgets/file_dialog.rs:9
-#: fractal-gtk/src/widgets/media_viewer.rs:786
+#: fractal-gtk/src/widgets/media_viewer.rs:648
 msgid "Save media as"
 msgstr "Salvar mídia como"
 
 #: fractal-gtk/src/widgets/file_dialog.rs:12
-#: fractal-gtk/src/widgets/media_viewer.rs:789
+#: fractal-gtk/src/widgets/media_viewer.rs:651
 msgid "_Save"
 msgstr "_Salvar"
 
@@ -927,11 +928,11 @@ msgstr "_Salvar"
 msgid "_Select"
 msgstr "_Selecionar"
 
-#: fractal-gtk/src/widgets/media_viewer.rs:746
+#: fractal-gtk/src/widgets/media_viewer.rs:608
 msgid "Error while loading previous media"
 msgstr "Erro ao carregar a mídia anterior"
 
-#: fractal-gtk/src/widgets/media_viewer.rs:799
+#: fractal-gtk/src/widgets/media_viewer.rs:661
 msgid "Could not save the file"
 msgstr "Não foi possível salvar o arquivo"
 
@@ -951,26 +952,26 @@ msgstr "Moderador"
 msgid "Privileged"
 msgstr "Privilegiado"
 
-#: fractal-gtk/src/widgets/message.rs:365
+#: fractal-gtk/src/widgets/message.rs:367
 msgid "Could not retrieve file URI"
 msgstr "Não foi possível recuperar o URI do arquivo"
 
-#: fractal-gtk/src/widgets/message.rs:381
-#: fractal-gtk/src/widgets/message.rs:407
+#: fractal-gtk/src/widgets/message.rs:383
+#: fractal-gtk/src/widgets/message.rs:409
 msgid "Save"
 msgstr "Salvar"
 
-#: fractal-gtk/src/widgets/message.rs:415
+#: fractal-gtk/src/widgets/message.rs:417
 msgid "Open"
 msgstr "Abrir"
 
 #. Use 12h time format (AM/PM)
-#: fractal-gtk/src/widgets/message.rs:437
+#: fractal-gtk/src/widgets/message.rs:439
 msgid "%l∶%M %p"
 msgstr "%l∶%M %p"
 
 #. Use 24 time format
-#: fractal-gtk/src/widgets/message.rs:440
+#: fractal-gtk/src/widgets/message.rs:442
 msgid "%R"
 msgstr "%R"
 
@@ -1025,6 +1026,40 @@ msgstr "Salas"
 #: fractal-gtk/src/widgets/roomlist.rs:435
 msgid "You don’t have any rooms yet"
 msgstr "Você ainda não tem salas"
+
+#~ msgid "Username"
+#~ msgstr "Nome de usuário"
+
+#~ msgctxt "login button"
+#~ msgid "Log In"
+#~ msgstr "Autenticar"
+
+#~ msgid "Home server URL"
+#~ msgstr "URL do servidor base"
+
+#~ msgid "Identity server URL"
+#~ msgstr "URL do servidor de identidade"
+
+#~ msgid "Matrix Server"
+#~ msgstr "Servidor Matrix"
+
+#~ msgid "Identity server"
+#~ msgstr "Servidor de identidade"
+
+#~ msgid "Advanced"
+#~ msgstr "Avançado"
+
+#~ msgid "Reset Password"
+#~ msgstr "Redefinir senha"
+
+#~ msgid "Log In as Guest"
+#~ msgstr "Autenticar como convidado"
+
+#~ msgid "Login"
+#~ msgstr "Autenticação"
+
+#~ msgid "Unknown Error"
+#~ msgstr "Erro desconhecido"
 
 #~ msgid "@icon@"
 #~ msgstr "@icon@"
