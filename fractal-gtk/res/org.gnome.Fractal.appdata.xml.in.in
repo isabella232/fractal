@@ -17,6 +17,41 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="4.2.0" type="stable" date="2019-05-05" urgency="high">
+      <description>
+        <p>This new major release is the result of 5 months of hard work by 37 contributors pushing over 200 commits.</p>
+        <p>New features:</p>
+        <ul>
+          <li>Adaptive window, mobile friendly</li>
+          <li>Window size and position are remembered</li>
+          <li>Redesigned login</li>
+          <li>Spellcheck</li>
+          <li>Network proxy support</li>
+          <li>Typing notifications</li>
+          <li>Badges are shown for operators and moderators</li>
+          <li>Better uploads:
+            <ul>
+              <li>Audio and video files are now tagged correctly</li>
+              <li>Image files have a thumbnail</li>
+              <li>Various tweaks to the file chooser</li>
+            </ul>
+          </li>
+        </ul>
+        <p>Bugfixes:</p>
+        <ul>
+          <li>Logs actually output something now</li>
+          <li>A few issues with invites and direct chats have been resolved</li>
+          <li>More reliable scrolling</li>
+          <li>Some crashes fixed</li>
+        </ul>
+        <p>Under the hood:</p>
+        <ul>
+          <li>Code refactor continues</li>
+          <li>We’re now using Rust 2018</li>
+          <li>Many improvements to the build system and CI</li>
+        </ul>
+      </description>
+    </release>
     <release version="4.0.0" type="stable" date="2018-12-22" urgency="high">
       <description>
         <p>This new major release is the result of 3 months of hard work by 25 contributors pushing over 340 commits.</p>
