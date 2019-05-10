@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2019-04-17 06:39+0000\n"
-"PO-Revision-Date: 2019-04-24 18:38+0700\n"
+"POT-Creation-Date: 2019-04-30 07:28+0000\n"
+"PO-Revision-Date: 2019-05-10 15:50+0700\n"
 "Last-Translator: Kukuh Syafaat <kukuhsyafaat@gnome.org>\n"
 "Language-Team: Indonesian <gnome-l10n-id@googlegroups.com>\n"
 "Language: id\n"
@@ -164,28 +164,22 @@ msgstr "Informasi Tingkat Lanjut"
 
 #: fractal-gtk/res/ui/account_settings.ui:308
 msgid "Homeserver"
-msgstr "Server rumah"
+msgstr "Peladen rumah"
 
-#: fractal-gtk/res/ui/account_settings.ui:323
-#: fractal-gtk/res/ui/account_settings.ui:351
-#: fractal-gtk/res/ui/account_settings.ui:379
-msgid "None"
-msgstr "Nihil"
-
-#: fractal-gtk/res/ui/account_settings.ui:336
+#: fractal-gtk/res/ui/account_settings.ui:337
 msgid "Matrix ID"
 msgstr "ID Matrix"
 
-#: fractal-gtk/res/ui/account_settings.ui:364
+#: fractal-gtk/res/ui/account_settings.ui:366
 msgid "Device ID"
 msgstr "ID Perangkat"
 
-#: fractal-gtk/res/ui/account_settings.ui:418
-#: fractal-gtk/res/ui/account_settings.ui:499
+#: fractal-gtk/res/ui/account_settings.ui:421
+#: fractal-gtk/res/ui/account_settings.ui:502
 msgid "Deactivate Account"
 msgstr "Nonaktifkan Akun"
 
-#: fractal-gtk/res/ui/account_settings.ui:444
+#: fractal-gtk/res/ui/account_settings.ui:447
 msgid ""
 "Deactivating your account means that you will lose all your messages, "
 "contacts, and files."
@@ -193,7 +187,7 @@ msgstr ""
 "Menonaktifkan akun Anda berarti Anda akan kehilangan semua pesan, kontak, "
 "dan berkas Anda."
 
-#: fractal-gtk/res/ui/account_settings.ui:459
+#: fractal-gtk/res/ui/account_settings.ui:462
 msgid ""
 "To confirm that you really want to deactivate this account type in your "
 "password:"
@@ -201,27 +195,27 @@ msgstr ""
 "Untuk mengonfirmasi bahwa Anda benar-benar ingin menonaktifkan jenis akun "
 "ini ketik kata sandi Anda:"
 
-#: fractal-gtk/res/ui/account_settings.ui:484
+#: fractal-gtk/res/ui/account_settings.ui:487
 msgid "Also erase all messages"
 msgstr "Hapus juga semua pesan"
 
-#: fractal-gtk/res/ui/account_settings.ui:583
+#: fractal-gtk/res/ui/account_settings.ui:586
 #: fractal-gtk/res/ui/main_menu.ui:109
 msgid "Account Settings"
 msgstr "Pengaturan Akun"
 
-#: fractal-gtk/res/ui/account_settings.ui:599
-#: fractal-gtk/res/ui/main_window.ui:517 fractal-gtk/res/ui/main_window.ui:653
-#: fractal-gtk/res/ui/main_window.ui:721 fractal-gtk/res/ui/media_viewer.ui:247
+#: fractal-gtk/res/ui/account_settings.ui:602
+#: fractal-gtk/res/ui/main_window.ui:517 fractal-gtk/res/ui/main_window.ui:655
+#: fractal-gtk/res/ui/main_window.ui:723 fractal-gtk/res/ui/media_viewer.ui:248
 #: fractal-gtk/res/ui/room_settings.ui:1034
 msgid "Back"
 msgstr "Kembali"
 
-#: fractal-gtk/res/ui/account_settings.ui:620
+#: fractal-gtk/res/ui/account_settings.ui:623
 msgid "Check your email"
 msgstr "Periksa surel Anda"
 
-#: fractal-gtk/res/ui/account_settings.ui:623
+#: fractal-gtk/res/ui/account_settings.ui:626
 #: fractal-gtk/res/ui/direct_chat.ui:129 fractal-gtk/res/ui/invite_user.ui:129
 #: fractal-gtk/res/ui/join_room.ui:93 fractal-gtk/res/ui/leave_room.ui:32
 #: fractal-gtk/res/ui/new_room.ui:42 fractal-gtk/src/appop/account.rs:69
@@ -229,7 +223,7 @@ msgstr "Periksa surel Anda"
 msgid "Cancel"
 msgstr "Batal"
 
-#: fractal-gtk/res/ui/account_settings.ui:631
+#: fractal-gtk/res/ui/account_settings.ui:634
 msgid "Apply"
 msgstr "Terapkan"
 
@@ -269,17 +263,11 @@ msgstr "Pilih berkas gambar ruang"
 msgid "Invitation"
 msgstr "Undangan"
 
-#: fractal-gtk/res/ui/invite.ui:19
-msgid "You’ve been invited to join \"\", you can accept or reject"
-msgstr ""
-"Anda telah diundang untuk bergabung dengan \"\", Anda dapat menerima atau "
-"menolak"
-
-#: fractal-gtk/res/ui/invite.ui:32
+#: fractal-gtk/res/ui/invite.ui:33
 msgid "Reject"
 msgstr "Tolak"
 
-#: fractal-gtk/res/ui/invite.ui:45
+#: fractal-gtk/res/ui/invite.ui:46
 msgid "Accept"
 msgstr "Terima"
 
@@ -319,6 +307,10 @@ msgstr "Tinggalkan ruang"
 #: fractal-gtk/res/ui/login_flow.ui:33
 msgid "Welcome to Fractal"
 msgstr "Selamat datang di Fractal"
+
+#: fractal-gtk/res/ui/login_flow.ui:47 fractal-gtk/res/ui/login_flow.ui:371
+msgid "_Log In"
+msgstr "Masu_k"
 
 #: fractal-gtk/res/ui/login_flow.ui:59
 msgid "_Create Account"
@@ -368,10 +360,6 @@ msgstr "Sela_njutnya"
 msgid "Log In"
 msgstr "Masuk"
 
-#: fractal-gtk/res/ui/login_flow.ui:371
-msgid "_Log In"
-msgstr "Masu_k"
-
 #: fractal-gtk/res/ui/main_menu.ui:123
 msgid "Log Out"
 msgstr "Keluar"
@@ -420,23 +408,15 @@ msgstr "Tambah"
 msgid "Room search"
 msgstr "Pencarian ruang"
 
-#: fractal-gtk/res/ui/main_window.ui:541 fractal-gtk/res/ui/new_room.ui:108
-msgid "Room name"
-msgstr "Nama ruang"
-
-#: fractal-gtk/res/ui/main_window.ui:556
-msgid "Room topic"
-msgstr "Topik ruang"
-
-#: fractal-gtk/res/ui/main_window.ui:589
+#: fractal-gtk/res/ui/main_window.ui:591
 msgid "Room Menu"
 msgstr "Menu Ruang"
 
-#: fractal-gtk/res/ui/main_window.ui:683
+#: fractal-gtk/res/ui/main_window.ui:685
 #: fractal-gtk/res/ui/server_chooser_menu.ui:65
 #: fractal-gtk/src/app/connect/directory.rs:127
 msgid "Default Matrix Server"
-msgstr "Server Matrix Bawaan"
+msgstr "Peladen Matrix Bawaan"
 
 #: fractal-gtk/res/ui/markdown_popover.ui:23
 msgid "Markdown"
@@ -461,10 +441,6 @@ msgstr "*miring*"
 #: fractal-gtk/res/ui/media_viewer.ui:185
 msgid "Loading more media"
 msgstr "Sedang memuat lebih banyak media"
-
-#: fractal-gtk/res/ui/media_viewer.ui:230
-msgid "Media viewer"
-msgstr "Penampil Media"
 
 #: fractal-gtk/res/ui/media_viewer_menu.ui:26
 msgid "Save as…"
@@ -533,6 +509,10 @@ msgstr "Buat ruang baru"
 #: fractal-gtk/res/ui/new_room.ui:50
 msgid "Create"
 msgstr "Buat"
+
+#: fractal-gtk/res/ui/new_room.ui:108
+msgid "Room name"
+msgstr "Nama ruang"
 
 #: fractal-gtk/res/ui/new_room.ui:152
 msgid "Visibility"
@@ -687,7 +667,7 @@ msgstr "Tampilkan ruang dari:"
 
 #: fractal-gtk/res/ui/server_chooser_menu.ui:90
 msgid "Your homeserver"
-msgstr "Server rumah Anda"
+msgstr "Peladen rumah Anda"
 
 #: fractal-gtk/res/ui/server_chooser_menu.ui:134
 msgid "Other Protocol"
@@ -695,11 +675,11 @@ msgstr "Protokol Lainnya"
 
 #: fractal-gtk/res/ui/server_chooser_menu.ui:207
 msgid "Other Homeserver"
-msgstr "Server Rumah Lainnya"
+msgstr "Peladen Rumah Lainnya"
 
 #: fractal-gtk/res/ui/server_chooser_menu.ui:235
 msgid "Homeserver URL"
-msgstr "URL Server rumah"
+msgstr "URL peladen rumah"
 
 #: fractal-gtk/src/actions/account_settings.rs:31
 #: fractal-gtk/src/actions/room_settings.rs:35
@@ -781,23 +761,23 @@ msgstr "Galat menghapus pesan"
 msgid "Error searching for rooms"
 msgstr "Galat mencari ruang"
 
-#: fractal-gtk/src/appop/about.rs:24
+#: fractal-gtk/src/appop/about.rs:21
 msgid "A Matrix.org client for GNOME"
 msgstr "Klien Matrix.org untuk GNOME"
 
-#: fractal-gtk/src/appop/about.rs:25
+#: fractal-gtk/src/appop/about.rs:22
 msgid "© 2017–2018 Daniel García Moreno, et al."
 msgstr "© 2017–2018 Daniel García Moreno, et al."
 
-#: fractal-gtk/src/appop/about.rs:31
+#: fractal-gtk/src/appop/about.rs:28
 msgid "Learn more about Fractal"
 msgstr "Pelajari lebih lanjut tentang Fractal"
 
-#: fractal-gtk/src/appop/about.rs:32
+#: fractal-gtk/src/appop/about.rs:29
 msgid "translator-credits"
 msgstr "Kukuh Syafaat <kukuhsyafaat@gnome.org>, 2018, 2019."
 
-#: fractal-gtk/src/appop/about.rs:47
+#: fractal-gtk/src/appop/about.rs:44
 msgid "Name by"
 msgstr "Nama oleh"
 
@@ -1004,6 +984,20 @@ msgstr "Ruang"
 #: fractal-gtk/src/widgets/roomlist.rs:435
 msgid "You don’t have any rooms yet"
 msgstr "Anda belum memiliki ruang"
+
+#~ msgid "None"
+#~ msgstr "Nihil"
+
+#~ msgid "You’ve been invited to join \"\", you can accept or reject"
+#~ msgstr ""
+#~ "Anda telah diundang untuk bergabung dengan \"\", Anda dapat menerima atau "
+#~ "menolak"
+
+#~ msgid "Room topic"
+#~ msgstr "Topik ruang"
+
+#~ msgid "Media viewer"
+#~ msgstr "Penampil Media"
 
 #~ msgid "Username"
 #~ msgstr "Nama Pengguna"
