@@ -524,7 +524,7 @@ impl RoomList {
         //FIXME don't use to_string(), pass &str
         run_in_group!(self, &r.to_string(), set_selected, Some(r.to_string()));
     }
-    
+
     fn sibling_id_inv(&self, unread_only: bool, direction: i32) -> Option<String> {
         let (room, _, next) = self.inv.get().sibling_id(unread_only, direction);
 
