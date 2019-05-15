@@ -29,6 +29,7 @@
           <li>Network proxy support</li>
           <li>Typing notifications</li>
           <li>Badges are shown for operators and moderators</li>
+          <li>Keyboard shortcuts for easier navigation across rooms</li>
           <li>Better uploads:
             <ul>
               <li>Audio and video files are now tagged correctly</li>
