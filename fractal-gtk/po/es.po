@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2019-05-14 11:43+0000\n"
-"PO-Revision-Date: 2019-05-16 18:25+0200\n"
+"POT-Creation-Date: 2019-05-16 16:26+0000\n"
+"PO-Revision-Date: 2019-05-16 19:15+0200\n"
 "Last-Translator: Rodrigo Lledó <rodhos92@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "Language: es\n"
@@ -41,22 +41,22 @@ msgstr "Abrir / cerrar la búsqueda de salas en el menú"
 #: fractal-gtk/res/gtk/help-overlay.ui:32
 msgctxt "shortcut window"
 msgid "Open the previous room in the list"
-msgstr "Abrir la sala anterior en la lista"
+msgstr "Abrir la sala anterior de la lista"
 
 #: fractal-gtk/res/gtk/help-overlay.ui:39
 msgctxt "shortcut window"
 msgid "Open the next room in the list"
-msgstr "Abrir la sala siguiente en la lista"
+msgstr "Abrir la siguiente sala de la lista"
 
 #: fractal-gtk/res/gtk/help-overlay.ui:46
 msgctxt "shortcut window"
 msgid "Open the previous room with unread messages in the list"
-msgstr "Abrir la sala anterior con mensajes sin leer en la lista"
+msgstr "Abrir la sala anterior de la lista con mensajes sin leer"
 
 #: fractal-gtk/res/gtk/help-overlay.ui:53
 msgctxt "shortcut window"
 msgid "Open the next room with unread messages in the list"
-msgstr "Abrir la sala siguiente con mensajes sin leer en la lista"
+msgstr "Abrir la siguiente sala de la lista con mensajes sin leer"
 
 #: fractal-gtk/res/gtk/help-overlay.ui:60
 msgctxt "shortcut window"
@@ -69,13 +69,11 @@ msgid "Open the last room of the list"
 msgstr "Abrir la última sala de la lista"
 
 #: fractal-gtk/res/gtk/help-overlay.ui:74
-#| msgid "New Messages"
 msgctxt "shortcut window"
 msgid "View older messages"
 msgstr "Ver los mensajes más antiguos"
 
 #: fractal-gtk/res/gtk/help-overlay.ui:81
-#| msgid "New Messages"
 msgctxt "shortcut window"
 msgid "View newer messages"
 msgstr "Ver los mensajes más recientes"
