@@ -77,7 +77,7 @@ pub fn sync(bk: &Backend, new_since: Option<String>, initial: bool) -> Result<()
     };
 
     let timeout = time::Duration::from_secs(30);
-    params.push(("timeout", timeout.as_secs().to_string()));
+    params.push(("timeout", timeout.as_millis().to_string()));
 
     let baseu = bk.get_base_url();
     let url = bk.url("sync", params)?;
