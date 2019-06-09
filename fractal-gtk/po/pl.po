@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2019-05-14 11:43+0000\n"
-"PO-Revision-Date: 2019-05-19 12:11+0200\n"
+"POT-Creation-Date: 2019-06-03 06:33+0000\n"
+"PO-Revision-Date: 2019-06-09 17:17+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -328,6 +328,10 @@ msgstr "Dołącz do pokoju"
 msgid "Join"
 msgstr "Dołącz"
 
+#: fractal-gtk/res/ui/kicked_room.ui:30 fractal-gtk/res/ui/msg_src_window.ui:32
+msgid "Close"
+msgstr "Zamknij"
+
 #: fractal-gtk/res/ui/leave_room.ui:18
 msgid "Leave?"
 msgstr "Opuścić?"
@@ -528,10 +532,6 @@ msgstr "Źródło wiadomości"
 #: fractal-gtk/res/ui/msg_src_window.ui:24
 msgid "Copy To Clipboard"
 msgstr "Skopiuj do schowka"
-
-#: fractal-gtk/res/ui/msg_src_window.ui:32
-msgid "Close"
-msgstr "Zamknij"
 
 #: fractal-gtk/res/ui/new_room.ui:14
 msgid "Private Chat"
@@ -885,27 +885,27 @@ msgstr "Hasła się nie zgadzają. Proszę spróbować ponownie."
 msgid " (direct message)"
 msgstr " (bezpośrednia wiadomość)"
 
-#: fractal-gtk/src/appop/room.rs:229
+#: fractal-gtk/src/appop/room.rs:237
 msgid "Leave {room_name}?"
 msgstr "Opuścić pokój „{room_name}”?"
 
-#: fractal-gtk/src/appop/room.rs:452
+#: fractal-gtk/src/appop/room.rs:473
 msgid "EMPTY ROOM"
 msgstr "PUSTY POKÓJ"
 
-#: fractal-gtk/src/appop/room.rs:454
+#: fractal-gtk/src/appop/room.rs:475
 msgid "{m1} and {m2}"
 msgstr "{m1} i {m2}"
 
-#: fractal-gtk/src/appop/room.rs:455
+#: fractal-gtk/src/appop/room.rs:476
 msgid "{m1} and Others"
 msgstr "{m1} i inni"
 
-#: fractal-gtk/src/appop/room.rs:551
+#: fractal-gtk/src/appop/room.rs:572
 msgid "Several users are typing…"
 msgstr "Kilku użytkowników pisze…"
 
-#: fractal-gtk/src/appop/room.rs:554
+#: fractal-gtk/src/appop/room.rs:575
 msgid "<b>{}</b> is typing…"
 msgid_plural "<b>{}</b> and <b>{}</b> are typing…"
 msgstr[0] "<b>{}</b> pisze…"
@@ -929,6 +929,18 @@ msgstr "_Zapisz"
 #: fractal-gtk/src/widgets/file_dialog.rs:33
 msgid "_Select"
 msgstr "_Wybierz"
+
+#: fractal-gtk/src/widgets/kicked_dialog.rs:46
+msgid "You have been kicked from {}"
+msgstr "Użytkownik został wyrzucony z pokoju {}"
+
+#: fractal-gtk/src/widgets/kicked_dialog.rs:50
+msgid ""
+"Kicked by: {}\n"
+" “{}”"
+msgstr ""
+"Przez użytkownika: {}\n"
+" „{}”"
 
 #: fractal-gtk/src/widgets/media_viewer.rs:608
 msgid "Error while loading previous media"
