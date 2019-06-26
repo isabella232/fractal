@@ -295,11 +295,18 @@ stack.titlebar:not(headerbar) > box > separator {
 
 .typing_label {
   margin: 6px;
-  margin-left: 78px;
+  /** list-padding-left + avatar-size + row-padding * 2 **/
+  /**                18 +          40 +              18 **/
+  margin-left: 76px;
   margin-bottom: 8px;
   color: @theme_selected_bg_color;
 }
 
+.folded-history .typing_label {
+  /** list-padding-left + avatar-size + row-padding * 2 **/
+  /**                 6 +          40 +              18 **/
+  margin-left: 64px;
+}
 
 .badge {
   border-radius: 5px;
