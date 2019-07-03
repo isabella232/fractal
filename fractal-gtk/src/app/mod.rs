@@ -249,10 +249,7 @@ impl App {
 
     fn on_activate(&self) {
         self.main_window.show();
-        // FIXME: present() dosen't work currently on wayland because of
-        // https://gitlab.gnome.org/GNOME/gtk/issues/624
-        self.main_window
-            .present_with_time((glib::get_monotonic_time() / 1000) as u32)
+        self.main_window.present()
     }
 
     fn on_shutdown(self) {
