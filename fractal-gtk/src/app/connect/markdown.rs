@@ -46,7 +46,7 @@ impl App {
 
             if let Some(md_lang) = md_lang.clone() {
                 buffer.set_highlight_matching_brackets(true);
-                buffer.set_language(&md_lang);
+                buffer.set_language(Some(&md_lang));
                 buffer.set_highlight_syntax(true);
             }
         }
