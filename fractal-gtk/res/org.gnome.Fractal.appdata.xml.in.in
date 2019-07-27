@@ -17,9 +17,9 @@
     </screenshot>
   </screenshots>
   <releases>
-    <release version="4.2.0" type="stable" date="2019-05-05" urgency="high">
+    <release version="4.2.0" type="stable" date="2019-07-27" urgency="high">
       <description>
-        <p>This new major release is the result of 5 months of hard work by 37 contributors pushing over 200 commits.</p>
+        <p>This new major release is the result of 7 months of hard work by 37 contributors pushing over 200 commits.</p>
         <p>New features:</p>
         <ul>
           <li>Adaptive window, mobile friendly</li>
