@@ -1,0 +1,938 @@
+# Romanian translation for fractal.
+# Copyright (C) 2019 fractal's COPYRIGHT HOLDER
+# This file is distributed under the same license as the fractal package.
+# Florentina Mușat <florentina.musat.28@gmail.com>, 2019.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: fractal gnome-3-30\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
+"POT-Creation-Date: 2019-07-20 14:10+0000\n"
+"PO-Revision-Date: 2019-08-23 10:13+0200\n"
+"Last-Translator: Daniel Șerbănescu <daniel [at] serbanescu [dot] dk>\n"
+"Language-Team: Romanian <gnomero-list@lists.sourceforge.net>\n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2);\n"
+"X-Generator: Poedit 2.2.3\n"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:13
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Generale"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:18
+msgctxt "shortcut window"
+msgid "Close the active room"
+msgstr "Închide camera activă"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:25
+msgctxt "shortcut window"
+msgid "Open / close the room sidebar search"
+msgstr "Deschide / închide căutarea în bara laterală a camerei"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:31
+msgctxt "shortcut window"
+msgid "Keyboard Shortcuts"
+msgstr "Scurtături de tastatură"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:38
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Ieșire"
+
+#: fractal-gtk/res/gtk/menus.ui:6
+msgid "Keyboard _Shortcuts"
+msgstr "_Scurtături de tastatură"
+
+#: fractal-gtk/res/gtk/menus.ui:10
+msgid "_About"
+msgstr "_Despre"
+
+#: fractal-gtk/res/gtk/menus.ui:14
+msgid "_Quit"
+msgstr "_Ieșire"
+
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:4
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:3
+msgid "Fractal"
+msgstr "Fractal"
+
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:7
+msgid "Daniel García Moreno"
+msgstr "Daniel García Moreno"
+
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:8
+msgid "Matrix group messaging app"
+msgstr "Aplicație de mesagerie de grup Matrix"
+
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:11
+msgid ""
+"Fractal is a Matrix messaging app for GNOME written in Rust. Its interface "
+"is optimized for collaboration in large groups, such as free software "
+"projects."
+msgstr ""
+"Fractal este o aplicație de mesagerie Matrix pentru GNOME scrisă în Rust. "
+"Interfața acesteia este optimizată pentru colaborarea în grupuri mari, "
+"precum proiectele de programe libere."
+
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:4
+msgid ""
+"Fractal is a decentralized, secure messaging client for collaborative group "
+"communication."
+msgstr ""
+"Fractal este un client de mesagerie sigur, descentralizat pentru comunicarea "
+"colaborativă în grupuri."
+
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:5
+msgid "Fractal group messaging"
+msgstr "Mesagerie de grup Fractal"
+
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:14
+msgid "Matrix;matrix.org;chat;irc;communications;talk;riot;"
+msgstr ""
+"Matrix;matrix.org;chat;irc;communications;talk;riot;matrice;comunicări;"
+"vorbire;discuție;"
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:13
+msgid "Type of password and token storage"
+msgstr "Tipul de stocare al parolei și al jetonului"
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:14
+msgid "Type of password and token storage, default value is: Secret Service"
+msgstr ""
+"Tipul de stocare al parolei și al jetonului, valoarea implicită este: "
+"Serviciul secret"
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:21
+msgid "If markdown sending is active"
+msgstr "Dacă trimiterea markdown este activă"
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:22
+msgid "Whether support for sending markdown messages is on"
+msgstr "Dacă este activat sau nu suportul pentru trimiterea mesajelor markdown"
+
+#: fractal-gtk/res/ui/account_settings.ui:71
+msgid "Other people can find you by searching for any of these identifiers."
+msgstr ""
+"Alți oameni pot să vă găsească prin căutarea oricărora dintre acești "
+"identificatori."
+
+#: fractal-gtk/res/ui/account_settings.ui:99
+msgid "Name"
+msgstr "Nume"
+
+#: fractal-gtk/res/ui/account_settings.ui:122
+msgid "Type in your name"
+msgstr "Tastați numele"
+
+#: fractal-gtk/res/ui/account_settings.ui:151
+msgid "Email"
+msgstr "Email"
+
+#: fractal-gtk/res/ui/account_settings.ui:180
+msgid "Phone"
+msgstr "Telefon"
+
+#: fractal-gtk/res/ui/account_settings.ui:209
+#: fractal-gtk/res/ui/main_window.ui:660
+msgid "Password"
+msgstr "Parolă"
+
+#: fractal-gtk/res/ui/account_settings.ui:283
+msgid "Advanced Information"
+msgstr "Informații avansate"
+
+#: fractal-gtk/res/ui/account_settings.ui:338
+msgid "Homeserver"
+msgstr "Server de acasă"
+
+#: fractal-gtk/res/ui/account_settings.ui:353
+#: fractal-gtk/res/ui/account_settings.ui:381
+#: fractal-gtk/res/ui/account_settings.ui:409
+msgid "None"
+msgstr "Nimic"
+
+#: fractal-gtk/res/ui/account_settings.ui:366
+msgid "Matrix ID"
+msgstr "ID Matrix"
+
+#: fractal-gtk/res/ui/account_settings.ui:394
+msgid "Device ID"
+msgstr "ID dispozitiv"
+
+#: fractal-gtk/res/ui/account_settings.ui:463
+#: fractal-gtk/res/ui/account_settings.ui:569
+msgid "Deactivate Account"
+msgstr "Dezactivează contul"
+
+#: fractal-gtk/res/ui/account_settings.ui:515
+msgid ""
+"Deactivating your account means that you will lose all your messages, "
+"contacts, and files."
+msgstr ""
+"Dezactivarea contului înseamnă că veți pierde toate mesajele, contactele și "
+"fișierele."
+
+#: fractal-gtk/res/ui/account_settings.ui:530
+msgid ""
+"To confirm that you really want to deactivate this account type in your "
+"password:"
+msgstr ""
+"Pentru a confirma că doriți sigur să dezactivați acest cont tastați parola:"
+
+#: fractal-gtk/res/ui/account_settings.ui:555
+msgid "Also erase all messages"
+msgstr "De asemenea șterge toate mesajele"
+
+#: fractal-gtk/res/ui/account_settings.ui:661
+#: fractal-gtk/res/ui/user_menu.ui:109
+msgid "Account Settings"
+msgstr "Configurări de cont"
+
+#: fractal-gtk/res/ui/account_settings.ui:676
+#: fractal-gtk/res/ui/main_window.ui:1154
+#: fractal-gtk/res/ui/main_window.ui:1222
+#: fractal-gtk/res/ui/media_viewer.ui:249
+#: fractal-gtk/res/ui/room_settings.ui:1028
+msgid "Back"
+msgstr "Înapoi"
+
+#: fractal-gtk/res/ui/account_settings.ui:697
+msgid "Check your email"
+msgstr "Verificați emailul"
+
+#: fractal-gtk/res/ui/account_settings.ui:700
+#: fractal-gtk/res/ui/direct_chat.ui:118 fractal-gtk/res/ui/invite_user.ui:121
+#: fractal-gtk/res/ui/join_room.ui:93 fractal-gtk/res/ui/leave_room.ui:33
+#: fractal-gtk/res/ui/new_room.ui:42 fractal-gtk/src/appop/account.rs:56
+#: fractal-gtk/src/appop/account.rs:102 fractal-gtk/src/appop/attach.rs:74
+msgid "Cancel"
+msgstr "Anulează"
+
+#: fractal-gtk/res/ui/account_settings.ui:708
+msgid "Apply"
+msgstr "Aplică"
+
+#: fractal-gtk/res/ui/add_room_menu.ui:22
+msgid "Room Directory"
+msgstr "Director cameră"
+
+#: fractal-gtk/res/ui/add_room_menu.ui:36
+msgid "Join Room"
+msgstr "Alăturare la cameră"
+
+#: fractal-gtk/res/ui/add_room_menu.ui:63
+msgid "New Room"
+msgstr "Cameră nouă"
+
+#: fractal-gtk/res/ui/add_room_menu.ui:77
+msgid "New Direct Chat"
+msgstr "Chat direct nou"
+
+#: fractal-gtk/res/ui/audio_player.ui:34 fractal-gtk/res/ui/audio_player.ui:50
+msgid "Play"
+msgstr "Redă"
+
+#: fractal-gtk/res/ui/direct_chat.ui:64 fractal-gtk/res/ui/invite_user.ui:64
+#: fractal-gtk/res/ui/main_window.ui:627
+msgid "Matrix username, email or phone number"
+msgstr "Nume de utilizator Matrix, email sau număr de telefon"
+
+#: fractal-gtk/res/ui/direct_chat.ui:115
+msgid "New direct chat"
+msgstr "Chat direct nou"
+
+#: fractal-gtk/res/ui/direct_chat.ui:126
+msgid "Start chat"
+msgstr "Începe chatul"
+
+#: fractal-gtk/res/ui/filechooser.ui:62
+msgid "Select room image file"
+msgstr "Selectează fișierul imagine al camerei"
+
+#: fractal-gtk/res/ui/invite.ui:19
+msgid "Invitation"
+msgstr "Invitație"
+
+#: fractal-gtk/res/ui/invite.ui:20
+msgid "You’ve been invited to join \"\", you can accept or reject"
+msgstr "Ați fost invitați să vă alăturați la „”, puteți accepta sau respinge"
+
+#: fractal-gtk/res/ui/invite.ui:33
+msgid "Reject"
+msgstr "Respinge"
+
+#: fractal-gtk/res/ui/invite.ui:46
+msgid "Accept"
+msgstr "Acceptă"
+
+#: fractal-gtk/res/ui/invite_user.ui:137 fractal-gtk/res/ui/invite_user.ui:150
+#: fractal-gtk/src/appop/invite.rs:139
+msgid "Invite"
+msgstr "Invitație"
+
+#: fractal-gtk/res/ui/join_room.ui:53
+msgid "ID or Alias"
+msgstr "ID sau alias"
+
+#: fractal-gtk/res/ui/join_room.ui:90
+msgid "Join room"
+msgstr "Alăturare la cameră"
+
+#: fractal-gtk/res/ui/join_room.ui:101 fractal-gtk/src/widgets/room.rs:111
+msgid "Join"
+msgstr "Alăturare"
+
+#: fractal-gtk/res/ui/leave_room.ui:19
+msgid "Leave?"
+msgstr "Părăsiți?"
+
+#: fractal-gtk/res/ui/leave_room.ui:20
+msgid ""
+"Once you leave, you won’t be able to interact with people in the room "
+"anymore."
+msgstr ""
+"Odată ce părăsiți, nu veți mai putea să interacționați cu oamenii din cameră."
+
+#: fractal-gtk/res/ui/leave_room.ui:46
+msgid "Leave room"
+msgstr "Părăsește camera"
+
+#: fractal-gtk/res/ui/main_window.ui:179
+msgid "Scroll to bottom"
+msgstr "Derulare la bază"
+
+#: fractal-gtk/res/ui/main_window.ui:225
+msgid "Attach files"
+msgstr "Atașează fișiere"
+
+#: fractal-gtk/res/ui/main_window.ui:253
+msgid "Text formatting"
+msgstr "Formatarea textului"
+
+#: fractal-gtk/res/ui/main_window.ui:373
+msgid "No room selected"
+msgstr "Nicio cameră selectată"
+
+#: fractal-gtk/res/ui/main_window.ui:388
+msgid "Join a room to start chatting"
+msgstr "Alăturați-vă la o cameră pentru a începe să discutați"
+
+#: fractal-gtk/res/ui/main_window.ui:398
+msgid "No room"
+msgstr "Nicio cameră"
+
+#: fractal-gtk/res/ui/main_window.ui:445
+msgid "This is an app-notification"
+msgstr "Aceasta este o notificare de aplicație"
+
+#: fractal-gtk/res/ui/main_window.ui:483
+msgid "Chat"
+msgstr "Chat"
+
+#: fractal-gtk/res/ui/main_window.ui:541
+msgid "Directory"
+msgstr "Director"
+
+#: fractal-gtk/res/ui/main_window.ui:565
+msgid "Loading"
+msgstr "Se încarcă"
+
+#: fractal-gtk/res/ui/main_window.ui:591
+msgctxt "big label"
+msgid "Log In"
+msgstr "Autentificare"
+
+#: fractal-gtk/res/ui/main_window.ui:610
+msgid "Username"
+msgstr "Nume de utilizator"
+
+#: fractal-gtk/res/ui/main_window.ui:640
+msgctxt "login button"
+msgid "Log In"
+msgstr "Autentificare"
+
+#: fractal-gtk/res/ui/main_window.ui:705
+msgid "Home server URL"
+msgstr "URL server de acasă"
+
+#: fractal-gtk/res/ui/main_window.ui:723
+msgid "Identity server URL"
+msgstr "URL server de identitate"
+
+#: fractal-gtk/res/ui/main_window.ui:740
+msgid "Matrix Server"
+msgstr "Server Matrix"
+
+#: fractal-gtk/res/ui/main_window.ui:759
+msgid "Identity server"
+msgstr "Server de identitate"
+
+#: fractal-gtk/res/ui/main_window.ui:796
+msgid "Advanced"
+msgstr "Avansat"
+
+#: fractal-gtk/res/ui/main_window.ui:811 fractal-gtk/src/appop/login.rs:113
+msgid "Invalid username or password"
+msgstr "Nume de utilizator sau parolă nevalidă"
+
+#: fractal-gtk/res/ui/main_window.ui:865
+msgid "Reset Password"
+msgstr "Restabilește parola"
+
+#: fractal-gtk/res/ui/main_window.ui:879
+msgid "Create Account"
+msgstr "Creează contul"
+
+#: fractal-gtk/res/ui/main_window.ui:893
+msgid "Log In as Guest"
+msgstr "Autentificare ca vizitator"
+
+#: fractal-gtk/res/ui/main_window.ui:915
+msgid "Login"
+msgstr "Autentificare"
+
+#: fractal-gtk/res/ui/main_window.ui:952
+msgid "User"
+msgstr "Utilizator"
+
+#: fractal-gtk/res/ui/main_window.ui:975 fractal-gtk/res/ui/sticker_group.ui:74
+msgid "Add"
+msgstr "Adaugă"
+
+#: fractal-gtk/res/ui/main_window.ui:1006
+msgid "Room search"
+msgstr "Căutare cameră"
+
+#: fractal-gtk/res/ui/main_window.ui:1039 fractal-gtk/res/ui/new_room.ui:108
+msgid "Room name"
+msgstr "Nume cameră"
+
+#: fractal-gtk/res/ui/main_window.ui:1054
+msgid "Room topic"
+msgstr "Subiect cameră"
+
+#: fractal-gtk/res/ui/main_window.ui:1085
+msgid "Room Menu"
+msgstr "Meniu cameră"
+
+#: fractal-gtk/res/ui/main_window.ui:1184
+#: fractal-gtk/res/ui/server_chooser_menu.ui:65
+#: fractal-gtk/src/app/connect/directory.rs:65
+msgid "Default Matrix Server"
+msgstr "Server Matrix implicit"
+
+#: fractal-gtk/res/ui/markdown_popover.ui:28
+msgid "Markdown"
+msgstr "Markdown"
+
+#: fractal-gtk/res/ui/markdown_popover.ui:76
+msgid "> quote"
+msgstr "> citare"
+
+#: fractal-gtk/res/ui/markdown_popover.ui:88
+msgid "**bold**"
+msgstr "**aldin**"
+
+#: fractal-gtk/res/ui/markdown_popover.ui:104
+msgid "`code`"
+msgstr "`cod`"
+
+#: fractal-gtk/res/ui/markdown_popover.ui:116
+msgid "*italic*"
+msgstr "*italic*"
+
+#: fractal-gtk/res/ui/media_viewer_menu.ui:26
+msgid "Save As"
+msgstr "Salvează ca"
+
+#: fractal-gtk/res/ui/media_viewer.ui:185
+msgid "Loading more media"
+msgstr "Se încarcă mai multe medii"
+
+#: fractal-gtk/res/ui/media_viewer.ui:233
+msgid "Media viewer"
+msgstr "Vizualizator media"
+
+#: fractal-gtk/res/ui/members.ui:25 fractal-gtk/res/ui/room_settings.ui:937
+msgid "Search for room members"
+msgstr "Caută membri de cameră"
+
+#: fractal-gtk/res/ui/message_menu.ui:21
+msgid "Reply"
+msgstr "Răspunde"
+
+#: fractal-gtk/res/ui/message_menu.ui:33
+msgid "Copy Selection"
+msgstr "Copiază selecția"
+
+#: fractal-gtk/res/ui/message_menu.ui:46
+msgid "Copy Text"
+msgstr "Copiază textul"
+
+#: fractal-gtk/res/ui/message_menu.ui:59
+msgid "View Source"
+msgstr "Vizualizează sursa"
+
+#: fractal-gtk/res/ui/message_menu.ui:83
+msgid "Delete Message"
+msgstr "Șterge mesajul"
+
+#: fractal-gtk/res/ui/msg_src_window.ui:25
+msgid "Copy To Clipboard"
+msgstr "Copiază în clipboard"
+
+#: fractal-gtk/res/ui/msg_src_window.ui:36
+msgid "Message Source"
+msgstr "Sursă mesaj"
+
+#: fractal-gtk/res/ui/msg_src_window.ui:44
+msgid "Close"
+msgstr "Închide"
+
+#: fractal-gtk/res/ui/new_room.ui:14
+msgid "Private Chat"
+msgstr "Chat privat"
+
+#: fractal-gtk/res/ui/new_room.ui:18 fractal-gtk/res/ui/new_room.ui:187
+msgid "Public"
+msgstr "Public"
+
+#: fractal-gtk/res/ui/new_room.ui:39
+msgid "Create new room"
+msgstr "Creează o cameră nouă"
+
+#: fractal-gtk/res/ui/new_room.ui:50
+msgid "Create"
+msgstr "Creează"
+
+#: fractal-gtk/res/ui/new_room.ui:152
+msgid "Visibility"
+msgstr "Vizibilitate"
+
+#: fractal-gtk/res/ui/new_room.ui:171
+msgid "Private"
+msgstr "Privat"
+
+#: fractal-gtk/res/ui/password_dialog.ui:23 fractal-gtk/src/appop/files.rs:30
+msgid "_Cancel"
+msgstr "_Anulează"
+
+#: fractal-gtk/res/ui/password_dialog.ui:36
+msgid "Ch_ange"
+msgstr "Mo_difică"
+
+#: fractal-gtk/res/ui/password_dialog.ui:134
+msgid "The passwords do not match."
+msgstr "Parolele nu se potrivesc."
+
+#: fractal-gtk/res/ui/password_dialog.ui:152
+msgid "_Verify New Password"
+msgstr "_Verifică parola nouă"
+
+#: fractal-gtk/res/ui/password_dialog.ui:169
+msgid "_New Password"
+msgstr "Parola _nouă"
+
+#: fractal-gtk/res/ui/password_dialog.ui:213
+msgid "Current _Password"
+msgstr "_Parola curentă"
+
+#: fractal-gtk/res/ui/room_menu.ui:22
+msgid "Room Details"
+msgstr "Detalii cameră"
+
+#: fractal-gtk/res/ui/room_menu.ui:36
+msgid "Invite to This Room"
+msgstr "Invită la această cameră"
+
+#: fractal-gtk/res/ui/room_menu.ui:63
+msgid "Leave Room"
+msgstr "Părăsește camera"
+
+#: fractal-gtk/res/ui/room_settings.ui:89
+msgid "Unknown"
+msgstr "Necunoscut"
+
+#: fractal-gtk/res/ui/room_settings.ui:115
+msgid "Add name"
+msgstr "Adaugă un nume"
+
+#: fractal-gtk/res/ui/room_settings.ui:147
+msgid "Add topic"
+msgstr "Adaugă un topic"
+
+#: fractal-gtk/res/ui/room_settings.ui:171
+msgid "Type in your room topic"
+msgstr "Tastați topicul camerei"
+
+#: fractal-gtk/res/ui/room_settings.ui:199
+msgid "No room description"
+msgstr "Nicio descriere a camerei"
+
+#: fractal-gtk/res/ui/room_settings.ui:236
+msgid "Notifications"
+msgstr "Notificări"
+
+#: fractal-gtk/res/ui/room_settings.ui:277
+msgid "Notification sounds"
+msgstr "Sunete de notificări"
+
+#: fractal-gtk/res/ui/room_settings.ui:322
+msgid "For all messages"
+msgstr "Pentru toate mesajele"
+
+#: fractal-gtk/res/ui/room_settings.ui:363
+msgid "Only for mentions"
+msgstr "Doar pentru mențiuni"
+
+#: fractal-gtk/res/ui/room_settings.ui:394
+msgid "Shared Media"
+msgstr "Medii partajate"
+
+#: fractal-gtk/res/ui/room_settings.ui:441
+msgid "photos"
+msgstr "fotografii"
+
+#: fractal-gtk/res/ui/room_settings.ui:481
+msgid "videos"
+msgstr "videouri"
+
+#: fractal-gtk/res/ui/room_settings.ui:521
+msgid "documents"
+msgstr "documente"
+
+#: fractal-gtk/res/ui/room_settings.ui:552
+msgid "New members can see"
+msgstr "Membrii noi pot să vadă"
+
+#: fractal-gtk/res/ui/room_settings.ui:597
+msgid "All room history"
+msgstr "Tot istoricul camerei"
+
+#: fractal-gtk/res/ui/room_settings.ui:638
+msgid "History after they were invited"
+msgstr "Istoricul după ce au fost invitați"
+
+#: fractal-gtk/res/ui/room_settings.ui:669
+msgid "Room Visibility"
+msgstr "Vizibilitate cameră"
+
+#: fractal-gtk/res/ui/room_settings.ui:716
+msgid "Allow guests"
+msgstr "Permite vizitatorii"
+
+#: fractal-gtk/res/ui/room_settings.ui:756
+msgid "Allow joining without invite"
+msgstr "Permite alăturarea fără invitație"
+
+#: fractal-gtk/res/ui/room_settings.ui:796
+msgid "Publish in room directory"
+msgstr "Publică în directorul camerei"
+
+#: fractal-gtk/res/ui/room_settings.ui:827
+msgid "Join addresses"
+msgstr "Adrese de alăturare"
+
+#: fractal-gtk/res/ui/room_settings.ui:886
+msgid "members"
+msgstr "membri"
+
+#: fractal-gtk/res/ui/room_settings.ui:902
+msgid "Invite New Member"
+msgstr "Invită un membru nou"
+
+#: fractal-gtk/res/ui/room_settings.ui:1013
+msgid "Details"
+msgstr "Detalii"
+
+#: fractal-gtk/res/ui/server_chooser_menu.ui:34
+msgid "Show rooms from:"
+msgstr "Arată camere de la:"
+
+#: fractal-gtk/res/ui/server_chooser_menu.ui:90
+msgid "Your homeserver"
+msgstr "Serverul de acasă"
+
+#: fractal-gtk/res/ui/server_chooser_menu.ui:134
+msgid "Other Protocol"
+msgstr "Alt protocol"
+
+#: fractal-gtk/res/ui/server_chooser_menu.ui:207
+msgid "Other Homeserver"
+msgstr "Alt server de acasă"
+
+#: fractal-gtk/res/ui/server_chooser_menu.ui:235
+msgid "Homeserver URL"
+msgstr "URL server de acasă"
+
+#: fractal-gtk/res/ui/stickers_popover.ui:22
+msgid "Stickers"
+msgstr "Abțibilduri"
+
+#: fractal-gtk/res/ui/user_menu.ui:136
+msgid "Log Out"
+msgstr "Deautentificare"
+
+#: fractal-gtk/src/app/backend_loop.rs:65
+msgid "Email is already in use"
+msgstr "Emailul este deja în uz"
+
+#: fractal-gtk/src/app/backend_loop.rs:69
+msgid "Phone number is already in use"
+msgstr "Numărul de telefon este deja în uz"
+
+#: fractal-gtk/src/app/backend_loop.rs:204
+msgid "Couldn’t delete the account"
+msgstr "Nu s-a putut șterge contul"
+
+#: fractal-gtk/src/app/backend_loop.rs:209
+msgid "Couldn’t change the password"
+msgstr "Nu s-a putut modifica parola"
+
+#: fractal-gtk/src/app/backend_loop.rs:214
+msgid "Couldn’t add the email address."
+msgstr "Nu s-a putut adăuga adresa de email."
+
+#: fractal-gtk/src/app/backend_loop.rs:219
+msgid "Couldn’t add the phone number."
+msgstr "Nu s-a putut adăuga numărul de telefon."
+
+#: fractal-gtk/src/app/backend_loop.rs:226
+msgid "Can’t create the room, try again"
+msgstr "Nu se poate crea camera, încercați din nou"
+
+#: fractal-gtk/src/app/backend_loop.rs:234
+msgid "Can’t join the room, try again."
+msgstr "Nu se poate alătura la cameră, încercați din nou."
+
+#: fractal-gtk/src/app/backend_loop.rs:240
+msgid "Can’t login, try again"
+msgstr "Nu se poate autentifica, încercați din nou"
+
+#: fractal-gtk/src/app/backend_loop.rs:256
+msgid "Error sending message"
+msgstr "Eroare la trimiterea mesajului"
+
+#: fractal-gtk/src/app/backend_loop.rs:262
+msgid "Error deleting message"
+msgstr "Eroare la ștergerea mesajului"
+
+#: fractal-gtk/src/app/backend_loop.rs:266
+msgid "Error searching for rooms"
+msgstr "Eroare la căutarea camerelor"
+
+#: fractal-gtk/src/app/connect/account.rs:76
+msgid "Pick a new avatar"
+msgstr "Alegeți un avatar nou"
+
+#: fractal-gtk/src/app/connect/account.rs:79
+#: fractal-gtk/src/widgets/room_settings.rs:148
+msgid "Select"
+msgstr "Selectează"
+
+#: fractal-gtk/src/appop/about.rs:21
+msgid "A Matrix.org client for GNOME"
+msgstr "Un client Matrix.org pentru GNOME"
+
+#: fractal-gtk/src/appop/about.rs:22
+msgid "© 2017–2018 Daniel García Moreno, et al."
+msgstr "© 2017–2018 Daniel García Moreno, și ceilalți."
+
+#: fractal-gtk/src/appop/about.rs:28
+msgid "Learn more about Fractal"
+msgstr "Aflați mai multe despre Fractal"
+
+#: fractal-gtk/src/appop/about.rs:29
+msgid "translator-credits"
+msgstr "Florentina Mușat <florentina.musat.28 [at] gmail [dot] com>, 2019"
+
+#: fractal-gtk/src/appop/about.rs:45
+msgid "Name by"
+msgstr "Nume după"
+
+#: fractal-gtk/src/appop/account.rs:36
+msgid "The validation code is not correct."
+msgstr "Codul de validare nu este corect."
+
+#: fractal-gtk/src/appop/account.rs:47
+msgid "Enter the code received via SMS"
+msgstr "Introduceți codul primit via SMS"
+
+#: fractal-gtk/src/appop/account.rs:57 fractal-gtk/src/appop/account.rs:103
+msgid "Continue"
+msgstr "Continuare"
+
+#: fractal-gtk/src/appop/account.rs:97
+msgid ""
+"In order to add this email address, go to your inbox and follow the link you "
+"received. Once you’ve done that, click Continue."
+msgstr ""
+"Pentru a adăuga această adresă de email, navigați la inbox și urmăriți "
+"legătura pe care ați primit-o. Odată ce ați făcut asta, apăsați clic pe "
+"Continuare."
+
+#: fractal-gtk/src/appop/account.rs:129
+msgid "OK"
+msgstr "OK"
+
+#: fractal-gtk/src/appop/account.rs:550
+msgid "Are you sure you want to delete your account?"
+msgstr "Sigur doriți să ștergeți contul?"
+
+#: fractal-gtk/src/appop/attach.rs:60
+msgid "Image from Clipboard"
+msgstr "Imagine din clipboard"
+
+#: fractal-gtk/src/appop/attach.rs:75
+msgid "Send"
+msgstr "Trimite"
+
+#: fractal-gtk/src/appop/files.rs:23
+msgid "Save media as"
+msgstr "Salvează media ca"
+
+#: fractal-gtk/src/appop/files.rs:31
+msgid "_Save"
+msgstr "_Salvează"
+
+#: fractal-gtk/src/appop/files.rs:44
+msgid "Do you want to overwrite the file?"
+msgstr "Doriți să suprascrieți fișierul?"
+
+#: fractal-gtk/src/appop/files.rs:50 fractal-gtk/src/appop/files.rs:63
+msgid "Could not save the file"
+msgstr "Nu s-a putut salva fișierul"
+
+#: fractal-gtk/src/appop/invite.rs:137
+msgid "Invite to {name}"
+msgstr "Invitați la {name}"
+
+#: fractal-gtk/src/appop/invite.rs:208
+msgid "Join {room_name}?"
+msgstr "Alăturare la {room_name}?"
+
+#: fractal-gtk/src/appop/invite.rs:212
+msgid ""
+"You’ve been invited to join to <b>{room_name}</b> room by <b>{sender_name}</"
+"b>"
+msgstr ""
+"Ați fost invitat să vă alăturați la camera <b>{room_name}</b> de "
+"<b>{sender_name}</b>"
+
+#: fractal-gtk/src/appop/invite.rs:215
+msgid "You’ve been invited to join to <b>{room_name}</b>"
+msgstr "Ați fost invitat să vă alăturați la <b>{room_name}</b>"
+
+#: fractal-gtk/src/appop/login.rs:117
+msgid "Unknown Error"
+msgstr "Eroare necunoscută"
+
+#: fractal-gtk/src/appop/login.rs:180
+msgid "Passwords didn’t match, try again"
+msgstr "Parola nu s-a potrivit, încercați din nou"
+
+#: fractal-gtk/src/appop/media_viewer.rs:147
+msgid "Error while loading previous media"
+msgstr "Eroare în timpul încărcării mediei precedente"
+
+#: fractal-gtk/src/appop/message.rs:207 fractal-gtk/src/appop/message.rs:215
+msgid "New Messages"
+msgstr "Mesaje noi"
+
+#: fractal-gtk/src/appop/notify.rs:52
+msgid "{name} (direct message)"
+msgstr "{name} (mesaj direct)"
+
+#: fractal-gtk/src/appop/room.rs:269
+msgid "Leave {room_name}?"
+msgstr "Părăsiți {room_name}?"
+
+#: fractal-gtk/src/appop/room.rs:502
+msgid "EMPTY ROOM"
+msgstr "CAMERĂ GOALĂ"
+
+#: fractal-gtk/src/appop/room.rs:504
+msgid "{m1} and {m2}"
+msgstr "{m1} și {m2}"
+
+#: fractal-gtk/src/appop/room.rs:505
+msgid "{m1} and Others"
+msgstr "{m1} și Alții"
+
+#: fractal-gtk/src/appop/sync.rs:11
+msgid "Syncing, this could take a while"
+msgstr "Se sincronizează, asta poate să dureze o vreme"
+
+#: fractal-gtk/src/widgets/members_list.rs:42
+msgid "No matching members found"
+msgstr "Nu s-au găsit membri care se potrivesc"
+
+#: fractal-gtk/src/widgets/message.rs:382
+msgid "Could not retrieve file URI"
+msgstr "Nu s-a putut obține URI-ul fișierului"
+
+#: fractal-gtk/src/widgets/message.rs:398
+#: fractal-gtk/src/widgets/message.rs:447
+msgid "Save"
+msgstr "Salvează"
+
+#: fractal-gtk/src/widgets/message.rs:408
+#: fractal-gtk/src/widgets/message.rs:458
+msgid "Could not download the file"
+msgstr "Nu s-a putut descărca fișierul"
+
+#: fractal-gtk/src/widgets/message.rs:476
+msgid "Open"
+msgstr "Deschide"
+
+#: fractal-gtk/src/widgets/room_settings.rs:145
+msgid "Pick a new room avatar"
+msgstr "Alegeți un avatar de cameră nou"
+
+#. we don't have private groups yet
+#. let description = Some(format!("Private Group · {} members", members.len()));
+#.
+#. Some(format!("Public Room · {} members", members.len()))
+#: fractal-gtk/src/widgets/room_settings.rs:183
+msgid "Room · {} member"
+msgid_plural "Room · {} members"
+msgstr[0] "Cameră · {} membru"
+msgstr[1] "Cameră · {} membri"
+msgstr[2] "Cameră · {} de membri"
+
+#: fractal-gtk/src/widgets/room_settings.rs:583
+msgid "{} member"
+msgid_plural "{} members"
+msgstr[0] "{} membru"
+msgstr[1] "{} membri"
+msgstr[2] "{} de membri"
+
+#: fractal-gtk/src/widgets/roomlist.rs:434
+msgid "Invites"
+msgstr "Invitații"
+
+#: fractal-gtk/src/widgets/roomlist.rs:435
+msgid "You don’t have any invitations"
+msgstr "Nu aveți invitații"
+
+#: fractal-gtk/src/widgets/roomlist.rs:436
+msgid "Favorites"
+msgstr "Favorite"
+
+#: fractal-gtk/src/widgets/roomlist.rs:437
+msgid "Drag and drop rooms here to add them to your favorites"
+msgstr "Trageți și plasați camere aici pentru a le adăuga la favorite"
+
+#: fractal-gtk/src/widgets/roomlist.rs:438
+msgid "Rooms"
+msgstr "Camere"
+
+#: fractal-gtk/src/widgets/roomlist.rs:439
+msgid "You don’t have any rooms yet"
+msgstr "Nu aveți camere încă"
