@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2019-08-23 18:46+0000\n"
-"PO-Revision-Date: 2019-08-25 18:33+0200\n"
+"POT-Creation-Date: 2019-09-07 14:32+0000\n"
+"PO-Revision-Date: 2019-09-08 11:01+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -917,7 +917,7 @@ msgid "Syncing, this could take a while"
 msgstr "Synchronizowanie. Może to chwilę zająć."
 
 #: fractal-gtk/src/uibuilder.rs:52
-msgid "You don\\u{2019}t have permission to post to this room"
+msgid "You don’t have permission to post to this room"
 msgstr "Brak uprawnienia do pisania wiadomości w tym pokoju"
 
 #: fractal-gtk/src/widgets/file_dialog.rs:9
