@@ -968,7 +968,7 @@ msgstr "Admin"
 
 #: fractal-gtk/src/widgets/members_list.rs:171
 msgid "Moderator"
-msgstr "Modérateurr"
+msgstr "Modérateur"
 
 #: fractal-gtk/src/widgets/members_list.rs:172
 msgid "Privileged"
