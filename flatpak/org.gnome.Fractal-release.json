@@ -1,18 +1,12 @@
 {
-    "app-id" : "org.gnome.FractalDevel",
-    "runtime" : "org.gnome.Platform",
-    "runtime-version" : "master",
-    "sdk" : "org.gnome.Sdk",
+    "app-id": "org.gnome.Fractal",
+    "runtime": "org.gnome.Platform",
+    "runtime-version": "3.34",
+    "sdk": "org.gnome.Sdk",
     "sdk-extensions" : [
         "org.freedesktop.Sdk.Extension.rust-stable"
     ],
     "command" : "fractal",
-    "tags" : [
-        "devel",
-        "development",
-        "nightly"
-    ],
-    "desktop-file-name-suffix" : " (Development)",
     "finish-args" : [
         "--share=network",
         "--share=ipc",
@@ -26,7 +20,7 @@
         "--metadata=X-DConf=migrate-path=/org/gnome/factal/"
     ],
     "build-options" : {
-        "append-path" : "/usr/lib/sdk/rust-stable/bin",
+        "append-path": "/usr/lib/sdk/rust-stable/bin",
         "build-args" : [
             "--share=network"
         ],
@@ -51,7 +45,8 @@
             "sources" : [
                 {
                     "type" : "git",
-                    "url" : "https://source.puri.sm/Librem5/libhandy.git"
+                    "url" : "https://source.puri.sm/Librem5/libhandy",
+                    "tag" : "v0.0.11"
                 }
             ]
         },
@@ -61,7 +56,8 @@
             "sources" : [
                 {
                     "type" : "git",
-                    "url" : "https://gitlab.gnome.org/GNOME/gtksourceview.git"
+                    "url" : "https://gitlab.gnome.org/GNOME/gtksourceview.git",
+                    "tag" : "4.4.0"
                 }
             ]
         },
@@ -95,23 +91,23 @@
                 {
                     "type" : "git",
                     "url" : "https://gitlab.freedesktop.org/gstreamer/gst-editing-services.git",
-                    "tag" : "1.14.4"
+                    "tag" : "1.16.0"
                 }
             ]
         },
         {
-            "name" : "fractal",
+            "name" : "Fractal",
             "buildsystem" : "meson",
-            "builddir" : true,
             "config-opts" : [
-                "-Dprofile=development"
+                "-Dprofile=default"
             ],
             "sources" : [
-                {
+               {
                     "type" : "git",
-                    "url" : "https://gitlab.gnome.org/GNOME/fractal.git"
-                }
-            ]
+                    "branch": "release-4.2.1",
+                    "url" : ".."
+               }
+           ]
         }
     ]
 }

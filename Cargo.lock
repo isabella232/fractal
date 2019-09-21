@@ -542,7 +542,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "fractal-gtk"
-version = "4.2.0"
+version = "4.2.1"
 dependencies = [
  "cairo-rs 0.7.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "chrono 0.4.7 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -550,7 +550,7 @@ dependencies = [
  "comrak 0.4.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "dirs 1.0.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "failure 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
- "fractal-matrix-api 4.2.0",
+ "fractal-matrix-api 4.2.1",
  "fragile 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "gdk 0.11.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "gdk-pixbuf 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -584,7 +584,7 @@ dependencies = [
 
 [[package]]
 name = "fractal-matrix-api"
-version = "4.2.0"
+version = "4.2.1"
 dependencies = [
  "chrono 0.4.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "directories 1.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
