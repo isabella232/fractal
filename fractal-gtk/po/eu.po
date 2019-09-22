@@ -6,8 +6,8 @@
 msgid ""
 msgstr "Project-Id-Version: fractal gnome-3-30\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2019-05-10 08:57+0000\n"
-"PO-Revision-Date: 2019-05-25 10:00+0100\n"
+"POT-Creation-Date: 2019-09-02 06:28+0000\n"
+"PO-Revision-Date: 2019-09-22 10:00+0100\n"
 "Last-Translator: Asier Sarasua Garmendia <asier.sarasua@gmail.com>\n"
 "Language-Team: Basque <librezale@librezale.eus>\n"
 "Language: eu\n"
@@ -29,64 +29,103 @@ msgstr "Itxi gela aktiboa"
 #: fractal-gtk/res/gtk/help-overlay.ui:25
 msgctxt "shortcut window"
 msgid "Open / close the room sidebar search"
-msgstr ""
+msgstr "Ireki / itxi gelaren alboko barraren bilaketa"
 
-#: fractal-gtk/res/gtk/help-overlay.ui:31
+#: fractal-gtk/res/gtk/help-overlay.ui:32
+msgctxt "shortcut window"
+msgid "Open the previous room in the list"
+msgstr "Ireki zerrendako aurreko gela"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:39
+msgctxt "shortcut window"
+msgid "Open the next room in the list"
+msgstr "Ireki zerrendako hurrengo gela"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:46
+msgctxt "shortcut window"
+msgid "Open the previous room with unread messages in the list"
+msgstr "Ireki irakurri gabeko mezuak dituen zerrendako aurreko gela"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:53
+msgctxt "shortcut window"
+msgid "Open the next room with unread messages in the list"
+msgstr "Ireki irakurri gabeko mezuak dituen zerrendako hurrengo gela"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:60
+msgctxt "shortcut window"
+msgid "Open the first room of the list"
+msgstr "Ireki zerrendako lehen gela"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:67
+msgctxt "shortcut window"
+msgid "Open the last room of the list"
+msgstr "Ireki zerrendako azken gela"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:74
+msgctxt "shortcut window"
+msgid "View older messages"
+msgstr "Ikusi mezu zaharragoak"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:81
+msgctxt "shortcut window"
+msgid "View newer messages"
+msgstr "Ikusi mezu berriagoak"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:87
 msgctxt "shortcut window"
 msgid "Keyboard Shortcuts"
 msgstr "Laster-teklak"
 
-#: fractal-gtk/res/gtk/help-overlay.ui:38
+#: fractal-gtk/res/gtk/help-overlay.ui:94
 msgctxt "shortcut window"
 msgid "Quit"
 msgstr "Irten"
 
-#: fractal-gtk/res/gtk/menus.ui:6
-msgid "Keyboard _Shortcuts"
-msgstr "Las_ter-teklak"
+#: fractal-gtk/res/gtk/help-overlay.ui:103
+msgctxt "shortcut message"
+msgid "Composing a new message"
+msgstr "Mezu berria osatzen"
 
-#: fractal-gtk/res/gtk/menus.ui:10
-msgid "_About"
-msgstr "Honi _buruz"
-
-#: fractal-gtk/res/gtk/menus.ui:14
-msgid "_Quit"
-msgstr "I_rten"
+#: fractal-gtk/res/gtk/help-overlay.ui:108
+msgctxt "shortcut message"
+msgid "Write on a new line"
+msgstr "Idatzi lerro berrian"
 
 #: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:4
 #: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:3
+#: fractal-gtk/res/ui/login_flow.ui:294
 msgid "Fractal"
-msgstr ""
+msgstr "Fractal"
 
 #: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:7
 msgid "Daniel García Moreno"
-msgstr ""
+msgstr "Daniel García Moreno"
 
 #: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:8
 msgid "Matrix group messaging app"
-msgstr ""
+msgstr "Matrix talderako mezularitza-aplikazioa"
 
-#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:11
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:10
 msgid ""
 "Fractal is a Matrix messaging app for GNOME written in Rust. Its interface "
 "is optimized for collaboration in large groups, such as free software "
 "projects."
-msgstr ""
+msgstr "Fractal Matrix sistemetarako mezularitza-aplikazio bat da, GNOMErako idatzia Rust lengoaian. Bere interfazea talde handietan, adibidez software-proiektuetan, lankidetzan aritzeko optimizatu da."
 
 #: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:4
 msgid ""
 "Fractal is a decentralized, secure messaging client for collaborative group "
 "communication."
-msgstr ""
+msgstr "Fractal lankidetzako talde-komunikaziorako mezularitza-bezero seguru eta deszentralizatua da."
 
 #: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:5
 msgid "Fractal group messaging"
-msgstr ""
+msgstr "Fractal talde-mezularitza"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:14
 msgid "Matrix;matrix.org;chat;irc;communications;talk;riot;"
-msgstr ""
+msgstr "Matrix;matrix.org;txata;irc;komunikazioak;talk;riot;"
 
 #: fractal-gtk/res/org.gnome.Fractal.gschema.xml:13
 msgid "Type of password and token storage"
@@ -98,112 +137,124 @@ msgstr ""
 
 #: fractal-gtk/res/org.gnome.Fractal.gschema.xml:21
 msgid "If markdown sending is active"
-msgstr ""
+msgstr "Markdown bidaltzea aktibo dagoen ala ez"
 
 #: fractal-gtk/res/org.gnome.Fractal.gschema.xml:22
 msgid "Whether support for sending markdown messages is on"
-msgstr ""
+msgstr "Markdown mezuak bidaltzeko euskarria aktibatuta dagoen ala ez"
 
-#: fractal-gtk/res/ui/account_settings.ui:71
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:29
+msgid "X position of the main window on startup"
+msgstr "Leiho nagusiaren X posizioa abioan"
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:34
+msgid "Y position of the main window on startup"
+msgstr "Leiho nagusiaren Y posizioa abioan"
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:39
+msgid "Width of the main window on startup"
+msgstr "Leiho nagusiaren zabalera abioan"
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:44
+msgid "Height of the main window on startup"
+msgstr "Leiho nagusiaren altuera abioan"
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:49
+msgid "Whether the main window is maximized on startup"
+msgstr "Leihoa maximizatuta dagoen edo ez abioan"
+
+#: fractal-gtk/res/ui/account_settings.ui:73
 msgid "Other people can find you by searching for any of these identifiers."
-msgstr ""
+msgstr "Beste pertsona batzuk zu bila zaitzakete honako identifikatzaileetako bat bilatuta."
 
-#: fractal-gtk/res/ui/account_settings.ui:99
+#: fractal-gtk/res/ui/account_settings.ui:101
 msgid "Name"
 msgstr "Izena"
 
-#: fractal-gtk/res/ui/account_settings.ui:122
+#: fractal-gtk/res/ui/account_settings.ui:124
 msgid "Type in your name"
-msgstr ""
+msgstr "Idatzi zure izena"
 
-#: fractal-gtk/res/ui/account_settings.ui:151
+#: fractal-gtk/res/ui/account_settings.ui:153
 msgid "Email"
-msgstr "Helb. el."
+msgstr "Posta elektronikoa"
 
-#: fractal-gtk/res/ui/account_settings.ui:180
+#: fractal-gtk/res/ui/account_settings.ui:182
 msgid "Phone"
 msgstr "Telefonoa"
 
-#: fractal-gtk/res/ui/account_settings.ui:209
-#: fractal-gtk/res/ui/main_window.ui:660
+#: fractal-gtk/res/ui/account_settings.ui:211
 msgid "Password"
 msgstr "Pasahitza"
 
-#: fractal-gtk/res/ui/account_settings.ui:283
+#: fractal-gtk/res/ui/account_settings.ui:278
 msgid "Advanced Information"
-msgstr ""
+msgstr "Informazio aurreratua"
 
-#: fractal-gtk/res/ui/account_settings.ui:338
+#: fractal-gtk/res/ui/account_settings.ui:308
 msgid "Homeserver"
-msgstr ""
+msgstr "Zerbitzaria"
 
-#: fractal-gtk/res/ui/account_settings.ui:353
-#: fractal-gtk/res/ui/account_settings.ui:381
-#: fractal-gtk/res/ui/account_settings.ui:409
-msgid "None"
-msgstr "Bat ere ez"
+#: fractal-gtk/res/ui/account_settings.ui:337
+msgid "Matrix ID"
+msgstr "Matrix IDa"
 
 #: fractal-gtk/res/ui/account_settings.ui:366
-msgid "Matrix ID"
-msgstr ""
-
-#: fractal-gtk/res/ui/account_settings.ui:394
 msgid "Device ID"
 msgstr "Gailuaren IDa"
 
-#: fractal-gtk/res/ui/account_settings.ui:463
-#: fractal-gtk/res/ui/account_settings.ui:569
+#: fractal-gtk/res/ui/account_settings.ui:421
+#: fractal-gtk/res/ui/account_settings.ui:502
 msgid "Deactivate Account"
-msgstr ""
+msgstr "Desaktibatu kontua"
 
-#: fractal-gtk/res/ui/account_settings.ui:515
+#: fractal-gtk/res/ui/account_settings.ui:447
 msgid ""
 "Deactivating your account means that you will lose all your messages, "
 "contacts, and files."
-msgstr ""
+msgstr "Zure kontua desaktibatzen baduzu, zure mezu, kontaktu eta fitxategi guztiak galduko dituzu."
 
-#: fractal-gtk/res/ui/account_settings.ui:530
+#: fractal-gtk/res/ui/account_settings.ui:462
 msgid ""
 "To confirm that you really want to deactivate this account type in your "
 "password:"
-msgstr ""
+msgstr "Benetan kontu hau desaktibatu nahi duzula baieztatzeko, idatzi zure pasahitza:"
 
-#: fractal-gtk/res/ui/account_settings.ui:555
+#: fractal-gtk/res/ui/account_settings.ui:487
 msgid "Also erase all messages"
-msgstr ""
+msgstr "Ezabatu mezu guztiak ere bai"
 
-#: fractal-gtk/res/ui/account_settings.ui:661
-#: fractal-gtk/res/ui/user_menu.ui:109
+#: fractal-gtk/res/ui/account_settings.ui:586
+#: fractal-gtk/res/ui/main_menu.ui:109
 msgid "Account Settings"
 msgstr "Kontuaren ezarpenak"
 
-#: fractal-gtk/res/ui/account_settings.ui:676
-#: fractal-gtk/res/ui/main_window.ui:1154
-#: fractal-gtk/res/ui/main_window.ui:1222
-#: fractal-gtk/res/ui/media_viewer.ui:249
-#: fractal-gtk/res/ui/room_settings.ui:1028
+#: fractal-gtk/res/ui/account_settings.ui:602
+#: fractal-gtk/res/ui/main_window.ui:517 fractal-gtk/res/ui/main_window.ui:657
+#: fractal-gtk/res/ui/main_window.ui:767 fractal-gtk/res/ui/media_viewer.ui:248
+#: fractal-gtk/res/ui/room_settings.ui:1034
 msgid "Back"
 msgstr "Atzera"
 
-#: fractal-gtk/res/ui/account_settings.ui:697
+#: fractal-gtk/res/ui/account_settings.ui:623
 msgid "Check your email"
-msgstr ""
+msgstr "Begiratu zure posta elektronikoa"
 
-#: fractal-gtk/res/ui/account_settings.ui:700
-#: fractal-gtk/res/ui/direct_chat.ui:118 fractal-gtk/res/ui/invite_user.ui:121
-#: fractal-gtk/res/ui/join_room.ui:93 fractal-gtk/res/ui/leave_room.ui:33
-#: fractal-gtk/res/ui/new_room.ui:42 fractal-gtk/src/appop/account.rs:56
-#: fractal-gtk/src/appop/account.rs:102 fractal-gtk/src/appop/attach.rs:74
+#: fractal-gtk/res/ui/account_settings.ui:626
+#: fractal-gtk/res/ui/direct_chat.ui:129 fractal-gtk/res/ui/invite_user.ui:129
+#: fractal-gtk/res/ui/join_room.ui:93 fractal-gtk/res/ui/leave_room.ui:32
+#: fractal-gtk/res/ui/new_room.ui:42 fractal-gtk/src/appop/account.rs:69
+#: fractal-gtk/src/appop/account.rs:128 fractal-gtk/src/appop/attach.rs:57
 msgid "Cancel"
 msgstr "Utzi"
 
-#: fractal-gtk/res/ui/account_settings.ui:708
+#: fractal-gtk/res/ui/account_settings.ui:634
 msgid "Apply"
 msgstr "Aplikatu"
 
 #: fractal-gtk/res/ui/add_room_menu.ui:22
 msgid "Room Directory"
-msgstr ""
+msgstr "Gelen direktorioa"
 
 #: fractal-gtk/res/ui/add_room_menu.ui:36
 msgid "Join Room"
@@ -211,40 +262,31 @@ msgstr "Elkartu gelara"
 
 #: fractal-gtk/res/ui/add_room_menu.ui:63
 msgid "New Room"
-msgstr ""
+msgstr "Gela berria"
 
 #: fractal-gtk/res/ui/add_room_menu.ui:77
 msgid "New Direct Chat"
-msgstr ""
+msgstr "Berriketa zuzen berria"
 
 #: fractal-gtk/res/ui/audio_player.ui:34 fractal-gtk/res/ui/audio_player.ui:50
 msgid "Play"
 msgstr "Erreproduzitu"
 
-#: fractal-gtk/res/ui/direct_chat.ui:64 fractal-gtk/res/ui/invite_user.ui:64
-#: fractal-gtk/res/ui/main_window.ui:627
-msgid "Matrix username, email or phone number"
-msgstr ""
-
-#: fractal-gtk/res/ui/direct_chat.ui:115
-msgid "New direct chat"
-msgstr ""
-
 #: fractal-gtk/res/ui/direct_chat.ui:126
+msgid "New direct chat"
+msgstr "Berriketa zuzen berria"
+
+#: fractal-gtk/res/ui/direct_chat.ui:137
 msgid "Start chat"
 msgstr "Hasi berriketa"
 
-#: fractal-gtk/res/ui/filechooser.ui:62
+#: fractal-gtk/res/ui/filechooser.ui:61
 msgid "Select room image file"
-msgstr ""
+msgstr "Hautatu gelaren irudi-fitxategia"
 
-#: fractal-gtk/res/ui/invite.ui:19
+#: fractal-gtk/res/ui/invite.ui:18
 msgid "Invitation"
 msgstr "Gonbidapena"
-
-#: fractal-gtk/res/ui/invite.ui:20
-msgid "You’ve been invited to join \"\", you can accept or reject"
-msgstr ""
 
 #: fractal-gtk/res/ui/invite.ui:33
 msgid "Reject"
@@ -254,228 +296,226 @@ msgstr "Baztertu"
 msgid "Accept"
 msgstr "Onartu"
 
-#: fractal-gtk/res/ui/invite_user.ui:137 fractal-gtk/res/ui/invite_user.ui:150
-#: fractal-gtk/src/appop/invite.rs:139
+#: fractal-gtk/res/ui/invite_user.ui:126 fractal-gtk/res/ui/invite_user.ui:137
+#: fractal-gtk/src/appop/invite.rs:147
 msgid "Invite"
 msgstr "Gonbidatu"
 
-#: fractal-gtk/res/ui/join_room.ui:53
+#: fractal-gtk/res/ui/join_room.ui:52
 msgid "ID or Alias"
-msgstr ""
+msgstr "IDa edo aliasa"
 
 #: fractal-gtk/res/ui/join_room.ui:90
 msgid "Join room"
 msgstr "Elkartu gelara"
 
-#: fractal-gtk/res/ui/join_room.ui:101 fractal-gtk/src/widgets/room.rs:111
+#: fractal-gtk/res/ui/join_room.ui:101 fractal-gtk/src/widgets/room.rs:119
 msgid "Join"
 msgstr "Elkartu"
 
-#: fractal-gtk/res/ui/leave_room.ui:19
+#: fractal-gtk/res/ui/kicked_room.ui:30 fractal-gtk/res/ui/msg_src_window.ui:32
+msgid "Close"
+msgstr "Itxi"
+
+#: fractal-gtk/res/ui/leave_room.ui:18
 msgid "Leave?"
 msgstr "Utzi?"
 
-#: fractal-gtk/res/ui/leave_room.ui:20
+#: fractal-gtk/res/ui/leave_room.ui:19
 msgid ""
 "Once you leave, you won’t be able to interact with people in the room "
 "anymore."
-msgstr ""
+msgstr "Uzten baduzu, ezingo duzu gehiago aritu gelako beste kideekin."
 
-#: fractal-gtk/res/ui/leave_room.ui:46
+#: fractal-gtk/res/ui/leave_room.ui:45
 msgid "Leave room"
 msgstr "Irten gelatik"
 
-#: fractal-gtk/res/ui/main_window.ui:179
-msgid "Scroll to bottom"
-msgstr ""
+#: fractal-gtk/res/ui/login_flow.ui:33
+msgid "Welcome to Fractal"
+msgstr "Ongi etorri Fractal aplikaziora"
 
-#: fractal-gtk/res/ui/main_window.ui:225
-msgid "Attach files"
-msgstr ""
+#: fractal-gtk/res/ui/login_flow.ui:47 fractal-gtk/res/ui/login_flow.ui:371
+msgid "_Log In"
+msgstr "_Hasi saioa"
 
-#: fractal-gtk/res/ui/main_window.ui:253
-msgid "Text formatting"
-msgstr ""
+#: fractal-gtk/res/ui/login_flow.ui:59
+msgid "_Create Account"
+msgstr "_Sortu kontua"
 
-#: fractal-gtk/res/ui/main_window.ui:373
+#: fractal-gtk/res/ui/login_flow.ui:95
+msgid "What is your Provider?"
+msgstr "Zein da zure hornitzailea?"
+
+#: fractal-gtk/res/ui/login_flow.ui:124
+msgid "Matrix provider domain, e.g. myserver.co"
+msgstr "Matrix hornitzailearen domeinua, adibidez myserver.co"
+
+#: fractal-gtk/res/ui/login_flow.ui:140
+msgid "The domain may not be empty."
+msgstr "Domeinuak ezin du hutsik egon."
+
+#: fractal-gtk/res/ui/login_flow.ui:166
+msgid "_User ID"
+msgstr "_Erabiltzailearen IDa"
+
+#: fractal-gtk/res/ui/login_flow.ui:182
+msgid "_Password"
+msgstr "_Pasahitza"
+
+#: fractal-gtk/res/ui/login_flow.ui:214
+msgid "User name, email, or phone number"
+msgstr "Erabiltzaile-izena, posta elektronikoa edo telefono-zenbakia"
+
+#: fractal-gtk/res/ui/login_flow.ui:247
+msgid "_Forgot Password?"
+msgstr "Pasahitza _ahaztu duzu?"
+
+#: fractal-gtk/res/ui/login_flow.ui:265
+msgid "Invalid username or password"
+msgstr "Baliogabeko erabiltzaile-izena edo pasahitza"
+
+#: fractal-gtk/res/ui/login_flow.ui:306
+msgid "Choose Provider"
+msgstr "Aukeratu hornitzailea"
+
+#: fractal-gtk/res/ui/login_flow.ui:329
+msgid "_Next"
+msgstr "_Hurrengoa"
+
+#: fractal-gtk/res/ui/login_flow.ui:348
+msgid "Log In"
+msgstr "Hasi saioa"
+
+#: fractal-gtk/res/ui/main_menu.ui:123
+msgid "Log Out"
+msgstr "Amaitu saioa"
+
+#: fractal-gtk/res/ui/main_menu.ui:150
+msgid "Keyboard _Shortcuts"
+msgstr "Las_ter-teklak"
+
+#: fractal-gtk/res/ui/main_menu.ui:164
+msgid "_About Fractal"
+msgstr "Fractal aplikazioari _buruz"
+
+#: fractal-gtk/res/ui/main_window.ui:183
 msgid "No room selected"
 msgstr "Ez da gelarik hautatu"
 
-#: fractal-gtk/res/ui/main_window.ui:388
+#: fractal-gtk/res/ui/main_window.ui:198
 msgid "Join a room to start chatting"
 msgstr "Elkartu gela batekin edo hasi berriketan"
 
-#: fractal-gtk/res/ui/main_window.ui:398
+#: fractal-gtk/res/ui/main_window.ui:208
 msgid "No room"
 msgstr "Gelarik ez"
 
-#: fractal-gtk/res/ui/main_window.ui:445
-msgid "This is an app-notification"
-msgstr ""
-
-#: fractal-gtk/res/ui/main_window.ui:483
+#: fractal-gtk/res/ui/main_window.ui:289
 msgid "Chat"
 msgstr "Berriketa"
 
-#: fractal-gtk/res/ui/main_window.ui:541
+#: fractal-gtk/res/ui/main_window.ui:341
 msgid "Directory"
 msgstr "Direktorioa"
 
-#: fractal-gtk/res/ui/main_window.ui:565
+#: fractal-gtk/res/ui/main_window.ui:365
 msgid "Loading"
 msgstr "Kargatzen"
 
-#: fractal-gtk/res/ui/main_window.ui:591
-msgctxt "big label"
-msgid "Log In"
-msgstr "Hasi saioa"
-
-#: fractal-gtk/res/ui/main_window.ui:610
-msgid "Username"
-msgstr "Erabiltzaile-izena"
-
-#: fractal-gtk/res/ui/main_window.ui:640
-msgctxt "login button"
-msgid "Log In"
-msgstr "Hasi saioa"
-
-#: fractal-gtk/res/ui/main_window.ui:705
-msgid "Home server URL"
-msgstr ""
-
-#: fractal-gtk/res/ui/main_window.ui:723
-msgid "Identity server URL"
-msgstr ""
-
-#: fractal-gtk/res/ui/main_window.ui:740
-msgid "Matrix Server"
-msgstr ""
-
-#: fractal-gtk/res/ui/main_window.ui:759
-msgid "Identity server"
-msgstr ""
-
-#: fractal-gtk/res/ui/main_window.ui:796
-msgid "Advanced"
-msgstr "Aurreratua"
-
-#: fractal-gtk/res/ui/main_window.ui:811 fractal-gtk/src/appop/login.rs:113
-msgid "Invalid username or password"
-msgstr ""
-
-#: fractal-gtk/res/ui/main_window.ui:865
-msgid "Reset Password"
-msgstr ""
-
-#: fractal-gtk/res/ui/main_window.ui:879
-msgid "Create Account"
-msgstr ""
-
-#: fractal-gtk/res/ui/main_window.ui:893
-msgid "Log In as Guest"
-msgstr ""
-
-#: fractal-gtk/res/ui/main_window.ui:915
-msgid "Login"
-msgstr "Saio-hasiera"
-
-#: fractal-gtk/res/ui/main_window.ui:952
+#: fractal-gtk/res/ui/main_window.ui:410
 msgid "User"
 msgstr "Erabiltzailea"
 
-#: fractal-gtk/res/ui/main_window.ui:975 fractal-gtk/res/ui/sticker_group.ui:74
+#: fractal-gtk/res/ui/main_window.ui:437
 msgid "Add"
 msgstr "Gehitu"
 
-#: fractal-gtk/res/ui/main_window.ui:1006
+#: fractal-gtk/res/ui/main_window.ui:467
 msgid "Room search"
-msgstr ""
+msgstr "Gelen bilaketa"
 
-#: fractal-gtk/res/ui/main_window.ui:1039 fractal-gtk/res/ui/new_room.ui:108
-msgid "Room name"
-msgstr "Gelaren izena"
-
-#: fractal-gtk/res/ui/main_window.ui:1054
-msgid "Room topic"
-msgstr ""
-
-#: fractal-gtk/res/ui/main_window.ui:1085
+#: fractal-gtk/res/ui/main_window.ui:591
 msgid "Room Menu"
-msgstr ""
+msgstr "Gelen menua"
 
-#: fractal-gtk/res/ui/main_window.ui:1184
+#: fractal-gtk/res/ui/main_window.ui:697
 #: fractal-gtk/res/ui/server_chooser_menu.ui:65
-#: fractal-gtk/src/app/connect/directory.rs:65
+#: fractal-gtk/src/app/connect/directory.rs:130
 msgid "Default Matrix Server"
-msgstr ""
+msgstr "Matrix zerbitzari lehenetsia"
 
-#: fractal-gtk/res/ui/markdown_popover.ui:28
+#: fractal-gtk/res/ui/markdown_popover.ui:23
 msgid "Markdown"
-msgstr ""
+msgstr "Markdown"
 
-#: fractal-gtk/res/ui/markdown_popover.ui:76
+#: fractal-gtk/res/ui/markdown_popover.ui:67
 msgid "> quote"
-msgstr ""
+msgstr "> komatxoa"
 
-#: fractal-gtk/res/ui/markdown_popover.ui:88
+#: fractal-gtk/res/ui/markdown_popover.ui:78
 msgid "**bold**"
-msgstr ""
+msgstr "**lodia**"
 
-#: fractal-gtk/res/ui/markdown_popover.ui:104
+#: fractal-gtk/res/ui/markdown_popover.ui:93
 msgid "`code`"
-msgstr ""
+msgstr "`kodea`"
 
-#: fractal-gtk/res/ui/markdown_popover.ui:116
+#: fractal-gtk/res/ui/markdown_popover.ui:105
 msgid "*italic*"
-msgstr ""
-
-#: fractal-gtk/res/ui/media_viewer_menu.ui:26
-msgid "Save As"
-msgstr "Gorde honela"
+msgstr "*etzana*"
 
 #: fractal-gtk/res/ui/media_viewer.ui:185
 msgid "Loading more media"
-msgstr ""
+msgstr "Multimedia gehiago kargatzen"
 
-#: fractal-gtk/res/ui/media_viewer.ui:233
-msgid "Media viewer"
-msgstr ""
+#: fractal-gtk/res/ui/media_viewer_menu.ui:26
+msgid "Save as…"
+msgstr "Gorde honela…"
 
-#: fractal-gtk/res/ui/members.ui:25 fractal-gtk/res/ui/room_settings.ui:937
+#: fractal-gtk/res/ui/members.ui:25 fractal-gtk/res/ui/room_settings.ui:940
 msgid "Search for room members"
-msgstr ""
+msgstr "Bilatu gelako kideen artean"
 
-#: fractal-gtk/res/ui/message_menu.ui:21
+#: fractal-gtk/res/ui/message_menu.ui:22
 msgid "Reply"
 msgstr "Erantzun"
 
-#: fractal-gtk/res/ui/message_menu.ui:33
+#: fractal-gtk/res/ui/message_menu.ui:34
+msgid "Open With…"
+msgstr "Ireki honekin…"
+
+#: fractal-gtk/res/ui/message_menu.ui:47
+msgid "Save Image As…"
+msgstr "Gorde irudia honela…"
+
+#: fractal-gtk/res/ui/message_menu.ui:60
+msgid "Copy Image"
+msgstr "Kopiatu irudia"
+
+#: fractal-gtk/res/ui/message_menu.ui:73
 msgid "Copy Selection"
 msgstr "Kopiatu hautapena"
 
-#: fractal-gtk/res/ui/message_menu.ui:46
+#: fractal-gtk/res/ui/message_menu.ui:86
 msgid "Copy Text"
 msgstr "Kopiatu testua"
 
-#: fractal-gtk/res/ui/message_menu.ui:59
+#: fractal-gtk/res/ui/message_menu.ui:101
 msgid "View Source"
 msgstr "Ikusi iturburua"
 
-#: fractal-gtk/res/ui/message_menu.ui:83
+#: fractal-gtk/res/ui/message_menu.ui:125
 msgid "Delete Message"
 msgstr "Ezabatu mezua"
 
-#: fractal-gtk/res/ui/msg_src_window.ui:25
-msgid "Copy To Clipboard"
-msgstr "Kopiatu arbelean"
-
-#: fractal-gtk/res/ui/msg_src_window.ui:36
+#: fractal-gtk/res/ui/msg_src_window.ui:21
 msgid "Message Source"
 msgstr "Mezu-iturburua"
 
-#: fractal-gtk/res/ui/msg_src_window.ui:44
-msgid "Close"
-msgstr "Itxi"
+#: fractal-gtk/res/ui/msg_src_window.ui:24
+msgid "Copy To Clipboard"
+msgstr "Kopiatu arbelean"
 
 #: fractal-gtk/res/ui/new_room.ui:14
 msgid "Private Chat"
@@ -493,6 +533,10 @@ msgstr "Sortu gela berria"
 msgid "Create"
 msgstr "Sorrera"
 
+#: fractal-gtk/res/ui/new_room.ui:108
+msgid "Room name"
+msgstr "Gelaren izena"
+
 #: fractal-gtk/res/ui/new_room.ui:152
 msgid "Visibility"
 msgstr "Ikusgaitasuna"
@@ -501,33 +545,36 @@ msgstr "Ikusgaitasuna"
 msgid "Private"
 msgstr "Pribatua"
 
-#: fractal-gtk/res/ui/password_dialog.ui:23 fractal-gtk/src/appop/files.rs:30
+#: fractal-gtk/res/ui/password_dialog.ui:22
+#: fractal-gtk/src/widgets/file_dialog.rs:13
+#: fractal-gtk/src/widgets/file_dialog.rs:34
+#: fractal-gtk/src/widgets/media_viewer.rs:650
 msgid "_Cancel"
 msgstr "_Utzi"
 
-#: fractal-gtk/res/ui/password_dialog.ui:36
+#: fractal-gtk/res/ui/password_dialog.ui:35
 msgid "Ch_ange"
 msgstr "_Aldatu"
 
-#: fractal-gtk/res/ui/password_dialog.ui:134
+#: fractal-gtk/res/ui/password_dialog.ui:133
 msgid "The passwords do not match."
 msgstr "Pasahitzak ez datoz bat."
 
-#: fractal-gtk/res/ui/password_dialog.ui:152
+#: fractal-gtk/res/ui/password_dialog.ui:151
 msgid "_Verify New Password"
 msgstr "_Egaiztatu pasahitz berria"
 
-#: fractal-gtk/res/ui/password_dialog.ui:169
+#: fractal-gtk/res/ui/password_dialog.ui:168
 msgid "_New Password"
 msgstr "Pasahitz _berria"
 
-#: fractal-gtk/res/ui/password_dialog.ui:213
+#: fractal-gtk/res/ui/password_dialog.ui:212
 msgid "Current _Password"
 msgstr "Uneko _pasahitza"
 
 #: fractal-gtk/res/ui/room_menu.ui:22
 msgid "Room Details"
-msgstr ""
+msgstr "Gelaren xehetasunak"
 
 #: fractal-gtk/res/ui/room_menu.ui:36
 msgid "Invite to This Room"
@@ -537,377 +584,438 @@ msgstr "Gonbidatu gela honetara"
 msgid "Leave Room"
 msgstr "Irten gelatik"
 
-#: fractal-gtk/res/ui/room_settings.ui:89
+#: fractal-gtk/res/ui/room_settings.ui:92
 msgid "Unknown"
 msgstr "Ezezaguna"
 
-#: fractal-gtk/res/ui/room_settings.ui:115
+#: fractal-gtk/res/ui/room_settings.ui:118
 msgid "Add name"
 msgstr "Gehitu izena"
 
-#: fractal-gtk/res/ui/room_settings.ui:147
+#: fractal-gtk/res/ui/room_settings.ui:150
 msgid "Add topic"
 msgstr "Gehitu gaia"
 
-#: fractal-gtk/res/ui/room_settings.ui:171
+#: fractal-gtk/res/ui/room_settings.ui:174
 msgid "Type in your room topic"
-msgstr ""
+msgstr "Idatzi zure gelaren gaia"
 
-#: fractal-gtk/res/ui/room_settings.ui:199
+#: fractal-gtk/res/ui/room_settings.ui:202
 msgid "No room description"
-msgstr ""
+msgstr "Ez dago gelaren deskribapenik"
 
-#: fractal-gtk/res/ui/room_settings.ui:236
+#: fractal-gtk/res/ui/room_settings.ui:239
 msgid "Notifications"
 msgstr "Jakinarazpenak"
 
-#: fractal-gtk/res/ui/room_settings.ui:277
+#: fractal-gtk/res/ui/room_settings.ui:280
 msgid "Notification sounds"
 msgstr "Jakinarazpen-soinuak"
 
-#: fractal-gtk/res/ui/room_settings.ui:322
+#: fractal-gtk/res/ui/room_settings.ui:325
 msgid "For all messages"
 msgstr "Mezu guztietarako"
 
-#: fractal-gtk/res/ui/room_settings.ui:363
+#: fractal-gtk/res/ui/room_settings.ui:366
 msgid "Only for mentions"
 msgstr "Aipamenetarako soilik"
 
-#: fractal-gtk/res/ui/room_settings.ui:394
+#: fractal-gtk/res/ui/room_settings.ui:397
 msgid "Shared Media"
 msgstr "Multimedia partekatua"
 
-#: fractal-gtk/res/ui/room_settings.ui:441
+#: fractal-gtk/res/ui/room_settings.ui:444
 msgid "photos"
 msgstr "argazkiak"
 
-#: fractal-gtk/res/ui/room_settings.ui:481
+#: fractal-gtk/res/ui/room_settings.ui:484
 msgid "videos"
 msgstr "bideoak"
 
-#: fractal-gtk/res/ui/room_settings.ui:521
+#: fractal-gtk/res/ui/room_settings.ui:524
 msgid "documents"
 msgstr "dokumentuak"
 
-#: fractal-gtk/res/ui/room_settings.ui:552
+#: fractal-gtk/res/ui/room_settings.ui:555
 msgid "New members can see"
 msgstr "Kide berriek ikus dezakete"
 
-#: fractal-gtk/res/ui/room_settings.ui:597
+#: fractal-gtk/res/ui/room_settings.ui:600
 msgid "All room history"
 msgstr "Gela guztien historia"
 
-#: fractal-gtk/res/ui/room_settings.ui:638
+#: fractal-gtk/res/ui/room_settings.ui:641
 msgid "History after they were invited"
-msgstr ""
+msgstr "Historia haiek gonbidatuak izan ondoren"
 
-#: fractal-gtk/res/ui/room_settings.ui:669
+#: fractal-gtk/res/ui/room_settings.ui:672
 msgid "Room Visibility"
-msgstr ""
+msgstr "Gelaren ikusgaitasuna"
 
-#: fractal-gtk/res/ui/room_settings.ui:716
+#: fractal-gtk/res/ui/room_settings.ui:719
 msgid "Allow guests"
-msgstr ""
+msgstr "Onartu gonbidatuak"
 
-#: fractal-gtk/res/ui/room_settings.ui:756
+#: fractal-gtk/res/ui/room_settings.ui:759
 msgid "Allow joining without invite"
-msgstr ""
+msgstr "Onartu gelarekin bat egitea gonbidapenik gabe"
 
-#: fractal-gtk/res/ui/room_settings.ui:796
+#: fractal-gtk/res/ui/room_settings.ui:799
 msgid "Publish in room directory"
-msgstr ""
+msgstr "Argitaratu gelaren direktorioan"
 
-#: fractal-gtk/res/ui/room_settings.ui:827
+#: fractal-gtk/res/ui/room_settings.ui:830
 msgid "Join addresses"
-msgstr ""
+msgstr "Elkartu helbideak"
 
-#: fractal-gtk/res/ui/room_settings.ui:886
+#: fractal-gtk/res/ui/room_settings.ui:889
 msgid "members"
-msgstr ""
+msgstr "kide"
 
-#: fractal-gtk/res/ui/room_settings.ui:902
+#: fractal-gtk/res/ui/room_settings.ui:905
 msgid "Invite New Member"
-msgstr ""
+msgstr "Gonbidatu kide berria"
 
-#: fractal-gtk/res/ui/room_settings.ui:1013
+#: fractal-gtk/res/ui/room_settings.ui:1018
 msgid "Details"
 msgstr "Xehetasunak"
 
+#: fractal-gtk/res/ui/scroll_widget.ui:63
+msgid "Scroll to bottom"
+msgstr "Korritu beheraino"
+
 #: fractal-gtk/res/ui/server_chooser_menu.ui:34
 msgid "Show rooms from:"
-msgstr ""
+msgstr "Erakutsi honako gelak:"
 
 #: fractal-gtk/res/ui/server_chooser_menu.ui:90
 msgid "Your homeserver"
-msgstr ""
+msgstr "Zure zerbitzaria"
 
 #: fractal-gtk/res/ui/server_chooser_menu.ui:134
 msgid "Other Protocol"
-msgstr ""
+msgstr "Beste protokolo bat"
 
 #: fractal-gtk/res/ui/server_chooser_menu.ui:207
 msgid "Other Homeserver"
-msgstr ""
+msgstr "Beste zerbitzari bat"
 
 #: fractal-gtk/res/ui/server_chooser_menu.ui:235
 msgid "Homeserver URL"
-msgstr ""
+msgstr "Zerbitzariaren URLa"
 
-#: fractal-gtk/res/ui/stickers_popover.ui:22
-msgid "Stickers"
-msgstr ""
+#: fractal-gtk/src/actions/account_settings.rs:31
+#: fractal-gtk/src/actions/room_settings.rs:35
+msgid "Images"
+msgstr "Irudiak"
 
-#: fractal-gtk/res/ui/user_menu.ui:136
-msgid "Log Out"
-msgstr "Amaitu saioa"
+#: fractal-gtk/src/actions/account_settings.rs:32
+#: fractal-gtk/src/actions/room_settings.rs:37
+msgid "Select a new avatar"
+msgstr "Hautatu avatar berria"
 
-#: fractal-gtk/src/app/backend_loop.rs:65
+#: fractal-gtk/src/actions/account_settings.rs:37
+#: fractal-gtk/src/actions/room_settings.rs:42
+msgid "Couldn’t open file"
+msgstr "Ezin da fitxategia ireki"
+
+#: fractal-gtk/src/actions/global.rs:285
+msgid "Select a file"
+msgstr "Hautatu fitxategia"
+
+#: fractal-gtk/src/actions/room_history.rs:57
+msgid "This message has no source."
+msgstr "Mezu honek ez du iturbururik."
+
+#: fractal-gtk/src/actions/room_history.rs:109
+#: fractal-gtk/src/actions/room_history.rs:141
+msgid "Could not download the file"
+msgstr "Ezin da fitxategia deskargatu"
+
+#: fractal-gtk/src/actions/room_history.rs:119
+msgid "Couldn’t save file"
+msgstr "Ezin da fitxategia gorde"
+
+#: fractal-gtk/src/app/backend_loop.rs:54
 msgid "Email is already in use"
-msgstr ""
+msgstr "Posta-helbide hori dagoeneko erabilia dago"
 
-#: fractal-gtk/src/app/backend_loop.rs:69
+#: fractal-gtk/src/app/backend_loop.rs:58
 msgid "Phone number is already in use"
-msgstr ""
+msgstr "Telefono-zenbaki hori dagoeneko erabilia dago"
 
-#: fractal-gtk/src/app/backend_loop.rs:204
+#: fractal-gtk/src/app/backend_loop.rs:192
 msgid "Couldn’t delete the account"
-msgstr ""
+msgstr "Ezin da kontua ezabatu"
 
-#: fractal-gtk/src/app/backend_loop.rs:209
+#: fractal-gtk/src/app/backend_loop.rs:197
 msgid "Couldn’t change the password"
-msgstr ""
+msgstr "Ezin da pasahitza aldatu"
+
+#: fractal-gtk/src/app/backend_loop.rs:202
+msgid "Couldn’t add the email address."
+msgstr "Ezin da posta-helbidea gehitu."
+
+#: fractal-gtk/src/app/backend_loop.rs:207
+msgid "Couldn’t add the phone number."
+msgstr "Ezin da telefono-zenbakia gehitu."
 
 #: fractal-gtk/src/app/backend_loop.rs:214
-msgid "Couldn’t add the email address."
-msgstr ""
-
-#: fractal-gtk/src/app/backend_loop.rs:219
-msgid "Couldn’t add the phone number."
-msgstr ""
-
-#: fractal-gtk/src/app/backend_loop.rs:226
 msgid "Can’t create the room, try again"
-msgstr ""
+msgstr "Ezin da gela sortu, saiatu berriro"
 
-#: fractal-gtk/src/app/backend_loop.rs:234
+#: fractal-gtk/src/app/backend_loop.rs:222
 msgid "Can’t join the room, try again."
-msgstr ""
+msgstr "Ezin da gelarekin elkartu, saiatu berriro."
 
-#: fractal-gtk/src/app/backend_loop.rs:240
+#: fractal-gtk/src/app/backend_loop.rs:228
 msgid "Can’t login, try again"
-msgstr ""
+msgstr "Ezin da saioa hasi, saiatu berriro"
 
-#: fractal-gtk/src/app/backend_loop.rs:256
+#: fractal-gtk/src/app/backend_loop.rs:244
 msgid "Error sending message"
-msgstr ""
+msgstr "Errorea mezua bidaltzean"
 
-#: fractal-gtk/src/app/backend_loop.rs:262
+#: fractal-gtk/src/app/backend_loop.rs:249
 msgid "Error deleting message"
-msgstr ""
+msgstr "Errorea mezua ezabatzean"
 
-#: fractal-gtk/src/app/backend_loop.rs:266
+#: fractal-gtk/src/app/backend_loop.rs:253
 msgid "Error searching for rooms"
-msgstr ""
-
-#: fractal-gtk/src/app/connect/account.rs:76
-msgid "Pick a new avatar"
-msgstr ""
-
-#: fractal-gtk/src/app/connect/account.rs:79
-#: fractal-gtk/src/widgets/room_settings.rs:148
-msgid "Select"
-msgstr "Hautatu"
+msgstr "Errorea gelak bilatzean"
 
 #: fractal-gtk/src/appop/about.rs:21
 msgid "A Matrix.org client for GNOME"
-msgstr ""
+msgstr "Matrix.org bezero bat GNOMErako"
 
-#: fractal-gtk/src/appop/about.rs:22
+#: fractal-gtk/src/appop/about.rs:23
 msgid "© 2017–2018 Daniel García Moreno, et al."
-msgstr ""
+msgstr "© 2017–2018 Daniel García Moreno, et al."
 
-#: fractal-gtk/src/appop/about.rs:28
+#: fractal-gtk/src/appop/about.rs:30
 msgid "Learn more about Fractal"
-msgstr ""
+msgstr "Ikasi gehiago Fractal aplikazioari buruz"
 
-#: fractal-gtk/src/appop/about.rs:29
+#: fractal-gtk/src/appop/about.rs:31
 msgid "translator-credits"
 msgstr "Asier Sarasua Garmendia <asier.sarasua@gmail.com>"
 
-#: fractal-gtk/src/appop/about.rs:45
+#: fractal-gtk/src/appop/about.rs:46
 msgid "Name by"
 msgstr ""
 
-#: fractal-gtk/src/appop/account.rs:36
+#: fractal-gtk/src/appop/account.rs:41
 msgid "The validation code is not correct."
-msgstr ""
+msgstr "Balioztatze-kodea ez da zuzena."
 
-#: fractal-gtk/src/appop/account.rs:47
+#: fractal-gtk/src/appop/account.rs:54
 msgid "Enter the code received via SMS"
-msgstr ""
+msgstr "Sartu SMS bidez jaso duzun kodea"
 
-#: fractal-gtk/src/appop/account.rs:57 fractal-gtk/src/appop/account.rs:103
+#: fractal-gtk/src/appop/account.rs:70 fractal-gtk/src/appop/account.rs:129
 msgid "Continue"
 msgstr "Jarraitu"
 
-#: fractal-gtk/src/appop/account.rs:97
+#: fractal-gtk/src/appop/account.rs:117
 msgid ""
 "In order to add this email address, go to your inbox and follow the link you "
 "received. Once you’ve done that, click Continue."
-msgstr ""
+msgstr "Posta-helbide hau gehitzeko, joan zure postako sarrerako mezuetara eta jarraitu  jaso duzun esteka. Hori egin ondoren, sakatu 'Jarraitu'."
 
-#: fractal-gtk/src/appop/account.rs:129
+#: fractal-gtk/src/appop/account.rs:167
 msgid "OK"
 msgstr "Ados"
 
-#: fractal-gtk/src/appop/account.rs:550
+#: fractal-gtk/src/appop/account.rs:683
 msgid "Are you sure you want to delete your account?"
-msgstr ""
+msgstr "Ziur zaude zure kontua ezabatu nahi duzula?"
 
-#: fractal-gtk/src/appop/attach.rs:60
+#: fractal-gtk/src/appop/attach.rs:42
 msgid "Image from Clipboard"
-msgstr ""
+msgstr "Irudia arbeletik"
 
-#: fractal-gtk/src/appop/attach.rs:75
+#: fractal-gtk/src/appop/attach.rs:58
 msgid "Send"
 msgstr "Bidali"
 
-#: fractal-gtk/src/appop/files.rs:23
+#: fractal-gtk/src/appop/invite.rs:145
+msgid "Invite to {name}"
+msgstr "Gonbidatu {name}"
+
+#: fractal-gtk/src/appop/invite.rs:238
+msgid "Join {room_name}?"
+msgstr "Elkartu {room_name} gelarekin?"
+
+#: fractal-gtk/src/appop/invite.rs:243
+msgid ""
+"You’ve been invited to join <b>{room_name}</b> room by <b>{sender_name}</b>"
+msgstr "<b>{room_name}</b> gelarekin bat egitera gonbidatu zaitu <b>{sender_name}</b> kideak"
+
+#: fractal-gtk/src/appop/invite.rs:248
+msgid "You’ve been invited to join <b>{room_name}</b>"
+msgstr "<b>{room_name}</b> gelarekin bat egitera gonbidatu zaituzte"
+
+#: fractal-gtk/src/appop/login.rs:116
+msgid "Passwords didn’t match, try again"
+msgstr "Pasahitzak ez datoz bat, saiatu berriro"
+
+#: fractal-gtk/src/appop/notify.rs:50
+msgid " (direct message)"
+msgstr " (mezu zuzena)"
+
+#: fractal-gtk/src/appop/room.rs:263
+msgid "Leave {room_name}?"
+msgstr "Utzi {room_name} gela?"
+
+#: fractal-gtk/src/appop/room.rs:504
+msgid "EMPTY ROOM"
+msgstr "GELA HUTSA"
+
+#: fractal-gtk/src/appop/room.rs:506
+msgid "{m1} and {m2}"
+msgstr "{m1} eta {m2}"
+
+#: fractal-gtk/src/appop/room.rs:507
+msgid "{m1} and Others"
+msgstr "{m1} eta beste batzuk"
+
+#: fractal-gtk/src/appop/room.rs:603
+msgid "Several users are typing…"
+msgstr "Erabiltzaile bat baino gehiago ari da idazten…"
+
+#: fractal-gtk/src/appop/room.rs:606
+msgid "<b>{}</b> is typing…"
+msgid_plural "<b>{}</b> and <b>{}</b> are typing…"
+msgstr[0] "<b>{}</b> ari da idazten…"
+msgstr[1] "<b>{}</b> eta <b>{}</b> ari dira idazten…"
+
+#: fractal-gtk/src/appop/sync.rs:10
+msgid "Syncing, this could take a while"
+msgstr "Sinkronizatzen, horrek denbora behar du"
+
+#: fractal-gtk/src/uibuilder.rs:52
+msgid "You don’t have permission to post to this room"
+msgstr "Ez duzu baimenik gela honetara mezuak bidaltzeko"
+
+#: fractal-gtk/src/widgets/file_dialog.rs:9
+#: fractal-gtk/src/widgets/media_viewer.rs:646
 msgid "Save media as"
 msgstr "Gorde multimedia honela"
 
-#: fractal-gtk/src/appop/files.rs:31
+#: fractal-gtk/src/widgets/file_dialog.rs:12
+#: fractal-gtk/src/widgets/media_viewer.rs:649
 msgid "_Save"
 msgstr "_Gorde"
 
-#: fractal-gtk/src/appop/files.rs:44
-msgid "Do you want to overwrite the file?"
-msgstr ""
+#: fractal-gtk/src/widgets/file_dialog.rs:33
+msgid "_Select"
+msgstr "_Hautatu"
 
-#: fractal-gtk/src/appop/files.rs:50 fractal-gtk/src/appop/files.rs:63
+#: fractal-gtk/src/widgets/kicked_dialog.rs:46
+msgid "You have been kicked from {}"
+msgstr "{} gelatik bota egin zaituzte"
+
+#: fractal-gtk/src/widgets/kicked_dialog.rs:50
+msgid ""
+"Kicked by: {}\n"
+" “{}”"
+msgstr "Botatzearen arrazoia: {}\n"
+" “{}”"
+
+#: fractal-gtk/src/widgets/media_viewer.rs:606
+msgid "Error while loading previous media"
+msgstr "Errorea aurreko multimedia kargatzean"
+
+#: fractal-gtk/src/widgets/media_viewer.rs:659
 msgid "Could not save the file"
 msgstr "Ezin izan da fitxategia gorde"
 
-#: fractal-gtk/src/appop/invite.rs:137
-msgid "Invite to {name}"
-msgstr ""
-
-#: fractal-gtk/src/appop/invite.rs:208
-msgid "Join {room_name}?"
-msgstr ""
-
-#: fractal-gtk/src/appop/invite.rs:212
-msgid ""
-"You’ve been invited to join to <b>{room_name}</b> room by <b>{sender_name}</"
-"b>"
-msgstr ""
-
-#: fractal-gtk/src/appop/invite.rs:215
-msgid "You’ve been invited to join to <b>{room_name}</b>"
-msgstr ""
-
-#: fractal-gtk/src/appop/login.rs:117
-msgid "Unknown Error"
-msgstr "Errore ezezaguna"
-
-#: fractal-gtk/src/appop/login.rs:180
-msgid "Passwords didn’t match, try again"
-msgstr ""
-
-#: fractal-gtk/src/appop/media_viewer.rs:147
-msgid "Error while loading previous media"
-msgstr ""
-
-#: fractal-gtk/src/appop/message.rs:207 fractal-gtk/src/appop/message.rs:215
-msgid "New Messages"
-msgstr "Mezu berriak"
-
-#: fractal-gtk/src/appop/notify.rs:52
-msgid "{name} (direct message)"
-msgstr ""
-
-#: fractal-gtk/src/appop/room.rs:269
-msgid "Leave {room_name}?"
-msgstr ""
-
-#: fractal-gtk/src/appop/room.rs:502
-msgid "EMPTY ROOM"
-msgstr ""
-
-#: fractal-gtk/src/appop/room.rs:504
-msgid "{m1} and {m2}"
-msgstr ""
-
-#: fractal-gtk/src/appop/room.rs:505
-msgid "{m1} and Others"
-msgstr ""
-
-#: fractal-gtk/src/appop/sync.rs:11
-msgid "Syncing, this could take a while"
-msgstr ""
-
-#: fractal-gtk/src/widgets/members_list.rs:42
+#: fractal-gtk/src/widgets/members_list.rs:54
 msgid "No matching members found"
-msgstr ""
+msgstr "Ez da aurkitu bat datorren kiderik"
 
-#: fractal-gtk/src/widgets/message.rs:382
+#: fractal-gtk/src/widgets/members_list.rs:170
+msgid "Admin"
+msgstr "Administratzailea"
+
+#: fractal-gtk/src/widgets/members_list.rs:171
+msgid "Moderator"
+msgstr "Moderatzailea"
+
+#: fractal-gtk/src/widgets/members_list.rs:172
+msgid "Privileged"
+msgstr "Pribilegiatua"
+
+#: fractal-gtk/src/widgets/message.rs:361
 msgid "Could not retrieve file URI"
-msgstr ""
+msgstr "Ezin da fitxategiaren URIa atzitu"
 
-#: fractal-gtk/src/widgets/message.rs:398
-#: fractal-gtk/src/widgets/message.rs:447
+#: fractal-gtk/src/widgets/message.rs:379
+#: fractal-gtk/src/widgets/message.rs:405
 msgid "Save"
 msgstr "Gorde"
 
-#: fractal-gtk/src/widgets/message.rs:408
-#: fractal-gtk/src/widgets/message.rs:458
-msgid "Could not download the file"
-msgstr ""
-
-#: fractal-gtk/src/widgets/message.rs:476
+#: fractal-gtk/src/widgets/message.rs:415
 msgid "Open"
 msgstr "Ireki"
 
-#: fractal-gtk/src/widgets/room_settings.rs:145
-msgid "Pick a new room avatar"
-msgstr ""
+#. Use 12h time format (AM/PM)
+#: fractal-gtk/src/widgets/message.rs:435
+msgid "%l∶%M %p"
+msgstr "%l∶%M %p"
 
-#. we don't have private groups yet
-#. let description = Some(format!("Private Group · {} members", members.len()));
-#.
-#. Some(format!("Public Room · {} members", members.len()))
-#: fractal-gtk/src/widgets/room_settings.rs:183
+#. Use 24 time format
+#: fractal-gtk/src/widgets/message.rs:438
+msgid "%R"
+msgstr "%R"
+
+#. Translators: This is a date format in the day divider without the year
+#: fractal-gtk/src/widgets/room_history.rs:327
+msgid "%B %e"
+msgstr "%B %e"
+
+#. Translators: This is a date format in the day divider with the year
+#: fractal-gtk/src/widgets/room_history.rs:330
+msgid "%B %e, %Y"
+msgstr "%Y %B %e"
+
+#: fractal-gtk/src/widgets/room_history.rs:352
+msgid "New Messages"
+msgstr "Mezu berriak"
+
+#: fractal-gtk/src/widgets/room_settings.rs:204
 msgid "Room · {} member"
 msgid_plural "Room · {} members"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Gela · Kide {}"
+msgstr[1] "Gela · {} kide"
 
-#: fractal-gtk/src/widgets/room_settings.rs:583
+#: fractal-gtk/src/widgets/room_settings.rs:626
 msgid "{} member"
 msgid_plural "{} members"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Kide {}"
+msgstr[1] "{} kide"
 
-#: fractal-gtk/src/widgets/roomlist.rs:434
+#: fractal-gtk/src/widgets/roomlist.rs:487
 msgid "Invites"
 msgstr ""
 
-#: fractal-gtk/src/widgets/roomlist.rs:435
+#: fractal-gtk/src/widgets/roomlist.rs:488
 msgid "You don’t have any invitations"
 msgstr "Ez duzu gonbidapenik"
 
-#: fractal-gtk/src/widgets/roomlist.rs:436
+#: fractal-gtk/src/widgets/roomlist.rs:492
 msgid "Favorites"
 msgstr "Gogokoak"
 
-#: fractal-gtk/src/widgets/roomlist.rs:437
+#: fractal-gtk/src/widgets/roomlist.rs:493
 msgid "Drag and drop rooms here to add them to your favorites"
-msgstr ""
+msgstr "Arrastatu eta jaregin gelak hona zure gogokoetara gehitzeko"
 
-#: fractal-gtk/src/widgets/roomlist.rs:438
+#: fractal-gtk/src/widgets/roomlist.rs:497
 msgid "Rooms"
 msgstr "Gelak"
 
-#: fractal-gtk/src/widgets/roomlist.rs:439
+#: fractal-gtk/src/widgets/roomlist.rs:498
 msgid "You don’t have any rooms yet"
-msgstr ""
+msgstr "Ez duzu gelarik oraindik"
+
