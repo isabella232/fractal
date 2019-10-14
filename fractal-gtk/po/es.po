@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2019-09-07 14:32+0000\n"
-"PO-Revision-Date: 2019-09-09 09:33+0200\n"
+"POT-Creation-Date: 2019-10-12 17:29+0000\n"
+"PO-Revision-Date: 2019-10-14 08:53+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Spanish - Spain <gnome-es-list@gnome.org>\n"
 "Language: es_ES\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Gtranslator 3.32.1\n"
+"X-Generator: Gtranslator 3.34.0\n"
 
 #: fractal-gtk/res/gtk/help-overlay.ui:13
 msgctxt "shortcut window"
@@ -98,21 +98,21 @@ msgctxt "shortcut message"
 msgid "Write on a new line"
 msgstr "Escribir en una nueva línea"
 
-#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:4
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:5
 #: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:3
 #: fractal-gtk/res/ui/login_flow.ui:294
 msgid "Fractal"
 msgstr "Fractal"
 
-#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:7
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:8
 msgid "Daniel García Moreno"
 msgstr "Daniel García Moreno"
 
-#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:8
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:9
 msgid "Matrix group messaging app"
 msgstr "Aplicación de mensajería sobre Matrix"
 
-#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:10
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:11
 msgid ""
 "Fractal is a Matrix messaging app for GNOME written in Rust. Its interface "
 "is optimized for collaboration in large groups, such as free software "
@@ -799,7 +799,7 @@ msgstr "Error al enviar mensaje"
 msgid "Error deleting message"
 msgstr "Error al eliminar el mensaje"
 
-#: fractal-gtk/src/app/backend_loop.rs:253
+#: fractal-gtk/src/app/backend_loop.rs:254
 msgid "Error searching for rooms"
 msgstr "Error al buscar salas"
 
@@ -880,35 +880,40 @@ msgstr ""
 msgid "You’ve been invited to join <b>{room_name}</b>"
 msgstr "Le han invitado a unirse a <b>{room_name}</b>"
 
-#: fractal-gtk/src/appop/login.rs:116
+#: fractal-gtk/src/appop/login.rs:117
 msgid "Passwords didn’t match, try again"
 msgstr "La contraseña no coincide, pruebe otra vez"
+
+#: fractal-gtk/src/appop/login.rs:128
+#| msgid "Home server URL"
+msgid "Malformed server URL"
+msgstr "URL de servidor mal formado"
 
 #: fractal-gtk/src/appop/notify.rs:50
 msgid " (direct message)"
 msgstr " (mensaje directo)"
 
-#: fractal-gtk/src/appop/room.rs:263
+#: fractal-gtk/src/appop/room.rs:264
 msgid "Leave {room_name}?"
 msgstr "¿Abandonar {room_name}?"
 
-#: fractal-gtk/src/appop/room.rs:504
+#: fractal-gtk/src/appop/room.rs:505
 msgid "EMPTY ROOM"
 msgstr "SALA VACÍA"
 
-#: fractal-gtk/src/appop/room.rs:506
+#: fractal-gtk/src/appop/room.rs:507
 msgid "{m1} and {m2}"
 msgstr "{m1} y {m2}"
 
-#: fractal-gtk/src/appop/room.rs:507
+#: fractal-gtk/src/appop/room.rs:508
 msgid "{m1} and Others"
 msgstr "{m1} y Otros"
 
-#: fractal-gtk/src/appop/room.rs:603
+#: fractal-gtk/src/appop/room.rs:604
 msgid "Several users are typing…"
 msgstr "Hay varios usuarios escribiendo…"
 
-#: fractal-gtk/src/appop/room.rs:606
+#: fractal-gtk/src/appop/room.rs:607
 msgid "<b>{}</b> is typing…"
 msgid_plural "<b>{}</b> and <b>{}</b> are typing…"
 msgstr[0] "<b>{}</b> está escribiendo…"
@@ -919,7 +924,6 @@ msgid "Syncing, this could take a while"
 msgstr "Sincronizando, esto puede tardar un tiempo"
 
 #: fractal-gtk/src/uibuilder.rs:52
-#| msgid "You don’t have any rooms yet"
 msgid "You don’t have permission to post to this room"
 msgstr "No tiene permiso para publicar en esta sala"
 
@@ -1022,27 +1026,27 @@ msgid_plural "{} members"
 msgstr[0] "{} miembro"
 msgstr[1] "{} miembros"
 
-#: fractal-gtk/src/widgets/roomlist.rs:487
+#: fractal-gtk/src/widgets/roomlist.rs:478
 msgid "Invites"
 msgstr "Invitaciones"
 
-#: fractal-gtk/src/widgets/roomlist.rs:488
+#: fractal-gtk/src/widgets/roomlist.rs:479
 msgid "You don’t have any invitations"
 msgstr "No tienes ninguna invitación"
 
-#: fractal-gtk/src/widgets/roomlist.rs:492
+#: fractal-gtk/src/widgets/roomlist.rs:483
 msgid "Favorites"
 msgstr "Favoritos"
 
-#: fractal-gtk/src/widgets/roomlist.rs:493
+#: fractal-gtk/src/widgets/roomlist.rs:484
 msgid "Drag and drop rooms here to add them to your favorites"
 msgstr "Arrastre y suelte salas aquí para añadirlas a sus favoritos"
 
-#: fractal-gtk/src/widgets/roomlist.rs:497
+#: fractal-gtk/src/widgets/roomlist.rs:488
 msgid "Rooms"
 msgstr "Salas"
 
-#: fractal-gtk/src/widgets/roomlist.rs:498
+#: fractal-gtk/src/widgets/roomlist.rs:489
 msgid "You don’t have any rooms yet"
 msgstr "No tiene ninguna sala todavía"
 
@@ -1067,9 +1071,6 @@ msgstr "No tiene ninguna sala todavía"
 #~ msgctxt "login button"
 #~ msgid "Log In"
 #~ msgstr "Entrar"
-
-#~ msgid "Home server URL"
-#~ msgstr "URL de servidor"
 
 #~ msgid "Identity server URL"
 #~ msgstr "URL de servidor de identidad"
