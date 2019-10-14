@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2019-09-07 14:32+0000\n"
-"PO-Revision-Date: 2019-09-08 11:01+0200\n"
+"POT-Creation-Date: 2019-10-12 17:29+0000\n"
+"PO-Revision-Date: 2019-10-14 16:05+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -95,21 +95,21 @@ msgctxt "shortcut message"
 msgid "Write on a new line"
 msgstr "Pisanie w nowym wierszu"
 
-#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:4
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:5
 #: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:3
 #: fractal-gtk/res/ui/login_flow.ui:294
 msgid "Fractal"
 msgstr "Fractal"
 
-#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:7
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:8
 msgid "Daniel García Moreno"
 msgstr "Daniel García Moreno"
 
-#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:8
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:9
 msgid "Matrix group messaging app"
 msgstr "Rozmowy grupowe w sieci Matrix"
 
-#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:10
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:11
 msgid ""
 "Fractal is a Matrix messaging app for GNOME written in Rust. Its interface "
 "is optimized for collaboration in large groups, such as free software "
@@ -796,7 +796,7 @@ msgstr "Błąd podczas wysyłania wiadomości"
 msgid "Error deleting message"
 msgstr "Błąd podczas usuwania wiadomości"
 
-#: fractal-gtk/src/app/backend_loop.rs:253
+#: fractal-gtk/src/app/backend_loop.rs:254
 msgid "Error searching for rooms"
 msgstr "Błąd podczas wyszukiwania pokoi"
 
@@ -877,35 +877,39 @@ msgstr ""
 msgid "You’ve been invited to join <b>{room_name}</b>"
 msgstr "Otrzymano zaproszenie do pokoju <b>{room_name}</b>"
 
-#: fractal-gtk/src/appop/login.rs:116
+#: fractal-gtk/src/appop/login.rs:117
 msgid "Passwords didn’t match, try again"
 msgstr "Hasła się nie zgadzają. Proszę spróbować ponownie."
+
+#: fractal-gtk/src/appop/login.rs:128
+msgid "Malformed server URL"
+msgstr "Błędnie sformatowany adres serwera"
 
 #: fractal-gtk/src/appop/notify.rs:50
 msgid " (direct message)"
 msgstr " (bezpośrednia wiadomość)"
 
-#: fractal-gtk/src/appop/room.rs:263
+#: fractal-gtk/src/appop/room.rs:264
 msgid "Leave {room_name}?"
 msgstr "Opuścić pokój „{room_name}”?"
 
-#: fractal-gtk/src/appop/room.rs:504
+#: fractal-gtk/src/appop/room.rs:505
 msgid "EMPTY ROOM"
 msgstr "PUSTY POKÓJ"
 
-#: fractal-gtk/src/appop/room.rs:506
+#: fractal-gtk/src/appop/room.rs:507
 msgid "{m1} and {m2}"
 msgstr "{m1} i {m2}"
 
-#: fractal-gtk/src/appop/room.rs:507
+#: fractal-gtk/src/appop/room.rs:508
 msgid "{m1} and Others"
 msgstr "{m1} i inni"
 
-#: fractal-gtk/src/appop/room.rs:603
+#: fractal-gtk/src/appop/room.rs:604
 msgid "Several users are typing…"
 msgstr "Kilku użytkowników pisze…"
 
-#: fractal-gtk/src/appop/room.rs:606
+#: fractal-gtk/src/appop/room.rs:607
 msgid "<b>{}</b> is typing…"
 msgid_plural "<b>{}</b> and <b>{}</b> are typing…"
 msgstr[0] "<b>{}</b> pisze…"
@@ -1021,26 +1025,26 @@ msgstr[0] "{} członek"
 msgstr[1] "{} członków"
 msgstr[2] "{} członków"
 
-#: fractal-gtk/src/widgets/roomlist.rs:487
+#: fractal-gtk/src/widgets/roomlist.rs:478
 msgid "Invites"
 msgstr "Zaproszenia"
 
-#: fractal-gtk/src/widgets/roomlist.rs:488
+#: fractal-gtk/src/widgets/roomlist.rs:479
 msgid "You don’t have any invitations"
 msgstr "Nie ma żadnych zaproszeń"
 
-#: fractal-gtk/src/widgets/roomlist.rs:492
+#: fractal-gtk/src/widgets/roomlist.rs:483
 msgid "Favorites"
 msgstr "Ulubione"
 
-#: fractal-gtk/src/widgets/roomlist.rs:493
+#: fractal-gtk/src/widgets/roomlist.rs:484
 msgid "Drag and drop rooms here to add them to your favorites"
 msgstr "Przeciągnięcie pokoi tutaj doda je do ulubionych"
 
-#: fractal-gtk/src/widgets/roomlist.rs:497
+#: fractal-gtk/src/widgets/roomlist.rs:488
 msgid "Rooms"
 msgstr "Pokoje"
 
-#: fractal-gtk/src/widgets/roomlist.rs:498
+#: fractal-gtk/src/widgets/roomlist.rs:489
 msgid "You don’t have any rooms yet"
 msgstr "Nie ma jeszcze żadnych pokoi"
