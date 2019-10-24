@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2019-10-12 17:29+0000\n"
-"PO-Revision-Date: 2019-10-14 16:05+0200\n"
+"POT-Creation-Date: 2019-10-21 12:12+0000\n"
+"PO-Revision-Date: 2019-10-24 15:50+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -258,7 +258,7 @@ msgstr "Proszę sprawdzić pocztę"
 #: fractal-gtk/res/ui/account_settings.ui:626
 #: fractal-gtk/res/ui/direct_chat.ui:129 fractal-gtk/res/ui/invite_user.ui:129
 #: fractal-gtk/res/ui/join_room.ui:93 fractal-gtk/res/ui/leave_room.ui:32
-#: fractal-gtk/res/ui/new_room.ui:42 fractal-gtk/src/appop/account.rs:69
+#: fractal-gtk/res/ui/new_room.ui:42 fractal-gtk/src/appop/account.rs:68
 #: fractal-gtk/src/appop/account.rs:128 fractal-gtk/src/appop/attach.rs:57
 msgid "Cancel"
 msgstr "Anuluj"
@@ -757,46 +757,62 @@ msgid "Email is already in use"
 msgstr "Adres e-mail jest już używany"
 
 #: fractal-gtk/src/app/backend_loop.rs:58
+msgid "Please enter a valid email adress."
+msgstr "Proszę podać prawidłowy adres e-mail."
+
+#: fractal-gtk/src/app/backend_loop.rs:62
 msgid "Phone number is already in use"
 msgstr "Numer telefonu jest już używany"
 
-#: fractal-gtk/src/app/backend_loop.rs:192
+#: fractal-gtk/src/app/backend_loop.rs:67
+msgid ""
+"Please enter your phone number in the format: \n"
+" + your country code and your phone number."
+msgstr ""
+"Proszę podać numer telefonu w formacie: \n"
+" + kod kraju i numer telefonu."
+
+#: fractal-gtk/src/app/backend_loop.rs:202
 msgid "Couldn’t delete the account"
 msgstr "Nie można usunąć konta"
 
-#: fractal-gtk/src/app/backend_loop.rs:197
+#: fractal-gtk/src/app/backend_loop.rs:207
 msgid "Couldn’t change the password"
 msgstr "Nie można zmienić hasła"
 
-#: fractal-gtk/src/app/backend_loop.rs:202
+#: fractal-gtk/src/app/backend_loop.rs:212
+msgid "Sorry, account settings can’t be loaded."
+msgstr "Nie można wczytać ustawień konta."
+
+#: fractal-gtk/src/app/backend_loop.rs:220
 msgid "Couldn’t add the email address."
 msgstr "Nie można dodać adresu e-mail."
 
-#: fractal-gtk/src/app/backend_loop.rs:207
+#: fractal-gtk/src/app/backend_loop.rs:225
 msgid "Couldn’t add the phone number."
 msgstr "Nie można dodać numeru telefonu."
 
-#: fractal-gtk/src/app/backend_loop.rs:214
+#: fractal-gtk/src/app/backend_loop.rs:232
 msgid "Can’t create the room, try again"
 msgstr "Nie można utworzyć pokoju. Proszę spróbować ponownie."
 
-#: fractal-gtk/src/app/backend_loop.rs:222
+#: fractal-gtk/src/app/backend_loop.rs:240
 msgid "Can’t join the room, try again."
 msgstr "Nie można dołączyć do pokoju. Proszę spróbować ponownie."
 
-#: fractal-gtk/src/app/backend_loop.rs:228
+#: fractal-gtk/src/app/backend_loop.rs:246
 msgid "Can’t login, try again"
 msgstr "Nie można się zalogować. Proszę spróbować ponownie."
 
-#: fractal-gtk/src/app/backend_loop.rs:244
+#: fractal-gtk/src/app/backend_loop.rs:262
 msgid "Error sending message"
 msgstr "Błąd podczas wysyłania wiadomości"
 
-#: fractal-gtk/src/app/backend_loop.rs:249
+#: fractal-gtk/src/app/backend_loop.rs:267
 msgid "Error deleting message"
 msgstr "Błąd podczas usuwania wiadomości"
 
-#: fractal-gtk/src/app/backend_loop.rs:254
+#: fractal-gtk/src/app/backend_loop.rs:272
 msgid "Error searching for rooms"
 msgstr "Błąd podczas wyszukiwania pokoi"
 
@@ -827,11 +843,11 @@ msgstr "Nazwa"
 msgid "The validation code is not correct."
 msgstr "Kod weryfikacyjny jest niepoprawny."
 
-#: fractal-gtk/src/appop/account.rs:54
+#: fractal-gtk/src/appop/account.rs:53
 msgid "Enter the code received via SMS"
 msgstr "Proszę wpisać kod otrzymany przez SMS"
 
-#: fractal-gtk/src/appop/account.rs:70 fractal-gtk/src/appop/account.rs:129
+#: fractal-gtk/src/appop/account.rs:69 fractal-gtk/src/appop/account.rs:129
 msgid "Continue"
 msgstr "Kontynuuj"
 
@@ -843,11 +859,11 @@ msgstr ""
 "Aby dodać ten adres e-mail, należy przejść do skrzynki odbiorczej i kliknąć "
 "otrzymany odnośnik. Po zrobieniu tego należy kliknąć przycisk Kontynuuj."
 
-#: fractal-gtk/src/appop/account.rs:167
+#: fractal-gtk/src/appop/account.rs:177
 msgid "OK"
 msgstr "OK"
 
-#: fractal-gtk/src/appop/account.rs:683
+#: fractal-gtk/src/appop/account.rs:688
 msgid "Are you sure you want to delete your account?"
 msgstr "Na pewno usunąć konto?"
 
@@ -889,27 +905,27 @@ msgstr "Błędnie sformatowany adres serwera"
 msgid " (direct message)"
 msgstr " (bezpośrednia wiadomość)"
 
-#: fractal-gtk/src/appop/room.rs:264
+#: fractal-gtk/src/appop/room.rs:266
 msgid "Leave {room_name}?"
 msgstr "Opuścić pokój „{room_name}”?"
 
-#: fractal-gtk/src/appop/room.rs:505
+#: fractal-gtk/src/appop/room.rs:507
 msgid "EMPTY ROOM"
 msgstr "PUSTY POKÓJ"
 
-#: fractal-gtk/src/appop/room.rs:507
+#: fractal-gtk/src/appop/room.rs:509
 msgid "{m1} and {m2}"
 msgstr "{m1} i {m2}"
 
-#: fractal-gtk/src/appop/room.rs:508
+#: fractal-gtk/src/appop/room.rs:510
 msgid "{m1} and Others"
 msgstr "{m1} i inni"
 
-#: fractal-gtk/src/appop/room.rs:604
+#: fractal-gtk/src/appop/room.rs:606
 msgid "Several users are typing…"
 msgstr "Kilku użytkowników pisze…"
 
-#: fractal-gtk/src/appop/room.rs:607
+#: fractal-gtk/src/appop/room.rs:609
 msgid "<b>{}</b> is typing…"
 msgid_plural "<b>{}</b> and <b>{}</b> are typing…"
 msgstr[0] "<b>{}</b> pisze…"
