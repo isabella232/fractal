@@ -28,6 +28,16 @@
             "RUST_BACKTRACE" : "1"
         }
     },
+    "add-extensions": {
+        "org.freedesktop.Platform.ffmpeg-full": {
+            "directory": "lib/ffmpeg",
+            "version": "19.08",
+            "add-ld-path": "."
+        }
+    },
+    "cleanup-commands": [
+        "mkdir -p /app/lib/ffmpeg"
+    ],
     "modules" : [
         {
             "name" : "libhandy",
