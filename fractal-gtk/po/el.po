@@ -1,0 +1,1039 @@
+# Greek translation for fractal.
+# Copyright (C) 2020 fractal's COPYRIGHT HOLDER
+# This file is distributed under the same license as the fractal package.
+# Efstathios Iosifidis <iosifidis@opensuse.org>, 2020.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: fractal master\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
+"POT-Creation-Date: 2020-01-06 09:01+0000\n"
+"PO-Revision-Date: 2020-01-07 12:47+0200\n"
+"Last-Translator: Efstathios Iosifidis <iosifidis@opensuse.org>\n"
+"Language-Team: Greek, Modern (1453-) <gnome-el-list@gnome.org>\n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.2.4\n"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:13
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Γενικά"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:18
+msgctxt "shortcut window"
+msgid "Close the active room"
+msgstr "Κλείσιμο του ενεργού δωματίου"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:25
+msgctxt "shortcut window"
+msgid "Open / close the room sidebar search"
+msgstr ""
+
+#: fractal-gtk/res/gtk/help-overlay.ui:32
+msgctxt "shortcut window"
+msgid "Open the previous room in the list"
+msgstr "Άνοιγμα του προηγούμενου δωματίου της λίστας"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:39
+msgctxt "shortcut window"
+msgid "Open the next room in the list"
+msgstr "Άνοιγμα του επόμενου δωματίου της λίστας"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:46
+msgctxt "shortcut window"
+msgid "Open the previous room with unread messages in the list"
+msgstr ""
+
+#: fractal-gtk/res/gtk/help-overlay.ui:53
+msgctxt "shortcut window"
+msgid "Open the next room with unread messages in the list"
+msgstr ""
+
+#: fractal-gtk/res/gtk/help-overlay.ui:60
+msgctxt "shortcut window"
+msgid "Open the first room of the list"
+msgstr "Άνοιγμα του πρώτου δωματίου της λίστας"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:67
+msgctxt "shortcut window"
+msgid "Open the last room of the list"
+msgstr "Άνοιγμα του τελευταίου δωματίου της λίστας"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:74
+msgctxt "shortcut window"
+msgid "View older messages"
+msgstr "Προβολή παλαιότερων μηνυμάτων"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:81
+msgctxt "shortcut window"
+msgid "View newer messages"
+msgstr "Προβολή νεότερων μηνυμάτων"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:87
+msgctxt "shortcut window"
+msgid "Keyboard Shortcuts"
+msgstr "Συντομεύσεις πληκτρολογίου"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:94
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Έξοδος"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:103
+msgctxt "shortcut message"
+msgid "Composing a new message"
+msgstr "Σύνταξη νέου μηνύματος"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:108
+msgctxt "shortcut message"
+msgid "Write on a new line"
+msgstr ""
+
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:5
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:3
+#: fractal-gtk/res/ui/login_flow.ui:294
+msgid "Fractal"
+msgstr "Fractal"
+
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:8
+msgid "Daniel García Moreno"
+msgstr "Daniel García Moreno"
+
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:9
+msgid "Matrix group messaging app"
+msgstr ""
+
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:11
+msgid ""
+"Fractal is a Matrix messaging app for GNOME written in Rust. Its interface "
+"is optimized for collaboration in large groups, such as free software "
+"projects."
+msgstr ""
+
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:4
+msgid ""
+"Fractal is a decentralized, secure messaging client for collaborative group "
+"communication."
+msgstr ""
+
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:5
+msgid "Fractal group messaging"
+msgstr ""
+
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:14
+msgid "Matrix;matrix.org;chat;irc;communications;talk;riot;"
+msgstr ""
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:13
+msgid "Type of password and token storage"
+msgstr ""
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:14
+msgid "Type of password and token storage, default value is: Secret Service"
+msgstr ""
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:21
+msgid "If markdown sending is active"
+msgstr ""
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:22
+msgid "Whether support for sending markdown messages is on"
+msgstr ""
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:29
+msgid "X position of the main window on startup"
+msgstr ""
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:34
+msgid "Y position of the main window on startup"
+msgstr ""
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:39
+msgid "Width of the main window on startup"
+msgstr ""
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:44
+msgid "Height of the main window on startup"
+msgstr ""
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:49
+msgid "Whether the main window is maximized on startup"
+msgstr ""
+
+#: fractal-gtk/res/ui/account_settings.ui:73
+msgid "Other people can find you by searching for any of these identifiers."
+msgstr ""
+
+#: fractal-gtk/res/ui/account_settings.ui:101
+msgid "Name"
+msgstr "Όνομα"
+
+#: fractal-gtk/res/ui/account_settings.ui:124
+msgid "Type in your name"
+msgstr "Πληκτρολογήστε το όνομά σας"
+
+#: fractal-gtk/res/ui/account_settings.ui:153
+msgid "Email"
+msgstr "Email"
+
+#: fractal-gtk/res/ui/account_settings.ui:182
+msgid "Phone"
+msgstr "Τηλέφωνο"
+
+#: fractal-gtk/res/ui/account_settings.ui:211
+msgid "Password"
+msgstr "Συνθηματικό"
+
+#: fractal-gtk/res/ui/account_settings.ui:278
+msgid "Advanced Information"
+msgstr "Προηγμένες πληροφορίες"
+
+#: fractal-gtk/res/ui/account_settings.ui:308
+msgid "Homeserver"
+msgstr ""
+
+#: fractal-gtk/res/ui/account_settings.ui:337
+msgid "Matrix ID"
+msgstr "Matrix ID"
+
+#: fractal-gtk/res/ui/account_settings.ui:366
+msgid "Device ID"
+msgstr "ID Συσκευής"
+
+#: fractal-gtk/res/ui/account_settings.ui:421
+#: fractal-gtk/res/ui/account_settings.ui:502
+msgid "Deactivate Account"
+msgstr "Απενεργοποίηση λογαριασμού"
+
+#: fractal-gtk/res/ui/account_settings.ui:447
+msgid ""
+"Deactivating your account means that you will lose all your messages, "
+"contacts, and files."
+msgstr ""
+
+#: fractal-gtk/res/ui/account_settings.ui:462
+msgid ""
+"To confirm that you really want to deactivate this account type in your "
+"password:"
+msgstr ""
+
+#: fractal-gtk/res/ui/account_settings.ui:487
+msgid "Also erase all messages"
+msgstr "Επίσης διαγραφή όλων των μηνυμάτων"
+
+#: fractal-gtk/res/ui/account_settings.ui:586
+#: fractal-gtk/res/ui/main_menu.ui:109
+msgid "Account Settings"
+msgstr "Ρυθμίσεις λογαριασμού"
+
+#: fractal-gtk/res/ui/account_settings.ui:602
+#: fractal-gtk/res/ui/main_window.ui:517 fractal-gtk/res/ui/main_window.ui:657
+#: fractal-gtk/res/ui/main_window.ui:767 fractal-gtk/res/ui/media_viewer.ui:248
+#: fractal-gtk/res/ui/room_settings.ui:1034
+msgid "Back"
+msgstr "Πίσω"
+
+#: fractal-gtk/res/ui/account_settings.ui:623
+msgid "Check your email"
+msgstr "Ελέγξτε το email σας"
+
+#: fractal-gtk/res/ui/account_settings.ui:626
+#: fractal-gtk/res/ui/direct_chat.ui:129 fractal-gtk/res/ui/invite_user.ui:129
+#: fractal-gtk/res/ui/join_room.ui:93 fractal-gtk/res/ui/leave_room.ui:32
+#: fractal-gtk/res/ui/new_room.ui:42 fractal-gtk/src/appop/account.rs:79
+#: fractal-gtk/src/appop/account.rs:138 fractal-gtk/src/appop/attach.rs:57
+msgid "Cancel"
+msgstr "Aκύρωση"
+
+#: fractal-gtk/res/ui/account_settings.ui:634
+msgid "Apply"
+msgstr "Εφαρμογή"
+
+#: fractal-gtk/res/ui/add_room_menu.ui:22
+msgid "Room Directory"
+msgstr ""
+
+#: fractal-gtk/res/ui/add_room_menu.ui:36
+msgid "Join Room"
+msgstr "Σύνδεση σε δωμάτιο"
+
+#: fractal-gtk/res/ui/add_room_menu.ui:63
+msgid "New Room"
+msgstr "Νέο δωμάτιο"
+
+#: fractal-gtk/res/ui/add_room_menu.ui:77
+msgid "New Direct Chat"
+msgstr "Νέα άμεση συνομιλία"
+
+#: fractal-gtk/res/ui/audio_player.ui:34 fractal-gtk/res/ui/audio_player.ui:50
+msgid "Play"
+msgstr "Αναπαραγωγή"
+
+#: fractal-gtk/res/ui/direct_chat.ui:126
+msgid "New direct chat"
+msgstr "Νέα άμεση συνομιλία"
+
+#: fractal-gtk/res/ui/direct_chat.ui:137
+msgid "Start chat"
+msgstr "Έναρξη συνομιλίας"
+
+#: fractal-gtk/res/ui/filechooser.ui:61
+msgid "Select room image file"
+msgstr "Επιλέξτε αρχείο εικόνας για το δωμάτιο"
+
+#: fractal-gtk/res/ui/invite.ui:18
+msgid "Invitation"
+msgstr "Πρόσκληση"
+
+#: fractal-gtk/res/ui/invite.ui:33
+msgid "Reject"
+msgstr "Απόρριψη"
+
+#: fractal-gtk/res/ui/invite.ui:46
+msgid "Accept"
+msgstr "Αποδοχή"
+
+#: fractal-gtk/res/ui/invite_user.ui:126 fractal-gtk/res/ui/invite_user.ui:137
+#: fractal-gtk/src/appop/invite.rs:147
+msgid "Invite"
+msgstr "Πρόσκληση"
+
+#: fractal-gtk/res/ui/join_room.ui:52
+msgid "ID or Alias"
+msgstr "Αναγνωριστικό ή ψευδώνυμο"
+
+#: fractal-gtk/res/ui/join_room.ui:90
+msgid "Join room"
+msgstr "Σύνδεση σε δωμάτιο"
+
+#: fractal-gtk/res/ui/join_room.ui:101 fractal-gtk/src/widgets/room.rs:120
+msgid "Join"
+msgstr "Σύνδεση"
+
+#: fractal-gtk/res/ui/kicked_room.ui:30 fractal-gtk/res/ui/msg_src_window.ui:32
+msgid "Close"
+msgstr "Κλείσιμο"
+
+#: fractal-gtk/res/ui/leave_room.ui:18
+msgid "Leave?"
+msgstr "Έξοδος;"
+
+#: fractal-gtk/res/ui/leave_room.ui:19
+msgid ""
+"Once you leave, you won’t be able to interact with people in the room "
+"anymore."
+msgstr ""
+
+#: fractal-gtk/res/ui/leave_room.ui:45
+msgid "Leave room"
+msgstr "Έξοδος από το δωμάτιο"
+
+#: fractal-gtk/res/ui/login_flow.ui:33
+msgid "Welcome to Fractal"
+msgstr "Καλώς ήλθατε στο Fractal"
+
+#: fractal-gtk/res/ui/login_flow.ui:47 fractal-gtk/res/ui/login_flow.ui:371
+msgid "_Log In"
+msgstr "_Σύνδεση"
+
+#: fractal-gtk/res/ui/login_flow.ui:59
+msgid "_Create Account"
+msgstr "_Δημιουργία λογαριασμού"
+
+#: fractal-gtk/res/ui/login_flow.ui:95
+msgid "What is your Provider?"
+msgstr "Ποιος είναι ο πάροχός σας;"
+
+#: fractal-gtk/res/ui/login_flow.ui:124
+msgid "Matrix provider domain, e.g. myserver.co"
+msgstr ""
+
+#: fractal-gtk/res/ui/login_flow.ui:140
+msgid "The domain may not be empty."
+msgstr ""
+
+#: fractal-gtk/res/ui/login_flow.ui:166
+msgid "_User ID"
+msgstr "ID _χρήστη"
+
+#: fractal-gtk/res/ui/login_flow.ui:182
+msgid "_Password"
+msgstr "_Συνθηματικό"
+
+#: fractal-gtk/res/ui/login_flow.ui:214
+msgid "User name, email, or phone number"
+msgstr "Όνομα χρήστη, email ή αριθμός τηλεφώνου"
+
+#: fractal-gtk/res/ui/login_flow.ui:247
+msgid "_Forgot Password?"
+msgstr ""
+
+#: fractal-gtk/res/ui/login_flow.ui:265
+msgid "Invalid username or password"
+msgstr "Μη έγκυρο όνομα χρήστη ή συνθηματικό"
+
+#: fractal-gtk/res/ui/login_flow.ui:306
+msgid "Choose Provider"
+msgstr "Επιλέξτε πάροχο"
+
+#: fractal-gtk/res/ui/login_flow.ui:329
+msgid "_Next"
+msgstr "Ε_πόμενο"
+
+#: fractal-gtk/res/ui/login_flow.ui:348
+msgid "Log In"
+msgstr "Είσοδος"
+
+#: fractal-gtk/res/ui/main_menu.ui:123
+msgid "Log Out"
+msgstr "Έξοδος"
+
+#: fractal-gtk/res/ui/main_menu.ui:150
+msgid "Keyboard _Shortcuts"
+msgstr "_Συντομεύσεις πληκτρολογίου"
+
+#: fractal-gtk/res/ui/main_menu.ui:164
+msgid "_About Fractal"
+msgstr "_Περί Fractal"
+
+#: fractal-gtk/res/ui/main_window.ui:183
+msgid "No room selected"
+msgstr "Δεν επιλέχτηκε δωμάτιο"
+
+#: fractal-gtk/res/ui/main_window.ui:198
+msgid "Join a room to start chatting"
+msgstr ""
+
+#: fractal-gtk/res/ui/main_window.ui:208
+msgid "No room"
+msgstr "Κανένα δωμάτιο"
+
+#: fractal-gtk/res/ui/main_window.ui:289
+msgid "Chat"
+msgstr "Συνομιλία"
+
+#: fractal-gtk/res/ui/main_window.ui:341
+msgid "Directory"
+msgstr "Κατάλογος"
+
+#: fractal-gtk/res/ui/main_window.ui:365
+msgid "Loading"
+msgstr "Γίνεται φόρτωση"
+
+#: fractal-gtk/res/ui/main_window.ui:410
+msgid "User"
+msgstr "Χρήστης"
+
+#: fractal-gtk/res/ui/main_window.ui:437
+msgid "Add"
+msgstr "Προσθήκη"
+
+#: fractal-gtk/res/ui/main_window.ui:467
+msgid "Room search"
+msgstr "Αναζήτηση δωματίου"
+
+#: fractal-gtk/res/ui/main_window.ui:591
+msgid "Room Menu"
+msgstr "Μενού δωματίου"
+
+#: fractal-gtk/res/ui/main_window.ui:697
+#: fractal-gtk/res/ui/server_chooser_menu.ui:65
+#: fractal-gtk/src/app/connect/directory.rs:130
+msgid "Default Matrix Server"
+msgstr "Προεπιλεγμένος διακομιστής Matrix"
+
+#: fractal-gtk/res/ui/markdown_popover.ui:23
+msgid "Markdown"
+msgstr "Markdown"
+
+#: fractal-gtk/res/ui/markdown_popover.ui:67
+msgid "> quote"
+msgstr "> παράθεση"
+
+#: fractal-gtk/res/ui/markdown_popover.ui:78
+msgid "**bold**"
+msgstr "**έντονα**"
+
+#: fractal-gtk/res/ui/markdown_popover.ui:93
+msgid "`code`"
+msgstr "`κώδικας`"
+
+#: fractal-gtk/res/ui/markdown_popover.ui:105
+msgid "*italic*"
+msgstr "*πλάγια*"
+
+#: fractal-gtk/res/ui/media_viewer.ui:185
+msgid "Loading more media"
+msgstr "Γίνεται φόρτωση περισσότερων μέσων"
+
+#: fractal-gtk/res/ui/media_viewer_menu.ui:26
+msgid "Save as…"
+msgstr "Αποθήκευση ως…"
+
+#: fractal-gtk/res/ui/members.ui:25 fractal-gtk/res/ui/room_settings.ui:940
+msgid "Search for room members"
+msgstr "Αναζήτηση για μέλη του δωματίου"
+
+#: fractal-gtk/res/ui/message_menu.ui:22
+msgid "Reply"
+msgstr "Απάντηση"
+
+#: fractal-gtk/res/ui/message_menu.ui:34
+msgid "Open With…"
+msgstr "Άνοιγμα με…"
+
+#: fractal-gtk/res/ui/message_menu.ui:47
+msgid "Save Image As…"
+msgstr "Αποθήκευση εικόνας ως…"
+
+#: fractal-gtk/res/ui/message_menu.ui:60
+msgid "Copy Image"
+msgstr "Αντιγραφή εικόνας"
+
+#: fractal-gtk/res/ui/message_menu.ui:73
+msgid "Copy Selection"
+msgstr "Αντιγραφή επιλογής"
+
+#: fractal-gtk/res/ui/message_menu.ui:86
+msgid "Copy Text"
+msgstr "Αντιγραφή κειμένου"
+
+#: fractal-gtk/res/ui/message_menu.ui:101
+msgid "View Source"
+msgstr "Προβολή πηγής"
+
+#: fractal-gtk/res/ui/message_menu.ui:126
+msgid "Delete Message"
+msgstr "Διαγραφή μηνύματος"
+
+#: fractal-gtk/res/ui/msg_src_window.ui:21
+msgid "Message Source"
+msgstr "Πηγή μηνύματος"
+
+#: fractal-gtk/res/ui/msg_src_window.ui:24
+msgid "Copy To Clipboard"
+msgstr "Αντιγραφή στο πρόχειρο"
+
+#: fractal-gtk/res/ui/new_room.ui:14
+msgid "Private Chat"
+msgstr "Ιδιωτική συνομιλία"
+
+#: fractal-gtk/res/ui/new_room.ui:18 fractal-gtk/res/ui/new_room.ui:187
+msgid "Public"
+msgstr "Δημόσιο"
+
+#: fractal-gtk/res/ui/new_room.ui:39
+msgid "Create new room"
+msgstr "Δημιουργία νέου δωματίου"
+
+#: fractal-gtk/res/ui/new_room.ui:50
+msgid "Create"
+msgstr "Δημιουργία"
+
+#: fractal-gtk/res/ui/new_room.ui:108
+msgid "Room name"
+msgstr "Όνομα δωματίου"
+
+#: fractal-gtk/res/ui/new_room.ui:152
+msgid "Visibility"
+msgstr "Ορατότητα"
+
+#: fractal-gtk/res/ui/new_room.ui:171
+msgid "Private"
+msgstr "Ιδιωτικό"
+
+#: fractal-gtk/res/ui/password_dialog.ui:22
+#: fractal-gtk/src/widgets/file_dialog.rs:13
+#: fractal-gtk/src/widgets/file_dialog.rs:34
+#: fractal-gtk/src/widgets/media_viewer.rs:670
+msgid "_Cancel"
+msgstr "_Ακύρωση"
+
+#: fractal-gtk/res/ui/password_dialog.ui:35
+msgid "Ch_ange"
+msgstr "Α_λλαγή"
+
+#: fractal-gtk/res/ui/password_dialog.ui:133
+msgid "The passwords do not match."
+msgstr "Τα συνθηματικά δεν ταιριάζουν."
+
+#: fractal-gtk/res/ui/password_dialog.ui:151
+msgid "_Verify New Password"
+msgstr "_Επαλήθευση νέου συνθηματικού"
+
+#: fractal-gtk/res/ui/password_dialog.ui:168
+msgid "_New Password"
+msgstr "_Νέο συνθηματικό"
+
+#: fractal-gtk/res/ui/password_dialog.ui:212
+msgid "Current _Password"
+msgstr "Τρέχον _συνθηματικό"
+
+#: fractal-gtk/res/ui/room_menu.ui:22
+msgid "Room Details"
+msgstr "Λεπτομέρειες δωματίου"
+
+#: fractal-gtk/res/ui/room_menu.ui:36
+msgid "Invite to This Room"
+msgstr "Πρόσκληση σε αυτό το δωμάτιο"
+
+#: fractal-gtk/res/ui/room_menu.ui:63
+msgid "Leave Room"
+msgstr "Έξοδος από το δωμάτιο"
+
+#: fractal-gtk/res/ui/room_settings.ui:92
+msgid "Unknown"
+msgstr "Άγνωστο"
+
+#: fractal-gtk/res/ui/room_settings.ui:118
+msgid "Add name"
+msgstr "Προσθήκη ονόματος"
+
+#: fractal-gtk/res/ui/room_settings.ui:150
+msgid "Add topic"
+msgstr "Προσθήκη θέματος"
+
+#: fractal-gtk/res/ui/room_settings.ui:174
+msgid "Type in your room topic"
+msgstr "Πληκτρολογήστε το θέμα του δωματίου"
+
+#: fractal-gtk/res/ui/room_settings.ui:202
+msgid "No room description"
+msgstr "Καμία περιγραφή δωματίου"
+
+#: fractal-gtk/res/ui/room_settings.ui:239
+msgid "Notifications"
+msgstr "Ειδοποιήσεις"
+
+#: fractal-gtk/res/ui/room_settings.ui:280
+msgid "Notification sounds"
+msgstr "Ήχοι ειδοποίησης"
+
+#: fractal-gtk/res/ui/room_settings.ui:325
+msgid "For all messages"
+msgstr "Για όλα τα μηνύματα"
+
+#: fractal-gtk/res/ui/room_settings.ui:366
+msgid "Only for mentions"
+msgstr "Μόνο για τις αναφορές"
+
+#: fractal-gtk/res/ui/room_settings.ui:397
+msgid "Shared Media"
+msgstr "Διαμοιρασμένα μέσα"
+
+#: fractal-gtk/res/ui/room_settings.ui:444
+msgid "photos"
+msgstr "φωτογραφίες"
+
+#: fractal-gtk/res/ui/room_settings.ui:484
+msgid "videos"
+msgstr "βίντεο"
+
+#: fractal-gtk/res/ui/room_settings.ui:524
+msgid "documents"
+msgstr "έγγραφα"
+
+#: fractal-gtk/res/ui/room_settings.ui:555
+msgid "New members can see"
+msgstr "Τα νέα μέλη μπορούν να δουν"
+
+#: fractal-gtk/res/ui/room_settings.ui:600
+msgid "All room history"
+msgstr "Όλο το ιστορικό του δωματίου"
+
+#: fractal-gtk/res/ui/room_settings.ui:641
+msgid "History after they were invited"
+msgstr "Ιστορικό μετά που έχουν προσκληθεί"
+
+#: fractal-gtk/res/ui/room_settings.ui:672
+msgid "Room Visibility"
+msgstr "Ορατότητα δωματίου"
+
+#: fractal-gtk/res/ui/room_settings.ui:719
+msgid "Allow guests"
+msgstr "Επιτρέπονται οι επισκέπτες"
+
+#: fractal-gtk/res/ui/room_settings.ui:759
+msgid "Allow joining without invite"
+msgstr ""
+
+#: fractal-gtk/res/ui/room_settings.ui:799
+msgid "Publish in room directory"
+msgstr ""
+
+#: fractal-gtk/res/ui/room_settings.ui:830
+msgid "Join addresses"
+msgstr "Διευθύνσεις εισόδου"
+
+#: fractal-gtk/res/ui/room_settings.ui:889
+msgid "members"
+msgstr "μέλη"
+
+#: fractal-gtk/res/ui/room_settings.ui:905
+msgid "Invite New Member"
+msgstr "Πρόσκληση νέου μέλους"
+
+#: fractal-gtk/res/ui/room_settings.ui:1018
+msgid "Details"
+msgstr "Λεπτομέρειες"
+
+#: fractal-gtk/res/ui/scroll_widget.ui:63
+msgid "Scroll to bottom"
+msgstr "Κύλιση προς τα κάτω"
+
+#: fractal-gtk/res/ui/server_chooser_menu.ui:34
+msgid "Show rooms from:"
+msgstr "Εμφάνιση δωματίων από:"
+
+#: fractal-gtk/res/ui/server_chooser_menu.ui:90
+msgid "Your homeserver"
+msgstr ""
+
+#: fractal-gtk/res/ui/server_chooser_menu.ui:134
+msgid "Other Protocol"
+msgstr "Άλλο πρωτόκολλο"
+
+#: fractal-gtk/res/ui/server_chooser_menu.ui:207
+msgid "Other Homeserver"
+msgstr ""
+
+#: fractal-gtk/res/ui/server_chooser_menu.ui:235
+msgid "Homeserver URL"
+msgstr ""
+
+#: fractal-gtk/src/actions/account_settings.rs:39
+#: fractal-gtk/src/actions/room_settings.rs:42
+msgid "Images"
+msgstr "Εικόνες"
+
+#: fractal-gtk/src/actions/account_settings.rs:40
+#: fractal-gtk/src/actions/room_settings.rs:44
+msgid "Select a new avatar"
+msgstr "Επιλέξτε νέο avatar"
+
+#: fractal-gtk/src/actions/account_settings.rs:50
+#: fractal-gtk/src/actions/room_settings.rs:54
+msgid "Couldn’t open file"
+msgstr "Αδυναμία ανοίγματος αρχείου"
+
+#: fractal-gtk/src/actions/global.rs:285
+msgid "Select a file"
+msgstr "Επιλογή αρχείου"
+
+#: fractal-gtk/src/actions/room_history.rs:64
+msgid "This message has no source."
+msgstr "Το μήνυμα δεν έχει πηγή."
+
+#: fractal-gtk/src/actions/room_history.rs:116
+#: fractal-gtk/src/actions/room_history.rs:148
+msgid "Could not download the file"
+msgstr "Αδυναμία λήψης του αρχείου"
+
+#: fractal-gtk/src/actions/room_history.rs:126
+msgid "Couldn’t save file"
+msgstr "Αδυναμία αποθήκευσης αρχείου"
+
+#: fractal-gtk/src/app/backend_loop.rs:48
+msgid "Email is already in use"
+msgstr "Το email είναι ήδη σε χρήση"
+
+#: fractal-gtk/src/app/backend_loop.rs:52
+msgid "Please enter a valid email adress."
+msgstr "Παρακαλούμε εισάγετε έγκυρη διεύθυνση ηλεκτρονικού ταχυδρομείου."
+
+#: fractal-gtk/src/app/backend_loop.rs:56
+msgid "Phone number is already in use"
+msgstr "Ο αριθμός τηλεφώνου είναι ήδη σε χρήση"
+
+#: fractal-gtk/src/app/backend_loop.rs:61
+msgid ""
+"Please enter your phone number in the format: \n"
+" + your country code and your phone number."
+msgstr ""
+
+#: fractal-gtk/src/app/backend_loop.rs:198
+msgid "Couldn’t delete the account"
+msgstr "Αδυναμία διαγραφής λογαριασμού"
+
+#: fractal-gtk/src/app/backend_loop.rs:203
+msgid "Couldn’t change the password"
+msgstr "Αδυναμία αλλαγής συνθηματικού"
+
+#: fractal-gtk/src/app/backend_loop.rs:208
+msgid "Sorry, account settings can’t be loaded."
+msgstr "Συγγνώμη, αδυναμία φόρτωσης ρυθμίσεων λογαριασμού."
+
+#: fractal-gtk/src/app/backend_loop.rs:216
+msgid "Couldn’t add the email address."
+msgstr "Αδυναμία προσθήκης της διεύθυνσης ηλεκτρονικού ταχυδρομείου."
+
+#: fractal-gtk/src/app/backend_loop.rs:221
+msgid "Couldn’t add the phone number."
+msgstr "Αδυναμία προσθήκης του αριθμού τηλεφώνου."
+
+#: fractal-gtk/src/app/backend_loop.rs:228
+msgid "Can’t create the room, try again"
+msgstr "Αδυναμία δημιουργίας δωματίου, δοκιμάστε ξανά"
+
+#: fractal-gtk/src/app/backend_loop.rs:236
+msgid "Can’t join the room, try again."
+msgstr "Αδυναμία εισόδου σε δωμάτιο, δοκιμάστε ξανά."
+
+#: fractal-gtk/src/app/backend_loop.rs:245
+msgid "Can’t login, try again"
+msgstr "Αδυναμία εισόδου, δοκιμάστε ξανά"
+
+#: fractal-gtk/src/app/backend_loop.rs:261
+msgid "Error sending message"
+msgstr "Σφάλμα κατά την αποστολή μηνύματος"
+
+#: fractal-gtk/src/app/backend_loop.rs:266
+msgid "Error deleting message"
+msgstr "Σφάλμα κατά τη διαγραφή μηνύματος"
+
+#: fractal-gtk/src/app/backend_loop.rs:270
+msgid "Error searching for rooms"
+msgstr "Σφάλμα κατά την αναζήτηση για δωμάτια"
+
+#: fractal-gtk/src/appop/about.rs:21
+msgid "A Matrix.org client for GNOME"
+msgstr "Ένας πελάτης του Matrix.org για το GNOME"
+
+#: fractal-gtk/src/appop/about.rs:23
+msgid "© 2017–2018 Daniel García Moreno, et al."
+msgstr "© 2017–2018 Daniel García Moreno, και άλλος."
+
+#: fractal-gtk/src/appop/about.rs:30
+msgid "Learn more about Fractal"
+msgstr "Μάθετε περισσότερα για το Fractal"
+
+#: fractal-gtk/src/appop/about.rs:31
+msgid "translator-credits"
+msgstr ""
+"Ελληνική μεταφραστική ομάδα GNOME\n"
+" Ευστάθιος Ιωσηφίδης <iosifidis@opensuse.org>\n"
+"\n"
+"Για περισσότερες πληροφορίες, επισκεφθείτε την σελίδα\n"
+"http://gnome.gr/"
+
+#: fractal-gtk/src/appop/about.rs:46
+msgid "Name by"
+msgstr "Όνομα κατά"
+
+#: fractal-gtk/src/appop/account.rs:51
+msgid "The validation code is not correct."
+msgstr "Ο κωδικός της επαλήθευσης δεν είναι σωστός."
+
+#: fractal-gtk/src/appop/account.rs:64
+msgid "Enter the code received via SMS"
+msgstr "Εισαγωγή του κωδικού που λάβατε μέσω SMS"
+
+#: fractal-gtk/src/appop/account.rs:80 fractal-gtk/src/appop/account.rs:139
+msgid "Continue"
+msgstr "Συνέχεια"
+
+#: fractal-gtk/src/appop/account.rs:128
+msgid ""
+"In order to add this email address, go to your inbox and follow the link you "
+"received. Once you’ve done that, click Continue."
+msgstr ""
+"Για να προσθέσετε αυτήν τη διεύθυνση ηλεκτρονικού ταχυδρομείου, μεταβείτε "
+"στα εισερχόμενά σας και ακολουθήστε τον σύνδεσμο που λάβατε. Αφού το κάνετε "
+"αυτό, κάντε κλικ στο κουμπί Συνέχεια."
+
+#: fractal-gtk/src/appop/account.rs:189
+msgid "OK"
+msgstr "Εντάξει"
+
+#: fractal-gtk/src/appop/account.rs:724
+msgid "Are you sure you want to delete your account?"
+msgstr "Είστε βέβαιοι ότι θέλετε να διαγραφεί ο λογαριασμός σας;"
+
+#: fractal-gtk/src/appop/attach.rs:42
+msgid "Image from Clipboard"
+msgstr "Εικόνα από το πρόχειρο"
+
+#: fractal-gtk/src/appop/attach.rs:58
+msgid "Send"
+msgstr "Αποστολή"
+
+#: fractal-gtk/src/appop/invite.rs:145
+msgid "Invite to {name}"
+msgstr "Πρόσκληση σε {name}"
+
+#: fractal-gtk/src/appop/invite.rs:253
+msgid "Join {room_name}?"
+msgstr "Είσοδος στο {room_name};"
+
+#: fractal-gtk/src/appop/invite.rs:258
+msgid ""
+"You’ve been invited to join <b>{room_name}</b> room by <b>{sender_name}</b>"
+msgstr ""
+
+#: fractal-gtk/src/appop/invite.rs:263
+msgid "You’ve been invited to join <b>{room_name}</b>"
+msgstr ""
+
+#: fractal-gtk/src/appop/notify.rs:50
+msgid " (direct message)"
+msgstr " (άμεσο μήνυμα)"
+
+#: fractal-gtk/src/appop/room.rs:313
+msgid "Leave {room_name}?"
+msgstr "Εγκατάλειψη {room_name};"
+
+#: fractal-gtk/src/appop/room.rs:569
+msgid "EMPTY ROOM"
+msgstr "ΑΔΕΙΟ ΔΩΜΑΤΙΟ"
+
+#: fractal-gtk/src/appop/room.rs:571
+msgid "{m1} and {m2}"
+msgstr "{m1} και {m2}"
+
+#: fractal-gtk/src/appop/room.rs:572
+msgid "{m1} and Others"
+msgstr "{m1} και άλλοι"
+
+#: fractal-gtk/src/appop/room.rs:675
+msgid "Several users are typing…"
+msgstr "Αρκετοί χρήστες πληκτρολογούν…"
+
+#: fractal-gtk/src/appop/room.rs:678
+msgid "<b>{}</b> is typing…"
+msgid_plural "<b>{}</b> and <b>{}</b> are typing…"
+msgstr[0] ""
+msgstr[1] ""
+
+#: fractal-gtk/src/appop/sync.rs:10
+msgid "Syncing, this could take a while"
+msgstr "Ο συγχρονισμός μπορεί να διαρκέσει αρκετά"
+
+#: fractal-gtk/src/uibuilder.rs:52
+msgid "You don’t have permission to post to this room"
+msgstr "Δεν έχετε δικαιώματα ανάρτησης σε αυτό το δωμάτιο"
+
+#: fractal-gtk/src/widgets/file_dialog.rs:9
+#: fractal-gtk/src/widgets/media_viewer.rs:666
+msgid "Save media as"
+msgstr "Αποθήκευση μέσου ως"
+
+#: fractal-gtk/src/widgets/file_dialog.rs:12
+#: fractal-gtk/src/widgets/media_viewer.rs:669
+msgid "_Save"
+msgstr "Απ_οθήκευση"
+
+#: fractal-gtk/src/widgets/file_dialog.rs:33
+msgid "_Select"
+msgstr "_Επιλογή"
+
+#: fractal-gtk/src/widgets/kicked_dialog.rs:46
+msgid "You have been kicked from {}"
+msgstr ""
+
+#: fractal-gtk/src/widgets/kicked_dialog.rs:50
+msgid ""
+"Kicked by: {}\n"
+" “{}”"
+msgstr ""
+
+#: fractal-gtk/src/widgets/media_viewer.rs:626
+msgid "Error while loading previous media"
+msgstr "Σφάλμα κατά τη φόρτωση προηγούμενου μέσου"
+
+#: fractal-gtk/src/widgets/media_viewer.rs:679
+msgid "Could not save the file"
+msgstr "Αδυναμία αποθήκευσης του αρχείου"
+
+#: fractal-gtk/src/widgets/members_list.rs:54
+msgid "No matching members found"
+msgstr "Δεν βρέθηκαν μέλη να ταιριάζουν"
+
+#: fractal-gtk/src/widgets/members_list.rs:170
+msgid "Admin"
+msgstr "Διαχειριστής"
+
+#: fractal-gtk/src/widgets/members_list.rs:171
+msgid "Moderator"
+msgstr "Συντονιστής"
+
+#: fractal-gtk/src/widgets/members_list.rs:172
+msgid "Privileged"
+msgstr ""
+
+#: fractal-gtk/src/widgets/message.rs:396
+msgid "Could not retrieve file URI"
+msgstr ""
+
+#: fractal-gtk/src/widgets/message.rs:414
+#: fractal-gtk/src/widgets/message.rs:440
+msgid "Save"
+msgstr "Αποθήκευση"
+
+#: fractal-gtk/src/widgets/message.rs:450
+msgid "Open"
+msgstr "Άνοιγμα"
+
+#. Use 12h time format (AM/PM)
+#: fractal-gtk/src/widgets/message.rs:470
+msgid "%l∶%M %p"
+msgstr "%l∶%M %p"
+
+#. Use 24 time format
+#: fractal-gtk/src/widgets/message.rs:473
+msgid "%R"
+msgstr "%R"
+
+#. Translators: This is a date format in the day divider without the year
+#: fractal-gtk/src/widgets/room_history.rs:391
+msgid "%B %e"
+msgstr "%B %e"
+
+#. Translators: This is a date format in the day divider with the year
+#: fractal-gtk/src/widgets/room_history.rs:394
+msgid "%B %e, %Y"
+msgstr "%B %e, %Y"
+
+#: fractal-gtk/src/widgets/room_history.rs:416
+msgid "New Messages"
+msgstr "Νέα μηνύματα"
+
+#: fractal-gtk/src/widgets/room_settings.rs:213
+msgid "Room · {} member"
+msgid_plural "Room · {} members"
+msgstr[0] "Δωμάτιο · {} μέλος"
+msgstr[1] "Δωμάτιο · {} μέλη"
+
+#: fractal-gtk/src/widgets/room_settings.rs:645
+msgid "{} member"
+msgid_plural "{} members"
+msgstr[0] "{} μέλος"
+msgstr[1] "{} μέλη"
+
+#: fractal-gtk/src/widgets/roomlist.rs:475
+msgid "Invites"
+msgstr ""
+
+#: fractal-gtk/src/widgets/roomlist.rs:476
+msgid "You don’t have any invitations"
+msgstr "Δεν έχετε προσκλήσεις"
+
+#: fractal-gtk/src/widgets/roomlist.rs:480
+msgid "Favorites"
+msgstr "Αγαπημένα"
+
+#: fractal-gtk/src/widgets/roomlist.rs:481
+msgid "Drag and drop rooms here to add them to your favorites"
+msgstr ""
+
+#: fractal-gtk/src/widgets/roomlist.rs:485
+msgid "Rooms"
+msgstr "Δωμάτια"
+
+#: fractal-gtk/src/widgets/roomlist.rs:486
+msgid "You don’t have any rooms yet"
+msgstr "Δεν έχετε ακόμα δωμάτια"
