@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2020-01-28 12:52+0000\n"
-"PO-Revision-Date: 2020-01-28 15:33+0100\n"
+"POT-Creation-Date: 2020-02-03 10:11+0000\n"
+"PO-Revision-Date: 2020-02-03 12:43+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Spanish - Spain <gnome-es-list@gnome.org>\n"
 "Language: es_ES\n"
@@ -509,7 +509,6 @@ msgid "Save Image As…"
 msgstr "Guardar imagen como…"
 
 #: fractal-gtk/res/ui/message_menu.ui:60
-#| msgid "Save Image As…"
 msgid "Save Video As…"
 msgstr "Guardar vídeo como…"
 
@@ -882,6 +881,12 @@ msgstr "Imagen del portapapeles"
 #: fractal-gtk/src/appop/attach.rs:58
 msgid "Send"
 msgstr "Enviar"
+
+#. Filename for the attached image
+#: fractal-gtk/src/appop/attach.rs:87
+#| msgid "Images"
+msgid "image"
+msgstr "imagen"
 
 #: fractal-gtk/src/appop/invite.rs:145
 msgid "Invite to {name}"
