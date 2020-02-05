@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2020-01-07 10:49+0000\n"
-"PO-Revision-Date: 2020-01-14 20:11+0700\n"
+"POT-Creation-Date: 2020-02-03 10:11+0000\n"
+"PO-Revision-Date: 2020-02-04 14:50+0700\n"
 "Last-Translator: Kukuh Syafaat <kukuhsyafaat@gnome.org>\n"
 "Language-Team: Indonesian <gnome-l10n-id@googlegroups.com>\n"
 "Language: id\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural= n!=1;\n"
-"X-Generator: Poedit 2.2.4\n"
+"X-Generator: Poedit 2.3\n"
 
 #: fractal-gtk/res/gtk/help-overlay.ui:13
 msgctxt "shortcut window"
@@ -507,22 +507,26 @@ msgid "Save Image As…"
 msgstr "Simpan Gambar Sebagai…"
 
 #: fractal-gtk/res/ui/message_menu.ui:60
+msgid "Save Video As…"
+msgstr "Simpan Video Sebagai…"
+
+#: fractal-gtk/res/ui/message_menu.ui:73
 msgid "Copy Image"
 msgstr "Salin Gambar"
 
-#: fractal-gtk/res/ui/message_menu.ui:73
+#: fractal-gtk/res/ui/message_menu.ui:86
 msgid "Copy Selection"
 msgstr "Salin seleksi"
 
-#: fractal-gtk/res/ui/message_menu.ui:86
+#: fractal-gtk/res/ui/message_menu.ui:99
 msgid "Copy Text"
 msgstr "Salin Teks"
 
-#: fractal-gtk/res/ui/message_menu.ui:101
+#: fractal-gtk/res/ui/message_menu.ui:114
 msgid "View Source"
 msgstr "Lihat Sumber"
 
-#: fractal-gtk/res/ui/message_menu.ui:126
+#: fractal-gtk/res/ui/message_menu.ui:139
 msgid "Delete Message"
 msgstr "Hapus Pesan"
 
@@ -565,7 +569,7 @@ msgstr "Privat"
 #: fractal-gtk/res/ui/password_dialog.ui:22
 #: fractal-gtk/src/widgets/file_dialog.rs:13
 #: fractal-gtk/src/widgets/file_dialog.rs:34
-#: fractal-gtk/src/widgets/media_viewer.rs:670
+#: fractal-gtk/src/widgets/media_viewer.rs:875
 msgid "_Cancel"
 msgstr "Ba_tal"
 
@@ -753,19 +757,19 @@ msgstr "Tidak dapat mengunduh berkas"
 msgid "Couldn’t save file"
 msgstr "Tidak dapat menyimpan berkas"
 
-#: fractal-gtk/src/app/backend_loop.rs:48
+#: fractal-gtk/src/app/backend_loop.rs:46
 msgid "Email is already in use"
 msgstr "Surel sudah digunakan"
 
-#: fractal-gtk/src/app/backend_loop.rs:52
+#: fractal-gtk/src/app/backend_loop.rs:50
 msgid "Please enter a valid email adress."
 msgstr "Silakan isi alamat surel."
 
-#: fractal-gtk/src/app/backend_loop.rs:56
+#: fractal-gtk/src/app/backend_loop.rs:54
 msgid "Phone number is already in use"
 msgstr "Nomor telepon sudah digunakan"
 
-#: fractal-gtk/src/app/backend_loop.rs:61
+#: fractal-gtk/src/app/backend_loop.rs:59
 msgid ""
 "Please enter your phone number in the format: \n"
 " + your country code and your phone number."
@@ -773,47 +777,47 @@ msgstr ""
 "Silakan masukkan nomor telepon Anda dalam format:\n"
 "  + kode negara Anda dan nomor telepon Anda."
 
-#: fractal-gtk/src/app/backend_loop.rs:198
+#: fractal-gtk/src/app/backend_loop.rs:196
 msgid "Couldn’t delete the account"
 msgstr "Tidak dapat menghapus akun"
 
-#: fractal-gtk/src/app/backend_loop.rs:203
+#: fractal-gtk/src/app/backend_loop.rs:201
 msgid "Couldn’t change the password"
 msgstr "Tidak dapat mengubah kata sandi"
 
-#: fractal-gtk/src/app/backend_loop.rs:208
+#: fractal-gtk/src/app/backend_loop.rs:206
 msgid "Sorry, account settings can’t be loaded."
 msgstr "Maaf, pengaturan akun tidak dapat dimuat."
 
-#: fractal-gtk/src/app/backend_loop.rs:216
+#: fractal-gtk/src/app/backend_loop.rs:214
 msgid "Couldn’t add the email address."
 msgstr "Tidak dapat menambahkan alamat surel."
 
-#: fractal-gtk/src/app/backend_loop.rs:221
+#: fractal-gtk/src/app/backend_loop.rs:219
 msgid "Couldn’t add the phone number."
 msgstr "Tidak dapat menambahkan nomor telepon."
 
-#: fractal-gtk/src/app/backend_loop.rs:228
+#: fractal-gtk/src/app/backend_loop.rs:226
 msgid "Can’t create the room, try again"
 msgstr "Tidak dapat membuat ruang, coba lagi"
 
-#: fractal-gtk/src/app/backend_loop.rs:236
+#: fractal-gtk/src/app/backend_loop.rs:234
 msgid "Can’t join the room, try again."
 msgstr "Tidak dapat bergabung dengan ruang, coba lagi."
 
-#: fractal-gtk/src/app/backend_loop.rs:245
+#: fractal-gtk/src/app/backend_loop.rs:243
 msgid "Can’t login, try again"
 msgstr "Tidak dapat masuk, coba lagi"
 
-#: fractal-gtk/src/app/backend_loop.rs:261
+#: fractal-gtk/src/app/backend_loop.rs:259
 msgid "Error sending message"
 msgstr "Galat mengirim pesan"
 
-#: fractal-gtk/src/app/backend_loop.rs:266
+#: fractal-gtk/src/app/backend_loop.rs:264
 msgid "Error deleting message"
 msgstr "Galat menghapus pesan"
 
-#: fractal-gtk/src/app/backend_loop.rs:270
+#: fractal-gtk/src/app/backend_loop.rs:268
 msgid "Error searching for rooms"
 msgstr "Galat mencari ruang"
 
@@ -873,6 +877,11 @@ msgstr "Gambar dari Papan Klip"
 msgid "Send"
 msgstr "Kirim"
 
+#. Filename for the attached image
+#: fractal-gtk/src/appop/attach.rs:87
+msgid "image"
+msgstr "gambar"
+
 #: fractal-gtk/src/appop/invite.rs:145
 msgid "Invite to {name}"
 msgstr "Undang ke {nama}"
@@ -931,18 +940,22 @@ msgid "You don’t have permission to post to this room"
 msgstr "Anda tidak memiliki izin untuk memposting ke ruang ini"
 
 #: fractal-gtk/src/widgets/file_dialog.rs:9
-#: fractal-gtk/src/widgets/media_viewer.rs:666
+#: fractal-gtk/src/widgets/media_viewer.rs:871
 msgid "Save media as"
 msgstr "Simpan media sebagai"
 
 #: fractal-gtk/src/widgets/file_dialog.rs:12
-#: fractal-gtk/src/widgets/media_viewer.rs:669
+#: fractal-gtk/src/widgets/media_viewer.rs:874
 msgid "_Save"
 msgstr "_Simpan"
 
 #: fractal-gtk/src/widgets/file_dialog.rs:33
 msgid "_Select"
 msgstr "_Pilih"
+
+#: fractal-gtk/src/widgets/inline_player.rs:498
+msgid "Could not retrieve file URI"
+msgstr "Tidak dapat mengambil berkas URI"
 
 #: fractal-gtk/src/widgets/kicked_dialog.rs:46
 msgid "You have been kicked from {}"
@@ -956,11 +969,15 @@ msgstr ""
 "Ditendang oleh: {}\n"
 " “{}”"
 
-#: fractal-gtk/src/widgets/media_viewer.rs:626
+#: fractal-gtk/src/widgets/media_viewer.rs:117
+msgid "Media is not loaded, yet."
+msgstr "Media belum dimuat."
+
+#: fractal-gtk/src/widgets/media_viewer.rs:829
 msgid "Error while loading previous media"
 msgstr "Galat saat memuat media sebelumnya"
 
-#: fractal-gtk/src/widgets/media_viewer.rs:679
+#: fractal-gtk/src/widgets/media_viewer.rs:884
 msgid "Could not save the file"
 msgstr "Tidak dapat menyimpan berkas"
 
@@ -980,42 +997,38 @@ msgstr "Moderator"
 msgid "Privileged"
 msgstr "Hak istimewa"
 
-#: fractal-gtk/src/widgets/message.rs:396
-msgid "Could not retrieve file URI"
-msgstr "Tidak dapat mengambil berkas URI"
-
-#: fractal-gtk/src/widgets/message.rs:414
-#: fractal-gtk/src/widgets/message.rs:440
+#: fractal-gtk/src/widgets/message.rs:390
+#: fractal-gtk/src/widgets/message.rs:482
 msgid "Save"
 msgstr "Simpan"
 
-#: fractal-gtk/src/widgets/message.rs:450
+#: fractal-gtk/src/widgets/message.rs:492
 msgid "Open"
 msgstr "Buka"
 
 #. Use 12h time format (AM/PM)
-#: fractal-gtk/src/widgets/message.rs:470
+#: fractal-gtk/src/widgets/message.rs:512
 msgid "%l∶%M %p"
 msgstr "%l∶%M %p"
 
 #. Use 24 time format
-#: fractal-gtk/src/widgets/message.rs:473
+#: fractal-gtk/src/widgets/message.rs:515
 msgid "%R"
 msgstr "%R"
 
+#: fractal-gtk/src/widgets/room_history.rs:81
+msgid "New Messages"
+msgstr "Pesan Baru"
+
 #. Translators: This is a date format in the day divider without the year
-#: fractal-gtk/src/widgets/room_history.rs:391
+#: fractal-gtk/src/widgets/room_history.rs:679
 msgid "%B %e"
 msgstr "%e %b"
 
 #. Translators: This is a date format in the day divider with the year
-#: fractal-gtk/src/widgets/room_history.rs:394
+#: fractal-gtk/src/widgets/room_history.rs:682
 msgid "%B %e, %Y"
 msgstr "%e %b %Y"
-
-#: fractal-gtk/src/widgets/room_history.rs:416
-msgid "New Messages"
-msgstr "Pesan Baru"
 
 #: fractal-gtk/src/widgets/room_settings.rs:213
 msgid "Room · {} member"
