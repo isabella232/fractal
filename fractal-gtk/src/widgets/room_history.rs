@@ -315,20 +315,23 @@ impl RoomHistory {
             .downcast::<gtk::Scrollbar>()
             .unwrap();
         let weak_rows = Rc::downgrade(&self.rows);
-        scrollbar.connect_value_changed(move |_| {
-            weak_rows.upgrade().map(|rows| {
-                let weak_rows_inner = weak_rows.clone();
-                let new_id = timeout_add(250, move || {
-                    weak_rows_inner.upgrade().map(|rows| {
-                        rows.borrow_mut().update_videos();
-                        rows.borrow_mut().video_scroll_debounce = None;
+        scrollbar.connect_value_changed(move |sb| {
+            if !sb.get_state_flags().contains(gtk::StateFlags::BACKDROP) {
+                /* Fractal is focused */
+                weak_rows.upgrade().map(|rows| {
+                    let weak_rows_inner = weak_rows.clone();
+                    let new_id = timeout_add(250, move || {
+                        weak_rows_inner.upgrade().map(|rows| {
+                            rows.borrow_mut().update_videos();
+                            rows.borrow_mut().video_scroll_debounce = None;
+                        });
+                        Continue(false)
                     });
-                    Continue(false)
+                    if let Some(old_id) = rows.borrow_mut().video_scroll_debounce.replace(new_id) {
+                        let _ = Source::remove(old_id);
+                    }
                 });
-                if let Some(old_id) = rows.borrow_mut().video_scroll_debounce.replace(new_id) {
-                    let _ = Source::remove(old_id);
-                }
-            });
+            }
         });
     }
 
@@ -376,13 +379,13 @@ impl RoomHistory {
             if window.get_mapped() {
                 /* The room history is being displayed */
                 weak_rows.upgrade().map(|rows| {
-                    let focussed = gtk::StateFlags::BACKDROP;
-                    if flag.contains(focussed) {
-                        /* Fractal has been focussed */
+                    let focused = gtk::StateFlags::BACKDROP;
+                    if flag.contains(focused) {
+                        /* Fractal has been focused */
                         let len = rows.borrow().playing_videos.len();
                         if len != 0 {
                             warn!(
-                                "{:?} videos were playing while Fractal was focussed out.",
+                                "{:?} videos were playing while Fractal was focused out.",
                                 len
                             );
                             for (player, handler_id) in rows.borrow_mut().playing_videos.drain(..) {
@@ -397,7 +400,7 @@ impl RoomHistory {
                         }
                         rows.borrow_mut().playing_videos = videos;
                     } else {
-                        /* Fractal has been unfocussed */
+                        /* Fractal has been unfocused */
                         if let Some(id) = rows.borrow_mut().video_scroll_debounce.take() {
                             let _ = Source::remove(id);
                         }
