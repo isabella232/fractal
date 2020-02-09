@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2020-01-28 12:52+0000\n"
-"PO-Revision-Date: 2020-02-02 12:45+0100\n"
+"POT-Creation-Date: 2020-02-03 10:11+0000\n"
+"PO-Revision-Date: 2020-02-09 12:15+0100\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -878,6 +878,11 @@ msgstr "Obraz ze schowka"
 #: fractal-gtk/src/appop/attach.rs:58
 msgid "Send"
 msgstr "Wyślij"
+
+#. Filename for the attached image
+#: fractal-gtk/src/appop/attach.rs:87
+msgid "image"
+msgstr "obraz"
 
 #: fractal-gtk/src/appop/invite.rs:145
 msgid "Invite to {name}"
