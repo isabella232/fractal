@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2020-02-03 10:11+0000\n"
-"PO-Revision-Date: 2020-02-03 12:43+0100\n"
+"POT-Creation-Date: 2020-02-11 08:26+0000\n"
+"PO-Revision-Date: 2020-02-11 12:34+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Spanish - Spain <gnome-es-list@gnome.org>\n"
 "Language: es_ES\n"
@@ -249,8 +249,8 @@ msgid "Account Settings"
 msgstr "Configuración de la cuenta"
 
 #: fractal-gtk/res/ui/account_settings.ui:602
-#: fractal-gtk/res/ui/main_window.ui:517 fractal-gtk/res/ui/main_window.ui:657
-#: fractal-gtk/res/ui/main_window.ui:767 fractal-gtk/res/ui/media_viewer.ui:248
+#: fractal-gtk/res/ui/main_window.ui:522 fractal-gtk/res/ui/main_window.ui:662
+#: fractal-gtk/res/ui/main_window.ui:772 fractal-gtk/res/ui/media_viewer.ui:248
 #: fractal-gtk/res/ui/room_settings.ui:1034
 msgid "Back"
 msgstr "Atrás"
@@ -418,47 +418,47 @@ msgstr "Combinaciones de _teclas"
 msgid "_About Fractal"
 msgstr "_Acerca de Fractal"
 
-#: fractal-gtk/res/ui/main_window.ui:183
+#: fractal-gtk/res/ui/main_window.ui:185
 msgid "No room selected"
 msgstr "No hay sala seleccionada"
 
-#: fractal-gtk/res/ui/main_window.ui:198
+#: fractal-gtk/res/ui/main_window.ui:200
 msgid "Join a room to start chatting"
 msgstr "Únase a una sala para empezar a hablar"
 
-#: fractal-gtk/res/ui/main_window.ui:208
+#: fractal-gtk/res/ui/main_window.ui:210
 msgid "No room"
 msgstr "Sin sala"
 
-#: fractal-gtk/res/ui/main_window.ui:289
+#: fractal-gtk/res/ui/main_window.ui:291
 msgid "Chat"
 msgstr "Charla"
 
-#: fractal-gtk/res/ui/main_window.ui:341
+#: fractal-gtk/res/ui/main_window.ui:343
 msgid "Directory"
 msgstr "Directorio"
 
-#: fractal-gtk/res/ui/main_window.ui:365
+#: fractal-gtk/res/ui/main_window.ui:367
 msgid "Loading"
 msgstr "Cargando"
 
-#: fractal-gtk/res/ui/main_window.ui:410
+#: fractal-gtk/res/ui/main_window.ui:412
 msgid "User"
 msgstr "Usuario"
 
-#: fractal-gtk/res/ui/main_window.ui:437
+#: fractal-gtk/res/ui/main_window.ui:439
 msgid "Add"
 msgstr "Añadir"
 
-#: fractal-gtk/res/ui/main_window.ui:467
+#: fractal-gtk/res/ui/main_window.ui:469
 msgid "Room search"
 msgstr "Búsqueda de sala"
 
-#: fractal-gtk/res/ui/main_window.ui:591
+#: fractal-gtk/res/ui/main_window.ui:596
 msgid "Room Menu"
 msgstr "Menú de sala"
 
-#: fractal-gtk/res/ui/main_window.ui:697
+#: fractal-gtk/res/ui/main_window.ui:702
 #: fractal-gtk/res/ui/server_chooser_menu.ui:65
 #: fractal-gtk/src/app/connect/directory.rs:130
 msgid "Default Matrix Server"
@@ -571,7 +571,7 @@ msgstr "Privado"
 #: fractal-gtk/res/ui/password_dialog.ui:22
 #: fractal-gtk/src/widgets/file_dialog.rs:13
 #: fractal-gtk/src/widgets/file_dialog.rs:34
-#: fractal-gtk/src/widgets/media_viewer.rs:875
+#: fractal-gtk/src/widgets/media_viewer.rs:1007
 msgid "_Cancel"
 msgstr "_Cancelar"
 
@@ -746,16 +746,16 @@ msgstr "No se pudo abrir el archivo"
 msgid "Select a file"
 msgstr "Selecciona un archivo"
 
-#: fractal-gtk/src/actions/room_history.rs:64
+#: fractal-gtk/src/actions/room_history.rs:66
 msgid "This message has no source."
 msgstr "Este mensaje no tiene origen."
 
-#: fractal-gtk/src/actions/room_history.rs:116
-#: fractal-gtk/src/actions/room_history.rs:148
+#: fractal-gtk/src/actions/room_history.rs:118
+#: fractal-gtk/src/actions/room_history.rs:157
 msgid "Could not download the file"
 msgstr "No se puede descargar el archivo"
 
-#: fractal-gtk/src/actions/room_history.rs:126
+#: fractal-gtk/src/actions/room_history.rs:128
 msgid "Couldn’t save file"
 msgstr "No se pudo guardar el archivo"
 
@@ -884,7 +884,6 @@ msgstr "Enviar"
 
 #. Filename for the attached image
 #: fractal-gtk/src/appop/attach.rs:87
-#| msgid "Images"
 msgid "image"
 msgstr "imagen"
 
@@ -945,12 +944,12 @@ msgid "You don’t have permission to post to this room"
 msgstr "No tiene permiso para publicar en esta sala"
 
 #: fractal-gtk/src/widgets/file_dialog.rs:9
-#: fractal-gtk/src/widgets/media_viewer.rs:871
+#: fractal-gtk/src/widgets/media_viewer.rs:1003
 msgid "Save media as"
 msgstr "Guardar medio como"
 
 #: fractal-gtk/src/widgets/file_dialog.rs:12
-#: fractal-gtk/src/widgets/media_viewer.rs:874
+#: fractal-gtk/src/widgets/media_viewer.rs:1006
 msgid "_Save"
 msgstr "_Guardar"
 
@@ -958,7 +957,7 @@ msgstr "_Guardar"
 msgid "_Select"
 msgstr "_Seleccionar"
 
-#: fractal-gtk/src/widgets/inline_player.rs:498
+#: fractal-gtk/src/widgets/inline_player.rs:521
 msgid "Could not retrieve file URI"
 msgstr "No se pudo obtener el URI del archivo"
 
@@ -974,15 +973,15 @@ msgstr ""
 "Expulsado por: {}\n"
 " «{}»"
 
-#: fractal-gtk/src/widgets/media_viewer.rs:117
+#: fractal-gtk/src/widgets/media_viewer.rs:165
 msgid "Media is not loaded, yet."
 msgstr "El medio no se ha cargado todavía."
 
-#: fractal-gtk/src/widgets/media_viewer.rs:829
+#: fractal-gtk/src/widgets/media_viewer.rs:961
 msgid "Error while loading previous media"
 msgstr "Error al cargar el medio anterior"
 
-#: fractal-gtk/src/widgets/media_viewer.rs:884
+#: fractal-gtk/src/widgets/media_viewer.rs:1016
 msgid "Could not save the file"
 msgstr "No se ha podido guardar el archivo"
 
@@ -1002,22 +1001,42 @@ msgstr "Moderador"
 msgid "Privileged"
 msgstr "Con privilegios"
 
-#: fractal-gtk/src/widgets/message.rs:390
-#: fractal-gtk/src/widgets/message.rs:482
+#: fractal-gtk/src/widgets/message.rs:83
+#| msgid "loading"
+msgid "Uploading video."
+msgstr "Subiendo vídeo."
+
+#: fractal-gtk/src/widgets/message.rs:88
+#| msgid "loading"
+msgid "Uploading audio."
+msgstr "Subiendo sonido."
+
+#: fractal-gtk/src/widgets/message.rs:93
+#| msgid "loading"
+msgid "Uploading image."
+msgstr "Subiendo imagen."
+
+#: fractal-gtk/src/widgets/message.rs:97
+#| msgid "loading"
+msgid "Uploading file."
+msgstr "Subiendo archivo."
+
+#: fractal-gtk/src/widgets/message.rs:415
+#: fractal-gtk/src/widgets/message.rs:507
 msgid "Save"
 msgstr "Guardar"
 
-#: fractal-gtk/src/widgets/message.rs:492
+#: fractal-gtk/src/widgets/message.rs:517
 msgid "Open"
 msgstr "Abrir"
 
 #. Use 12h time format (AM/PM)
-#: fractal-gtk/src/widgets/message.rs:512
+#: fractal-gtk/src/widgets/message.rs:537
 msgid "%l∶%M %p"
 msgstr "%l∶%M %p"
 
 #. Use 24 time format
-#: fractal-gtk/src/widgets/message.rs:515
+#: fractal-gtk/src/widgets/message.rs:540
 msgid "%R"
 msgstr "%R"
 
@@ -1026,12 +1045,12 @@ msgid "New Messages"
 msgstr "Mensajes nuevos"
 
 #. Translators: This is a date format in the day divider without the year
-#: fractal-gtk/src/widgets/room_history.rs:679
+#: fractal-gtk/src/widgets/room_history.rs:690
 msgid "%B %e"
 msgstr "%e %B"
 
 #. Translators: This is a date format in the day divider with the year
-#: fractal-gtk/src/widgets/room_history.rs:682
+#: fractal-gtk/src/widgets/room_history.rs:693
 msgid "%B %e, %Y"
 msgstr "%e %B, %Y"
 
@@ -1187,9 +1206,6 @@ msgstr "No tiene ninguna sala todavía"
 
 #~ msgid "desc"
 #~ msgstr "descripción"
-
-#~ msgid "loading"
-#~ msgstr "cargando"
 
 #~ msgid "view"
 #~ msgstr "vista"
