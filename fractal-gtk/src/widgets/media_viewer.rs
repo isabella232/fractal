@@ -162,7 +162,7 @@ impl Data {
                 self.media_list[self.current_media_index].body.clone(),
             );
         } else {
-            ErrorDialog::new(false, &i18n("Media is not loaded, yet."));
+            ErrorDialog::new(false, &i18n("Media is not loaded yet."));
         }
     }
 
