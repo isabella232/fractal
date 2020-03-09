@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2020-02-13 07:19+0000\n"
-"PO-Revision-Date: 2020-02-16 13:13+0100\n"
+"POT-Creation-Date: 2020-03-09 07:43+0000\n"
+"PO-Revision-Date: 2020-03-09 17:24+0100\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -312,7 +312,7 @@ msgid "Accept"
 msgstr "Przyjmij"
 
 #: fractal-gtk/res/ui/invite_user.ui:126 fractal-gtk/res/ui/invite_user.ui:137
-#: fractal-gtk/src/appop/invite.rs:147
+#: fractal-gtk/src/appop/invite.rs:148
 msgid "Invite"
 msgstr "Zaproś"
 
@@ -324,7 +324,7 @@ msgstr "Identyfikator lub alias"
 msgid "Join room"
 msgstr "Dołącz do pokoju"
 
-#: fractal-gtk/res/ui/join_room.ui:101 fractal-gtk/src/widgets/room.rs:120
+#: fractal-gtk/res/ui/join_room.ui:101 fractal-gtk/src/widgets/room.rs:126
 msgid "Join"
 msgstr "Dołącz"
 
@@ -485,10 +485,6 @@ msgstr "*pochylenie*"
 msgid "Loading more media"
 msgstr "Wczytywanie więcej multimediów"
 
-#: fractal-gtk/res/ui/media_viewer_menu.ui:26
-msgid "Save as…"
-msgstr "Zapisz jako…"
-
 #: fractal-gtk/res/ui/members.ui:25 fractal-gtk/res/ui/room_settings.ui:940
 msgid "Search for room members"
 msgstr "Wyszukiwanie członków pokoju"
@@ -568,7 +564,6 @@ msgstr "Prywatny"
 #: fractal-gtk/res/ui/password_dialog.ui:22
 #: fractal-gtk/src/widgets/file_dialog.rs:13
 #: fractal-gtk/src/widgets/file_dialog.rs:34
-#: fractal-gtk/src/widgets/media_viewer.rs:1007
 msgid "_Cancel"
 msgstr "_Anuluj"
 
@@ -725,34 +720,34 @@ msgid "Homeserver URL"
 msgstr "Adres serwera domowego"
 
 #: fractal-gtk/src/actions/account_settings.rs:39
-#: fractal-gtk/src/actions/room_settings.rs:42
+#: fractal-gtk/src/actions/room_settings.rs:46
 msgid "Images"
 msgstr "Obrazy"
 
 #: fractal-gtk/src/actions/account_settings.rs:40
-#: fractal-gtk/src/actions/room_settings.rs:44
+#: fractal-gtk/src/actions/room_settings.rs:48
 msgid "Select a new avatar"
 msgstr "Wybór nowego awatara"
 
 #: fractal-gtk/src/actions/account_settings.rs:50
-#: fractal-gtk/src/actions/room_settings.rs:54
+#: fractal-gtk/src/actions/room_settings.rs:58
 msgid "Couldn’t open file"
 msgstr "Nie można otworzyć pliku"
 
-#: fractal-gtk/src/actions/global.rs:285
+#: fractal-gtk/src/actions/global.rs:286
 msgid "Select a file"
 msgstr "Wybór pliku"
 
-#: fractal-gtk/src/actions/room_history.rs:66
+#: fractal-gtk/src/actions/message.rs:74
 msgid "This message has no source."
 msgstr "Ta wiadomość nie ma źródła."
 
-#: fractal-gtk/src/actions/room_history.rs:118
-#: fractal-gtk/src/actions/room_history.rs:157
+#: fractal-gtk/src/actions/message.rs:144
+#: fractal-gtk/src/actions/message.rs:183
 msgid "Could not download the file"
 msgstr "Nie można pobrać pliku"
 
-#: fractal-gtk/src/actions/room_history.rs:128
+#: fractal-gtk/src/actions/message.rs:154
 msgid "Couldn’t save file"
 msgstr "Nie można zapisać pliku"
 
@@ -867,7 +862,7 @@ msgstr ""
 msgid "OK"
 msgstr "OK"
 
-#: fractal-gtk/src/appop/account.rs:724
+#: fractal-gtk/src/appop/account.rs:730
 msgid "Are you sure you want to delete your account?"
 msgstr "Na pewno usunąć konto?"
 
@@ -884,49 +879,49 @@ msgstr "Wyślij"
 msgid "image"
 msgstr "obraz"
 
-#: fractal-gtk/src/appop/invite.rs:145
+#: fractal-gtk/src/appop/invite.rs:146
 msgid "Invite to {name}"
 msgstr "Zaproś do „{name}”"
 
-#: fractal-gtk/src/appop/invite.rs:253
+#: fractal-gtk/src/appop/invite.rs:252
 msgid "Join {room_name}?"
 msgstr "Dołączyć do pokoju „{room_name}”?"
 
-#: fractal-gtk/src/appop/invite.rs:258
+#: fractal-gtk/src/appop/invite.rs:257
 msgid ""
 "You’ve been invited to join <b>{room_name}</b> room by <b>{sender_name}</b>"
 msgstr ""
 "Otrzymano zaproszenie do pokoju <b>{room_name}</b> od <b>{sender_name}</b>"
 
-#: fractal-gtk/src/appop/invite.rs:263
+#: fractal-gtk/src/appop/invite.rs:262
 msgid "You’ve been invited to join <b>{room_name}</b>"
 msgstr "Otrzymano zaproszenie do pokoju <b>{room_name}</b>"
 
-#: fractal-gtk/src/appop/notify.rs:50
+#: fractal-gtk/src/appop/notify.rs:52
 msgid " (direct message)"
 msgstr " (bezpośrednia wiadomość)"
 
-#: fractal-gtk/src/appop/room.rs:313
+#: fractal-gtk/src/appop/room.rs:310
 msgid "Leave {room_name}?"
 msgstr "Opuścić pokój „{room_name}”?"
 
-#: fractal-gtk/src/appop/room.rs:569
+#: fractal-gtk/src/appop/room.rs:572
 msgid "EMPTY ROOM"
 msgstr "PUSTY POKÓJ"
 
-#: fractal-gtk/src/appop/room.rs:571
+#: fractal-gtk/src/appop/room.rs:574
 msgid "{m1} and {m2}"
 msgstr "{m1} i {m2}"
 
-#: fractal-gtk/src/appop/room.rs:572
+#: fractal-gtk/src/appop/room.rs:575
 msgid "{m1} and Others"
 msgstr "{m1} i inni"
 
-#: fractal-gtk/src/appop/room.rs:675
+#: fractal-gtk/src/appop/room.rs:671
 msgid "Several users are typing…"
 msgstr "Kilku użytkowników pisze…"
 
-#: fractal-gtk/src/appop/room.rs:678
+#: fractal-gtk/src/appop/room.rs:674
 msgid "<b>{}</b> is typing…"
 msgid_plural "<b>{}</b> and <b>{}</b> are typing…"
 msgstr[0] "<b>{}</b> pisze…"
@@ -942,12 +937,10 @@ msgid "You don’t have permission to post to this room"
 msgstr "Brak uprawnienia do pisania wiadomości w tym pokoju"
 
 #: fractal-gtk/src/widgets/file_dialog.rs:9
-#: fractal-gtk/src/widgets/media_viewer.rs:1003
 msgid "Save media as"
 msgstr "Zapis multimediów jako"
 
 #: fractal-gtk/src/widgets/file_dialog.rs:12
-#: fractal-gtk/src/widgets/media_viewer.rs:1006
 msgid "_Save"
 msgstr "_Zapisz"
 
@@ -955,7 +948,7 @@ msgstr "_Zapisz"
 msgid "_Select"
 msgstr "_Wybierz"
 
-#: fractal-gtk/src/widgets/inline_player.rs:521
+#: fractal-gtk/src/widgets/inline_player.rs:523
 msgid "Could not retrieve file URI"
 msgstr "Nie można odebrać adresu URI pliku"
 
@@ -971,117 +964,113 @@ msgstr ""
 "Przez użytkownika: {}\n"
 " „{}”"
 
-#: fractal-gtk/src/widgets/media_viewer.rs:165
-msgid "Media is not loaded yet."
-msgstr "Multimedia nie zostały jeszcze wczytane."
+#: fractal-gtk/src/widgets/login.rs:100
+msgid "Malformed server URL"
+msgstr "Błędnie sformatowany adres serwera"
 
-#: fractal-gtk/src/widgets/media_viewer.rs:961
+#: fractal-gtk/src/widgets/media_viewer.rs:1071
 msgid "Error while loading previous media"
 msgstr "Błąd podczas wczytywania poprzednich multimediów"
 
-#: fractal-gtk/src/widgets/media_viewer.rs:1016
-msgid "Could not save the file"
-msgstr "Nie można zapisać pliku"
-
-#: fractal-gtk/src/widgets/members_list.rs:54
+#: fractal-gtk/src/widgets/members_list.rs:52
 msgid "No matching members found"
 msgstr "Nie odnaleziono pasujących członków"
 
-#: fractal-gtk/src/widgets/members_list.rs:170
+#: fractal-gtk/src/widgets/members_list.rs:168
 msgid "Admin"
 msgstr "Administrator"
 
-#: fractal-gtk/src/widgets/members_list.rs:171
+#: fractal-gtk/src/widgets/members_list.rs:169
 msgid "Moderator"
 msgstr "Moderator"
 
-#: fractal-gtk/src/widgets/members_list.rs:172
+#: fractal-gtk/src/widgets/members_list.rs:170
 msgid "Privileged"
 msgstr "Z uprawnieniami"
 
-#: fractal-gtk/src/widgets/message.rs:83
+#: fractal-gtk/src/widgets/message.rs:84
 msgid "Uploading video."
 msgstr "Wysyłanie filmu."
 
-#: fractal-gtk/src/widgets/message.rs:88
+#: fractal-gtk/src/widgets/message.rs:89
 msgid "Uploading audio."
 msgstr "Wysyłanie dźwięku."
 
-#: fractal-gtk/src/widgets/message.rs:93
+#: fractal-gtk/src/widgets/message.rs:94
 msgid "Uploading image."
 msgstr "Wysyłanie obrazu."
 
-#: fractal-gtk/src/widgets/message.rs:97
+#: fractal-gtk/src/widgets/message.rs:98
 msgid "Uploading file."
 msgstr "Wysyłanie pliku."
 
-#: fractal-gtk/src/widgets/message.rs:415
-#: fractal-gtk/src/widgets/message.rs:507
+#: fractal-gtk/src/widgets/message.rs:414
+#: fractal-gtk/src/widgets/message.rs:520
 msgid "Save"
 msgstr "Zapisuje"
 
-#: fractal-gtk/src/widgets/message.rs:517
+#: fractal-gtk/src/widgets/message.rs:530
 msgid "Open"
 msgstr "Otwiera"
 
 #. Use 12h time format (AM/PM)
-#: fractal-gtk/src/widgets/message.rs:537
+#: fractal-gtk/src/widgets/message.rs:550
 msgid "%l∶%M %p"
 msgstr "%-l∶%M %p"
 
 #. Use 24 time format
-#: fractal-gtk/src/widgets/message.rs:540
+#: fractal-gtk/src/widgets/message.rs:553
 msgid "%R"
 msgstr "%H∶%M"
 
-#: fractal-gtk/src/widgets/room_history.rs:81
+#: fractal-gtk/src/widgets/room_history.rs:91
 msgid "New Messages"
 msgstr "Nowe wiadomości"
 
 #. Translators: This is a date format in the day divider without the year
-#: fractal-gtk/src/widgets/room_history.rs:690
+#: fractal-gtk/src/widgets/room_history.rs:705
 msgid "%B %e"
 msgstr "%-d %B"
 
 #. Translators: This is a date format in the day divider with the year
-#: fractal-gtk/src/widgets/room_history.rs:693
+#: fractal-gtk/src/widgets/room_history.rs:708
 msgid "%B %e, %Y"
 msgstr "%-d %B %Y"
 
-#: fractal-gtk/src/widgets/room_settings.rs:213
+#: fractal-gtk/src/widgets/room_settings.rs:215
 msgid "Room · {} member"
 msgid_plural "Room · {} members"
 msgstr[0] "Pokój · {} członek"
 msgstr[1] "Pokój · {} członków"
 msgstr[2] "Pokój · {} członków"
 
-#: fractal-gtk/src/widgets/room_settings.rs:645
+#: fractal-gtk/src/widgets/room_settings.rs:644
 msgid "{} member"
 msgid_plural "{} members"
 msgstr[0] "{} członek"
 msgstr[1] "{} członków"
 msgstr[2] "{} członków"
 
-#: fractal-gtk/src/widgets/roomlist.rs:475
+#: fractal-gtk/src/widgets/roomlist.rs:472
 msgid "Invites"
 msgstr "Zaproszenia"
 
-#: fractal-gtk/src/widgets/roomlist.rs:476
+#: fractal-gtk/src/widgets/roomlist.rs:473
 msgid "You don’t have any invitations"
 msgstr "Nie ma żadnych zaproszeń"
 
-#: fractal-gtk/src/widgets/roomlist.rs:480
+#: fractal-gtk/src/widgets/roomlist.rs:477
 msgid "Favorites"
 msgstr "Ulubione"
 
-#: fractal-gtk/src/widgets/roomlist.rs:481
+#: fractal-gtk/src/widgets/roomlist.rs:478
 msgid "Drag and drop rooms here to add them to your favorites"
 msgstr "Przeciągnięcie pokoi tutaj doda je do ulubionych"
 
-#: fractal-gtk/src/widgets/roomlist.rs:485
+#: fractal-gtk/src/widgets/roomlist.rs:482
 msgid "Rooms"
 msgstr "Pokoje"
 
-#: fractal-gtk/src/widgets/roomlist.rs:486
+#: fractal-gtk/src/widgets/roomlist.rs:483
 msgid "You don’t have any rooms yet"
 msgstr "Nie ma jeszcze żadnych pokoi"
