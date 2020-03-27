@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2020-03-26 07:24+0000\n"
-"PO-Revision-Date: 2020-03-26 17:54+0200\n"
+"POT-Creation-Date: 2020-03-27 17:05+0000\n"
+"PO-Revision-Date: 2020-03-27 19:41+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -66,13 +66,11 @@ msgid "Open the last room of the list"
 msgstr "Відкрити останню кімнату у списку"
 
 #: fractal-gtk/res/gtk/help-overlay.ui:74
-#| msgid "New Messages"
 msgctxt "shortcut window"
 msgid "View older messages"
 msgstr "Переглянути старіші повідомлення"
 
 #: fractal-gtk/res/gtk/help-overlay.ui:81
-#| msgid "New Messages"
 msgctxt "shortcut window"
 msgid "View newer messages"
 msgstr "Переглянути новіші повідомлення"
@@ -137,8 +135,8 @@ msgstr "Fractal груповий обмін повідомленнями"
 #: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:14
 msgid "Matrix;matrix.org;chat;irc;communications;talk;riot;"
 msgstr ""
-"Matrix;matrix.org;chat;irc;communications;talk;riot;матрікс;метрікс;матриця;ча"
-"т;балачка;спілкування;ірк;ріот;райот;"
+"Matrix;matrix.org;chat;irc;communications;talk;riot;матрікс;метрікс;матриця;"
+"чат;балачка;спілкування;ірк;ріот;райот;"
 
 #: fractal-gtk/res/org.gnome.Fractal.gschema.xml:13
 msgid "Type of password and token storage"
@@ -352,18 +350,14 @@ msgid "Leave room"
 msgstr "Покинути кімнату"
 
 #: fractal-gtk/res/ui/login_flow.ui:33
-#| msgid "_About Fractal"
 msgid "Welcome to Fractal"
 msgstr "Вітаємо у Fractal"
 
 #: fractal-gtk/res/ui/login_flow.ui:47 fractal-gtk/res/ui/login_flow.ui:371
-#| msgctxt "big label"
-#| msgid "Log In"
 msgid "_Log In"
 msgstr "_Увійти"
 
 #: fractal-gtk/res/ui/login_flow.ui:59
-#| msgid "Create Account"
 msgid "_Create Account"
 msgstr "С_творити обліковий запис"
 
@@ -380,22 +374,18 @@ msgid "The domain may not be empty."
 msgstr "Запис домену не може бути порожнім."
 
 #: fractal-gtk/res/ui/login_flow.ui:166
-#| msgid "User"
 msgid "_User ID"
 msgstr "Ід. _користувача"
 
 #: fractal-gtk/res/ui/login_flow.ui:182
-#| msgid "Password"
 msgid "_Password"
 msgstr "_Пароль"
 
 #: fractal-gtk/res/ui/login_flow.ui:214
-#| msgid "Matrix username, email or phone number"
 msgid "User name, email, or phone number"
 msgstr "Ім'я користувача, адреса електронної пошти або номер телефону"
 
 #: fractal-gtk/res/ui/login_flow.ui:247
-#| msgid "_New Password"
 msgid "_Forgot Password?"
 msgstr "За_були пароль?"
 
@@ -412,8 +402,6 @@ msgid "_Next"
 msgstr "_Далі"
 
 #: fractal-gtk/res/ui/login_flow.ui:348
-#| msgctxt "big label"
-#| msgid "Log In"
 msgid "Log In"
 msgstr "Увійти"
 
@@ -516,7 +504,6 @@ msgid "Save Image As…"
 msgstr "Зберегти зображення як…"
 
 #: fractal-gtk/res/ui/message_menu.ui:60
-#| msgid "Save Image As…"
 msgid "Save Video As…"
 msgstr "Зберегти відео як…"
 
@@ -749,7 +736,7 @@ msgstr "Виберіть новий аватар"
 msgid "Couldn’t open file"
 msgstr "Не вдалося відкрити файл"
 
-#: fractal-gtk/src/actions/global.rs:286
+#: fractal-gtk/src/actions/global.rs:292
 msgid "Select a file"
 msgstr "Виберіть файл"
 
@@ -771,8 +758,9 @@ msgid "Email is already in use"
 msgstr "Ця електронна адреса вже використовується"
 
 #: fractal-gtk/src/app/backend_loop.rs:50
-msgid "Please enter a valid email adress."
-msgstr "Будь ласка, введіть адресу електронної пошти."
+#| msgid "Please enter a valid email adress."
+msgid "Please enter a valid email address."
+msgstr "Будь ласка, введіть коректну адресу електронної пошти."
 
 #: fractal-gtk/src/app/backend_loop.rs:54
 msgid "Phone number is already in use"
@@ -889,7 +877,6 @@ msgstr "Надіслати"
 
 #. Filename for the attached image
 #: fractal-gtk/src/appop/attach.rs:87
-#| msgid "Images"
 msgid "image"
 msgstr "зображення"
 
@@ -947,7 +934,6 @@ msgid "Syncing, this could take a while"
 msgstr "Синхронізація, це може зайняти деякий час"
 
 #: fractal-gtk/src/uibuilder.rs:52
-#| msgid "You don’t have any rooms yet"
 msgid "You don’t have permission to post to this room"
 msgstr "У вас немає права дописувати у цій кімнаті"
 
@@ -980,7 +966,6 @@ msgstr ""
 " «{}»"
 
 #: fractal-gtk/src/widgets/login.rs:100
-#| msgid "Home server URL"
 msgid "Malformed server URL"
 msgstr "Помилкове форматування адреси сервера"
 
@@ -1069,78 +1054,26 @@ msgstr[1] "{} учасника"
 msgstr[2] "{} учасників"
 msgstr[3] "{} учасник"
 
-#: fractal-gtk/src/widgets/roomlist.rs:472
+#: fractal-gtk/src/widgets/roomlist.rs:473
 msgid "Invites"
 msgstr "Запрошення"
 
-#: fractal-gtk/src/widgets/roomlist.rs:473
+#: fractal-gtk/src/widgets/roomlist.rs:474
 msgid "You don’t have any invitations"
 msgstr "У вас немає запрошень"
 
-#: fractal-gtk/src/widgets/roomlist.rs:477
+#: fractal-gtk/src/widgets/roomlist.rs:478
 msgid "Favorites"
 msgstr "Обране"
 
-#: fractal-gtk/src/widgets/roomlist.rs:478
+#: fractal-gtk/src/widgets/roomlist.rs:479
 msgid "Drag and drop rooms here to add them to your favorites"
 msgstr "Перетягніть сюди кімнати, щоб додати їх в обране"
 
-#: fractal-gtk/src/widgets/roomlist.rs:482
+#: fractal-gtk/src/widgets/roomlist.rs:483
 msgid "Rooms"
 msgstr "кімнати"
 
-#: fractal-gtk/src/widgets/roomlist.rs:483
+#: fractal-gtk/src/widgets/roomlist.rs:484
 msgid "You don’t have any rooms yet"
 msgstr "У вас поки немає кімнат"
-
-#~ msgid "@icon@"
-#~ msgstr "@icon@"
-
-#~ msgid "You’ve been invited to join \"\", you can accept or reject"
-#~ msgstr "Ви були запрошені увійти в \"\", ви можете прийняти або відхилити"
-
-#~ msgid "Username"
-#~ msgstr "Ім'я користувача"
-
-#~ msgctxt "login button"
-#~ msgid "Log In"
-#~ msgstr "Авторизуватися"
-
-#~ msgid "Identity server URL"
-#~ msgstr "URL сервера ідентифікації"
-
-#~ msgid "Matrix Server"
-#~ msgstr "Сервер Matrix"
-
-#~ msgid "Identity server"
-#~ msgstr "Сервер ідентифікації"
-
-#~ msgid "Advanced"
-#~ msgstr "Додатково"
-
-#~ msgid "Reset Password"
-#~ msgstr "Скидання пароля"
-
-#~ msgid "Log In as Guest"
-#~ msgstr "Ввійти як гість"
-
-#~ msgid "Login"
-#~ msgstr "Авторизуватися"
-
-#~ msgid "Room topic"
-#~ msgstr "Тема кімнати"
-
-#~ msgid "Media viewer"
-#~ msgstr "Медіа-переглядач"
-
-#~ msgid "Save as…"
-#~ msgstr "Зберегти як..."
-
-#~ msgid "Unknown Error"
-#~ msgstr "Невідома помилка"
-
-#~ msgid "Passwords didn’t match, try again"
-#~ msgstr "Невірний пароль, спробуйте ще раз"
-
-#~ msgid "Could not save the file"
-#~ msgstr "Не вдалося зберегти файл"
