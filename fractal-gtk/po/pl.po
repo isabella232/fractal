@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2020-03-09 07:43+0000\n"
-"PO-Revision-Date: 2020-03-09 17:24+0100\n"
+"POT-Creation-Date: 2020-03-27 17:05+0000\n"
+"PO-Revision-Date: 2020-03-29 13:02+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -734,7 +734,7 @@ msgstr "Wybór nowego awatara"
 msgid "Couldn’t open file"
 msgstr "Nie można otworzyć pliku"
 
-#: fractal-gtk/src/actions/global.rs:286
+#: fractal-gtk/src/actions/global.rs:292
 msgid "Select a file"
 msgstr "Wybór pliku"
 
@@ -756,7 +756,7 @@ msgid "Email is already in use"
 msgstr "Adres e-mail jest już używany"
 
 #: fractal-gtk/src/app/backend_loop.rs:50
-msgid "Please enter a valid email adress."
+msgid "Please enter a valid email address."
 msgstr "Proszę podać prawidłowy adres e-mail."
 
 #: fractal-gtk/src/app/backend_loop.rs:54
@@ -1051,26 +1051,26 @@ msgstr[0] "{} członek"
 msgstr[1] "{} członków"
 msgstr[2] "{} członków"
 
-#: fractal-gtk/src/widgets/roomlist.rs:472
+#: fractal-gtk/src/widgets/roomlist.rs:473
 msgid "Invites"
 msgstr "Zaproszenia"
 
-#: fractal-gtk/src/widgets/roomlist.rs:473
+#: fractal-gtk/src/widgets/roomlist.rs:474
 msgid "You don’t have any invitations"
 msgstr "Nie ma żadnych zaproszeń"
 
-#: fractal-gtk/src/widgets/roomlist.rs:477
+#: fractal-gtk/src/widgets/roomlist.rs:478
 msgid "Favorites"
 msgstr "Ulubione"
 
-#: fractal-gtk/src/widgets/roomlist.rs:478
+#: fractal-gtk/src/widgets/roomlist.rs:479
 msgid "Drag and drop rooms here to add them to your favorites"
 msgstr "Przeciągnięcie pokoi tutaj doda je do ulubionych"
 
-#: fractal-gtk/src/widgets/roomlist.rs:482
+#: fractal-gtk/src/widgets/roomlist.rs:483
 msgid "Rooms"
 msgstr "Pokoje"
 
-#: fractal-gtk/src/widgets/roomlist.rs:483
+#: fractal-gtk/src/widgets/roomlist.rs:484
 msgid "You don’t have any rooms yet"
 msgstr "Nie ma jeszcze żadnych pokoi"
