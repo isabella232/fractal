@@ -1,0 +1,1180 @@
+# Chinese (China) translation for fractal.
+# Copyright (C) 2018 fractal's COPYRIGHT HOLDER
+# This file is distributed under the same license as the fractal package.
+# lumingzh <lumingzh@qq.com>, 2018-2020.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: fractal master\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
+"POT-Creation-Date: 2020-04-14 10:35+0000\n"
+"PO-Revision-Date: 2020-04-14 20:43+0800\n"
+"Last-Translator: lumingzh <lumingzh@qq.com>\n"
+"Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"X-Generator: Gtranslator 3.36.0\n"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:13
+msgctxt "shortcut window"
+msgid "General"
+msgstr "常规"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:18
+msgctxt "shortcut window"
+msgid "Close the active room"
+msgstr "关闭激活的聊天室"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:25
+msgctxt "shortcut window"
+msgid "Open / close the room sidebar search"
+msgstr "打开/关闭聊天室侧边栏搜索"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:32
+msgctxt "shortcut window"
+msgid "Open the previous room in the list"
+msgstr "在列表中打开上一个聊天室"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:39
+msgctxt "shortcut window"
+msgid "Open the next room in the list"
+msgstr "在列表中打开下一个聊天室"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:46
+msgctxt "shortcut window"
+msgid "Open the previous room with unread messages in the list"
+msgstr "在列表中打开上一个带有未读消息的聊天室"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:53
+msgctxt "shortcut window"
+msgid "Open the next room with unread messages in the list"
+msgstr "在列表中打开下一个带有未读消息的聊天室"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:60
+msgctxt "shortcut window"
+msgid "Open the first room of the list"
+msgstr "打开列表的第一个聊天室"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:67
+msgctxt "shortcut window"
+msgid "Open the last room of the list"
+msgstr "打开列表的最后一个聊天室"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:74
+msgctxt "shortcut window"
+msgid "View older messages"
+msgstr "查看较早消息"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:81
+msgctxt "shortcut window"
+msgid "View newer messages"
+msgstr "查看较新消息"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:87
+msgctxt "shortcut window"
+msgid "Keyboard Shortcuts"
+msgstr "键盘快捷键"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:94
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "退出"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:103
+msgctxt "shortcut message"
+msgid "Composing a new message"
+msgstr "编写新消息"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:108
+msgctxt "shortcut message"
+msgid "Write on a new line"
+msgstr "另起一行编写"
+
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:5
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:3
+#: fractal-gtk/res/ui/login_flow.ui:294 fractal-gtk/src/appop/mod.rs:179
+msgid "Fractal"
+msgstr "Fractal"
+
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:8
+msgid "Daniel García Moreno"
+msgstr "Daniel García Moreno"
+
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:9
+msgid "Matrix group messaging app"
+msgstr "Matrix 团组聊天应用"
+
+#: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:11
+msgid ""
+"Fractal is a Matrix messaging app for GNOME written in Rust. Its interface "
+"is optimized for collaboration in large groups, such as free software "
+"projects."
+msgstr ""
+"Fractal 是一个用 Rust 为 GNOME 编写的 Matrix 聊天应用。它的界面是为如自由软件"
+"工程等大型合作团队优化的。"
+
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:4
+msgid ""
+"Fractal is a decentralized, secure messaging client for collaborative group "
+"communication."
+msgstr "Fractal 是一个用于团组交流的分布式、保密聊天客户端。"
+
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:5
+msgid "Fractal group messaging"
+msgstr "Fractal 团组聊天"
+
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:14
+msgid "Matrix;matrix.org;chat;irc;communications;talk;riot;"
+msgstr ""
+"矩阵;沟通;交流;聊天;Matrix;matrix.org;chat;irc;communications;talk;riot;"
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:13
+msgid "Type of password and token storage"
+msgstr "密码和令牌存储类型"
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:14
+msgid "Type of password and token storage, default value is: Secret Service"
+msgstr "密码和令牌存储类型，默认值为：Secret Service"
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:21
+msgid "If markdown sending is active"
+msgstr "Markdown 发送是否激活"
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:22
+msgid "Whether support for sending markdown messages is on"
+msgstr "是否开启对发送 Markdown 消息的支持"
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:29
+msgid "X position of the main window on startup"
+msgstr "启动时主窗口的水平位置"
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:34
+msgid "Y position of the main window on startup"
+msgstr "启动时主窗口的竖直位置"
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:39
+msgid "Width of the main window on startup"
+msgstr "启动时主窗口的宽度"
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:44
+msgid "Height of the main window on startup"
+msgstr "启动时主窗口的高度"
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:49
+msgid "Whether the main window is maximized on startup"
+msgstr "启动时主窗口是否最大化"
+
+#: fractal-gtk/res/ui/account_settings.ui:73
+msgid "Other people can find you by searching for any of these identifiers."
+msgstr "其他人可以通过搜索这些身份标识找到你。"
+
+#: fractal-gtk/res/ui/account_settings.ui:101
+msgid "Name"
+msgstr "名字"
+
+#: fractal-gtk/res/ui/account_settings.ui:124
+msgid "Type in your name"
+msgstr "输入您的名字"
+
+#: fractal-gtk/res/ui/account_settings.ui:153
+msgid "Email"
+msgstr "电子邮件"
+
+#: fractal-gtk/res/ui/account_settings.ui:182
+msgid "Phone"
+msgstr "手机"
+
+#: fractal-gtk/res/ui/account_settings.ui:211
+msgid "Password"
+msgstr "密码"
+
+#: fractal-gtk/res/ui/account_settings.ui:278
+msgid "Advanced Information"
+msgstr "高级信息"
+
+#: fractal-gtk/res/ui/account_settings.ui:308
+msgid "Homeserver"
+msgstr "主服务器"
+
+#: fractal-gtk/res/ui/account_settings.ui:337
+msgid "Matrix ID"
+msgstr "Matrix ID"
+
+#: fractal-gtk/res/ui/account_settings.ui:366
+msgid "Device ID"
+msgstr "设备 ID"
+
+#: fractal-gtk/res/ui/account_settings.ui:421
+#: fractal-gtk/res/ui/account_settings.ui:502
+msgid "Deactivate Account"
+msgstr "注销账号"
+
+#: fractal-gtk/res/ui/account_settings.ui:447
+msgid ""
+"Deactivating your account means that you will lose all your messages, "
+"contacts, and files."
+msgstr "注销您的账号意味着您将失去所有的消息、联系人和文件。"
+
+#: fractal-gtk/res/ui/account_settings.ui:462
+msgid ""
+"To confirm that you really want to deactivate this account type in your "
+"password:"
+msgstr "为确认您真要注销该账号请输入您的密码："
+
+#: fractal-gtk/res/ui/account_settings.ui:487
+msgid "Also erase all messages"
+msgstr "同时擦除所有消息"
+
+#: fractal-gtk/res/ui/account_settings.ui:586
+#: fractal-gtk/res/ui/main_menu.ui:109
+msgid "Account Settings"
+msgstr "账号设置"
+
+#: fractal-gtk/res/ui/account_settings.ui:602
+#: fractal-gtk/res/ui/main_window.ui:522 fractal-gtk/res/ui/main_window.ui:662
+#: fractal-gtk/res/ui/main_window.ui:772 fractal-gtk/res/ui/media_viewer.ui:248
+#: fractal-gtk/res/ui/room_settings.ui:1034
+msgid "Back"
+msgstr "返回"
+
+#: fractal-gtk/res/ui/account_settings.ui:623
+msgid "Check your email"
+msgstr "检查您的电子邮件"
+
+#: fractal-gtk/res/ui/account_settings.ui:626
+#: fractal-gtk/res/ui/direct_chat.ui:129 fractal-gtk/res/ui/invite_user.ui:129
+#: fractal-gtk/res/ui/join_room.ui:93 fractal-gtk/res/ui/leave_room.ui:32
+#: fractal-gtk/res/ui/new_room.ui:42 fractal-gtk/src/appop/account.rs:79
+#: fractal-gtk/src/appop/account.rs:138 fractal-gtk/src/appop/attach.rs:57
+msgid "Cancel"
+msgstr "取消"
+
+#: fractal-gtk/res/ui/account_settings.ui:634
+msgid "Apply"
+msgstr "应用"
+
+#: fractal-gtk/res/ui/add_room_menu.ui:22
+msgid "Room Directory"
+msgstr "聊天室目录"
+
+#: fractal-gtk/res/ui/add_room_menu.ui:36
+msgid "Join Room"
+msgstr "加入聊天室"
+
+#: fractal-gtk/res/ui/add_room_menu.ui:63
+msgid "New Room"
+msgstr "新建聊天室"
+
+#: fractal-gtk/res/ui/add_room_menu.ui:77
+msgid "New Direct Chat"
+msgstr "新建直接聊天"
+
+#: fractal-gtk/res/ui/audio_player.ui:34 fractal-gtk/res/ui/audio_player.ui:50
+msgid "Play"
+msgstr "播放"
+
+#: fractal-gtk/res/ui/direct_chat.ui:126
+msgid "New direct chat"
+msgstr "新建直接聊天"
+
+#: fractal-gtk/res/ui/direct_chat.ui:137
+msgid "Start chat"
+msgstr "开始聊天"
+
+#: fractal-gtk/res/ui/filechooser.ui:61
+msgid "Select room image file"
+msgstr "选择聊天室图像文件"
+
+#: fractal-gtk/res/ui/invite.ui:18
+msgid "Invitation"
+msgstr "邀请"
+
+#: fractal-gtk/res/ui/invite.ui:33
+msgid "Reject"
+msgstr "拒绝"
+
+#: fractal-gtk/res/ui/invite.ui:46
+msgid "Accept"
+msgstr "接受"
+
+#: fractal-gtk/res/ui/invite_user.ui:126 fractal-gtk/res/ui/invite_user.ui:137
+#: fractal-gtk/src/appop/invite.rs:148
+msgid "Invite"
+msgstr "邀请"
+
+#: fractal-gtk/res/ui/join_room.ui:52
+msgid "ID or Alias"
+msgstr "ID 或别名"
+
+#: fractal-gtk/res/ui/join_room.ui:90
+msgid "Join room"
+msgstr "加入聊天室"
+
+#: fractal-gtk/res/ui/join_room.ui:101 fractal-gtk/src/widgets/room.rs:126
+msgid "Join"
+msgstr "加入"
+
+#: fractal-gtk/res/ui/kicked_room.ui:30 fractal-gtk/res/ui/msg_src_window.ui:32
+msgid "Close"
+msgstr "关闭"
+
+#: fractal-gtk/res/ui/leave_room.ui:18
+msgid "Leave?"
+msgstr "离开？"
+
+#: fractal-gtk/res/ui/leave_room.ui:19
+msgid ""
+"Once you leave, you won’t be able to interact with people in the room "
+"anymore."
+msgstr "一旦您离开，您将再也不能和该聊天室的人们交流了。"
+
+#: fractal-gtk/res/ui/leave_room.ui:45
+msgid "Leave room"
+msgstr "离开聊天室"
+
+#: fractal-gtk/res/ui/login_flow.ui:33
+msgid "Welcome to Fractal"
+msgstr "欢迎使用 Fractal"
+
+#: fractal-gtk/res/ui/login_flow.ui:47 fractal-gtk/res/ui/login_flow.ui:371
+msgid "_Log In"
+msgstr "登录(_L)"
+
+#: fractal-gtk/res/ui/login_flow.ui:59
+msgid "_Create Account"
+msgstr "创建账号(_C)"
+
+#: fractal-gtk/res/ui/login_flow.ui:95
+msgid "What is your Provider?"
+msgstr "您的提供者是什么？"
+
+#: fractal-gtk/res/ui/login_flow.ui:124
+msgid "Matrix provider domain, e.g. myserver.co"
+msgstr "Matrix 提供者域名，例如 myserver.com"
+
+#: fractal-gtk/res/ui/login_flow.ui:140
+msgid "The domain may not be empty."
+msgstr "域名不能为空。"
+
+#: fractal-gtk/res/ui/login_flow.ui:166
+msgid "_User ID"
+msgstr "用户标识(_U)"
+
+#: fractal-gtk/res/ui/login_flow.ui:182
+msgid "_Password"
+msgstr "密码(_P)"
+
+#: fractal-gtk/res/ui/login_flow.ui:214
+msgid "User name, email, or phone number"
+msgstr "用户名、电子邮件或手机号码"
+
+#: fractal-gtk/res/ui/login_flow.ui:247
+msgid "_Forgot Password?"
+msgstr "忘记了密码？(_F)"
+
+#: fractal-gtk/res/ui/login_flow.ui:265
+msgid "Invalid username or password"
+msgstr "无效用户名或密码"
+
+#: fractal-gtk/res/ui/login_flow.ui:306
+msgid "Choose Provider"
+msgstr "选择提供者"
+
+#: fractal-gtk/res/ui/login_flow.ui:329
+msgid "_Next"
+msgstr "下一步(_N)"
+
+#: fractal-gtk/res/ui/login_flow.ui:348
+msgid "Log In"
+msgstr "登录"
+
+#: fractal-gtk/res/ui/main_menu.ui:123
+msgid "Log Out"
+msgstr "登出"
+
+#: fractal-gtk/res/ui/main_menu.ui:150
+msgid "Keyboard _Shortcuts"
+msgstr "键盘快捷键(_S)"
+
+#: fractal-gtk/res/ui/main_menu.ui:164
+msgid "_About Fractal"
+msgstr "关于 Fractal(_A)"
+
+#: fractal-gtk/res/ui/main_window.ui:185
+msgid "No room selected"
+msgstr "未选择聊天室"
+
+#: fractal-gtk/res/ui/main_window.ui:200
+msgid "Join a room to start chatting"
+msgstr "加入聊天室开始聊天"
+
+#: fractal-gtk/res/ui/main_window.ui:210
+msgid "No room"
+msgstr "没有聊天室"
+
+#: fractal-gtk/res/ui/main_window.ui:291
+msgid "Chat"
+msgstr "聊天"
+
+#: fractal-gtk/res/ui/main_window.ui:343
+msgid "Directory"
+msgstr "目录"
+
+#: fractal-gtk/res/ui/main_window.ui:367
+msgid "Loading"
+msgstr "正在加载"
+
+#: fractal-gtk/res/ui/main_window.ui:412
+msgid "User"
+msgstr "用户"
+
+#: fractal-gtk/res/ui/main_window.ui:439
+msgid "Add"
+msgstr "添加"
+
+#: fractal-gtk/res/ui/main_window.ui:469
+msgid "Room search"
+msgstr "聊天室搜索"
+
+#: fractal-gtk/res/ui/main_window.ui:596
+msgid "Room Menu"
+msgstr "聊天室菜单"
+
+#: fractal-gtk/res/ui/main_window.ui:702
+#: fractal-gtk/res/ui/server_chooser_menu.ui:65
+#: fractal-gtk/src/app/connect/directory.rs:130
+msgid "Default Matrix Server"
+msgstr "默认 Matrix 服务器"
+
+#: fractal-gtk/res/ui/markdown_popover.ui:23
+msgid "Markdown"
+msgstr "Markdown"
+
+#: fractal-gtk/res/ui/markdown_popover.ui:67
+msgid "> quote"
+msgstr "> 引用"
+
+#: fractal-gtk/res/ui/markdown_popover.ui:78
+msgid "**bold**"
+msgstr "**粗体**"
+
+#: fractal-gtk/res/ui/markdown_popover.ui:93
+msgid "`code`"
+msgstr "`代码`"
+
+#: fractal-gtk/res/ui/markdown_popover.ui:105
+msgid "*italic*"
+msgstr "*斜体*"
+
+#: fractal-gtk/res/ui/media_viewer.ui:185
+msgid "Loading more media"
+msgstr "正在加载更多媒体"
+
+#: fractal-gtk/res/ui/members.ui:25 fractal-gtk/res/ui/room_settings.ui:940
+msgid "Search for room members"
+msgstr "搜索聊天室成员"
+
+#: fractal-gtk/res/ui/message_menu.ui:22
+msgid "Reply"
+msgstr "回复"
+
+#: fractal-gtk/res/ui/message_menu.ui:34
+msgid "Open With…"
+msgstr "打开方式…"
+
+#: fractal-gtk/res/ui/message_menu.ui:47
+msgid "Save Image As…"
+msgstr "保存图像为…"
+
+#: fractal-gtk/res/ui/message_menu.ui:60
+#| msgid "Save Image As…"
+msgid "Save Video As…"
+msgstr "保存视频为…"
+
+#: fractal-gtk/res/ui/message_menu.ui:73
+msgid "Copy Image"
+msgstr "复制图像"
+
+#: fractal-gtk/res/ui/message_menu.ui:86
+msgid "Copy Selection"
+msgstr "复制选区"
+
+#: fractal-gtk/res/ui/message_menu.ui:99
+msgid "Copy Text"
+msgstr "复制文本"
+
+#: fractal-gtk/res/ui/message_menu.ui:114
+msgid "View Source"
+msgstr "查看来源"
+
+#: fractal-gtk/res/ui/message_menu.ui:139
+msgid "Delete Message"
+msgstr "删除消息"
+
+#: fractal-gtk/res/ui/msg_src_window.ui:21
+msgid "Message Source"
+msgstr "消息来源"
+
+#: fractal-gtk/res/ui/msg_src_window.ui:24
+msgid "Copy To Clipboard"
+msgstr "复制到剪贴板"
+
+#: fractal-gtk/res/ui/new_room.ui:14
+msgid "Private Chat"
+msgstr "私人聊天"
+
+#: fractal-gtk/res/ui/new_room.ui:18 fractal-gtk/res/ui/new_room.ui:187
+msgid "Public"
+msgstr "公开"
+
+#: fractal-gtk/res/ui/new_room.ui:39
+msgid "Create new room"
+msgstr "创建新聊天室"
+
+#: fractal-gtk/res/ui/new_room.ui:50
+msgid "Create"
+msgstr "创建"
+
+#: fractal-gtk/res/ui/new_room.ui:108
+msgid "Room name"
+msgstr "聊天室名字"
+
+#: fractal-gtk/res/ui/new_room.ui:152
+msgid "Visibility"
+msgstr "可见性"
+
+#: fractal-gtk/res/ui/new_room.ui:171
+msgid "Private"
+msgstr "私人"
+
+#: fractal-gtk/res/ui/password_dialog.ui:22
+#: fractal-gtk/src/widgets/file_dialog.rs:13
+#: fractal-gtk/src/widgets/file_dialog.rs:34
+msgid "_Cancel"
+msgstr "取消(_C)"
+
+#: fractal-gtk/res/ui/password_dialog.ui:35
+msgid "Ch_ange"
+msgstr "修改(_A)"
+
+#: fractal-gtk/res/ui/password_dialog.ui:133
+msgid "The passwords do not match."
+msgstr "密码不匹配。"
+
+#: fractal-gtk/res/ui/password_dialog.ui:151
+msgid "_Verify New Password"
+msgstr "验证新密码(_V)"
+
+#: fractal-gtk/res/ui/password_dialog.ui:168
+msgid "_New Password"
+msgstr "新密码(_N)"
+
+#: fractal-gtk/res/ui/password_dialog.ui:212
+msgid "Current _Password"
+msgstr "当前密码(_P)"
+
+#: fractal-gtk/res/ui/room_menu.ui:22
+msgid "Room Details"
+msgstr "聊天室详情"
+
+#: fractal-gtk/res/ui/room_menu.ui:36
+msgid "Invite to This Room"
+msgstr "邀请到该聊天室"
+
+#: fractal-gtk/res/ui/room_menu.ui:63
+msgid "Leave Room"
+msgstr "离开聊天室"
+
+#: fractal-gtk/res/ui/room_settings.ui:92
+msgid "Unknown"
+msgstr "未知"
+
+#: fractal-gtk/res/ui/room_settings.ui:118
+msgid "Add name"
+msgstr "添加名字"
+
+#: fractal-gtk/res/ui/room_settings.ui:150
+msgid "Add topic"
+msgstr "添加主题"
+
+#: fractal-gtk/res/ui/room_settings.ui:174
+msgid "Type in your room topic"
+msgstr "输入您的聊天室主题"
+
+#: fractal-gtk/res/ui/room_settings.ui:202
+msgid "No room description"
+msgstr "无聊天室描述"
+
+#: fractal-gtk/res/ui/room_settings.ui:239
+msgid "Notifications"
+msgstr "通知"
+
+#: fractal-gtk/res/ui/room_settings.ui:280
+msgid "Notification sounds"
+msgstr "通知铃声"
+
+#: fractal-gtk/res/ui/room_settings.ui:325
+msgid "For all messages"
+msgstr "所有消息"
+
+#: fractal-gtk/res/ui/room_settings.ui:366
+msgid "Only for mentions"
+msgstr "仅被提到"
+
+#: fractal-gtk/res/ui/room_settings.ui:397
+msgid "Shared Media"
+msgstr "已分享媒体"
+
+#: fractal-gtk/res/ui/room_settings.ui:444
+msgid "photos"
+msgstr "照片"
+
+#: fractal-gtk/res/ui/room_settings.ui:484
+msgid "videos"
+msgstr "视频"
+
+#: fractal-gtk/res/ui/room_settings.ui:524
+msgid "documents"
+msgstr "文档"
+
+#: fractal-gtk/res/ui/room_settings.ui:555
+msgid "New members can see"
+msgstr "新成员可见"
+
+#: fractal-gtk/res/ui/room_settings.ui:600
+msgid "All room history"
+msgstr "所有聊天室记录"
+
+#: fractal-gtk/res/ui/room_settings.ui:641
+msgid "History after they were invited"
+msgstr "他们被邀请后的记录"
+
+#: fractal-gtk/res/ui/room_settings.ui:672
+msgid "Room Visibility"
+msgstr "聊天室可见性"
+
+#: fractal-gtk/res/ui/room_settings.ui:719
+msgid "Allow guests"
+msgstr "允许游客"
+
+#: fractal-gtk/res/ui/room_settings.ui:759
+msgid "Allow joining without invite"
+msgstr "允许无邀请加入"
+
+#: fractal-gtk/res/ui/room_settings.ui:799
+msgid "Publish in room directory"
+msgstr "公布在聊天室目录"
+
+#: fractal-gtk/res/ui/room_settings.ui:830
+msgid "Join addresses"
+msgstr "加入地址"
+
+#: fractal-gtk/res/ui/room_settings.ui:889
+msgid "members"
+msgstr "成员"
+
+#: fractal-gtk/res/ui/room_settings.ui:905
+msgid "Invite New Member"
+msgstr "邀请新成员"
+
+#: fractal-gtk/res/ui/room_settings.ui:1018
+msgid "Details"
+msgstr "详情"
+
+#: fractal-gtk/res/ui/scroll_widget.ui:63
+msgid "Scroll to bottom"
+msgstr "滚动到底部"
+
+#: fractal-gtk/res/ui/server_chooser_menu.ui:34
+msgid "Show rooms from:"
+msgstr "显示聊天室："
+
+#: fractal-gtk/res/ui/server_chooser_menu.ui:90
+msgid "Your homeserver"
+msgstr "您的主服务器"
+
+#: fractal-gtk/res/ui/server_chooser_menu.ui:134
+msgid "Other Protocol"
+msgstr "其它协议"
+
+#: fractal-gtk/res/ui/server_chooser_menu.ui:207
+msgid "Other Homeserver"
+msgstr "其它主服务器"
+
+#: fractal-gtk/res/ui/server_chooser_menu.ui:235
+msgid "Homeserver URL"
+msgstr "主服务器网址"
+
+#: fractal-gtk/src/actions/account_settings.rs:39
+#: fractal-gtk/src/actions/room_settings.rs:46
+msgid "Images"
+msgstr "图像"
+
+#: fractal-gtk/src/actions/account_settings.rs:40
+#: fractal-gtk/src/actions/room_settings.rs:48
+msgid "Select a new avatar"
+msgstr "选择新头像"
+
+#: fractal-gtk/src/actions/account_settings.rs:50
+#: fractal-gtk/src/actions/room_settings.rs:58
+msgid "Couldn’t open file"
+msgstr "无法打开文件"
+
+#: fractal-gtk/src/actions/global.rs:292
+msgid "Select a file"
+msgstr "选择文件"
+
+#: fractal-gtk/src/actions/message.rs:74
+msgid "This message has no source."
+msgstr "该消息没有来源。"
+
+#: fractal-gtk/src/actions/message.rs:144
+#: fractal-gtk/src/actions/message.rs:183
+msgid "Could not download the file"
+msgstr "无法下载该文件"
+
+#: fractal-gtk/src/actions/message.rs:154
+msgid "Couldn’t save file"
+msgstr "无法保存文件"
+
+#: fractal-gtk/src/app/backend_loop.rs:48
+msgid "Email is already in use"
+msgstr "电子邮件已被使用"
+
+#: fractal-gtk/src/app/backend_loop.rs:52
+#| msgid "Couldn’t add the email address."
+msgid "Please enter a valid email address."
+msgstr "请填入一个有效的电子邮箱地址。"
+
+#: fractal-gtk/src/app/backend_loop.rs:56
+msgid "Phone number is already in use"
+msgstr "手机号码已被使用"
+
+#: fractal-gtk/src/app/backend_loop.rs:61
+msgid ""
+"Please enter your phone number in the format: \n"
+" + your country code and your phone number."
+msgstr ""
+"请按以下格式填入您的电话号码：\n"
+" + 您的国别码和您的手机号码。"
+
+#: fractal-gtk/src/app/backend_loop.rs:198
+msgid "Couldn’t delete the account"
+msgstr "无法删除该账号"
+
+#: fractal-gtk/src/app/backend_loop.rs:207
+msgid "Couldn’t change the password"
+msgstr "无法修改该密码"
+
+#: fractal-gtk/src/app/backend_loop.rs:216
+msgid "Sorry, account settings can’t be loaded."
+msgstr "抱歉，账号设置无法加载。"
+
+#: fractal-gtk/src/app/backend_loop.rs:224
+msgid "Couldn’t add the email address."
+msgstr "无法添加该电子邮件地址。"
+
+#: fractal-gtk/src/app/backend_loop.rs:233
+msgid "Couldn’t add the phone number."
+msgstr "无法添加该手机号码。"
+
+#: fractal-gtk/src/app/backend_loop.rs:248
+msgid "Can’t create the room, try again"
+msgstr "无法创建该聊天室，请重试"
+
+#: fractal-gtk/src/app/backend_loop.rs:261
+msgid "Can’t join the room, try again."
+msgstr "无法加入该聊天室，请重试。"
+
+#: fractal-gtk/src/app/backend_loop.rs:274
+msgid "Can’t login, try again"
+msgstr "无法登录，请重试"
+
+#: fractal-gtk/src/app/backend_loop.rs:294
+msgid "Error sending message"
+msgstr "发送消息出错"
+
+#: fractal-gtk/src/app/backend_loop.rs:299
+msgid "Error deleting message"
+msgstr "删除消息出错"
+
+#: fractal-gtk/src/app/backend_loop.rs:303
+msgid "Error searching for rooms"
+msgstr "搜索聊天室出错"
+
+#: fractal-gtk/src/appop/about.rs:21
+msgid "A Matrix.org client for GNOME"
+msgstr "一个 GNOME Matrix.org 客户端"
+
+#: fractal-gtk/src/appop/about.rs:23
+msgid "© 2017–2018 Daniel García Moreno, et al."
+msgstr "© 2017–2018 Daniel García Moreno, et al."
+
+#: fractal-gtk/src/appop/about.rs:30
+msgid "Learn more about Fractal"
+msgstr "了解更多关于 Fractal 信息"
+
+#: fractal-gtk/src/appop/about.rs:31
+msgid "translator-credits"
+msgstr "lumingzh <lumingzh@qq.com>, 2018-2019"
+
+#: fractal-gtk/src/appop/about.rs:46
+msgid "Name by"
+msgstr "名字"
+
+#: fractal-gtk/src/appop/account.rs:51
+msgid "The validation code is not correct."
+msgstr "该验证码不正确。"
+
+#: fractal-gtk/src/appop/account.rs:64
+msgid "Enter the code received via SMS"
+msgstr "输入通过短信收到的验证码"
+
+#: fractal-gtk/src/appop/account.rs:80 fractal-gtk/src/appop/account.rs:139
+msgid "Continue"
+msgstr "继续"
+
+#: fractal-gtk/src/appop/account.rs:128
+msgid ""
+"In order to add this email address, go to your inbox and follow the link you "
+"received. Once you’ve done that, click Continue."
+msgstr ""
+"为了添加该邮箱地址，请打开您的收件箱并点击收到的链接。一旦您那样做完，点击继"
+"续。"
+
+#: fractal-gtk/src/appop/account.rs:189
+msgid "OK"
+msgstr "确定"
+
+#: fractal-gtk/src/appop/account.rs:730
+msgid "Are you sure you want to delete your account?"
+msgstr "您确定想要删除您的账号吗？"
+
+#: fractal-gtk/src/appop/attach.rs:42
+msgid "Image from Clipboard"
+msgstr "剪贴板图像"
+
+#: fractal-gtk/src/appop/attach.rs:58
+msgid "Send"
+msgstr "发送"
+
+#. Filename for the attached image
+#: fractal-gtk/src/appop/attach.rs:87
+#| msgid "Images"
+msgid "image"
+msgstr "图像"
+
+#: fractal-gtk/src/appop/invite.rs:146
+msgid "Invite to {name}"
+msgstr "邀请到 {name}"
+
+#: fractal-gtk/src/appop/invite.rs:252
+msgid "Join {room_name}?"
+msgstr "加入 {room_name}？"
+
+#: fractal-gtk/src/appop/invite.rs:257
+msgid ""
+"You’ve been invited to join <b>{room_name}</b> room by <b>{sender_name}</b>"
+msgstr "您已被 <b>{sender_name}</b> 邀请加入 <b>{room_name}</b> 房间"
+
+#: fractal-gtk/src/appop/invite.rs:262
+msgid "You’ve been invited to join <b>{room_name}</b>"
+msgstr "您已被邀请加入 <b>{room_name}</b>"
+
+#. Translators: The placeholder is for the number of unread messages in the
+#. application
+#: fractal-gtk/src/appop/mod.rs:183
+#| msgid "Fractal"
+msgid "Fractal [{}]"
+msgstr "Fractal [{}]"
+
+#: fractal-gtk/src/appop/notify.rs:52
+msgid " (direct message)"
+msgstr "（直连消息）"
+
+#: fractal-gtk/src/appop/room.rs:310
+msgid "Leave {room_name}?"
+msgstr "离开 {room_name}？"
+
+#: fractal-gtk/src/appop/room.rs:572
+msgid "EMPTY ROOM"
+msgstr "空聊天室"
+
+#: fractal-gtk/src/appop/room.rs:574
+msgid "{m1} and {m2}"
+msgstr "{m1} 和 {m2}"
+
+#: fractal-gtk/src/appop/room.rs:575
+msgid "{m1} and Others"
+msgstr "{m1} 和其它"
+
+#: fractal-gtk/src/appop/room.rs:671
+msgid "Several users are typing…"
+msgstr "几个用户正在输入…"
+
+#: fractal-gtk/src/appop/room.rs:674
+msgid "<b>{}</b> is typing…"
+msgid_plural "<b>{}</b> and <b>{}</b> are typing…"
+msgstr[0] "<b>{}</b> 正在输入…"
+
+#: fractal-gtk/src/appop/sync.rs:10
+msgid "Syncing, this could take a while"
+msgstr "正在同步，这可能会花一段时间"
+
+#: fractal-gtk/src/uibuilder.rs:52
+#| msgid "You don’t have any rooms yet"
+msgid "You don’t have permission to post to this room"
+msgstr "您没有在该聊天室发言的权限"
+
+#: fractal-gtk/src/widgets/file_dialog.rs:9
+msgid "Save media as"
+msgstr "保存媒体为"
+
+#: fractal-gtk/src/widgets/file_dialog.rs:12
+msgid "_Save"
+msgstr "保存(_S)"
+
+#: fractal-gtk/src/widgets/file_dialog.rs:33
+msgid "_Select"
+msgstr "选择(_S)"
+
+#: fractal-gtk/src/widgets/inline_player.rs:524
+msgid "Could not retrieve file URI"
+msgstr "无法找回文件网址"
+
+#: fractal-gtk/src/widgets/kicked_dialog.rs:46
+msgid "You have been kicked from {}"
+msgstr "您已被踢出 {}"
+
+#: fractal-gtk/src/widgets/kicked_dialog.rs:50
+msgid ""
+"Kicked by: {}\n"
+" “{}”"
+msgstr ""
+"被 {} 踢出\n"
+" “{}”"
+
+#: fractal-gtk/src/widgets/login.rs:101
+#| msgid "Home server URL"
+msgid "Malformed server URL"
+msgstr "有缺陷的服务器网址"
+
+#: fractal-gtk/src/widgets/media_viewer.rs:1071
+msgid "Error while loading previous media"
+msgstr "加载之前的媒体时出错"
+
+#: fractal-gtk/src/widgets/members_list.rs:52
+msgid "No matching members found"
+msgstr "未发现匹配的成员"
+
+#: fractal-gtk/src/widgets/members_list.rs:168
+msgid "Admin"
+msgstr "管理员"
+
+#: fractal-gtk/src/widgets/members_list.rs:169
+msgid "Moderator"
+msgstr "仲裁者"
+
+#: fractal-gtk/src/widgets/members_list.rs:170
+msgid "Privileged"
+msgstr "特权用户"
+
+#: fractal-gtk/src/widgets/message.rs:84
+msgid "Uploading video."
+msgstr "正在上传视频。"
+
+#: fractal-gtk/src/widgets/message.rs:89
+msgid "Uploading audio."
+msgstr "正在上传音频。"
+
+#: fractal-gtk/src/widgets/message.rs:94
+msgid "Uploading image."
+msgstr "正在上传图像。"
+
+#: fractal-gtk/src/widgets/message.rs:98
+msgid "Uploading file."
+msgstr "正在上传文件。"
+
+#: fractal-gtk/src/widgets/message.rs:414
+#: fractal-gtk/src/widgets/message.rs:520
+msgid "Save"
+msgstr "保存"
+
+#: fractal-gtk/src/widgets/message.rs:530
+msgid "Open"
+msgstr "打开"
+
+#. Use 12h time format (AM/PM)
+#: fractal-gtk/src/widgets/message.rs:550
+msgid "%l∶%M %p"
+msgstr "%l∶%M %p"
+
+#. Use 24 time format
+#: fractal-gtk/src/widgets/message.rs:553
+msgid "%R"
+msgstr "%R"
+
+#: fractal-gtk/src/widgets/room_history.rs:91
+msgid "New Messages"
+msgstr "新消息"
+
+#. Translators: This is a date format in the day divider without the year
+#: fractal-gtk/src/widgets/room_history.rs:705
+msgid "%B %e"
+msgstr "%B %e"
+
+#. Translators: This is a date format in the day divider with the year
+#: fractal-gtk/src/widgets/room_history.rs:708
+msgid "%B %e, %Y"
+msgstr "%B %e, %Y"
+
+#: fractal-gtk/src/widgets/room_settings.rs:215
+msgid "Room · {} member"
+msgid_plural "Room · {} members"
+msgstr[0] "聊天室・{} 成员"
+
+#: fractal-gtk/src/widgets/room_settings.rs:644
+msgid "{} member"
+msgid_plural "{} members"
+msgstr[0] "{} 成员"
+
+#: fractal-gtk/src/widgets/roomlist.rs:480
+msgid "Invites"
+msgstr "邀请"
+
+#: fractal-gtk/src/widgets/roomlist.rs:481
+msgid "You don’t have any invitations"
+msgstr "您没有任何邀请"
+
+#: fractal-gtk/src/widgets/roomlist.rs:485
+msgid "Favorites"
+msgstr "最爱"
+
+#: fractal-gtk/src/widgets/roomlist.rs:486
+msgid "Drag and drop rooms here to add them to your favorites"
+msgstr "拖放聊天室到这里把它们添加到您的最爱"
+
+#: fractal-gtk/src/widgets/roomlist.rs:490
+msgid "Rooms"
+msgstr "聊天室"
+
+#: fractal-gtk/src/widgets/roomlist.rs:491
+msgid "You don’t have any rooms yet"
+msgstr "您还没有任何聊天室"
+
+#~ msgid "Save as…"
+#~ msgstr "另存为…"
+
+#~ msgid "Passwords didn’t match, try again"
+#~ msgstr "密码不匹配，请重试"
+
+#~ msgid "Could not save the file"
+#~ msgstr "无法保存该文件"
+
+#~ msgid "None"
+#~ msgstr "无"
+
+#~ msgid "You’ve been invited to join \"\", you can accept or reject"
+#~ msgstr "您已被邀请加入“”，您可以接受或拒绝"
+
+#~ msgid "Room topic"
+#~ msgstr "聊天室主题"
+
+#~ msgid "Media viewer"
+#~ msgstr "媒体查看器"
+
+#~ msgid "@icon@"
+#~ msgstr "@icon@"
+
+#~ msgid "Username"
+#~ msgstr "用户名"
+
+#~ msgctxt "login button"
+#~ msgid "Log In"
+#~ msgstr "登录"
+
+#~ msgid "Identity server URL"
+#~ msgstr "认证服务器网址"
+
+#~ msgid "Matrix Server"
+#~ msgstr "Matrix 服务器"
+
+#~ msgid "Identity server"
+#~ msgstr "认证服务器"
+
+#~ msgid "Advanced"
+#~ msgstr "高级"
+
+#~ msgid "Reset Password"
+#~ msgstr "重置密码"
+
+#~ msgid "Log In as Guest"
+#~ msgstr "游客身份登录"
+
+#~ msgid "Login"
+#~ msgstr "登录"
+
+#~ msgid "Unknown Error"
+#~ msgstr "未知错误"
+
+#~ msgid "Select"
+#~ msgstr "选择"
+
+#~ msgid "Pick a new room avatar"
+#~ msgstr "选择聊天室头像"
+
+#~ msgid "%e %B"
+#~ msgstr "%e %B"
+
+#~ msgid "Stickers"
+#~ msgstr "贴纸"
+
+#~ msgid "This is an app-notification"
+#~ msgstr "这是一条应用通知"
+
+#~ msgid "_About"
+#~ msgstr "关于(_A)"
+
+#~ msgid "_Quit"
+#~ msgstr "退出(_Q)"
+
+#~ msgid "Attach files"
+#~ msgstr "附加文件"
+
+#~ msgid "Text formatting"
+#~ msgstr "文字格式"
+
+#~ msgid "Do you want to overwrite the file?"
+#~ msgstr "您想要覆盖该文件吗？"
+
+#~ msgid "org.gnome.Fractal"
+#~ msgstr "org.gnome.Fractal"
+
+#~ msgid "Searching"
+#~ msgstr "正在搜索"
+
+#~ msgid "Download"
+#~ msgstr "下载"
+
+#~ msgid "ID"
+#~ msgstr "ID"
+
+#~ msgid "Topic"
+#~ msgstr "主题"
+
+#~ msgid "and one more"
+#~ msgid_plural "and {member_count} more"
+#~ msgstr[0] "和另外 {member_count} 个"
+
+#~ msgid "Load more members"
+#~ msgstr "加载更多成员"
+
+#~ msgid "Default Servers"
+#~ msgstr "默认服务器"
+
+#~ msgid "Leave"
+#~ msgstr "离开"
