@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2020-03-27 17:05+0000\n"
-"PO-Revision-Date: 2020-03-28 08:25-0300\n"
+"POT-Creation-Date: 2020-04-13 15:18+0000\n"
+"PO-Revision-Date: 2020-04-27 11:30-0300\n"
 "Last-Translator: Rafael Fontenelle <rafaelff@gnome.org>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "Language: pt_BR\n"
@@ -96,7 +96,7 @@ msgstr "Escreve em uma nova linha"
 
 #: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:5
 #: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:3
-#: fractal-gtk/res/ui/login_flow.ui:294
+#: fractal-gtk/res/ui/login_flow.ui:294 fractal-gtk/src/appop/mod.rs:179
 msgid "Fractal"
 msgstr "Fractal"
 
@@ -751,20 +751,19 @@ msgstr "Não foi possível baixar o arquivo"
 msgid "Couldn’t save file"
 msgstr "Não foi possível salvar o arquivo"
 
-#: fractal-gtk/src/app/backend_loop.rs:46
+#: fractal-gtk/src/app/backend_loop.rs:48
 msgid "Email is already in use"
 msgstr "Esse e-mail já está sendo utilizado"
 
-#: fractal-gtk/src/app/backend_loop.rs:50
-#| msgid "Please enter a valid email adress."
+#: fractal-gtk/src/app/backend_loop.rs:52
 msgid "Please enter a valid email address."
 msgstr "Por favor, insira um endereço de e-mail válido."
 
-#: fractal-gtk/src/app/backend_loop.rs:54
+#: fractal-gtk/src/app/backend_loop.rs:56
 msgid "Phone number is already in use"
 msgstr "Esse número de telefone já está sendo utilizado"
 
-#: fractal-gtk/src/app/backend_loop.rs:59
+#: fractal-gtk/src/app/backend_loop.rs:61
 msgid ""
 "Please enter your phone number in the format: \n"
 " + your country code and your phone number."
@@ -772,47 +771,47 @@ msgstr ""
 "Por favor, insira seu número de telefone no formato:\n"
 " + o código do seu país e seu número de telefone."
 
-#: fractal-gtk/src/app/backend_loop.rs:196
+#: fractal-gtk/src/app/backend_loop.rs:198
 msgid "Couldn’t delete the account"
 msgstr "Não foi possível apagar a conta"
 
-#: fractal-gtk/src/app/backend_loop.rs:201
+#: fractal-gtk/src/app/backend_loop.rs:207
 msgid "Couldn’t change the password"
 msgstr "Não foi possível alterar a senha"
 
-#: fractal-gtk/src/app/backend_loop.rs:206
+#: fractal-gtk/src/app/backend_loop.rs:216
 msgid "Sorry, account settings can’t be loaded."
 msgstr "Desculpe, as configurações de conta não puderam ser carregadas"
 
-#: fractal-gtk/src/app/backend_loop.rs:214
+#: fractal-gtk/src/app/backend_loop.rs:224
 msgid "Couldn’t add the email address."
 msgstr "Não foi possível adicionar o endereço de e-mail."
 
-#: fractal-gtk/src/app/backend_loop.rs:219
+#: fractal-gtk/src/app/backend_loop.rs:233
 msgid "Couldn’t add the phone number."
 msgstr "Não foi possível adicionar o número de telefone."
 
-#: fractal-gtk/src/app/backend_loop.rs:226
+#: fractal-gtk/src/app/backend_loop.rs:248
 msgid "Can’t create the room, try again"
 msgstr "Não foi possível criar a sala, tente novamente"
 
-#: fractal-gtk/src/app/backend_loop.rs:234
+#: fractal-gtk/src/app/backend_loop.rs:261
 msgid "Can’t join the room, try again."
 msgstr "Não foi possível entrar a sala, tente novamente."
 
-#: fractal-gtk/src/app/backend_loop.rs:243
+#: fractal-gtk/src/app/backend_loop.rs:274
 msgid "Can’t login, try again"
 msgstr "Não foi possível iniciar a sessão, tente novamente"
 
-#: fractal-gtk/src/app/backend_loop.rs:259
+#: fractal-gtk/src/app/backend_loop.rs:294
 msgid "Error sending message"
 msgstr "Erro ao enviar mensagem"
 
-#: fractal-gtk/src/app/backend_loop.rs:264
+#: fractal-gtk/src/app/backend_loop.rs:299
 msgid "Error deleting message"
 msgstr "Erro ao excluir mensagem"
 
-#: fractal-gtk/src/app/backend_loop.rs:268
+#: fractal-gtk/src/app/backend_loop.rs:303
 msgid "Error searching for rooms"
 msgstr "Erro ao pesquisar por salas"
 
@@ -904,6 +903,11 @@ msgstr ""
 msgid "You’ve been invited to join <b>{room_name}</b>"
 msgstr "Você foi convidado a se juntar à sala <b>{room_name}</b>"
 
+#: fractal-gtk/src/appop/mod.rs:181
+#| msgid "Fractal"
+msgid "Fractal [{}]"
+msgstr "Fractal [{}]"
+
 # O conteúdo entre chaves é uma variável e NÃO PODE ser traduzida
 #: fractal-gtk/src/appop/notify.rs:52
 msgid " (direct message)"
@@ -958,7 +962,7 @@ msgstr "_Salvar"
 msgid "_Select"
 msgstr "_Selecionar"
 
-#: fractal-gtk/src/widgets/inline_player.rs:523
+#: fractal-gtk/src/widgets/inline_player.rs:524
 msgid "Could not retrieve file URI"
 msgstr "Não foi possível recuperar o URI do arquivo"
 
@@ -974,7 +978,7 @@ msgstr ""
 "Expulso por: {}\n"
 " “{}”"
 
-#: fractal-gtk/src/widgets/login.rs:100
+#: fractal-gtk/src/widgets/login.rs:101
 msgid "Malformed server URL"
 msgstr "URL do servidor malformada"
 
@@ -1061,27 +1065,27 @@ msgid_plural "{} members"
 msgstr[0] "{} membro"
 msgstr[1] "{} membros"
 
-#: fractal-gtk/src/widgets/roomlist.rs:473
+#: fractal-gtk/src/widgets/roomlist.rs:480
 msgid "Invites"
 msgstr "Convites"
 
-#: fractal-gtk/src/widgets/roomlist.rs:474
+#: fractal-gtk/src/widgets/roomlist.rs:481
 msgid "You don’t have any invitations"
 msgstr "Você não tem convites"
 
-#: fractal-gtk/src/widgets/roomlist.rs:478
+#: fractal-gtk/src/widgets/roomlist.rs:485
 msgid "Favorites"
 msgstr "Favoritos"
 
-#: fractal-gtk/src/widgets/roomlist.rs:479
+#: fractal-gtk/src/widgets/roomlist.rs:486
 msgid "Drag and drop rooms here to add them to your favorites"
 msgstr "Arraste e solte salas aqui para adicioná-las aos seus favoritos"
 
-#: fractal-gtk/src/widgets/roomlist.rs:483
+#: fractal-gtk/src/widgets/roomlist.rs:490
 msgid "Rooms"
 msgstr "Salas"
 
-#: fractal-gtk/src/widgets/roomlist.rs:484
+#: fractal-gtk/src/widgets/roomlist.rs:491
 msgid "You don’t have any rooms yet"
 msgstr "Você ainda não tem salas"
 
