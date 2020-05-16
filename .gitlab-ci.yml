@@ -21,7 +21,7 @@ variables:
           - target_test/
 
 check:
-    image: "$FLATPAK_IMAGE"
+    image: "registry.gitlab.com/alatiera/rustfmt-oci-image/rustfmt:stable"
     stage: "check"
     script:
         # Create blank versions of our configured files
@@ -34,7 +34,7 @@ check:
 
 flatpak:
   extends: '.flatpak'
-  image: "registry.gitlab.gnome.org/gnome/gnome-runtime-images/rust_bundle:3.36"
+  image: "$FLATPAK_IMAGE"
   variables:
     RUNTIME_REPO: 'https://nightly.gnome.org/gnome-nightly.flatpakrepo'
     APP_ID: "org.gnome.FractalDevel"
