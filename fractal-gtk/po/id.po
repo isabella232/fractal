@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2020-03-27 17:05+0000\n"
-"PO-Revision-Date: 2020-04-05 19:52+0700\n"
+"POT-Creation-Date: 2020-05-15 08:00+0000\n"
+"PO-Revision-Date: 2020-05-22 10:52+0700\n"
 "Last-Translator: Kukuh Syafaat <kukuhsyafaat@gnome.org>\n"
 "Language-Team: Indonesian <gnome-l10n-id@googlegroups.com>\n"
 "Language: id\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural= n!=1;\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 2.3.1\n"
 
 #: fractal-gtk/res/gtk/help-overlay.ui:13
 msgctxt "shortcut window"
@@ -95,7 +95,7 @@ msgstr "Tulis di baris baru"
 
 #: fractal-gtk/res/org.gnome.Fractal.appdata.xml.in.in:5
 #: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:3
-#: fractal-gtk/res/ui/login_flow.ui:294
+#: fractal-gtk/res/ui/login_flow.ui:294 fractal-gtk/src/appop/mod.rs:180
 msgid "Fractal"
 msgstr "Fractal"
 
@@ -257,9 +257,9 @@ msgstr "Periksa surel Anda"
 
 #: fractal-gtk/res/ui/account_settings.ui:626
 #: fractal-gtk/res/ui/direct_chat.ui:129 fractal-gtk/res/ui/invite_user.ui:129
-#: fractal-gtk/res/ui/join_room.ui:93 fractal-gtk/res/ui/leave_room.ui:32
-#: fractal-gtk/res/ui/new_room.ui:42 fractal-gtk/src/appop/account.rs:79
-#: fractal-gtk/src/appop/account.rs:138 fractal-gtk/src/appop/attach.rs:57
+#: fractal-gtk/res/ui/join_room.ui:94 fractal-gtk/res/ui/leave_room.ui:32
+#: fractal-gtk/res/ui/new_room.ui:42 fractal-gtk/src/appop/account.rs:102
+#: fractal-gtk/src/appop/account.rs:173 fractal-gtk/src/appop/attach.rs:57
 msgid "Cancel"
 msgstr "Batal"
 
@@ -312,7 +312,7 @@ msgid "Accept"
 msgstr "Terima"
 
 #: fractal-gtk/res/ui/invite_user.ui:126 fractal-gtk/res/ui/invite_user.ui:137
-#: fractal-gtk/src/appop/invite.rs:148
+#: fractal-gtk/src/appop/invite.rs:151
 msgid "Invite"
 msgstr "Undang"
 
@@ -320,11 +320,11 @@ msgstr "Undang"
 msgid "ID or Alias"
 msgstr "ID atau alias"
 
-#: fractal-gtk/res/ui/join_room.ui:90
+#: fractal-gtk/res/ui/join_room.ui:91
 msgid "Join room"
 msgstr "Gabung ke ruang"
 
-#: fractal-gtk/res/ui/join_room.ui:101 fractal-gtk/src/widgets/room.rs:126
+#: fractal-gtk/res/ui/join_room.ui:102 fractal-gtk/src/widgets/room.rs:126
 msgid "Join"
 msgstr "Gabung"
 
@@ -720,51 +720,66 @@ msgstr "Peladen Rumah Lainnya"
 msgid "Homeserver URL"
 msgstr "URL peladen rumah"
 
-#: fractal-gtk/src/actions/account_settings.rs:39
-#: fractal-gtk/src/actions/room_settings.rs:46
+#: fractal-gtk/src/actions/account_settings.rs:41
+#: fractal-gtk/src/actions/room_settings.rs:50
 msgid "Images"
 msgstr "Gambar"
 
-#: fractal-gtk/src/actions/account_settings.rs:40
-#: fractal-gtk/src/actions/room_settings.rs:48
+#: fractal-gtk/src/actions/account_settings.rs:42
+#: fractal-gtk/src/actions/room_settings.rs:52
 msgid "Select a new avatar"
 msgstr "Pilih avatar baru"
 
-#: fractal-gtk/src/actions/account_settings.rs:50
-#: fractal-gtk/src/actions/room_settings.rs:58
-msgid "Couldn’t open file"
-msgstr "Tidak dapat membuka berkas"
-
-#: fractal-gtk/src/actions/global.rs:292
+#: fractal-gtk/src/actions/global.rs:294
 msgid "Select a file"
 msgstr "Pilih berkas"
 
-#: fractal-gtk/src/actions/message.rs:74
+#: fractal-gtk/src/actions/message.rs:79
 msgid "This message has no source."
 msgstr "Pesan ini tidak memiliki sumber."
 
-#: fractal-gtk/src/actions/message.rs:144
-#: fractal-gtk/src/actions/message.rs:183
+#: fractal-gtk/src/actions/message.rs:164
+#: fractal-gtk/src/actions/message.rs:203
 msgid "Could not download the file"
 msgstr "Tidak dapat mengunduh berkas"
 
-#: fractal-gtk/src/actions/message.rs:154
+#: fractal-gtk/src/actions/message.rs:174
 msgid "Couldn’t save file"
 msgstr "Tidak dapat menyimpan berkas"
 
-#: fractal-gtk/src/app/backend_loop.rs:46
+#: fractal-gtk/src/actions/room_settings.rs:72
+msgid "Couldn’t open file"
+msgstr "Tidak dapat membuka berkas"
+
+#: fractal-gtk/src/app/backend_loop.rs:96
+msgid "Couldn’t delete the account"
+msgstr "Tidak dapat menghapus akun"
+
+#: fractal-gtk/src/app/backend_loop.rs:105
+msgid "Couldn’t change the password"
+msgstr "Tidak dapat mengubah kata sandi"
+
+#: fractal-gtk/src/app/backend_loop.rs:114
+msgid "Sorry, account settings can’t be loaded."
+msgstr "Maaf, pengaturan akun tidak dapat dimuat."
+
+#: fractal-gtk/src/app/backend_loop.rs:122
 msgid "Email is already in use"
 msgstr "Surel sudah digunakan"
 
-#: fractal-gtk/src/app/backend_loop.rs:50
+#: fractal-gtk/src/app/backend_loop.rs:126
 msgid "Please enter a valid email address."
 msgstr "Silakan isi alamat surel dengan benar."
 
-#: fractal-gtk/src/app/backend_loop.rs:54
+#: fractal-gtk/src/app/backend_loop.rs:130
+msgid "Couldn’t add the email address."
+msgstr "Tidak dapat menambahkan alamat surel."
+
+#: fractal-gtk/src/app/backend_loop.rs:139
 msgid "Phone number is already in use"
 msgstr "Nomor telepon sudah digunakan"
 
-#: fractal-gtk/src/app/backend_loop.rs:59
+#: fractal-gtk/src/app/backend_loop.rs:144
 msgid ""
 "Please enter your phone number in the format: \n"
 " + your country code and your phone number."
@@ -772,47 +787,31 @@ msgstr ""
 "Silakan masukkan nomor telepon Anda dalam format:\n"
 "  + kode negara Anda dan nomor telepon Anda."
 
-#: fractal-gtk/src/app/backend_loop.rs:196
-msgid "Couldn’t delete the account"
-msgstr "Tidak dapat menghapus akun"
-
-#: fractal-gtk/src/app/backend_loop.rs:201
-msgid "Couldn’t change the password"
-msgstr "Tidak dapat mengubah kata sandi"
-
-#: fractal-gtk/src/app/backend_loop.rs:206
-msgid "Sorry, account settings can’t be loaded."
-msgstr "Maaf, pengaturan akun tidak dapat dimuat."
-
-#: fractal-gtk/src/app/backend_loop.rs:214
-msgid "Couldn’t add the email address."
-msgstr "Tidak dapat menambahkan alamat surel."
-
-#: fractal-gtk/src/app/backend_loop.rs:219
+#: fractal-gtk/src/app/backend_loop.rs:149
 msgid "Couldn’t add the phone number."
 msgstr "Tidak dapat menambahkan nomor telepon."
 
-#: fractal-gtk/src/app/backend_loop.rs:226
+#: fractal-gtk/src/app/backend_loop.rs:164
 msgid "Can’t create the room, try again"
 msgstr "Tidak dapat membuat ruang, coba lagi"
 
-#: fractal-gtk/src/app/backend_loop.rs:234
+#: fractal-gtk/src/app/backend_loop.rs:177
 msgid "Can’t join the room, try again."
 msgstr "Tidak dapat bergabung dengan ruang, coba lagi."
 
-#: fractal-gtk/src/app/backend_loop.rs:243
+#: fractal-gtk/src/app/backend_loop.rs:190
 msgid "Can’t login, try again"
 msgstr "Tidak dapat masuk, coba lagi"
 
-#: fractal-gtk/src/app/backend_loop.rs:259
+#: fractal-gtk/src/app/backend_loop.rs:210
 msgid "Error sending message"
 msgstr "Galat mengirim pesan"
 
-#: fractal-gtk/src/app/backend_loop.rs:264
+#: fractal-gtk/src/app/backend_loop.rs:215
 msgid "Error deleting message"
 msgstr "Galat menghapus pesan"
 
-#: fractal-gtk/src/app/backend_loop.rs:268
+#: fractal-gtk/src/app/backend_loop.rs:219
 msgid "Error searching for rooms"
 msgstr "Galat mencari ruang"
 
@@ -836,19 +835,19 @@ msgstr "Kukuh Syafaat <kukuhsyafaat@gnome.org>, 2018-2020."
 msgid "Name by"
 msgstr "Nama oleh"
 
-#: fractal-gtk/src/appop/account.rs:51
+#: fractal-gtk/src/appop/account.rs:74
 msgid "The validation code is not correct."
 msgstr "Kode validasi tidak benar."
 
-#: fractal-gtk/src/appop/account.rs:64
+#: fractal-gtk/src/appop/account.rs:87
 msgid "Enter the code received via SMS"
 msgstr "Masukkan kode yang diterima melalui SMS"
 
-#: fractal-gtk/src/appop/account.rs:80 fractal-gtk/src/appop/account.rs:139
+#: fractal-gtk/src/appop/account.rs:103 fractal-gtk/src/appop/account.rs:174
 msgid "Continue"
 msgstr "Lanjutkan"
 
-#: fractal-gtk/src/appop/account.rs:128
+#: fractal-gtk/src/appop/account.rs:163
 msgid ""
 "In order to add this email address, go to your inbox and follow the link you "
 "received. Once you’ve done that, click Continue."
@@ -856,11 +855,11 @@ msgstr ""
 "Untuk menambahkan alamat surel ini, masuk ke kotak masuk Anda dan ikuti "
 "tautan yang Anda terima. Setelah Anda selesai melakukannya, klik Lanjutkan."
 
-#: fractal-gtk/src/appop/account.rs:189
+#: fractal-gtk/src/appop/account.rs:240
 msgid "OK"
 msgstr "OK"
 
-#: fractal-gtk/src/appop/account.rs:730
+#: fractal-gtk/src/appop/account.rs:804
 msgid "Are you sure you want to delete your account?"
 msgstr "Anda yakin ingin menghapus akun Anda?"
 
@@ -877,50 +876,56 @@ msgstr "Kirim"
 msgid "image"
 msgstr "gambar"
 
-#: fractal-gtk/src/appop/invite.rs:146
+#: fractal-gtk/src/appop/invite.rs:149
 msgid "Invite to {name}"
 msgstr "Undang ke {nama}"
 
-#: fractal-gtk/src/appop/invite.rs:252
+#: fractal-gtk/src/appop/invite.rs:262
 msgid "Join {room_name}?"
 msgstr "Bergabung dengan {nama_ruang}?"
 
-#: fractal-gtk/src/appop/invite.rs:257
+#: fractal-gtk/src/appop/invite.rs:267
 msgid ""
 "You’ve been invited to join <b>{room_name}</b> room by <b>{sender_name}</b>"
 msgstr ""
 "Anda telah diundang untuk bergabung ke ruang <b>{nama_ruang}</b> oleh "
 "<b>{nama_pengirim}</b>"
 
-#: fractal-gtk/src/appop/invite.rs:262
+#: fractal-gtk/src/appop/invite.rs:272
 msgid "You’ve been invited to join <b>{room_name}</b>"
 msgstr "Anda telah diundang untuk bergabung dengan <b>{nama_ruang}</b>"
+
+#. Translators: The placeholder is for the number of unread messages in the
+#. application
+#: fractal-gtk/src/appop/mod.rs:184
+msgid "Fractal [{}]"
+msgstr "Fractal [{}]"
 
 #: fractal-gtk/src/appop/notify.rs:52
 msgid " (direct message)"
 msgstr " (pesan langsung)"
 
-#: fractal-gtk/src/appop/room.rs:310
+#: fractal-gtk/src/appop/room.rs:339
 msgid "Leave {room_name}?"
 msgstr "Tinggalkan {nama_ruang}?"
 
-#: fractal-gtk/src/appop/room.rs:572
+#: fractal-gtk/src/appop/room.rs:615
 msgid "EMPTY ROOM"
 msgstr "RUANG KOSONG"
 
-#: fractal-gtk/src/appop/room.rs:574
+#: fractal-gtk/src/appop/room.rs:617
 msgid "{m1} and {m2}"
 msgstr "{m1} dan {m2}"
 
-#: fractal-gtk/src/appop/room.rs:575
+#: fractal-gtk/src/appop/room.rs:618
 msgid "{m1} and Others"
 msgstr "{m1} and Lainnya"
 
-#: fractal-gtk/src/appop/room.rs:671
+#: fractal-gtk/src/appop/room.rs:719
 msgid "Several users are typing…"
 msgstr "Beberapa pengguna sedang mengetik…"
 
-#: fractal-gtk/src/appop/room.rs:674
+#: fractal-gtk/src/appop/room.rs:722
 msgid "<b>{}</b> is typing…"
 msgid_plural "<b>{}</b> and <b>{}</b> are typing…"
 msgstr[0] "<b>{}</b> sedang mengetik…"
@@ -946,7 +951,7 @@ msgstr "_Simpan"
 msgid "_Select"
 msgstr "_Pilih"
 
-#: fractal-gtk/src/widgets/inline_player.rs:523
+#: fractal-gtk/src/widgets/inline_player.rs:524
 msgid "Could not retrieve file URI"
 msgstr "Tidak dapat mengambil berkas URI"
 
@@ -962,11 +967,11 @@ msgstr ""
 "Ditendang oleh: {}\n"
 " “{}”"
 
-#: fractal-gtk/src/widgets/login.rs:100
+#: fractal-gtk/src/widgets/login.rs:101
 msgid "Malformed server URL"
 msgstr "URL peladen salah"
 
-#: fractal-gtk/src/widgets/media_viewer.rs:1071
+#: fractal-gtk/src/widgets/media_viewer.rs:1072
 msgid "Error while loading previous media"
 msgstr "Galat saat memuat media sebelumnya"
 
@@ -1002,22 +1007,22 @@ msgstr "Mengunggah gambar."
 msgid "Uploading file."
 msgstr "Mengunggah berkas."
 
-#: fractal-gtk/src/widgets/message.rs:414
-#: fractal-gtk/src/widgets/message.rs:520
+#: fractal-gtk/src/widgets/message.rs:413
+#: fractal-gtk/src/widgets/message.rs:529
 msgid "Save"
 msgstr "Simpan"
 
-#: fractal-gtk/src/widgets/message.rs:530
+#: fractal-gtk/src/widgets/message.rs:545
 msgid "Open"
 msgstr "Buka"
 
 #. Use 12h time format (AM/PM)
-#: fractal-gtk/src/widgets/message.rs:550
+#: fractal-gtk/src/widgets/message.rs:565
 msgid "%l∶%M %p"
 msgstr "%l∶%M %p"
 
 #. Use 24 time format
-#: fractal-gtk/src/widgets/message.rs:553
+#: fractal-gtk/src/widgets/message.rs:568
 msgid "%R"
 msgstr "%R"
 
@@ -1035,39 +1040,39 @@ msgstr "%e %b"
 msgid "%B %e, %Y"
 msgstr "%e %b %Y"
 
-#: fractal-gtk/src/widgets/room_settings.rs:215
+#: fractal-gtk/src/widgets/room_settings.rs:219
 msgid "Room · {} member"
 msgid_plural "Room · {} members"
 msgstr[0] "Ruang · {} anggota"
 msgstr[1] "Ruang · {} anggota"
 
-#: fractal-gtk/src/widgets/room_settings.rs:644
+#: fractal-gtk/src/widgets/room_settings.rs:676
 msgid "{} member"
 msgid_plural "{} members"
 msgstr[0] "{} anggota"
 msgstr[1] "{} anggota"
 
-#: fractal-gtk/src/widgets/roomlist.rs:473
+#: fractal-gtk/src/widgets/roomlist.rs:480
 msgid "Invites"
 msgstr "Undang"
 
-#: fractal-gtk/src/widgets/roomlist.rs:474
+#: fractal-gtk/src/widgets/roomlist.rs:481
 msgid "You don’t have any invitations"
 msgstr "Anda tidak memiliki undangan apa pun"
 
-#: fractal-gtk/src/widgets/roomlist.rs:478
+#: fractal-gtk/src/widgets/roomlist.rs:485
 msgid "Favorites"
 msgstr "Favorit"
 
-#: fractal-gtk/src/widgets/roomlist.rs:479
+#: fractal-gtk/src/widgets/roomlist.rs:486
 msgid "Drag and drop rooms here to add them to your favorites"
 msgstr "Seret dan jatuhkan ruang di sini untuk menambahkannya ke favorit Anda"
 
-#: fractal-gtk/src/widgets/roomlist.rs:483
+#: fractal-gtk/src/widgets/roomlist.rs:490
 msgid "Rooms"
 msgstr "Ruang"
 
-#: fractal-gtk/src/widgets/roomlist.rs:484
+#: fractal-gtk/src/widgets/roomlist.rs:491
 msgid "You don’t have any rooms yet"
 msgstr "Anda belum memiliki ruang"
 
