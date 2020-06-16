@@ -2,9 +2,7 @@ use crate::i18n::i18n;
 
 use fractal_api::backend::room;
 use fractal_api::util::ResultExpectLog;
-use gtk;
 use gtk::prelude::*;
-use pango;
 use std::thread;
 
 use crate::types::Room;

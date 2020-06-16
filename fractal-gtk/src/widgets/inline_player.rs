@@ -25,7 +25,6 @@ use gst::ClockTime;
 use gstreamer_pbutils::Discoverer;
 use log::{error, info, warn};
 
-use gtk;
 use gtk::prelude::*;
 use gtk::ButtonExt;
 

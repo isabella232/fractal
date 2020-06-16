@@ -1,7 +1,6 @@
 use fractal_api::backend::room;
 use fractal_api::identifiers::RoomId;
 use fractal_api::util::ResultExpectLog;
-use gtk;
 use gtk::prelude::*;
 use std::thread;
 
