@@ -587,7 +587,7 @@ pub fn direct_chat(
     }
 
     Ok(Room {
-        name: user.alias.clone(),
+        name: user.alias,
         direct: true,
         ..Room::new(response.room_id, RoomMembership::Joined(RoomTag::None))
     })

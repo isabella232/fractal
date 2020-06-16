@@ -69,7 +69,7 @@ impl AppOp {
             self.thread_pool.clone(),
             self.user_info_cache.clone(),
             server_url,
-            msg.sender.clone(),
+            msg.sender,
             tx,
         );
 

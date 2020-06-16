@@ -191,7 +191,7 @@ pub fn add_threepid(
     let body = AddThreePIDBody {
         three_pid_creds: ThreePIDCredentials {
             id_server: identity.try_into()?,
-            sid: sid.clone(),
+            sid: sid,
             client_secret,
         },
         bind: true,

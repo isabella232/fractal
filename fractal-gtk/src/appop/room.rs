@@ -525,7 +525,7 @@ impl AppOp {
                 name_label.set_text(&value);
             }
             "m.room.topic" => {
-                self.set_room_topic_label(Some(value.clone()));
+                self.set_room_topic_label(Some(value));
             }
             _ => warn!("no key {}", key),
         };

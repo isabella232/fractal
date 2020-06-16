@@ -79,7 +79,7 @@ impl AppOp {
 
                 invite_entry.add_child_at_anchor(&w, &anchor);
 
-                self.invite_list.push((u.clone(), anchor));
+                self.invite_list.push((u, anchor));
             }
         }
     }

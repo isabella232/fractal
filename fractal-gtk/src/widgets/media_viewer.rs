@@ -1055,7 +1055,7 @@ fn load_more_media(
 
     let msg = data.borrow().media_list[data.borrow().current_media_index].clone();
     let roomid = msg.room.clone();
-    let first_media_id = unwrap_or_unit_return!(msg.id.clone());
+    let first_media_id = unwrap_or_unit_return!(msg.id);
     let prev_batch = data.borrow().prev_batch.clone();
     let server_url = data.borrow().server_url.clone();
     let access_token = data.borrow().access_token.clone();
