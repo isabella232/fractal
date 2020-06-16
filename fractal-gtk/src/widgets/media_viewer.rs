@@ -316,7 +316,7 @@ impl Data {
             previous_media_button.set_visible(true);
         }
 
-        if self.media_list.len() > 0 && self.current_media_index >= self.media_list.len() - 1 {
+        if !self.media_list.is_empty() && self.current_media_index >= self.media_list.len() - 1 {
             next_media_button.set_visible(false);
         } else {
             next_media_button.set_visible(true);
@@ -1088,7 +1088,7 @@ fn load_more_media(
             Continue(false)
         }
         Ok((msgs, prev_batch)) => {
-            if msgs.len() == 0 {
+            if msgs.is_empty() {
                 data_weak.clone().upgrade().map(|data| {
                     data.borrow_mut().no_more_media = true;
                 });
