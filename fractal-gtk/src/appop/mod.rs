@@ -49,6 +49,28 @@ mod user;
 use self::member::SearchType;
 use self::message::TmpMsg;
 
+#[derive(Clone, Debug, PartialEq)]
+pub enum RoomSearchPagination {
+    Initial,
+    Next(String),
+    NoMorePages,
+}
+
+impl From<RoomSearchPagination> for Option<String> {
+    fn from(rooms_pagination: RoomSearchPagination) -> Option<String> {
+        match rooms_pagination {
+            RoomSearchPagination::Next(rooms_since) => Some(rooms_since),
+            _ => None,
+        }
+    }
+}
+
+impl RoomSearchPagination {
+    pub fn has_more(&self) -> bool {
+        *self != RoomSearchPagination::Initial
+    }
+}
+
 #[derive(Clone, Debug)]
 pub struct LoginData {
     pub access_token: AccessToken,
@@ -82,7 +104,7 @@ pub struct AppOp {
 
     pub media_viewer: Rc<RefCell<Option<widgets::MediaViewer>>>,
 
-    pub rooms_since: Option<String>, // This is for directory searches
+    pub directory_pagination: RoomSearchPagination,
     pub state: AppState,
     pub since: Option<String>,
     pub room_back_history: Rc<RefCell<Vec<AppState>>>,
@@ -121,7 +143,7 @@ impl AppOp {
             state: AppState::Login,
             room_back_history: Rc::new(RefCell::new(vec![])),
             roomlist: widgets::RoomList::new(None, None),
-            rooms_since: None,
+            directory_pagination: RoomSearchPagination::Initial,
             unread_rooms: 0,
             since: None,
             unsent_messages: HashMap::new(),
