@@ -217,7 +217,7 @@ impl Image {
                     }
                 }
 
-                if let None = scaled_pix {
+                if scaled_pix.is_none() {
                     scaled_pix = pb.scale_simple(pw, ph, gdk_pixbuf::InterpType::Bilinear);
                 }
 
