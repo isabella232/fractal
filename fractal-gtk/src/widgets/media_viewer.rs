@@ -326,7 +326,7 @@ impl Data {
         }
 
         if self.current_media_index == 0 {
-            return false;
+            false
         } else {
             {
                 self.current_media_index -= 1;
@@ -335,7 +335,7 @@ impl Data {
             }
 
             self.redraw_media_in_viewport(thread_pool);
-            return true;
+            true
         }
     }
 
