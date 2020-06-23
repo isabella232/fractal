@@ -139,10 +139,8 @@ impl<'a> RoomBox<'a> {
                             APPOP!(reload_rooms);
                         }
                         Err(err) => {
-                            tx.send(BKCommand::SendBKResponse(BKResponse::JoinRoomError(
-                                err.into(),
-                            )))
-                            .expect_log("Connection closed");
+                            tx.send(BKCommand::SendBKResponse(BKResponse::JoinRoomError(err)))
+                                .expect_log("Connection closed");
                         }
                     }
                 });

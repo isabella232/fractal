@@ -197,7 +197,7 @@ impl Image {
                 };
 
                 if let Ok(zoom_level_guard) = zoom_level.lock() {
-                    if let Some(zl) = zoom_level_guard.clone() {
+                    if let Some(zl) = *zoom_level_guard {
                         pw = (pb.get_width() as f64 * zl) as i32;
                         ph = (pb.get_height() as f64 * zl) as i32;
                     }

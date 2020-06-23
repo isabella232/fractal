@@ -716,7 +716,7 @@ impl MediaViewer {
                     image::Image::new(&self.backend, self.data.borrow().server_url.clone(), &url)
                         .shrink_to_fit(true)
                         .center(true)
-                        .build(thread_pool.clone());
+                        .build(thread_pool);
 
                 media_viewport.add(&image.widget);
                 media_viewport.show_all();
@@ -906,12 +906,7 @@ impl MediaViewer {
         previous_media_button.connect_clicked(move |_| {
             if let Some(own) = own_weak.upgrade() {
                 if !own.borrow_mut().previous_media(t_pool.clone()) {
-                    load_more_media(
-                        t_pool.clone(),
-                        own.clone(),
-                        builder.clone(),
-                        backend.clone(),
-                    );
+                    load_more_media(t_pool.clone(), own, builder.clone(), backend.clone());
                 }
             }
         });
@@ -1091,12 +1086,7 @@ fn load_more_media(
                 data.borrow_mut().media_list = new_media_list;
                 data.borrow_mut().prev_batch = Some(prev_batch);
                 if img_msgs_count == 0 {
-                    load_more_media(
-                        thread_pool.clone(),
-                        data.clone(),
-                        builder.clone(),
-                        backend.clone(),
-                    );
+                    load_more_media(thread_pool, data, builder.clone(), backend.clone());
                 } else {
                     data.borrow_mut().current_media_index += img_msgs_count;
                     data.borrow_mut().previous_media(thread_pool);

@@ -85,7 +85,7 @@ impl MessageBox {
             RowType::Emote => {
                 self.row.set_margin_top(12);
                 self.header = false;
-                self.small_widget(thread_pool.clone(), msg)
+                self.small_widget(thread_pool, msg)
             }
             RowType::Video if is_temp => {
                 upload_attachment_msg
@@ -109,7 +109,7 @@ impl MessageBox {
             _ if has_header => {
                 self.row.set_margin_top(12);
                 self.header = true;
-                self.widget(thread_pool.clone(), user_info_cache, msg)
+                self.widget(thread_pool, user_info_cache, msg)
             }
             _ => {
                 self.header = false;
@@ -151,7 +151,7 @@ impl MessageBox {
         let w = if has_header && msg.mtype != RowType::Emote {
             self.row.set_margin_top(12);
             self.header = true;
-            self.widget(thread_pool.clone(), user_info_cache, &msg)
+            self.widget(thread_pool, user_info_cache, &msg)
         } else {
             if let RowType::Emote = msg.mtype {
                 self.row.set_margin_top(12);
@@ -223,10 +223,10 @@ impl MessageBox {
         }
 
         let body = match msg.mtype {
-            RowType::Sticker => self.build_room_msg_sticker(thread_pool.clone(), msg),
-            RowType::Image => self.build_room_msg_image(thread_pool.clone(), msg),
+            RowType::Sticker => self.build_room_msg_sticker(thread_pool, msg),
+            RowType::Image => self.build_room_msg_image(thread_pool, msg),
             RowType::Emote => self.build_room_msg_emote(msg),
-            RowType::Audio => self.build_room_audio_player(thread_pool.clone(), msg),
+            RowType::Audio => self.build_room_audio_player(thread_pool, msg),
             RowType::Video => self.build_room_video_player(thread_pool, msg),
             RowType::File => self.build_room_msg_file(msg),
             _ => self.build_room_msg_body(msg),

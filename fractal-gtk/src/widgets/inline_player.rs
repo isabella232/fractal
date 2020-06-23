@@ -507,7 +507,7 @@ impl<T: MediaPlayer + 'static> PlayerExt for T {
             Sender<Result<String, Error>>,
             Receiver<Result<String, Error>>,
         ) = channel();
-        media::get_media_async(thread_pool, server_url.clone(), media_url.clone(), tx);
+        media::get_media_async(thread_pool, server_url.clone(), media_url.to_string(), tx);
         let local_path = player.get_local_path_access();
         gtk::timeout_add(
             50,
