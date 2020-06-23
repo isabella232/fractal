@@ -136,6 +136,11 @@ impl AppOp {
         }
 
         let search_term = q.get_text().unwrap().to_string();
+        if let RoomSearchPagination::NoMorePages = self.directory_pagination {
+            // there are no more rooms. We don't need to request for more
+            return;
+        }
+
         let rooms_since = self.directory_pagination.clone().into();
         let tx = self.backend.clone();
         thread::spawn(move || {
