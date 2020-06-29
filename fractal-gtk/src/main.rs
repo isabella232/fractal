@@ -40,14 +40,19 @@ fn main() -> Result<(), Box<dyn Error>> {
         );
 
     let clap_args = clap_app.get_matches();
-    loggerv::init_with_verbosity(clap_args.occurrences_of("v"))
-        .expect("Failed to initialize logger");
-
     #[cfg(debug_assertions)]
     {
         if clap_args.occurrences_of("v") == 0 {
             loggerv::init_with_level(Level::Info).expect("Failed to initialize logger");
+        } else {
+            loggerv::init_with_verbosity(clap_args.occurrences_of("v"))
+                .expect("Failed to initialize logger");
         }
+    }
+    #[cfg(not(debug_assertions))]
+    {
+        loggerv::init_with_verbosity(clap_args.occurrences_of("v"))
+            .expect("Failed to initialize logger");
     }
 
     static_resources::init().expect("GResource initialization failed.");
