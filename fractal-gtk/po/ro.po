@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal gnome-3-30\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2020-07-09 06:24+0000\n"
-"PO-Revision-Date: 2020-07-10 16:41+0300\n"
+"POT-Creation-Date: 2020-07-14 06:43+0000\n"
+"PO-Revision-Date: 2020-07-14 18:02+0300\n"
 "Last-Translator: Florentina Mușat <florentina.musat.28@gmail.com>\n"
 "Language-Team: Romanian <gnomero-list@lists.sourceforge.net>\n"
 "Language: ro\n"
@@ -901,48 +901,52 @@ msgstr[2] "<b>{}</b> și <b>{}</b> tastează…"
 msgid "Syncing, this could take a while"
 msgstr "Se sincronizează, asta poate să dureze o vreme"
 
-#: fractal-gtk/src/backend/directory.rs:39
-#: fractal-gtk/src/backend/directory.rs:71
+#: fractal-gtk/src/backend/directory.rs:38
+#: fractal-gtk/src/backend/directory.rs:72
 msgid "Error searching for rooms"
 msgstr "Eroare la căutarea camerelor"
 
-#: fractal-gtk/src/backend/register.rs:38
+#: fractal-gtk/src/backend/register.rs:37
 msgid "Can’t login, try again"
 msgstr "Nu se poate autentifica, încercați din nou"
 
-#: fractal-gtk/src/backend/room.rs:333
+#: fractal-gtk/src/backend/room.rs:340
 msgid "Error deleting message"
 msgstr "Eroare la ștergerea mesajului"
 
-#: fractal-gtk/src/backend/room.rs:382
+#: fractal-gtk/src/backend/room.rs:385
 msgid "Can’t join the room, try again."
 msgstr "Nu se poate alătura la cameră, încercați din nou."
 
-#: fractal-gtk/src/backend/room.rs:617
+#: fractal-gtk/src/backend/room.rs:635 fractal-gtk/src/backend/room.rs:692
 msgid "Can’t create the room, try again"
 msgstr "Nu se poate crea camera, încercați din nou"
 
-#: fractal-gtk/src/backend/user.rs:155
+#: fractal-gtk/src/backend/user.rs:162
 msgid "Sorry, account settings can’t be loaded."
 msgstr "Configurările contului nu pot fi încărcate."
 
-#: fractal-gtk/src/backend/user.rs:193
+#: fractal-gtk/src/backend/user.rs:201
 msgid "Email is already in use"
 msgstr "Emailul este deja în uz"
 
-#: fractal-gtk/src/backend/user.rs:197
+#: fractal-gtk/src/backend/user.rs:205
 msgid "Please enter a valid email address."
 msgstr "Introduceți o adresă de email validă."
 
-#: fractal-gtk/src/backend/user.rs:201
+#: fractal-gtk/src/backend/user.rs:209
 msgid "Couldn’t add the email address."
 msgstr "Nu s-a putut adăuga adresa de email."
 
-#: fractal-gtk/src/backend/user.rs:261
+#: fractal-gtk/src/backend/user.rs:218 fractal-gtk/src/backend/user.rs:296
+msgid "The identity server is invalid."
+msgstr "Serverul de identitate nu este valid."
+
+#: fractal-gtk/src/backend/user.rs:277
 msgid "Phone number is already in use"
 msgstr "Numărul de telefon este deja în uz"
 
-#: fractal-gtk/src/backend/user.rs:266
+#: fractal-gtk/src/backend/user.rs:282
 msgid ""
 "Please enter your phone number in the format: \n"
 " + your country code and your phone number."
@@ -950,15 +954,15 @@ msgstr ""
 "Introduceți numărul de telefon în formatul: \n"
 "+ codul țării și numărul de telefon."
 
-#: fractal-gtk/src/backend/user.rs:271
+#: fractal-gtk/src/backend/user.rs:287
 msgid "Couldn’t add the phone number."
 msgstr "Nu s-a putut adăuga numărul de telefon."
 
-#: fractal-gtk/src/backend/user.rs:415
+#: fractal-gtk/src/backend/user.rs:443
 msgid "Couldn’t change the password"
 msgstr "Nu s-a putut modifica parola"
 
-#: fractal-gtk/src/backend/user.rs:459
+#: fractal-gtk/src/backend/user.rs:487
 msgid "Couldn’t delete the account"
 msgstr "Nu s-a putut șterge contul"
 
@@ -1018,57 +1022,57 @@ msgstr "Moderator"
 msgid "Privileged"
 msgstr "Privilegiat"
 
-#: fractal-gtk/src/widgets/message.rs:88
+#: fractal-gtk/src/widgets/message.rs:91
 msgid "Uploading video."
 msgstr "Se încarcă video-ul."
 
-#: fractal-gtk/src/widgets/message.rs:93
+#: fractal-gtk/src/widgets/message.rs:96
 msgid "Uploading audio."
 msgstr "Se încarcă audio-ul."
 
-#: fractal-gtk/src/widgets/message.rs:98
+#: fractal-gtk/src/widgets/message.rs:101
 msgid "Uploading image."
 msgstr "Se încarcă imaginea."
 
-#: fractal-gtk/src/widgets/message.rs:102
+#: fractal-gtk/src/widgets/message.rs:105
 msgid "Uploading file."
 msgstr "Se încarcă fișierul."
 
-#: fractal-gtk/src/widgets/message.rs:254
+#: fractal-gtk/src/widgets/message.rs:257
 #, c-format
 msgid "Last edited %c"
 msgstr "Ultima modificare %c"
 
-#: fractal-gtk/src/widgets/message.rs:464
-#: fractal-gtk/src/widgets/message.rs:579
+#: fractal-gtk/src/widgets/message.rs:468
+#: fractal-gtk/src/widgets/message.rs:583
 msgid "Save"
 msgstr "Salvează"
 
-#: fractal-gtk/src/widgets/message.rs:593
+#: fractal-gtk/src/widgets/message.rs:597
 msgid "Open"
 msgstr "Deschide"
 
 #. Use 12h time format (AM/PM)
-#: fractal-gtk/src/widgets/message.rs:613
+#: fractal-gtk/src/widgets/message.rs:617
 msgid "%l∶%M %p"
 msgstr "%l∶%M %p"
 
 #. Use 24 time format
-#: fractal-gtk/src/widgets/message.rs:616
+#: fractal-gtk/src/widgets/message.rs:620
 msgid "%R"
 msgstr "%R"
 
-#: fractal-gtk/src/widgets/room_history.rs:97
+#: fractal-gtk/src/widgets/room_history.rs:98
 msgid "New Messages"
 msgstr "Mesaje noi"
 
 #. Translators: This is a date format in the day divider without the year
-#: fractal-gtk/src/widgets/room_history.rs:792
+#: fractal-gtk/src/widgets/room_history.rs:801
 msgid "%B %e"
 msgstr "%B %e"
 
 #. Translators: This is a date format in the day divider with the year
-#: fractal-gtk/src/widgets/room_history.rs:795
+#: fractal-gtk/src/widgets/room_history.rs:804
 msgid "%B %e, %Y"
 msgstr "%B %e, %Y"
 
@@ -1147,9 +1151,6 @@ msgstr "Nu aveți camere încă"
 
 #~ msgid "Matrix Server"
 #~ msgstr "Server Matrix"
-
-#~ msgid "Identity server"
-#~ msgstr "Server de identitate"
 
 #~ msgid "Advanced"
 #~ msgstr "Avansat"
