@@ -319,7 +319,12 @@ impl AppOp {
         stack.set_visible_child_name("loading");
         self.get_three_pid();
         uid.set_text(&login_data.uid.to_string());
-        device_id.set_text(&self.device_id.clone().unwrap_or_default());
+        device_id.set_text(
+            self.device_id
+                .as_ref()
+                .map(|id| id.as_str())
+                .unwrap_or_default(),
+        );
         homeserver.set_text(login_data.server_url.as_str());
         name.set_text(&login_data.username.unwrap_or_default());
         name.grab_focus_without_selecting();
