@@ -4,6 +4,7 @@ use crate::backend::user::get_user_avatar;
 use crate::model::member::Member;
 use crate::model::member::MemberList;
 use crate::model::message::Message;
+use either::Either;
 use fractal_api::identifiers::{Error as IdError, EventId, RoomId, UserId};
 use fractal_api::r0::directory::post_public_rooms::Chunk as PublicRoomsChunk;
 use fractal_api::r0::sync::sync_events::Response as SyncResponse;
@@ -12,6 +13,7 @@ use log::{debug, info};
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
 use std::convert::{TryFrom, TryInto};
+use std::path::PathBuf;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum RoomMembership {
@@ -81,7 +83,7 @@ pub enum RoomTag {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Room {
     pub id: RoomId,
-    pub avatar: Option<String>, // TODO: Use Option<Url>
+    pub avatar: Option<Url>,
     pub name: Option<String>,
     pub topic: Option<String>,
     pub alias: Option<String>,
@@ -160,7 +162,8 @@ impl Room {
 
             let mut r = Self {
                 name: calculate_room_name(stevents, &user_id),
-                avatar: evc(stevents, "m.room.avatar", "url"),
+                avatar: evc(stevents, "m.room.avatar", "url")
+                    .and_then(|ref url| Url::parse(url).ok()),
                 alias: evc(stevents, "m.room.canonical_alias", "alias"),
                 topic: evc(stevents, "m.room.topic", "topic"),
                 direct: direct.contains(&k),
@@ -209,7 +212,7 @@ impl Room {
                     {
                         let kicker = Member {
                             alias: Some(kicker_alias),
-                            avatar: Some(kicker_avatar),
+                            avatar: Some(Either::Right(kicker_avatar)),
                             uid: leave_id,
                         };
                         let reason = Reason::Kicked(
@@ -236,7 +239,7 @@ impl Room {
             .iter()
             .map(|(k, room)| {
                 let stevents = &room.invite_state.events;
-                let alias_avatar: Result<Option<(String, String)>, IdError> = stevents
+                let alias_avatar: Result<Option<(String, PathBuf)>, IdError> = stevents
                     .iter()
                     .find(|x| {
                         x["content"]["membership"] == "invite"
@@ -252,13 +255,14 @@ impl Room {
                 if let Some((alias, avatar)) = alias_avatar? {
                     let inv_sender = Member {
                         alias: Some(alias),
-                        avatar: Some(avatar),
+                        avatar: Some(Either::Right(avatar)),
                         uid: user_id.clone(),
                     };
 
                     Ok(Some(Self {
                         name: calculate_room_name(stevents, &user_id),
-                        avatar: evc(stevents, "m.room.avatar", "url"),
+                        avatar: evc(stevents, "m.room.avatar", "url")
+                            .and_then(|ref url| Url::parse(url).ok()),
                         alias: evc(stevents, "m.room.canonical_alias", "alias"),
                         topic: evc(stevents, "m.room.topic", "topic"),
                         direct: direct.contains(&k),
@@ -325,7 +329,7 @@ impl From<PublicRoomsChunk> for Room {
         Self {
             alias: input.canonical_alias.as_ref().map(ToString::to_string),
             name: input.name,
-            avatar: input.avatar_url.map(Url::into_string),
+            avatar: input.avatar_url,
             topic: input.topic,
             n_members: input.num_joined_members,
             world_readable: input.world_readable,
@@ -429,8 +433,12 @@ fn parse_room_member(msg: &JsonValue) -> Option<Member> {
 
     Some(Member {
         uid: msg["sender"].as_str().unwrap_or_default().try_into().ok()?,
-        alias: c["displayname"].as_str().map(Into::into),
-        avatar: c["avatar_url"].as_str().map(Into::into),
+        alias: c["displayname"].as_str().map(String::from),
+        avatar: c["avatar_url"]
+            .as_str()
+            .map(Url::parse)
+            .and_then(Result::ok)
+            .map(Either::Left),
     })
 }
 

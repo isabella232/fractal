@@ -1,17 +1,16 @@
 use crate::i18n::i18n;
 use itertools::Itertools;
 
+use crate::appop::UserInfoCache;
 use crate::backend::ThreadPool;
-use crate::cache::CacheMap;
 use chrono::prelude::*;
-use fractal_api::identifiers::UserId;
+use either::Either;
 use fractal_api::r0::AccessToken;
 use fractal_api::url::Url;
 use glib::clone;
 use gtk::{prelude::*, ButtonExt, ContainerExt, LabelExt, Overlay, WidgetExt};
 use std::cmp::max;
 use std::rc::Rc;
-use std::sync::{Arc, Mutex};
 
 use crate::util::markup_text;
 
@@ -72,7 +71,7 @@ impl MessageBox {
     pub fn create(
         &mut self,
         thread_pool: ThreadPool,
-        user_info_cache: Arc<Mutex<CacheMap<UserId, (String, String)>>>,
+        user_info_cache: UserInfoCache,
         msg: &Message,
         has_header: bool,
         is_temp: bool,
@@ -129,7 +128,7 @@ impl MessageBox {
     pub fn tmpwidget(
         mut self,
         thread_pool: ThreadPool,
-        user_info_cache: Arc<Mutex<CacheMap<UserId, (String, String)>>>,
+        user_info_cache: UserInfoCache,
         msg: &Message,
     ) -> MessageBox {
         self.create(thread_pool, user_info_cache, msg, true, true);
@@ -143,7 +142,7 @@ impl MessageBox {
     pub fn update_header(
         &mut self,
         thread_pool: ThreadPool,
-        user_info_cache: Arc<Mutex<CacheMap<UserId, (String, String)>>>,
+        user_info_cache: UserInfoCache,
         msg: Message,
         has_header: bool,
     ) {
@@ -168,7 +167,7 @@ impl MessageBox {
     fn widget(
         &mut self,
         thread_pool: ThreadPool,
-        user_info_cache: Arc<Mutex<CacheMap<UserId, (String, String)>>>,
+        user_info_cache: UserInfoCache,
         msg: &Message,
     ) -> gtk::Box {
         // msg
@@ -265,7 +264,7 @@ impl MessageBox {
     fn build_room_msg_avatar(
         &self,
         thread_pool: ThreadPool,
-        user_info_cache: Arc<Mutex<CacheMap<UserId, (String, String)>>>,
+        user_info_cache: UserInfoCache,
         msg: &Message,
     ) -> widgets::Avatar {
         let uid = msg.sender.clone();
@@ -417,29 +416,35 @@ impl MessageBox {
     fn build_room_msg_image(&mut self, thread_pool: ThreadPool, msg: &Message) -> gtk::Box {
         let bx = gtk::Box::new(gtk::Orientation::Horizontal, 0);
 
-        let img_path = match msg.thumb {
-            // If the thumbnail is not a valid URL we use the msg.url
-            Some(ref m) if m.starts_with("mxc:") || m.starts_with("http") => m.clone(),
-            _ => msg.url.clone().unwrap_or_default(),
-        };
-        let image = widgets::image::Image::new(self.server_url.clone(), &img_path)
-            .size(Some(globals::MAX_IMAGE_SIZE))
-            .build(thread_pool);
+        // If the thumbnail is not a valid URL we use the msg.url
+        let img = msg
+            .thumb
+            .clone()
+            .filter(|m| m.scheme() == "mxc" || m.scheme().starts_with("http"))
+            .or_else(|| msg.url.clone())
+            .map(Either::Left)
+            .or_else(|| Some(Either::Right(msg.local_path.clone()?)));
 
-        image.widget.get_style_context().add_class("image-widget");
+        if let Some(img_path) = img {
+            let image = widgets::image::Image::new(self.server_url.clone(), img_path)
+                .size(Some(globals::MAX_IMAGE_SIZE))
+                .build(thread_pool);
 
-        bx.pack_start(&image.widget, true, true, 0);
-        bx.show_all();
-        self.image = Some(image.widget);
-        self.connect_media_viewer(msg);
+            image.widget.get_style_context().add_class("image-widget");
+
+            bx.pack_start(&image.widget, true, true, 0);
+            bx.show_all();
+            self.image = Some(image.widget);
+            self.connect_media_viewer(msg);
+        }
 
         bx
     }
 
     fn build_room_msg_sticker(&self, thread_pool: ThreadPool, msg: &Message) -> gtk::Box {
         let bx = gtk::Box::new(gtk::Orientation::Horizontal, 0);
-        if let Some(url) = msg.url.as_ref() {
-            let image = widgets::image::Image::new(self.server_url.clone(), url)
+        if let Some(url) = msg.url.clone() {
+            let image = widgets::image::Image::new(self.server_url.clone(), Either::Left(url))
                 .size(Some(globals::MAX_STICKER_SIZE))
                 .build(thread_pool);
             image.widget.set_tooltip_text(Some(&msg.body[..]));
@@ -452,16 +457,23 @@ impl MessageBox {
 
     fn build_room_audio_player(&self, thread_pool: ThreadPool, msg: &Message) -> gtk::Box {
         let bx = gtk::Box::new(gtk::Orientation::Horizontal, 6);
-        let player = AudioPlayerWidget::new();
-        let start_playing = false;
-        PlayerExt::initialize_stream(
-            &player,
-            &msg.url.clone().unwrap_or_default(),
-            &self.server_url,
-            thread_pool,
-            &bx,
-            start_playing,
-        );
+
+        if let Some(url) = msg.url.clone() {
+            let player = AudioPlayerWidget::new();
+            let start_playing = false;
+            PlayerExt::initialize_stream(
+                &player,
+                url,
+                self.server_url.clone(),
+                thread_pool,
+                &bx,
+                start_playing,
+            );
+
+            let control_box = PlayerExt::get_controls_container(&player)
+                .expect("Every AudioPlayer must have controls.");
+            bx.pack_start(&control_box, false, true, 0);
+        }
 
         let download_btn =
             gtk::Button::new_from_icon_name(Some("document-save-symbolic"), gtk::IconSize::Button);
@@ -475,10 +487,6 @@ impl MessageBox {
         let data = glib::Variant::from(evid);
         download_btn.set_action_target_value(Some(&data));
         download_btn.set_action_name(Some("message.save_as"));
-
-        let control_box = PlayerExt::get_controls_container(&player)
-            .expect("Every AudioPlayer must have controls.");
-        bx.pack_start(&control_box, false, true, 0);
         bx.pack_start(&download_btn, false, false, 3);
 
         let outer_box = gtk::Box::new(gtk::Orientation::Vertical, 6);
@@ -494,72 +502,76 @@ impl MessageBox {
     }
 
     fn build_room_video_player(&mut self, thread_pool: ThreadPool, msg: &Message) -> gtk::Box {
-        let with_controls = false;
-        let player = VideoPlayerWidget::new(with_controls);
         let bx = gtk::Box::new(gtk::Orientation::Vertical, 6);
-        let start_playing = false;
-        PlayerExt::initialize_stream(
-            &player,
-            &msg.url.clone().unwrap_or_default(),
-            &self.server_url,
-            thread_pool,
-            &bx,
-            start_playing,
-        );
 
-        let overlay = Overlay::new();
-        let video_widget = player.get_video_widget();
-        video_widget.set_size_request(-1, 390);
-        VideoPlayerWidget::auto_adjust_video_dimensions(&player);
-        overlay.add(&video_widget);
+        if let Some(url) = msg.url.clone() {
+            let with_controls = false;
+            let player = VideoPlayerWidget::new(with_controls);
+            let start_playing = false;
+            PlayerExt::initialize_stream(
+                &player,
+                url,
+                self.server_url.clone(),
+                thread_pool,
+                &bx,
+                start_playing,
+            );
 
-        let play_button = gtk::Button::new();
-        let play_icon = gtk::Image::new_from_icon_name(
-            Some("media-playback-start-symbolic"),
-            gtk::IconSize::Dialog,
-        );
-        play_button.set_image(Some(&play_icon));
-        play_button.set_halign(gtk::Align::Center);
-        play_button.set_valign(gtk::Align::Center);
-        play_button.get_style_context().add_class("osd");
-        play_button.get_style_context().add_class("play-icon");
-        play_button.get_style_context().add_class("flat");
-        let evid = msg
-            .id
-            .as_ref()
-            .map(|evid| evid.to_string())
-            .unwrap_or_default();
-        let data = glib::Variant::from(evid);
-        play_button.set_action_name(Some("app.open-media-viewer"));
-        play_button.set_action_target_value(Some(&data));
-        overlay.add_overlay(&play_button);
+            let overlay = Overlay::new();
+            let video_widget = player.get_video_widget();
+            video_widget.set_size_request(-1, 390);
+            VideoPlayerWidget::auto_adjust_video_dimensions(&player);
+            overlay.add(&video_widget);
 
-        let menu_button = gtk::MenuButton::new();
-        let three_dot_icon =
-            gtk::Image::new_from_icon_name(Some("view-more-symbolic"), gtk::IconSize::Button);
-        menu_button.set_image(Some(&three_dot_icon));
-        menu_button.get_style_context().add_class("osd");
-        menu_button.get_style_context().add_class("round-button");
-        menu_button.get_style_context().add_class("flat");
-        menu_button.set_margin_top(12);
-        menu_button.set_margin_end(12);
-        menu_button.set_opacity(0.8);
-        menu_button.set_halign(gtk::Align::End);
-        menu_button.set_valign(gtk::Align::Start);
-        menu_button.connect_size_allocate(|button, allocation| {
-            let diameter = max(allocation.width, allocation.height);
-            button.set_size_request(diameter, diameter);
-        });
-        overlay.add_overlay(&menu_button);
+            let play_button = gtk::Button::new();
+            let play_icon = gtk::Image::new_from_icon_name(
+                Some("media-playback-start-symbolic"),
+                gtk::IconSize::Dialog,
+            );
+            play_button.set_image(Some(&play_icon));
+            play_button.set_halign(gtk::Align::Center);
+            play_button.set_valign(gtk::Align::Center);
+            play_button.get_style_context().add_class("osd");
+            play_button.get_style_context().add_class("play-icon");
+            play_button.get_style_context().add_class("flat");
+            let evid = msg
+                .id
+                .as_ref()
+                .map(|evid| evid.to_string())
+                .unwrap_or_default();
+            let data = glib::Variant::from(evid);
+            play_button.set_action_name(Some("app.open-media-viewer"));
+            play_button.set_action_target_value(Some(&data));
+            overlay.add_overlay(&play_button);
 
-        let evid = msg.id.as_ref();
-        let redactable = msg.redactable;
-        let menu = MessageMenu::new(evid, &RowType::Video, &redactable, None, None);
-        menu_button.set_popover(Some(&menu.get_popover()));
+            let menu_button = gtk::MenuButton::new();
+            let three_dot_icon =
+                gtk::Image::new_from_icon_name(Some("view-more-symbolic"), gtk::IconSize::Button);
+            menu_button.set_image(Some(&three_dot_icon));
+            menu_button.get_style_context().add_class("osd");
+            menu_button.get_style_context().add_class("round-button");
+            menu_button.get_style_context().add_class("flat");
+            menu_button.set_margin_top(12);
+            menu_button.set_margin_end(12);
+            menu_button.set_opacity(0.8);
+            menu_button.set_halign(gtk::Align::End);
+            menu_button.set_valign(gtk::Align::Start);
+            menu_button.connect_size_allocate(|button, allocation| {
+                let diameter = max(allocation.width, allocation.height);
+                button.set_size_request(diameter, diameter);
+            });
+            overlay.add_overlay(&menu_button);
 
-        bx.pack_start(&overlay, true, true, 0);
-        self.connect_media_viewer(msg);
-        self.video_player = Some(player);
+            let evid = msg.id.as_ref();
+            let redactable = msg.redactable;
+            let menu = MessageMenu::new(evid, &RowType::Video, &redactable, None, None);
+            menu_button.set_popover(Some(&menu.get_popover()));
+
+            bx.pack_start(&overlay, true, true, 0);
+            self.connect_media_viewer(msg);
+            self.video_player = Some(player);
+        }
+
         bx
     }
 

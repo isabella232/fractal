@@ -1,9 +1,10 @@
+use fractal_api::url::Url;
 use serde::{Deserialize, Serialize};
 use serde_json::Value as JsonValue;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Info {
-    pub thumbnail_url: Option<String>,
+    pub thumbnail_url: Option<Url>,
     pub thumbnail_info: Option<JsonValue>,
     pub w: Option<u32>,
     pub h: Option<u32>,

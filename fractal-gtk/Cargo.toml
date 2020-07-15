@@ -75,3 +75,8 @@ features = ["derive"]
 [dependencies.gio]
 version = "0.8.1"
 features = ["v2_56"]
+
+[dependencies.either]
+git = "https://github.com/aledomu/either.git"
+rev = "111c9bd4905c6b51d3d904ba42625f2b32246b59"
+features = ["serde_untagged"]

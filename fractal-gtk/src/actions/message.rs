@@ -114,21 +114,21 @@ pub fn new(
 
     open_with.connect_activate(clone!(@strong server_url => move |_, data| {
         if let Some(m) = get_message(data) {
-            let url = m.url.unwrap_or_default();
-            let server_url = server_url.clone();
-            thread::spawn(move || {
-                match dw_media(server_url, &url, ContentType::Download, None) {
-                    Ok(fname) => {
-                        Command::new("xdg-open")
-                            .arg(&fname)
-                            .spawn()
-                            .expect("failed to execute process");
+            if let Some(url) = m.url {
+                thread::spawn(clone!(@strong server_url => move || {
+                    match dw_media(server_url, &url, ContentType::Download, None) {
+                        Ok(fname) => {
+                            Command::new("xdg-open")
+                                .arg(&fname)
+                                .spawn()
+                                .expect("failed to execute process");
+                        }
+                        Err(err) => {
+                            err.handle_error()
+                        }
                     }
-                    Err(err) => {
-                        err.handle_error()
-                    }
-                }
-            });
+                }));
+            }
         }
     }));
 
@@ -138,77 +138,83 @@ pub fn new(
     @weak parent as window
     => move |_, data| {
         if let Some(m) = get_message(data) {
-            let name = m.body;
-            let url = m.url.unwrap_or_default();
+            if let Some(url) = m.url {
+                let name = m.body;
 
-            let (tx, rx): (Sender<media::MediaResult>, Receiver<media::MediaResult>) = channel();
-            media::get_media_async(thread_pool.clone(), server_url.clone(), url, tx);
+                let (tx, rx): (
+                    Sender<media::MediaResult>,
+                    Receiver<media::MediaResult>,
+                ) = channel();
 
-            gtk::timeout_add(
-                50,
-                clone!(
-                    @strong name,
-                    @weak window
-                    => @default-return Continue(true), move || match rx.try_recv() {
-                        Err(TryRecvError::Empty) => Continue(true),
-                        Err(TryRecvError::Disconnected) => {
-                            let msg = i18n("Could not download the file");
-                            ErrorDialog::new(false, &msg);
+                media::get_media_async(thread_pool.clone(), server_url.clone(), url, tx);
 
-                            Continue(true)
-                        },
-                        Ok(Ok(fname)) => {
-                            if let Some(path) = save(&window, &name, &[]) {
-                                // TODO use glib to copy file
-                                if fs::copy(fname, path).is_err() {
-                                    ErrorDialog::new(false, &i18n("Couldn’t save file"));
+                gtk::timeout_add(
+                    50,
+                    clone!(
+                        @strong name,
+                        @weak window
+                        => @default-return Continue(true), move || match rx.try_recv() {
+                            Err(TryRecvError::Empty) => Continue(true),
+                            Err(TryRecvError::Disconnected) => {
+                                let msg = i18n("Could not download the file");
+                                ErrorDialog::new(false, &msg);
+
+                                Continue(true)
+                            },
+                            Ok(Ok(fname)) => {
+                                if let Some(path) = save(&window, &name, &[]) {
+                                    // TODO use glib to copy file
+                                    if fs::copy(fname, path).is_err() {
+                                        ErrorDialog::new(false, &i18n("Couldn’t save file"));
+                                    }
                                 }
+                                Continue(false)
                             }
-                            Continue(false)
+                            Ok(Err(err)) => {
+                                error!("Media path could not be found due to error: {:?}", err);
+                                Continue(false)
+                            }
                         }
-                        Ok(Err(err)) => {
-                            error!("Media path could not be found due to error: {:?}", err);
-                            Continue(false)
-                        }
-                    }),
-            );
+                    ),
+                );
+            }
         }
     }));
 
     copy_image.connect_activate(clone!(@strong server_url => move |_, data| {
         if let Some(m) = get_message(data) {
-            let url = m.url.unwrap_or_default();
+            if let Some(url) = m.url {
+                let (tx, rx): (
+                    Sender<media::MediaResult>,
+                    Receiver<media::MediaResult>,
+                ) = channel();
 
-            let (tx, rx): (
-                Sender<media::MediaResult>,
-                Receiver<media::MediaResult>,
-            ) = channel();
+                media::get_media_async(thread_pool.clone(), server_url.clone(), url, tx);
 
-            media::get_media_async(thread_pool.clone(), server_url.clone(), url, tx);
+                gtk::timeout_add(50, move || match rx.try_recv() {
+                    Err(TryRecvError::Empty) => Continue(true),
+                    Err(TryRecvError::Disconnected) => {
+                        let msg = i18n("Could not download the file");
+                        ErrorDialog::new(false, &msg);
 
-            gtk::timeout_add(50, move || match rx.try_recv() {
-                Err(TryRecvError::Empty) => Continue(true),
-                Err(TryRecvError::Disconnected) => {
-                    let msg = i18n("Could not download the file");
-                    ErrorDialog::new(false, &msg);
-
-                    Continue(true)
-                }
-                Ok(Ok(fname)) => {
-                    if let Ok(pixbuf) = gdk_pixbuf::Pixbuf::new_from_file(fname) {
-                        let atom = gdk::Atom::intern("CLIPBOARD");
-                        let clipboard = gtk::Clipboard::get(&atom);
-
-                        clipboard.set_image(&pixbuf);
+                        Continue(true)
                     }
+                    Ok(Ok(fname)) => {
+                        if let Ok(pixbuf) = gdk_pixbuf::Pixbuf::new_from_file(fname) {
+                            let atom = gdk::Atom::intern("CLIPBOARD");
+                            let clipboard = gtk::Clipboard::get(&atom);
 
-                    Continue(false)
-                }
-                Ok(Err(err)) => {
-                    error!("Image path could not be found due to error: {:?}", err);
-                    Continue(false)
-                }
-            });
+                            clipboard.set_image(&pixbuf);
+                        }
+
+                        Continue(false)
+                    }
+                    Ok(Err(err)) => {
+                        error!("Image path could not be found due to error: {:?}", err);
+                        Continue(false)
+                    }
+                });
+            }
         }
     }));
 

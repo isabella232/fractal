@@ -9,6 +9,7 @@ use std::collections::HashMap;
 use std::rc::Rc;
 
 use crate::i18n::i18n;
+use either::Either;
 use fractal_api::identifiers::UserId;
 use fractal_api::url::Url;
 use gdk::*;
@@ -314,6 +315,8 @@ impl Data {
     }
 
     pub fn redraw_media_in_viewport(&mut self, thread_pool: ThreadPool) {
+        let msg = &self.media_list[self.current_media_index];
+        let url = unwrap_or_unit_return!(msg.url.clone());
         let media_container = self
             .builder
             .get_object::<gtk::EventBox>("media_container")
@@ -323,11 +326,9 @@ impl Data {
             media_container.remove(&child);
         }
 
-        let msg = &self.media_list[self.current_media_index];
-        let url = msg.url.clone().unwrap_or_default();
         match msg.mtype.as_ref() {
             "m.image" => {
-                let image = image::Image::new(self.server_url.clone(), &url)
+                let image = image::Image::new(self.server_url.clone(), Either::Left(url))
                     .shrink_to_fit(true)
                     .center(true)
                     .build(thread_pool);
@@ -336,7 +337,7 @@ impl Data {
                 self.widget = Widget::Image(image);
             }
             "m.video" => {
-                let widget = self.create_video_widget(thread_pool, &url);
+                let widget = self.create_video_widget(thread_pool, url);
                 media_container.add(&widget.outer_box);
                 self.widget = Widget::Video(widget);
                 media_container.show_all();
@@ -348,7 +349,7 @@ impl Data {
         self.set_nav_btn_visibility();
     }
 
-    fn create_video_widget(&self, thread_pool: ThreadPool, url: &str) -> VideoWidget {
+    fn create_video_widget(&self, thread_pool: ThreadPool, url: Url) -> VideoWidget {
         let with_controls = true;
         let player = VideoPlayerWidget::new(with_controls);
         let bx = gtk::Box::new(gtk::Orientation::Vertical, 0);
@@ -356,7 +357,7 @@ impl Data {
         PlayerExt::initialize_stream(
             &player,
             url,
-            &self.server_url.clone(),
+            self.server_url.clone(),
             thread_pool,
             &bx,
             start_playing,
@@ -661,6 +662,8 @@ impl MediaViewer {
     }
 
     pub fn display_media_viewer(&mut self, thread_pool: ThreadPool, media_msg: Message) {
+        let url = unwrap_or_unit_return!(media_msg.url.clone());
+
         let previous_media_revealer = self
             .builder
             .get_object::<gtk::Revealer>("previous_media_revealer")
@@ -680,13 +683,13 @@ impl MediaViewer {
             .get_object::<gtk::EventBox>("media_container")
             .expect("Cant find media_container in ui file.");
 
-        let url = media_msg.url.clone().unwrap_or_default();
         match media_msg.mtype.as_ref() {
             "m.image" => {
-                let image = image::Image::new(self.data.borrow().server_url.clone(), &url)
-                    .shrink_to_fit(true)
-                    .center(true)
-                    .build(thread_pool);
+                let image =
+                    image::Image::new(self.data.borrow().server_url.clone(), Either::Left(url))
+                        .shrink_to_fit(true)
+                        .center(true)
+                        .build(thread_pool);
 
                 media_container.add(&image.widget);
                 media_container.show_all();
@@ -694,7 +697,7 @@ impl MediaViewer {
                 self.data.borrow_mut().widget = Widget::Image(image);
             }
             "m.video" => {
-                let video_widget = self.data.borrow().create_video_widget(thread_pool, &url);
+                let video_widget = self.data.borrow().create_video_widget(thread_pool, url);
                 media_container.add(&video_widget.outer_box);
                 media_container.show_all();
 

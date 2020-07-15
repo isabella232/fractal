@@ -16,7 +16,7 @@ use serde_json::json;
 use serde_json::Value as JsonValue;
 use std::env::temp_dir;
 use std::fs;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::thread;
 
 use crate::appop::room::Force;
@@ -298,46 +298,49 @@ impl AppOp {
     pub fn attach_message(&mut self, path: PathBuf) {
         if let Some(room) = self.active_room.clone() {
             if let Some(sender) = self.login_data.as_ref().map(|ld| ld.uid.clone()) {
-                if let Ok(info) = gio::File::new_for_path(&path).query_info(
-                    &gio::FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
-                    gio::FileQueryInfoFlags::NONE,
-                    gio::NONE_CANCELLABLE,
-                ) {
-                    // This should always return a type
-                    let mime = info
-                        .get_content_type()
-                        .expect("Could not parse content type from file");
-                    let mtype = match mime.as_ref() {
-                        m if m.starts_with("image") => "m.image",
-                        m if m.starts_with("audio") => "m.audio",
-                        "application/x-riff" => "m.audio",
-                        m if m.starts_with("video") => "m.video",
-                        "application/x-mpegURL" => "m.video",
-                        _ => "m.file",
-                    };
-                    let body = path
-                        .file_name()
-                        .and_then(|s| s.to_str())
-                        .unwrap_or_default();
-                    let path_string = path.to_str().unwrap_or_default();
+                if let Ok(uri) = Url::from_file_path(&path) {
+                    if let Ok(info) = gio::File::new_for_path(&path).query_info(
+                        &gio::FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
+                        gio::FileQueryInfoFlags::NONE,
+                        gio::NONE_CANCELLABLE,
+                    ) {
+                        // This should always return a type
+                        let mime = info
+                            .get_content_type()
+                            .expect("Could not parse content type from file");
+                        let mtype = match mime.as_ref() {
+                            m if m.starts_with("image") => "m.image",
+                            m if m.starts_with("audio") => "m.audio",
+                            "application/x-riff" => "m.audio",
+                            m if m.starts_with("video") => "m.video",
+                            "application/x-mpegURL" => "m.video",
+                            _ => "m.file",
+                        };
+                        let body = path
+                            .file_name()
+                            .and_then(|s| s.to_str())
+                            .map(Into::into)
+                            .unwrap_or_default();
 
-                    let mut m =
-                        Message::new(room, sender, body.to_string(), mtype.to_string(), None);
-                    let info = match mtype {
-                        "m.image" => get_image_media_info(path_string, mime.as_ref()),
-                        "m.audio" => get_audio_video_media_info(path_string, mime.as_ref()),
-                        "m.video" => get_audio_video_media_info(path_string, mime.as_ref()),
-                        "m.file" => get_file_media_info(path_string, mime.as_ref()),
-                        _ => None,
-                    };
+                        let mut m = Message::new(room, sender, body, mtype.to_string(), None);
+                        let info = match mtype {
+                            "m.image" => get_image_media_info(&path, mime.as_ref()),
+                            "m.audio" => get_audio_video_media_info(&uri, mime.as_ref()),
+                            "m.video" => get_audio_video_media_info(&uri, mime.as_ref()),
+                            "m.file" => get_file_media_info(&path, mime.as_ref()),
+                            _ => None,
+                        };
 
-                    m.extra_content = info;
-                    m.url = Some(path_string.to_string());
+                        m.extra_content = info;
+                        m.local_path = Some(path);
 
-                    self.add_tmp_room_message(m);
-                    self.dequeue_message();
+                        self.add_tmp_room_message(m);
+                        self.dequeue_message();
+                    } else {
+                        error!("Can't send message: Could not query info");
+                    }
                 } else {
-                    error!("Can't send message: Could not query info");
+                    error!("Can't send message: Path is not absolute")
                 }
             } else {
                 error!("Can't send message: No user is logged in");
@@ -560,6 +563,7 @@ fn create_ui_message(
         },
         thumb: msg.thumb,
         url: msg.url,
+        local_path: msg.local_path,
         formatted_body: msg.formatted_body,
         format: msg.format,
         last_viewed,
@@ -572,9 +576,9 @@ fn create_ui_message(
 /// This function opens the image, creates a thumbnail
 /// and populates the info Json with the information it has
 
-fn get_image_media_info(file: &str, mimetype: &str) -> Option<JsonValue> {
-    let (_, w, h) = Pixbuf::get_file_info(&file)?;
-    let size = fs::metadata(&file).ok()?.len();
+fn get_image_media_info(file: &Path, mimetype: &str) -> Option<JsonValue> {
+    let (_, w, h) = Pixbuf::get_file_info(file)?;
+    let size = fs::metadata(file).ok()?.len();
 
     // make thumbnail max 800x600
     let thumb = Pixbuf::new_from_file_at_scale(&file, 800, 600, true).ok()?;
@@ -608,10 +612,10 @@ fn get_image_media_info(file: &str, mimetype: &str) -> Option<JsonValue> {
     Some(info)
 }
 
-fn get_audio_video_media_info(file: &str, mimetype: &str) -> Option<JsonValue> {
-    let size = fs::metadata(file).ok()?.len();
+fn get_audio_video_media_info(uri: &Url, mimetype: &str) -> Option<JsonValue> {
+    let size = fs::metadata(uri.to_file_path().ok()?).ok()?.len();
 
-    if let Some(duration) = widgets::inline_player::get_media_duration(file)
+    if let Some(duration) = widgets::inline_player::get_media_duration(uri)
         .ok()
         .and_then(|d| d.mseconds())
     {
@@ -632,7 +636,7 @@ fn get_audio_video_media_info(file: &str, mimetype: &str) -> Option<JsonValue> {
     }
 }
 
-fn get_file_media_info(file: &str, mimetype: &str) -> Option<JsonValue> {
+fn get_file_media_info(file: &Path, mimetype: &str) -> Option<JsonValue> {
     let size = fs::metadata(file).ok()?.len();
 
     let info = json!({
@@ -645,59 +649,63 @@ fn get_file_media_info(file: &str, mimetype: &str) -> Option<JsonValue> {
     Some(info)
 }
 
-fn attach_file(baseu: Url, tk: AccessToken, mut msg: Message) {
-    let fname = msg.url.clone().unwrap_or_default();
+struct NonMediaMsg;
+
+fn attach_file(baseu: Url, tk: AccessToken, mut msg: Message) -> Result<(), NonMediaMsg> {
     let mut extra_content: Option<ExtraContent> = msg
-        .clone()
         .extra_content
+        .clone()
         .and_then(|c| serde_json::from_value(c).ok());
 
-    let thumb = extra_content
-        .clone()
-        .and_then(|c| c.info.thumbnail_url)
-        .unwrap_or_default();
+    let thumb_url = extra_content.clone().and_then(|c| c.info.thumbnail_url);
 
-    if fname.starts_with("mxc://") && thumb.starts_with("mxc://") {
-        send_msg_and_manage(baseu, tk, msg);
+    match (msg.url.clone(), msg.local_path.as_ref(), thumb_url) {
+        (Some(url), _, Some(thumb)) if url.scheme() == "mxc" && thumb.scheme() == "mxc" => {
+            send_msg_and_manage(baseu, tk, msg);
 
-        return;
-    }
-
-    if !thumb.is_empty() {
-        match room::upload_file(baseu.clone(), tk.clone(), &thumb) {
-            Ok(response) => {
-                let thumb_uri = response.content_uri.to_string();
-                msg.thumb = Some(thumb_uri.clone());
-                if let Some(ref mut xctx) = extra_content {
-                    xctx.info.thumbnail_url = Some(thumb_uri);
+            Ok(())
+        }
+        (_, Some(local_path), _) => {
+            if let Some(ref local_path_thumb) = msg.local_path_thumb {
+                match room::upload_file(baseu.clone(), tk.clone(), local_path_thumb) {
+                    Ok(response) => {
+                        let thumb_uri = response.content_uri;
+                        msg.thumb = Some(thumb_uri.clone());
+                        if let Some(ref mut xctx) = extra_content {
+                            xctx.info.thumbnail_url = Some(thumb_uri);
+                        }
+                        msg.extra_content = serde_json::to_value(&extra_content).ok();
+                    }
+                    Err(err) => {
+                        err.handle_error();
+                    }
                 }
-                msg.extra_content = serde_json::to_value(&extra_content).ok();
-            }
-            Err(err) => {
-                err.handle_error();
-            }
-        }
 
-        if let Err(_e) = std::fs::remove_file(&thumb) {
-            error!("Can't remove thumbnail: {}", thumb);
+                if let Err(_e) = std::fs::remove_file(local_path_thumb) {
+                    error!("Can't remove thumbnail: {}", local_path_thumb.display());
+                }
+            }
+
+            let query = room::upload_file(baseu.clone(), tk.clone(), local_path).map(|response| {
+                msg.url = Some(response.content_uri);
+                thread::spawn(clone!(@strong msg => move || send_msg_and_manage(baseu, tk, msg)));
+
+                msg
+            });
+
+            match query {
+                Ok(msg) => {
+                    APPOP!(attached_file, (msg));
+                }
+                Err(err) => {
+                    err.handle_error();
+                }
+            };
+
+            Ok(())
         }
+        _ => Err(NonMediaMsg),
     }
-
-    let query = room::upload_file(baseu.clone(), tk.clone(), &fname).map(|response| {
-        msg.url = Some(response.content_uri.to_string());
-        thread::spawn(clone!(@strong msg => move || send_msg_and_manage(baseu, tk, msg)));
-
-        msg
-    });
-
-    match query {
-        Ok(msg) => {
-            APPOP!(attached_file, (msg));
-        }
-        Err(err) => {
-            err.handle_error();
-        }
-    };
 }
 
 fn send_msg_and_manage(baseu: Url, tk: AccessToken, msg: Message) {

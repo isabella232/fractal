@@ -3,6 +3,7 @@ use crate::globals;
 use fractal_api::identifiers::{Error as IdError, EventId, RoomId};
 use fractal_api::reqwest::Error as ReqwestError;
 use fractal_api::url::Url;
+use std::path::PathBuf;
 use std::sync::mpsc::Sender;
 
 use crate::backend::HTTP_CLIENT;
@@ -18,27 +19,17 @@ use fractal_api::r0::message::get_message_events::Response as GetMessagesEventsR
 
 use super::{dw_media, get_prev_batch_from, ContentType, ThreadPool};
 
-pub type MediaResult = Result<String, MediaError>;
+pub type MediaResult = Result<PathBuf, MediaError>;
 pub type MediaList = (Vec<Message>, String);
 
-pub fn get_thumb_async(
-    thread_pool: ThreadPool,
-    baseu: Url,
-    media: String,
-    tx: Sender<MediaResult>,
-) {
+pub fn get_thumb_async(thread_pool: ThreadPool, baseu: Url, media: Url, tx: Sender<MediaResult>) {
     thread_pool.run(move || {
         let fname = dw_media(baseu, &media, ContentType::default_thumbnail(), None);
         tx.send(fname).expect_log("Connection closed");
     });
 }
 
-pub fn get_media_async(
-    thread_pool: ThreadPool,
-    baseu: Url,
-    media: String,
-    tx: Sender<MediaResult>,
-) {
+pub fn get_media_async(thread_pool: ThreadPool, baseu: Url, media: Url, tx: Sender<MediaResult>) {
     thread_pool.run(move || {
         let fname = dw_media(baseu, &media, ContentType::Download, None);
         tx.send(fname).expect_log("Connection closed");

@@ -1,12 +1,16 @@
 use chrono::prelude::*;
 use chrono::DateTime;
 use chrono::TimeZone;
-use fractal_api::identifiers::{Error as IdError, EventId, RoomId, UserId};
+use fractal_api::{
+    identifiers::{Error as IdError, EventId, RoomId, UserId},
+    url::Url,
+};
 use serde::{Deserialize, Serialize};
 use serde_json::Value as JsonValue;
 use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::convert::TryInto;
+use std::path::PathBuf;
 
 //FIXME make properties private
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -16,8 +20,10 @@ pub struct Message {
     pub body: String,
     pub date: DateTime<Local>,
     pub room: RoomId,
-    pub thumb: Option<String>,
-    pub url: Option<String>,
+    pub thumb: Option<Url>,
+    pub local_path_thumb: Option<PathBuf>,
+    pub url: Option<Url>,
+    pub local_path: Option<PathBuf>,
     // FIXME: This should be a required field but it is mandatory
     // to do it this way because because this struct is used both
     // for received messages and messages to send. At the moment
@@ -72,7 +78,9 @@ impl Message {
             date,
             room,
             thumb: None,
+            local_path_thumb: None,
             url: None,
+            local_path: None,
             formatted_body: None,
             format: None,
             source: None,
@@ -143,7 +151,9 @@ impl Message {
             mtype: type_.to_string(),
             body: String::new(),
             url: None,
+            local_path: None,
             thumb: None,
+            local_path_thumb: None,
             formatted_body: None,
             format: None,
             source: serde_json::to_string_pretty(&msg).ok(),
@@ -184,17 +194,12 @@ impl Message {
 
         match mtype.as_str() {
             "m.image" | "m.file" | "m.video" | "m.audio" => {
-                let url = c["url"].as_str().map(String::from).unwrap_or_default();
-                let mut t = c["info"]["thumbnail_url"]
+                self.url = c["url"].as_str().map(Url::parse).and_then(Result::ok);
+                self.thumb = c["info"]["thumbnail_url"]
                     .as_str()
-                    .map(String::from)
-                    .unwrap_or_default();
-                if t.is_empty() && !url.is_empty() {
-                    t = url.clone();
-                }
-
-                self.url = Some(url);
-                self.thumb = Some(t);
+                    .map(Url::parse)
+                    .and_then(Result::ok)
+                    .or_else(|| Some(self.url.clone()?));
             }
             "m.text" => {
                 // Only m.text messages can be replies for backward compatibility
@@ -213,18 +218,13 @@ impl Message {
     }
 
     fn parse_m_sticker(&mut self, c: &JsonValue) {
-        let url = c["url"].as_str().map(String::from).unwrap_or_default();
-        let mut t = c["info"]["thumbnail_url"]
+        self.url = c["url"].as_str().map(Url::parse).and_then(Result::ok);
+        self.thumb = c["info"]["thumbnail_url"]
             .as_str()
-            .map(String::from)
-            .unwrap_or_default();
-        if t.is_empty() && !url.is_empty() {
-            t = url.clone();
-        }
-
+            .map(Url::parse)
+            .and_then(Result::ok)
+            .or_else(|| Some(self.url.clone()?));
         self.body = c["body"].as_str().map(String::from).unwrap_or_default();
-        self.url = Some(url);
-        self.thumb = Some(t);
     }
 
     /// Create a vec of Message from a json event list

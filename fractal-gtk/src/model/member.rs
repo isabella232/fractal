@@ -1,9 +1,11 @@
+use either::Either;
 use fractal_api::identifiers::UserId;
 use fractal_api::r0::search::user::User;
 use fractal_api::r0::sync::get_joined_members::RoomMember;
 use fractal_api::url::Url;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use std::path::PathBuf;
 
 // TODO: Make this non-(de)serializable
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -12,7 +14,7 @@ pub struct Member {
     #[serde(rename = "display_name")]
     pub alias: Option<String>,
     #[serde(rename = "avatar_url")]
-    pub avatar: Option<String>,
+    pub avatar: Option<Either<Url, PathBuf>>,
 }
 
 impl Member {
@@ -37,7 +39,7 @@ impl From<User> for Member {
         Self {
             uid: user.user_id,
             alias: user.display_name,
-            avatar: user.avatar_url.map(Url::into_string),
+            avatar: user.avatar_url.map(Either::Left),
         }
     }
 }
@@ -47,7 +49,7 @@ impl From<(UserId, RoomMember)> for Member {
         Member {
             uid,
             alias: roommember.display_name,
-            avatar: roommember.avatar_url.as_ref().map(ToString::to_string),
+            avatar: roommember.avatar_url.map(Either::Left),
         }
     }
 }

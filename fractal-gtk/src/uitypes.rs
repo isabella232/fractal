@@ -2,7 +2,11 @@ use crate::types::Message;
 use crate::widgets;
 use chrono::prelude::DateTime;
 use chrono::prelude::Local;
-use fractal_api::identifiers::{EventId, UserId};
+use fractal_api::{
+    identifiers::{EventId, UserId},
+    url::Url,
+};
+use std::path::PathBuf;
 
 /* MessageContent contains all data needed to display one row
  * therefore it should contain only one Message body with one format
@@ -16,8 +20,9 @@ pub struct MessageContent {
     pub body: String,
     pub date: DateTime<Local>,
     pub replace_date: Option<DateTime<Local>>,
-    pub thumb: Option<String>,
-    pub url: Option<String>,
+    pub thumb: Option<Url>,
+    pub url: Option<Url>,
+    pub local_path: Option<PathBuf>,
     pub formatted_body: Option<String>,
     pub format: Option<String>,
     /* in some places we still need the backend message type (e.g. media viewer) */

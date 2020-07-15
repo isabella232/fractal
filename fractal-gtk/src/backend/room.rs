@@ -6,6 +6,7 @@ use fractal_api::reqwest::Error as ReqwestError;
 use fractal_api::url::Url;
 use std::fs;
 use std::io::Error as IoError;
+use std::path::{Path, PathBuf};
 
 use std::collections::HashMap;
 use std::convert::TryFrom;
@@ -139,12 +140,7 @@ pub fn get_room_avatar(
     let avatar = response["url"].as_str().and_then(|s| Url::parse(s).ok());
     let dest = cache_dir_path(None, &room_id.to_string()).ok();
     if let Some(ref avatar) = avatar {
-        let _ = dw_media(
-            base,
-            avatar.as_str(),
-            ContentType::default_thumbnail(),
-            dest,
-        );
+        let _ = dw_media(base, avatar, ContentType::default_thumbnail(), dest);
     }
 
     Ok((room_id, avatar))
@@ -545,7 +541,7 @@ pub fn set_room_avatar(
     base: Url,
     access_token: AccessToken,
     room_id: RoomId,
-    avatar: String,
+    avatar: PathBuf,
 ) -> Result<(), SetRoomAvatarError> {
     let params = CreateStateEventsForKeyParameters {
         access_token: access_token.clone(),
@@ -592,7 +588,7 @@ impl HandleError for AttachedFileError {
 pub fn upload_file(
     base: Url,
     access_token: AccessToken,
-    fname: &str,
+    fname: &Path,
 ) -> Result<CreateContentResponse, AttachedFileError> {
     let params_upload = CreateContentParameters {
         access_token,

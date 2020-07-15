@@ -110,8 +110,12 @@ impl FCache {
     fn get_store(&self) -> MutexGuard<Option<Cache>> {
         let mut guard = self.cache.lock().unwrap();
         if guard.is_none() {
-            let db: String =
-                cache_dir_path(None, "cache.mdl").expect("Fatal error: Can't start the cache");
+            let maybe_db_path = cache_dir_path(None, "cache.mdl").ok();
+            let db: String = maybe_db_path
+                .and_then(|p| p.to_str().map(Into::into))
+                .expect("Fatal error: Can't start the cache");
+            // TODO: Replace Cache with another library. Not expecting a proper
+            //       Path type for the path of the DB is bonkers.
             let mdl_cache = Cache::new(&db).expect("Fatal error: Can't start the cache");
             *guard = Some(mdl_cache);
         }

@@ -6,16 +6,15 @@ use std::io::Error as IoError;
 
 use super::MediaError;
 use crate::actions::global::activate_action;
+use crate::appop::UserInfoCache;
 use crate::backend::ThreadPool;
 use crate::backend::HTTP_CLIENT;
-use crate::cache::CacheMap;
 use crate::util::cache_dir_path;
 use crate::util::ResultExpectLog;
 use log::error;
 use std::convert::TryInto;
 use std::path::PathBuf;
 use std::sync::mpsc::Sender;
-use std::sync::{Arc, Mutex};
 use std::thread;
 
 use crate::types::Member;
@@ -78,7 +77,7 @@ use crate::app::App;
 use crate::i18n::i18n;
 use crate::APPOP;
 
-pub type UserInfo = (String, String);
+pub type UserInfo = (String, PathBuf);
 
 #[derive(Debug)]
 pub struct NameError(ReqwestError);
@@ -564,7 +563,7 @@ pub fn set_user_avatar(
 
 pub fn get_user_info_async(
     thread_pool: ThreadPool,
-    user_info_cache: Arc<Mutex<CacheMap<UserId, (String, String)>>>,
+    user_info_cache: UserInfoCache,
     baseu: Url,
     uid: UserId,
     tx: Sender<UserInfo>,
@@ -628,12 +627,18 @@ impl From<ReqwestError> for GetUserAvatarError {
     }
 }
 
+impl From<MediaError> for GetUserAvatarError {
+    fn from(err: MediaError) -> Self {
+        Self::Download(err)
+    }
+}
+
 impl HandleError for GetUserAvatarError {}
 
 pub fn get_user_avatar(
     base: Url,
     user_id: &UserId,
-) -> Result<(String, String), GetUserAvatarError> {
+) -> Result<(String, PathBuf), GetUserAvatarError> {
     let request = get_profile(base.clone(), user_id)?;
     let response: GetProfileResponse = HTTP_CLIENT.get_client().execute(request)?.json()?;
 
@@ -644,15 +649,10 @@ pub fn get_user_avatar(
 
     let img = response
         .avatar_url
+        .as_ref()
         .map(|url| {
-            let dest = cache_dir_path(None, &user_id.to_string())
-                .map_err(MediaError::InvalidDownloadPath)?;
-            dw_media(
-                base,
-                url.as_str(),
-                ContentType::default_thumbnail(),
-                Some(dest),
-            )
+            let dest = cache_dir_path(None, &user_id.to_string())?;
+            dw_media(base, url, ContentType::default_thumbnail(), Some(dest))
         })
         .unwrap_or_else(|| Ok(Default::default()))
         .map_err(GetUserAvatarError::Download)?;

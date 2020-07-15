@@ -1,5 +1,9 @@
 use crate::backend::{user, HandleError};
-use fractal_api::identifiers::{RoomId, UserId};
+use either::Either;
+use fractal_api::{
+    identifiers::{RoomId, UserId},
+    url::Url,
+};
 use glib::clone;
 use gtk::prelude::*;
 
@@ -59,12 +63,12 @@ impl AppOp {
             }
             Some("join") => {
                 let m = Member {
-                    avatar: Some(String::from(
-                        ev.content["avatar_url"].as_str().unwrap_or_default(),
-                    )),
-                    alias: Some(String::from(
-                        ev.content["displayname"].as_str().unwrap_or_default(),
-                    )),
+                    avatar: ev.content["avatar_url"]
+                        .as_str()
+                        .map(Url::parse)
+                        .and_then(Result::ok)
+                        .map(Either::Left),
+                    alias: ev.content["displayname"].as_str().map(String::from),
                     uid: sender,
                 };
                 if let Some(r) = self.rooms.get_mut(&ev.room.clone()) {

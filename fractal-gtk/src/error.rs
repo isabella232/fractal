@@ -1,5 +1,4 @@
 use serde::Deserialize;
-use std::io;
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct StandardErrorResponse {
@@ -23,7 +22,6 @@ macro_rules! derror {
 #[derive(Debug)]
 pub enum Error {
     BackendError,
-    CacheError,
     ReqwestError(fractal_api::reqwest::Error),
     NetworkError(fractal_api::reqwest::StatusCode),
     MatrixError(MatrixErrorCode, String),
@@ -41,8 +39,5 @@ impl From<StandardErrorResponse> for Error {
     }
 }
 
-derror!(fractal_api::url::ParseError, Error::BackendError);
-derror!(io::Error, Error::BackendError);
 derror!(glib::error::Error, Error::BackendError);
 derror!(fractal_api::identifiers::Error, Error::BackendError);
-derror!(serde_json::Error, Error::CacheError);

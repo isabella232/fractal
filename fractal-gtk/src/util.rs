@@ -1,4 +1,3 @@
-use crate::error::Error;
 use crate::globals::CACHE_PATH;
 use failure::format_err;
 use failure::Error as FailError;
@@ -8,19 +7,18 @@ use gio::{Settings, SettingsExt, SettingsSchemaSource};
 use html2pango::{html_escape, markup_links};
 use log::error;
 use std::fs::create_dir_all;
+use std::io::Error as IoError;
+use std::path::PathBuf;
 use std::sync::mpsc::SendError;
 
-pub fn cache_dir_path(dir: Option<&str>, name: &str) -> Result<String, Error> {
+pub fn cache_dir_path(dir: Option<&str>, name: &str) -> Result<PathBuf, IoError> {
     let path = CACHE_PATH.join(dir.unwrap_or_default());
 
     if !path.is_dir() {
         create_dir_all(&path)?;
     }
 
-    path.join(name)
-        .to_str()
-        .map(Into::into)
-        .ok_or(Error::CacheError)
+    Ok(path.join(name))
 }
 
 pub fn get_pixbuf_data(pb: &Pixbuf) -> Result<Vec<u8>, FailError> {

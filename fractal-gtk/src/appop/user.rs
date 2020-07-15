@@ -3,6 +3,7 @@ use gtk::prelude::*;
 use crate::backend::{user, HandleError};
 use glib::clone;
 
+use std::path::PathBuf;
 use std::thread;
 
 use crate::app::App;
@@ -145,10 +146,10 @@ impl AppOp {
         });
     }
 
-    pub fn set_avatar(&mut self, path: String) {
+    pub fn set_avatar(&mut self, path: PathBuf) {
         let login_data = unwrap_or_unit_return!(self.login_data.clone());
         self.set_login_data(LoginData {
-            avatar: Some(path.into()),
+            avatar: Some(path),
             ..login_data
         });
     }

@@ -23,7 +23,7 @@ use glib::clone;
 use gst::prelude::*;
 use gst::ClockTime;
 use gstreamer_pbutils::Discoverer;
-use log::{error, info, warn};
+use log::{error, warn};
 
 use gtk::prelude::*;
 use gtk::ButtonExt;
@@ -37,6 +37,7 @@ use fragile::Fragile;
 
 use std::cell::RefCell;
 use std::ops::Deref;
+use std::path::PathBuf;
 use std::rc::Rc;
 
 use std::sync::mpsc::channel;
@@ -54,8 +55,8 @@ pub trait PlayerExt {
     fn stop(&self);
     fn initialize_stream(
         player: &Rc<Self>,
-        media_url: &str,
-        server_url: &Url,
+        media_url: Url,
+        server_url: Url,
         thread_pool: ThreadPool,
         bx: &gtk::Box,
         start_playing: bool,
@@ -145,7 +146,7 @@ pub struct PlayerControls {
 pub trait MediaPlayer {
     fn get_player(&self) -> gst_player::Player;
     fn get_controls(&self) -> Option<PlayerControls>;
-    fn get_local_path_access(&self) -> Rc<RefCell<Option<String>>>;
+    fn get_local_path_access(&self) -> Rc<RefCell<Option<PathBuf>>>;
 }
 
 trait ControlsConnection {
@@ -158,7 +159,7 @@ trait ControlsConnection {
 pub struct AudioPlayerWidget {
     player: gst_player::Player,
     controls: PlayerControls,
-    local_path: Rc<RefCell<Option<String>>>,
+    local_path: Rc<RefCell<Option<PathBuf>>>,
 }
 
 impl Default for AudioPlayerWidget {
@@ -228,7 +229,7 @@ impl MediaPlayer for AudioPlayerWidget {
         Some(self.controls.clone())
     }
 
-    fn get_local_path_access(&self) -> Rc<RefCell<Option<String>>> {
+    fn get_local_path_access(&self) -> Rc<RefCell<Option<PathBuf>>> {
         self.local_path.clone()
     }
 }
@@ -237,7 +238,7 @@ impl MediaPlayer for AudioPlayerWidget {
 pub struct VideoPlayerWidget {
     player: gst_player::Player,
     controls: Option<PlayerControls>,
-    local_path: Rc<RefCell<Option<String>>>,
+    local_path: Rc<RefCell<Option<PathBuf>>>,
     dimensions: Rc<RefCell<Option<(i32, i32)>>>,
     state: Rc<RefCell<Option<gst_player::PlayerState>>>,
 }
@@ -465,7 +466,7 @@ impl MediaPlayer for VideoPlayerWidget {
         self.controls.clone()
     }
 
-    fn get_local_path_access(&self) -> Rc<RefCell<Option<String>>> {
+    fn get_local_path_access(&self) -> Rc<RefCell<Option<PathBuf>>> {
         self.local_path.clone()
     }
 }
@@ -501,15 +502,15 @@ impl<T: MediaPlayer + 'static> PlayerExt for T {
 
     fn initialize_stream(
         player: &Rc<Self>,
-        media_url: &str,
-        server_url: &Url,
+        media_url: Url,
+        server_url: Url,
         thread_pool: ThreadPool,
         bx: &gtk::Box,
         start_playing: bool,
     ) {
         bx.set_opacity(0.3);
         let (tx, rx): (Sender<media::MediaResult>, Receiver<media::MediaResult>) = channel();
-        media::get_media_async(thread_pool, server_url.clone(), media_url.to_string(), tx);
+        media::get_media_async(thread_pool, server_url, media_url, tx);
         let local_path = player.get_local_path_access();
         gtk::timeout_add(
             50,
@@ -523,23 +524,28 @@ impl<T: MediaPlayer + 'static> PlayerExt for T {
                         Continue(true)
                     },
                     Ok(Ok(path)) => {
-                        info!("MEDIA PATH: {}", &path);
-                        *local_path.borrow_mut() = Some(path.clone());
-                        if ! start_playing {
-                            if let Some(controls) = player.get_controls() {
-                                if let Ok(duration) = get_media_duration(&path) {
-                                    controls.timer.on_duration_changed(Duration(duration))
+                        match Url::from_file_path(&path) {
+                            Ok(uri) => {
+                                *local_path.borrow_mut() = Some(path);
+                                if !start_playing {
+                                    if let Some(controls) = player.get_controls() {
+                                        if let Ok(duration) = get_media_duration(&uri) {
+                                            controls.timer.on_duration_changed(Duration(duration))
+                                        }
+                                    }
+                                }
+                                player.get_player().set_uri(uri.as_str());
+                                if player.get_controls().is_some() {
+                                    ControlsConnection::init(&player);
+                                }
+                                bx.set_opacity(1.0);
+                                if start_playing {
+                                    player.play();
                                 }
                             }
-                        }
-                        let uri = format!("file://{}", path);
-                        player.get_player().set_uri(&uri);
-                        if player.get_controls().is_some() {
-                            ControlsConnection::init(&player);
-                        }
-                        bx.set_opacity(1.0);
-                        if start_playing {
-                            player.play();
+                            Err(_) => {
+                                error!("Media path is not valid: {:?}", path);
+                            }
                         }
                         Continue(false)
                     }
@@ -702,9 +708,9 @@ fn adjust_box_margins_to_video_dimensions(bx: &gtk::Box, video_width: i32, video
     }
 }
 
-pub fn get_media_duration(file: &str) -> Result<ClockTime, glib::Error> {
+pub fn get_media_duration(uri: &Url) -> Result<ClockTime, glib::Error> {
     let timeout = ClockTime::from_seconds(1);
     let discoverer = Discoverer::new(timeout)?;
-    let info = discoverer.discover_uri(&format!("file://{}", file))?;
+    let info = discoverer.discover_uri(uri.as_str())?;
     Ok(info.get_duration())
 }

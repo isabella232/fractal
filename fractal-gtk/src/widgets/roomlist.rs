@@ -225,7 +225,7 @@ impl RoomListGroup {
         });
     }
 
-    pub fn set_room_avatar(&mut self, room_id: RoomId, av: Option<String>) {
+    pub fn set_room_avatar(&mut self, room_id: RoomId, av: Option<Url>) {
         if let Some(r) = self.rooms.get_mut(&room_id) {
             r.set_avatar(av.clone());
         }
@@ -635,7 +635,7 @@ impl RoomList {
         });
     }
 
-    pub fn set_room_avatar(&mut self, room_id: RoomId, av: Option<String>) {
+    pub fn set_room_avatar(&mut self, room_id: RoomId, av: Option<Url>) {
         run_in_group!(self, &room_id, set_room_avatar, room_id, av);
     }
 

@@ -485,7 +485,7 @@ impl AppOp {
                     }
                 }
             }
-            r.avatar = avatar.map(|s| s.into_string());
+            r.avatar = avatar;
             self.roomlist
                 .set_room_avatar(room_id.clone(), r.avatar.clone());
         }

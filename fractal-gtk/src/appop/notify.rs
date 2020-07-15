@@ -7,6 +7,7 @@ use glib::clone;
 use glib::source::Continue;
 use gtk::prelude::*;
 use log::info;
+use std::path::Path;
 use std::sync::mpsc::channel;
 use std::sync::mpsc::TryRecvError;
 use std::sync::mpsc::{Receiver, Sender};
@@ -107,11 +108,11 @@ fn dirty_truncate(s: &str, num_chars: usize) -> &str {
     }
 }
 
-fn create_notification(room_id: &str, title: &str, body: &str, avatar: &str) -> Notification {
+fn create_notification(room_id: &str, title: &str, body: &str, avatar: &Path) -> Notification {
     let notification = Notification::new(title);
     notification.set_body(Some(body));
     notification.set_priority(gio::NotificationPriority::High);
-    info!("Creating notification with avatar: {}", avatar);
+    info!("Creating notification with avatar: {}", avatar.display());
     let file = gio::File::new_for_path(avatar);
     let _ = file.load_bytes(gio::NONE_CANCELLABLE).map(|(b, _)| {
         let avatar = gio::BytesIcon::new(&b);

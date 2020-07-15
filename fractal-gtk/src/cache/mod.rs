@@ -1,3 +1,4 @@
+use crate::appop::UserInfoCache;
 use crate::backend::user;
 use crate::backend::ThreadPool;
 use crate::util::ResultExpectLog;
@@ -14,6 +15,7 @@ use failure::Error;
 use fractal_api::identifiers::UserId;
 use std::collections::HashMap;
 use std::hash::Hash;
+use std::path::PathBuf;
 use std::time::{Duration, Instant};
 
 use crate::globals;
@@ -23,7 +25,6 @@ use std::sync::mpsc::channel;
 use std::sync::mpsc::Receiver;
 use std::sync::mpsc::Sender;
 use std::sync::mpsc::TryRecvError;
-use std::sync::{Arc, Mutex};
 
 use crate::widgets::AvatarData;
 use std::cell::RefCell;
@@ -145,12 +146,12 @@ pub fn load() -> Result<CacheData, Error> {
 /// this downloads a avatar and stores it in the cache folder
 pub fn download_to_cache(
     thread_pool: ThreadPool,
-    user_info_cache: Arc<Mutex<CacheMap<UserId, (String, String)>>>,
+    user_info_cache: UserInfoCache,
     server_url: Url,
     uid: UserId,
     data: Rc<RefCell<AvatarData>>,
 ) {
-    let (tx, rx) = channel::<(String, String)>();
+    let (tx, rx) = channel::<(String, PathBuf)>();
     user::get_user_info_async(thread_pool, user_info_cache, server_url, uid, tx);
 
     gtk::timeout_add(50, move || match rx.try_recv() {

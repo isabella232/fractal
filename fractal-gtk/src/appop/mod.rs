@@ -48,6 +48,8 @@ mod user;
 use self::member::SearchType;
 use self::message::TmpMsg;
 
+pub type UserInfoCache = Arc<Mutex<CacheMap<UserId, (String, PathBuf)>>>;
+
 #[derive(Clone, Debug, PartialEq)]
 pub enum RoomSearchPagination {
     Initial,
@@ -116,7 +118,7 @@ pub struct AppOp {
     pub leaflet: libhandy::Leaflet,
 
     pub thread_pool: ThreadPool,
-    pub user_info_cache: Arc<Mutex<CacheMap<UserId, (String, String)>>>,
+    pub user_info_cache: UserInfoCache,
 }
 
 impl PasswordStorage for AppOp {}

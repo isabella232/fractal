@@ -1,4 +1,5 @@
 use crate::backend::{media, ThreadPool};
+use either::Either;
 use fractal_api::url::Url;
 use gdk::prelude::GdkContextExt;
 use gdk_pixbuf::Pixbuf;
@@ -9,7 +10,7 @@ use glib::source::Continue;
 use gtk::prelude::*;
 use gtk::DrawingArea;
 use log::error;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::sync::mpsc::channel;
 use std::sync::mpsc::TryRecvError;
 use std::sync::mpsc::{Receiver, Sender};
@@ -17,8 +18,8 @@ use std::sync::{Arc, Mutex};
 
 #[derive(Clone, Debug)]
 pub struct Image {
-    pub path: String,
-    pub local_path: Arc<Mutex<Option<String>>>,
+    pub path: Either<Url, PathBuf>,
+    pub local_path: Arc<Mutex<Option<PathBuf>>>,
     pub server_url: Url,
     pub max_size: Option<(i32, i32)>,
     pub widget: DrawingArea,
@@ -46,7 +47,7 @@ impl Image {
     ///           .size(Some((50, 50)))
     ///           .build();
     /// ```
-    pub fn new(server_url: Url, path: &str) -> Image {
+    pub fn new(server_url: Url, path: Either<Url, PathBuf>) -> Image {
         let da = DrawingArea::new();
         da.add_events(gdk::EventMask::ENTER_NOTIFY_MASK);
         da.add_events(gdk::EventMask::LEAVE_NOTIFY_MASK);
@@ -63,7 +64,7 @@ impl Image {
         });
 
         Image {
-            path: path.to_string(),
+            path,
             local_path: Arc::new(Mutex::new(None)),
             server_url,
             max_size: None,
@@ -255,47 +256,48 @@ impl Image {
     /// If `path` starts with mxc this func download the img async, in other case the image is loaded
     /// in the `image` widget scaled to size
     pub fn load_async(&self, thread_pool: ThreadPool) {
-        if self.path.starts_with("mxc:") {
-            // asyn load
-            let (tx, rx): (Sender<media::MediaResult>, Receiver<media::MediaResult>) = channel();
-            let command = if self.thumb {
-                media::get_thumb_async
-            } else {
-                media::get_media_async
-            };
-            command(
-                thread_pool,
-                self.server_url.clone(),
-                self.path.to_string(),
-                tx,
-            );
-            let local_path = self.local_path.clone();
-            let pix = self.pixbuf.clone();
-            let scaled = self.scaled.clone();
-            let da = self.widget.clone();
+        match self.path.as_ref() {
+            Either::Left(url) if url.scheme() == "mxc" => {
+                let mxc = url.clone();
+                // asyn load
+                let (tx, rx): (Sender<media::MediaResult>, Receiver<media::MediaResult>) =
+                    channel();
+                let command = if self.thumb {
+                    media::get_thumb_async
+                } else {
+                    media::get_media_async
+                };
+                command(thread_pool, self.server_url.clone(), mxc, tx);
+                let local_path = self.local_path.clone();
+                let pix = self.pixbuf.clone();
+                let scaled = self.scaled.clone();
+                let da = self.widget.clone();
 
-            da.get_style_context().add_class("image-spinner");
-            gtk::timeout_add(50, move || match rx.try_recv() {
-                Err(TryRecvError::Empty) => Continue(true),
-                Err(TryRecvError::Disconnected) => Continue(false),
-                Ok(Ok(fname)) => {
-                    *local_path.lock().unwrap() = Some(fname.clone());
-                    load_pixbuf(pix.clone(), scaled.clone(), da.clone(), &fname);
-                    da.get_style_context().remove_class("image-spinner");
-                    Continue(false)
-                }
-                Ok(Err(err)) => {
-                    error!("Image path could not be found due to error: {:?}", err);
-                    Continue(false)
-                }
-            });
-        } else {
-            load_pixbuf(
-                self.pixbuf.clone(),
-                self.scaled.clone(),
-                self.widget.clone(),
-                &self.path,
-            );
+                da.get_style_context().add_class("image-spinner");
+                gtk::timeout_add(50, move || match rx.try_recv() {
+                    Err(TryRecvError::Empty) => Continue(true),
+                    Err(TryRecvError::Disconnected) => Continue(false),
+                    Ok(Ok(fname)) => {
+                        *local_path.lock().unwrap() = Some(fname.clone());
+                        load_pixbuf(pix.clone(), scaled.clone(), da.clone(), &fname);
+                        da.get_style_context().remove_class("image-spinner");
+                        Continue(false)
+                    }
+                    Ok(Err(err)) => {
+                        error!("Image path could not be found due to error: {:?}", err);
+                        Continue(false)
+                    }
+                });
+            }
+            Either::Right(path) => {
+                load_pixbuf(
+                    self.pixbuf.clone(),
+                    self.scaled.clone(),
+                    self.widget.clone(),
+                    &path,
+                );
+            }
+            _ => error!("The resource URL doesn't have the scheme mxc:"),
         }
     }
 }
@@ -304,10 +306,10 @@ pub fn load_pixbuf(
     pix: Arc<Mutex<Option<Pixbuf>>>,
     scaled: Arc<Mutex<Option<Pixbuf>>>,
     widget: DrawingArea,
-    fname: &str,
+    fname: &Path,
 ) {
     if is_gif(&fname) {
-        load_animation(pix, scaled, widget, &fname);
+        load_animation(pix, scaled, widget, fname);
         return;
     }
 
@@ -338,7 +340,7 @@ pub fn load_animation(
     pix: Arc<Mutex<Option<Pixbuf>>>,
     scaled: Arc<Mutex<Option<Pixbuf>>>,
     widget: DrawingArea,
-    fname: &str,
+    fname: &Path,
 ) {
     let res = PixbufAnimation::new_from_file(fname);
     if res.is_err() {
@@ -362,13 +364,12 @@ pub fn load_animation(
     });
 }
 
-pub fn is_gif(fname: &str) -> bool {
-    let p = &Path::new(fname);
-    if !p.is_file() {
+pub fn is_gif(fname: &Path) -> bool {
+    if !fname.is_file() {
         return false;
     }
 
-    if let Ok(info) = gio::File::new_for_path(&p).query_info(
+    if let Ok(info) = gio::File::new_for_path(fname).query_info(
         &gio::FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
         gio::FileQueryInfoFlags::NONE,
         gio::NONE_CANCELLABLE,

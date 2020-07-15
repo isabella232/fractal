@@ -7,19 +7,17 @@ use log::warn;
 use std::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
-use std::sync::{Arc, Mutex};
 
-use crate::appop::AppOp;
+use crate::appop::{AppOp, UserInfoCache};
 use crate::i18n::i18n;
 use crate::uitypes::MessageContent;
 use crate::uitypes::RowType;
 
 use crate::backend::ThreadPool;
-use crate::cache::CacheMap;
 use crate::globals;
 use crate::widgets;
 use crate::widgets::{PlayerExt, VideoPlayerWidget};
-use fractal_api::identifiers::{RoomId, UserId};
+use fractal_api::identifiers::RoomId;
 use fractal_api::r0::AccessToken;
 use fractal_api::url::Url;
 use gio::ActionMapExt;
@@ -305,7 +303,7 @@ impl RoomHistory {
     pub fn create(
         &mut self,
         thread_pool: ThreadPool,
-        user_info_cache: Arc<Mutex<CacheMap<UserId, (String, String)>>>,
+        user_info_cache: UserInfoCache,
         mut messages: Vec<MessageContent>,
     ) -> Option<()> {
         let mut position = messages.len();
@@ -435,11 +433,7 @@ impl RoomHistory {
         }));
     }
 
-    fn run_queue(
-        &mut self,
-        thread_pool: ThreadPool,
-        user_info_cache: Arc<Mutex<CacheMap<UserId, (String, String)>>>,
-    ) -> Option<()> {
+    fn run_queue(&mut self, thread_pool: ThreadPool, user_info_cache: UserInfoCache) -> Option<()> {
         let queue = self.queue.clone();
         let edit_buffer = self.edit_buffer.clone();
         let rows = self.rows.clone();
@@ -549,7 +543,7 @@ impl RoomHistory {
     pub fn add_new_message(
         &mut self,
         thread_pool: ThreadPool,
-        user_info_cache: Arc<Mutex<CacheMap<UserId, (String, String)>>>,
+        user_info_cache: UserInfoCache,
         mut item: MessageContent,
     ) -> Option<()> {
         if item.msg.replace.is_some() {
@@ -602,7 +596,7 @@ impl RoomHistory {
     pub fn replace_message(
         &mut self,
         thread_pool: ThreadPool,
-        user_info_cache: Arc<Mutex<CacheMap<UserId, (String, String)>>>,
+        user_info_cache: UserInfoCache,
         mut item: MessageContent,
     ) -> Option<()> {
         let mut rows = self.rows.borrow_mut();
@@ -639,7 +633,7 @@ impl RoomHistory {
     pub fn remove_message(
         &mut self,
         thread_pool: ThreadPool,
-        user_info_cache: Arc<Mutex<CacheMap<UserId, (String, String)>>>,
+        user_info_cache: UserInfoCache,
         item: MessageContent,
     ) -> Option<()> {
         let mut rows = self.rows.borrow_mut();
@@ -693,7 +687,7 @@ impl RoomHistory {
     pub fn add_new_messages_in_batch(
         &mut self,
         thread_pool: ThreadPool,
-        user_info_cache: Arc<Mutex<CacheMap<UserId, (String, String)>>>,
+        user_info_cache: UserInfoCache,
         messages: Vec<MessageContent>,
     ) -> Option<()> {
         /* TODO: use lazy loading */
@@ -706,7 +700,7 @@ impl RoomHistory {
     pub fn add_old_messages_in_batch(
         &mut self,
         thread_pool: ThreadPool,
-        user_info_cache: Arc<Mutex<CacheMap<UserId, (String, String)>>>,
+        user_info_cache: UserInfoCache,
         messages: Vec<MessageContent>,
     ) -> Option<()> {
         self.rows.borrow().view.reset_request_sent();
@@ -737,7 +731,7 @@ impl RoomHistory {
 /* This function creates the content for a Row based on the content of msg */
 fn create_row(
     thread_pool: ThreadPool,
-    user_info_cache: Arc<Mutex<CacheMap<UserId, (String, String)>>>,
+    user_info_cache: UserInfoCache,
     row: MessageContent,
     has_header: bool,
     server_url: Url,

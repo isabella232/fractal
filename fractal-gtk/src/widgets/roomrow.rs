@@ -1,3 +1,4 @@
+use fractal_api::url::Url;
 use gtk::prelude::*;
 
 use crate::types::Room;
@@ -116,7 +117,7 @@ impl RoomRow {
         self.text.set_text(&name);
     }
 
-    pub fn set_avatar(&mut self, avatar: Option<String>) {
+    pub fn set_avatar(&mut self, avatar: Option<Url>) {
         self.room.avatar = avatar;
 
         let name = self.room.name.clone().unwrap_or_else(|| "...".to_string());

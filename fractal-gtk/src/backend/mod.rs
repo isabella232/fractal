@@ -1,19 +1,17 @@
 use fractal_api::identifiers::{EventId, RoomId};
 use fractal_api::reqwest::Error as ReqwestError;
-use fractal_api::url::{ParseError as UrlError, Url};
+use fractal_api::url::Url;
 use lazy_static::lazy_static;
 use log::error;
 use regex::Regex;
 use std::fmt::Debug;
 use std::fs::write;
 use std::io::{Error as IoError, Read};
-use std::path::Path;
+use std::path::PathBuf;
 use std::sync::{Arc, Condvar, Mutex};
 use std::thread;
-use std::time::SystemTimeError;
 
 use crate::client::Client;
-use crate::error::Error;
 use crate::util::cache_dir_path;
 use fractal_api::r0::context::get_context::request as get_context;
 use fractal_api::r0::context::get_context::Parameters as GetContextParameters;
@@ -118,11 +116,9 @@ pub fn get_prev_batch_from(
 
 #[derive(Debug)]
 pub enum MediaError {
-    InvalidMxcUrl(Option<UrlError>),
-    InvalidDownloadPath(Error),
-    Reqwest(ReqwestError),
+    MalformedMxcUrl,
     Io(IoError),
-    SystemTime(SystemTimeError),
+    Reqwest(ReqwestError),
 }
 
 impl From<ReqwestError> for MediaError {
@@ -137,35 +133,25 @@ impl From<IoError> for MediaError {
     }
 }
 
-impl From<SystemTimeError> for MediaError {
-    fn from(err: SystemTimeError) -> Self {
-        Self::SystemTime(err)
-    }
-}
-
 impl HandleError for MediaError {}
 
 pub fn dw_media(
     base: Url,
-    mxc: &str,
+    mxc: &Url,
     media_type: ContentType,
-    dest: Option<String>,
-) -> Result<String, MediaError> {
-    let mxc_url = Url::parse(mxc).map_err(|url_err| MediaError::InvalidMxcUrl(Some(url_err)))?;
-
-    if mxc_url.scheme() != "mxc" {
-        return Err(MediaError::InvalidMxcUrl(None));
+    dest: Option<PathBuf>,
+) -> Result<PathBuf, MediaError> {
+    if mxc.scheme() != "mxc" {
+        return Err(MediaError::MalformedMxcUrl);
     }
 
-    let server = mxc_url
-        .host()
-        .ok_or(MediaError::InvalidMxcUrl(None))?
-        .to_owned();
-    let media_id = mxc_url
+    let server = mxc.host().ok_or(MediaError::MalformedMxcUrl)?.to_owned();
+
+    let media_id = mxc
         .path_segments()
         .and_then(|mut ps| ps.next())
         .filter(|s| !s.is_empty())
-        .ok_or(MediaError::InvalidMxcUrl(None))?;
+        .ok_or(MediaError::MalformedMxcUrl)?;
 
     let request = if let ContentType::Thumbnail(width, height) = media_type {
         let params = GetContentThumbnailParameters {
@@ -180,19 +166,25 @@ pub fn dw_media(
         get_content(base, &params, &server, &media_id)
     }?;
 
-    let fname = match dest {
-        None if media_type.is_thumbnail() => cache_dir_path(Some("thumbs"), &media_id),
-        None => cache_dir_path(Some("medias"), &media_id),
-        Some(ref d) => Ok(d.clone()),
-    }
-    .map_err(MediaError::InvalidDownloadPath)?;
-
-    let fpath = Path::new(&fname);
+    let default_fname = || {
+        let dir = if media_type.is_thumbnail() {
+            "thumbs"
+        } else {
+            "medias"
+        };
+        cache_dir_path(Some(dir), &media_id)
+    };
+    let fname = dest.clone().map_or_else(default_fname, Ok)?;
 
     // If the file is already cached and recent enough, don't download it
-    if fpath.is_file()
-        && (dest.is_none() || fpath.metadata()?.modified()?.elapsed()?.as_secs() < 60)
-    {
+    let is_fname_recent = fname
+        .metadata()
+        .ok()
+        .and_then(|md| md.modified().ok())
+        .and_then(|modf| modf.elapsed().ok())
+        .map_or(false, |dur| dur.as_secs() < 60);
+
+    if fname.is_file() && (dest.is_none() || is_fname_recent) {
         Ok(fname)
     } else {
         HTTP_CLIENT
