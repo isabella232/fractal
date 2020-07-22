@@ -126,12 +126,9 @@ Full reference in: <https://matrix.org/docs/spec/client_server/r0.2.0.html#m-roo
 Fractal does not currently have encryption support, but
 there is an initiative for it.
 
-The current effort is to create a monolithic module for Fractal to interact with.
-Said module will handle all cryptographic tasks.
-The goal is to reduce the amount of work required for implementing end-to-end encryption
-by having one thing to interact with, instead of a huge API surface.
+The current effort is to use matrix-rust-sdk rather than our own implementation. (See https://gitlab.gnome.org/GNOME/fractal/-/issues/636)
 
-Code and further information for this module can be found at [World/metaolm](https://gitlab.gnome.org/World/metaolm).
+Code and further information for this module can be found at [matrix/matrix-rust-sdk](https://github.com/matrix-org/matrix-rust-sdk).
 
 * Can I run Fractal with the window closed?
 
