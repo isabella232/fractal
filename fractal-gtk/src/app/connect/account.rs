@@ -9,7 +9,6 @@ use crate::actions::{AccountSettings, StateExt};
 impl App {
     pub fn connect_account_settings(&self) {
         let op = &self.op;
-        let login_data = unwrap_or_unit_return!(op.lock().unwrap().login_data.clone());
         let builder = &self.ui.builder;
         let cancel_password = self
             .ui
@@ -73,12 +72,7 @@ impl App {
             .expect("Can't find account_settings_delete_btn in ui file.");
 
         let window = self.main_window.upcast_ref::<gtk::Window>();
-        let actions = AccountSettings::new(
-            &window,
-            login_data.server_url,
-            login_data.access_token,
-            login_data.uid,
-        );
+        let actions = AccountSettings::new(&window, op.clone());
         let container = self
             .ui
             .builder
