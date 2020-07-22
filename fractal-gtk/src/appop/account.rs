@@ -13,7 +13,7 @@ use crate::i18n::i18n;
 use crate::widgets;
 use crate::widgets::AvatarExt;
 
-use crate::cache::download_to_cache;
+use crate::cache::{download_to_cache, remove_from_cache};
 use fractal_api::r0::contact::get_identifiers::ThirdPartyIdentifier;
 use fractal_api::r0::Medium;
 
@@ -501,6 +501,9 @@ impl AppOp {
         });
         avatar_spinner.hide();
         avatar_btn.set_sensitive(true);
+        if let Some(login_data) = &self.login_data {
+            remove_from_cache(self.user_info_cache.clone(), &login_data.uid);
+        }
         self.show_avatar();
     }
 

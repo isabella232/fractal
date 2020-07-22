@@ -1,6 +1,7 @@
 use crate::appop::UserInfoCache;
 use crate::backend::user;
 use crate::backend::ThreadPool;
+use crate::util::cache_dir_path;
 use crate::util::ResultExpectLog;
 use fractal_api::r0::AccessToken;
 use fractal_api::url::Url;
@@ -70,6 +71,10 @@ impl<K: Clone + Eq + Hash, V: Clone> CacheMap<K, V> {
     pub fn insert(&mut self, k: K, v: V) {
         let now = Instant::now();
         self.map.insert(k, (now, v));
+    }
+
+    pub fn remove(&mut self, k: &K) -> Option<V> {
+        self.map.remove(k).map(|v| v.1)
     }
 }
 
@@ -141,6 +146,13 @@ pub fn load() -> Result<CacheData, Error> {
     };
 
     Ok(data)
+}
+
+pub fn remove_from_cache(user_info_cache: UserInfoCache, user_id: &UserId) {
+    user_info_cache.lock().unwrap().remove(&user_id);
+    if let Ok(dest) = cache_dir_path(None, &user_id.to_string()) {
+        let _ = std::fs::remove_file(dest);
+    }
 }
 
 /// this downloads a avatar and stores it in the cache folder
