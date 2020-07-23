@@ -1,6 +1,6 @@
 use fractal_api::identifiers::{DeviceId, UserId};
 use fractal_api::reqwest::Error as ReqwestError;
-use fractal_api::url::Url;
+use fractal_api::url::{ParseError as UrlError, Url};
 
 use crate::actions::AppState;
 use crate::backend::HTTP_CLIENT;
@@ -96,8 +96,30 @@ pub fn logout(server: Url, access_token: AccessToken) -> Result<(), LogoutError>
     Ok(())
 }
 
-pub fn get_well_known(domain: Url) -> Result<DomainInfoResponse, ReqwestError> {
+#[derive(Debug)]
+pub enum GetWellKnownError {
+    Reqwest(ReqwestError),
+    ParseUrl(UrlError),
+}
+
+impl From<ReqwestError> for GetWellKnownError {
+    fn from(err: ReqwestError) -> Self {
+        Self::Reqwest(err)
+    }
+}
+
+impl From<UrlError> for GetWellKnownError {
+    fn from(err: UrlError) -> Self {
+        Self::ParseUrl(err)
+    }
+}
+
+pub fn get_well_known(domain: Url) -> Result<DomainInfoResponse, GetWellKnownError> {
     let request = domain_info(domain)?;
 
-    HTTP_CLIENT.get_client().execute(request)?.json()
+    HTTP_CLIENT
+        .get_client()
+        .execute(request)?
+        .json()
+        .map_err(Into::into)
 }

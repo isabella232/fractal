@@ -588,11 +588,20 @@ pub fn get_user_info_async(
 }
 
 #[derive(Debug)]
-pub struct UserSearchError(ReqwestError);
+pub enum UserSearchError {
+    Reqwest(ReqwestError),
+    ParseUrl(UrlError),
+}
 
 impl From<ReqwestError> for UserSearchError {
     fn from(err: ReqwestError) -> Self {
-        Self(err)
+        Self::Reqwest(err)
+    }
+}
+
+impl From<UrlError> for UserSearchError {
+    fn from(err: UrlError) -> Self {
+        Self::ParseUrl(err)
     }
 }
 
@@ -612,13 +621,19 @@ pub fn search(
     let request = user_directory(base, &params, &body)?;
     let response: UserDirectoryResponse = HTTP_CLIENT.get_client().execute(request)?.json()?;
 
-    Ok(response.results.into_iter().map(Into::into).collect())
+    response
+        .results
+        .into_iter()
+        .map(TryInto::try_into)
+        .collect::<Result<_, UrlError>>()
+        .map_err(Into::into)
 }
 
 #[derive(Debug)]
 pub enum GetUserAvatarError {
     Reqwest(ReqwestError),
     Download(MediaError),
+    ParseUrl(UrlError),
 }
 
 impl From<ReqwestError> for GetUserAvatarError {
@@ -630,6 +645,12 @@ impl From<ReqwestError> for GetUserAvatarError {
 impl From<MediaError> for GetUserAvatarError {
     fn from(err: MediaError) -> Self {
         Self::Download(err)
+    }
+}
+
+impl From<UrlError> for GetUserAvatarError {
+    fn from(err: UrlError) -> Self {
+        Self::ParseUrl(err)
     }
 }
 
@@ -649,10 +670,11 @@ pub fn get_user_avatar(
 
     let img = response
         .avatar_url
-        .as_ref()
+        .map(|url| Url::parse(&url))
+        .transpose()?
         .map(|url| {
             let dest = cache_dir_path(None, &user_id.to_string())?;
-            dw_media(base, url, ContentType::default_thumbnail(), Some(dest))
+            dw_media(base, &url, ContentType::default_thumbnail(), Some(dest))
         })
         .unwrap_or_else(|| Ok(Default::default()))
         .map_err(GetUserAvatarError::Download)?;

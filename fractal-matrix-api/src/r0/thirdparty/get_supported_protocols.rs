@@ -21,7 +21,7 @@ pub struct Protocol {
     pub location_fields: Vec<String>,
     // This field is documented as "required",
     // but for some reason matrix.org does not send this
-    pub icon: Option<Url>,
+    pub icon: Option<String>,
     pub field_types: BTreeMap<String, FieldType>,
     pub instances: Vec<ProtocolInstance>,
 }
@@ -38,7 +38,7 @@ pub struct ProtocolInstance {
     #[serde(rename = "network_id")]
     pub id: String,
     pub desc: String,
-    pub icon: Option<Url>,
+    pub icon: Option<String>,
     pub fields: JsonValue,
 }
 

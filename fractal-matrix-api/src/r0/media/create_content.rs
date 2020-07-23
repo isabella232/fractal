@@ -14,7 +14,7 @@ pub struct Parameters {
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct Response {
-    pub content_uri: Url,
+    pub content_uri: String,
 }
 
 pub fn request(base: Url, params: &Parameters, contents: Vec<u8>) -> Result<Request, Error> {

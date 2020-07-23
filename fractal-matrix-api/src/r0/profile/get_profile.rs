@@ -7,7 +7,7 @@ use url::Url;
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct Response {
-    pub avatar_url: Option<Url>,
+    pub avatar_url: Option<String>,
     pub displayname: Option<String>,
 }
 

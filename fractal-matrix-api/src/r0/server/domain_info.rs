@@ -14,12 +14,12 @@ pub struct Response {
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct HomeserverInfo {
-    pub base_url: Url,
+    pub base_url: String,
 }
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct IDServerInfo {
-    pub base_url: Url,
+    pub base_url: String,
 }
 
 pub fn request(base: Url) -> Result<Request, Error> {

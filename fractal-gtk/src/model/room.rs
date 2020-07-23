@@ -8,7 +8,7 @@ use either::Either;
 use fractal_api::identifiers::{Error as IdError, EventId, RoomId, UserId};
 use fractal_api::r0::directory::post_public_rooms::Chunk as PublicRoomsChunk;
 use fractal_api::r0::sync::sync_events::Response as SyncResponse;
-use fractal_api::url::Url;
+use fractal_api::url::{ParseError as UrlError, Url};
 use log::{debug, info};
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
@@ -324,18 +324,24 @@ impl Room {
     }
 }
 
-impl From<PublicRoomsChunk> for Room {
-    fn from(input: PublicRoomsChunk) -> Self {
-        Self {
+impl TryFrom<PublicRoomsChunk> for Room {
+    type Error = UrlError;
+
+    fn try_from(input: PublicRoomsChunk) -> Result<Self, Self::Error> {
+        Ok(Self {
             alias: input.canonical_alias.as_ref().map(ToString::to_string),
             name: input.name,
-            avatar: input.avatar_url,
+            avatar: input
+                .avatar_url
+                .filter(|url| !url.is_empty())
+                .map(|url| Url::parse(&url))
+                .transpose()?,
             topic: input.topic,
             n_members: input.num_joined_members,
             world_readable: input.world_readable,
             guest_can_join: input.guest_can_join,
             ..Self::new(input.room_id, RoomMembership::None)
-        }
+        })
     }
 }
 

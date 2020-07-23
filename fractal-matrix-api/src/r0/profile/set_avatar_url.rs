@@ -14,7 +14,7 @@ pub struct Parameters {
 #[derive(Clone, Debug, Serialize)]
 pub struct Body {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub avatar_url: Option<Url>,
+    pub avatar_url: Option<String>,
 }
 
 pub fn request(

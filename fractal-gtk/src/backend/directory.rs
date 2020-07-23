@@ -1,5 +1,6 @@
 use fractal_api::reqwest::Error as ReqwestError;
 use fractal_api::url::{Host, ParseError as UrlError, Url};
+use std::convert::TryInto;
 
 use crate::globals;
 
@@ -59,11 +60,18 @@ pub fn protocols(
 pub enum DirectorySearchError {
     InvalidHomeserverUrl(UrlError),
     Reqwest(ReqwestError),
+    ParseUrl(UrlError),
 }
 
 impl From<ReqwestError> for DirectorySearchError {
     fn from(err: ReqwestError) -> Self {
         Self::Reqwest(err)
+    }
+}
+
+impl From<UrlError> for DirectorySearchError {
+    fn from(err: UrlError) -> Self {
+        Self::ParseUrl(err)
     }
 }
 
@@ -125,15 +133,17 @@ pub fn room_search(
     let rooms = response
         .chunk
         .into_iter()
-        .map(Into::into)
-        .inspect(|r: &Room| {
-            if let Some(avatar) = r.avatar.clone() {
-                if let Ok(dest) = cache_dir_path(None, &r.id.to_string()) {
-                    let _ = dw_media(base.clone(), &avatar, ContentType::Download, Some(dest));
+        .map(TryInto::try_into)
+        .inspect(|r: &Result<Room, _>| {
+            if let Ok(room) = r {
+                if let Some(avatar) = room.avatar.clone() {
+                    if let Ok(dest) = cache_dir_path(None, &room.id.to_string()) {
+                        let _ = dw_media(base.clone(), &avatar, ContentType::Download, Some(dest));
+                    }
                 }
             }
         })
-        .collect();
+        .collect::<Result<_, UrlError>>()?;
 
     Ok((rooms, since))
 }

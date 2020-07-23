@@ -19,7 +19,7 @@ pub struct Body {
     pub id_server: HostAndPort<String>,
     pub send_attempt: u64,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub next_link: Option<Url>,
+    pub next_link: Option<String>,
 }
 
 #[derive(Clone, Debug, Deserialize)]

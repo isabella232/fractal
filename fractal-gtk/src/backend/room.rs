@@ -3,7 +3,7 @@ use serde_json::json;
 
 use fractal_api::identifiers::{Error as IdError, EventId, RoomId, UserId};
 use fractal_api::reqwest::Error as ReqwestError;
-use fractal_api::url::Url;
+use fractal_api::url::{ParseError as UrlError, Url};
 use std::fs;
 use std::io::Error as IoError;
 use std::path::{Path, PathBuf};
@@ -147,11 +147,20 @@ pub fn get_room_avatar(
 }
 
 #[derive(Debug)]
-pub struct RoomMembersError(ReqwestError);
+pub enum RoomMembersError {
+    Reqwest(ReqwestError),
+    ParseUrl(UrlError),
+}
 
 impl From<ReqwestError> for RoomMembersError {
     fn from(err: ReqwestError) -> Self {
-        Self(err)
+        Self::Reqwest(err)
+    }
+}
+
+impl From<UrlError> for RoomMembersError {
+    fn from(err: UrlError) -> Self {
+        Self::ParseUrl(err)
     }
 }
 
@@ -167,7 +176,11 @@ pub fn get_room_members(
     let request = get_joined_members(base, &room_id, &params)?;
     let response: JoinedMembersResponse = HTTP_CLIENT.get_client().execute(request)?.json()?;
 
-    let ms = response.joined.into_iter().map(Member::from).collect();
+    let ms = response
+        .joined
+        .into_iter()
+        .map(Member::try_from)
+        .collect::<Result<_, UrlError>>()?;
 
     Ok((room_id, ms))
 }
@@ -518,6 +531,7 @@ pub fn set_room_topic(
 pub enum SetRoomAvatarError {
     Io(IoError),
     Reqwest(ReqwestError),
+    ParseUrl(UrlError),
 }
 
 impl From<ReqwestError> for SetRoomAvatarError {
@@ -531,6 +545,7 @@ impl From<AttachedFileError> for SetRoomAvatarError {
         match err {
             AttachedFileError::Io(err) => Self::Io(err),
             AttachedFileError::Reqwest(err) => Self::Reqwest(err),
+            AttachedFileError::ParseUrl(err) => Self::ParseUrl(err),
         }
     }
 }
@@ -560,6 +575,7 @@ pub fn set_room_avatar(
 pub enum AttachedFileError {
     Io(IoError),
     Reqwest(ReqwestError),
+    ParseUrl(UrlError),
 }
 
 impl From<ReqwestError> for AttachedFileError {
@@ -571,6 +587,12 @@ impl From<ReqwestError> for AttachedFileError {
 impl From<IoError> for AttachedFileError {
     fn from(err: IoError) -> Self {
         Self::Io(err)
+    }
+}
+
+impl From<UrlError> for AttachedFileError {
+    fn from(err: UrlError) -> Self {
+        Self::ParseUrl(err)
     }
 }
 

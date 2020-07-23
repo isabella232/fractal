@@ -92,7 +92,7 @@ impl LoginWidget {
                 if !password.is_empty() && !username.is_empty() {
                     // take the user's homeserver value if the
                     // well-known request fails
-                    let mut homeserver_url = if let Ok(hs_url) = Url::parse(&txt) {
+                    let homeserver_url = if let Ok(hs_url) = Url::parse(&txt) {
                         hs_url
                     } else {
                         let msg = i18n("Malformed server URL");
@@ -100,18 +100,24 @@ impl LoginWidget {
                         return;
                     };
 
-                    let mut idserver = globals::DEFAULT_IDENTITYSERVER.clone();
-                    match get_well_known(homeserver_url.clone()) {
-                        Ok(response) => {
-                            info!("Got well-known response from {}: {:#?}", &txt, response);
-                            homeserver_url = response.homeserver.base_url;
-                            idserver = response
+                    let (homeserver_url, idserver) = get_well_known(homeserver_url.clone())
+                        .and_then(|response| {
+                            let hs_url = Url::parse(&response.homeserver.base_url)?;
+                            let ids = response
                                 .identity_server
-                                .map(|ids| ids.base_url)
-                                .unwrap_or(idserver);
-                        }
-                        Err(e) => info!("Failed to .well-known request: {:#?}", e),
-                    };
+                                .as_ref()
+                                .map(|ids| Url::parse(&ids.base_url))
+                                .transpose()?
+                                .unwrap_or(globals::DEFAULT_IDENTITYSERVER.clone());
+                            info!("Got well-known response from {}: {:#?}", &txt, response);
+
+                            Ok((hs_url, ids))
+                        })
+                        .map_err(|e| {
+                            info!("Failed to .well-known request: {:#?}", e);
+                            e
+                        })
+                        .unwrap_or((homeserver_url, globals::DEFAULT_IDENTITYSERVER.clone()));
 
                     err_label.hide();
                     op.lock().unwrap().set_state(AppState::Loading);

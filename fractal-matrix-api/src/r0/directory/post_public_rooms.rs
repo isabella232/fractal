@@ -84,7 +84,7 @@ pub struct Response {
 #[derive(Clone, Debug, Deserialize)]
 pub struct Chunk {
     pub aliases: Option<Vec<RoomAliasId>>, // TODO: Change Vec to Set?
-    pub avatar_url: Option<Url>,
+    pub avatar_url: Option<String>,
     pub canonical_alias: Option<RoomAliasId>,
     pub guest_can_join: bool,
     pub name: Option<String>,

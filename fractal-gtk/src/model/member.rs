@@ -2,9 +2,10 @@ use either::Either;
 use fractal_api::identifiers::UserId;
 use fractal_api::r0::search::user::User;
 use fractal_api::r0::sync::get_joined_members::RoomMember;
-use fractal_api::url::Url;
+use fractal_api::url::{ParseError as UrlError, Url};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use std::convert::TryFrom;
 use std::path::PathBuf;
 
 // TODO: Make this non-(de)serializable
@@ -34,23 +35,37 @@ impl PartialEq for Member {
     }
 }
 
-impl From<User> for Member {
-    fn from(user: User) -> Self {
-        Self {
+impl TryFrom<User> for Member {
+    type Error = UrlError;
+
+    fn try_from(user: User) -> Result<Self, Self::Error> {
+        Ok(Self {
             uid: user.user_id,
             alias: user.display_name,
-            avatar: user.avatar_url.map(Either::Left),
-        }
+            avatar: user
+                .avatar_url
+                .filter(|url| !url.is_empty())
+                .map(|url| Url::parse(&url))
+                .transpose()?
+                .map(Either::Left),
+        })
     }
 }
 
-impl From<(UserId, RoomMember)> for Member {
-    fn from((uid, roommember): (UserId, RoomMember)) -> Self {
-        Member {
+impl TryFrom<(UserId, RoomMember)> for Member {
+    type Error = UrlError;
+
+    fn try_from((uid, roommember): (UserId, RoomMember)) -> Result<Self, Self::Error> {
+        Ok(Member {
             uid,
             alias: roommember.display_name,
-            avatar: roommember.avatar_url.map(Either::Left),
-        }
+            avatar: roommember
+                .avatar_url
+                .filter(|url| !url.is_empty())
+                .map(|url| Url::parse(&url))
+                .transpose()?
+                .map(Either::Left),
+        })
     }
 }
 

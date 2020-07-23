@@ -38,7 +38,7 @@ pub struct Response {
 pub struct User {
     pub user_id: UserId,
     pub display_name: Option<String>,
-    pub avatar_url: Option<Url>,
+    pub avatar_url: Option<String>,
 }
 
 pub fn request(base: Url, params: &Parameters, body: &Body) -> Result<Request, Error> {

@@ -667,9 +667,11 @@ fn attach_file(baseu: Url, tk: AccessToken, mut msg: Message) -> Result<(), NonM
         }
         (_, Some(local_path), _) => {
             if let Some(ref local_path_thumb) = msg.local_path_thumb {
-                match room::upload_file(baseu.clone(), tk.clone(), local_path_thumb) {
-                    Ok(response) => {
-                        let thumb_uri = response.content_uri;
+                let response = room::upload_file(baseu.clone(), tk.clone(), local_path_thumb)
+                    .and_then(|response| Url::parse(&response.content_uri).map_err(Into::into));
+
+                match response {
+                    Ok(thumb_uri) => {
                         msg.thumb = Some(thumb_uri.clone());
                         if let Some(ref mut xctx) = extra_content {
                             xctx.info.thumbnail_url = Some(thumb_uri);
@@ -686,12 +688,15 @@ fn attach_file(baseu: Url, tk: AccessToken, mut msg: Message) -> Result<(), NonM
                 }
             }
 
-            let query = room::upload_file(baseu.clone(), tk.clone(), local_path).map(|response| {
-                msg.url = Some(response.content_uri);
-                thread::spawn(clone!(@strong msg => move || send_msg_and_manage(baseu, tk, msg)));
+            let query =
+                room::upload_file(baseu.clone(), tk.clone(), local_path).and_then(|response| {
+                    msg.url = Some(Url::parse(&response.content_uri)?);
+                    thread::spawn(
+                        clone!(@strong msg => move || send_msg_and_manage(baseu, tk, msg)),
+                    );
 
-                msg
-            });
+                    Ok(msg)
+                });
 
             match query {
                 Ok(msg) => {
