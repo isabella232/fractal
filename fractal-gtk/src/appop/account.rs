@@ -27,7 +27,10 @@ impl AppOp {
     pub fn get_three_pid(&self) {
         let login_data = unwrap_or_unit_return!(self.login_data.clone());
         thread::spawn(move || {
-            match user::get_threepid(login_data.server_url, login_data.access_token) {
+            match user::get_threepid(
+                login_data.session_client.homeserver().clone(),
+                login_data.access_token,
+            ) {
                 Ok(list) => {
                     let l = Some(list);
                     APPOP!(set_three_pid, (l));
@@ -49,7 +52,7 @@ impl AppOp {
             if let Some(secret) = secret {
                 thread::spawn(move || {
                     match user::add_threepid(
-                        login_data.server_url,
+                        login_data.session_client.homeserver().clone(),
                         login_data.access_token,
                         login_data.identity_url,
                         secret,
@@ -115,7 +118,7 @@ impl AppOp {
             if let gtk::ResponseType::Ok = r {
                 let token = value.get_text().to_string();
 
-                let server_url = login_data.server_url.clone();
+                let server_url = login_data.session_client.homeserver().clone();
                 let secret = secret.clone();
                 let sid = sid.clone();
                 thread::spawn(move || {
@@ -162,7 +165,7 @@ impl AppOp {
                 let sid = sid.clone();
                 thread::spawn(move || {
                     match user::add_threepid(
-                        login_data.server_url,
+                        login_data.session_client.homeserver().clone(),
                         login_data.access_token,
                         login_data.identity_url,
                         secret,
@@ -317,13 +320,8 @@ impl AppOp {
         stack.set_visible_child_name("loading");
         self.get_three_pid();
         uid.set_text(&login_data.uid.to_string());
-        device_id.set_text(
-            self.device_id
-                .as_ref()
-                .map(|id| id.as_str())
-                .unwrap_or_default(),
-        );
-        homeserver.set_text(login_data.server_url.as_str());
+        device_id.set_text(login_data.device_id.as_str());
+        homeserver.set_text(login_data.session_client.homeserver().as_str());
         name.set_text(&login_data.username.unwrap_or_default());
         name.grab_focus_without_selecting();
         name.set_position(-1);
@@ -547,7 +545,7 @@ impl AppOp {
         download_to_cache(
             self.thread_pool.clone(),
             self.user_info_cache.clone(),
-            login_data.server_url,
+            login_data.session_client.homeserver().clone(),
             login_data.access_token,
             login_data.uid,
             data,
@@ -611,7 +609,7 @@ impl AppOp {
             name.set_editable(false);
             thread::spawn(move || {
                 match user::set_username(
-                    login_data.server_url,
+                    login_data.session_client.homeserver().clone(),
                     login_data.access_token,
                     login_data.uid,
                     username,
@@ -682,7 +680,7 @@ impl AppOp {
             password_btn_stack.set_visible_child_name("spinner");
             thread::spawn(move || {
                 match user::change_password(
-                    login_data.server_url,
+                    login_data.session_client.homeserver().clone(),
                     login_data.access_token,
                     login_data.uid.localpart().into(),
                     old.to_string(),
@@ -797,7 +795,7 @@ impl AppOp {
                 let login_data = login_data.clone();
                 thread::spawn(move || {
                     match user::account_destruction(
-                        login_data.server_url.clone(),
+                        login_data.session_client.homeserver().clone(),
                         login_data.access_token.clone(),
                         login_data.uid.localpart().into(),
                         password,

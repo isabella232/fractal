@@ -1,6 +1,6 @@
 use crate::backend::room;
 use crate::util::i18n::{i18n, i18n_k, ni18n_f};
-use fractal_api::identifiers::{DeviceId, RoomId};
+use fractal_api::identifiers::RoomId;
 use fractal_api::url::Url;
 use log::{error, warn};
 use std::convert::TryInto;
@@ -79,7 +79,7 @@ impl AppOp {
                 self.update_typing_notification();
             } else {
                 // Request all joined members for each new room
-                let server = login_data.server_url.clone();
+                let server = login_data.session_client.homeserver().clone();
                 let access_token = login_data.access_token.clone();
                 let room_id = room.id.clone();
                 thread::spawn(move || {
@@ -94,7 +94,7 @@ impl AppOp {
                 });
                 // Download the room avatar
                 // TODO: Use the avatar url returned by sync
-                let server = login_data.server_url.clone();
+                let server = login_data.session_client.homeserver().clone();
                 let access_token = login_data.access_token.clone();
                 let room_id = room.id.clone();
                 thread::spawn(
@@ -142,12 +142,13 @@ impl AppOp {
                 }
             }
 
-            self.roomlist = widgets::RoomList::new(adj, Some(login_data.server_url.clone()));
+            self.roomlist =
+                widgets::RoomList::new(adj, Some(login_data.session_client.homeserver().clone()));
             self.roomlist.add_rooms(roomlist);
             container.add(self.roomlist.widget());
 
             self.roomlist.connect_fav(move |room, tofav| {
-                let server = login_data.server_url.clone();
+                let server = login_data.session_client.homeserver().clone();
                 let access_token = login_data.access_token.clone();
                 let uid = login_data.uid.clone();
                 thread::spawn(move || {
@@ -245,7 +246,7 @@ impl AppOp {
         self.roomlist.select(&active_room);
 
         // getting room details
-        let server_url = login_data.server_url.clone();
+        let server_url = login_data.session_client.homeserver().clone();
         let access_token = login_data.access_token.clone();
         let a_room = active_room.clone();
         thread::spawn(
@@ -259,7 +260,7 @@ impl AppOp {
             },
         );
 
-        let server_url = login_data.server_url.clone();
+        let server_url = login_data.session_client.homeserver().clone();
         let access_token = login_data.access_token.clone();
         let a_room = active_room.clone();
         thread::spawn(move || {
@@ -302,7 +303,7 @@ impl AppOp {
         let back_history = self.room_back_history.clone();
         let actions = actions::Message::new(
             self.thread_pool.clone(),
-            login_data.server_url,
+            login_data.session_client.homeserver().clone(),
             login_data.access_token,
             self.ui.clone(),
             back_history,
@@ -333,7 +334,11 @@ impl AppOp {
         let r = unwrap_or_unit_return!(self.active_room.clone());
         let room_id = r.clone();
         thread::spawn(move || {
-            let query = room::leave_room(login_data.server_url, login_data.access_token, room_id);
+            let query = room::leave_room(
+                login_data.session_client.homeserver().clone(),
+                login_data.access_token,
+                room_id,
+            );
             if let Err(err) = query {
                 err.handle_error();
             }
@@ -399,7 +404,7 @@ impl AppOp {
         let name = n;
         thread::spawn(move || {
             match room::new_room(
-                login_data.server_url,
+                login_data.session_client.homeserver().clone(),
                 login_data.access_token,
                 name,
                 privacy,
@@ -421,10 +426,7 @@ impl AppOp {
         let since = self.since.clone();
         let username = login_data.username.unwrap_or_default();
         let uid = login_data.uid;
-        let device_id = self
-            .device_id
-            .clone()
-            .unwrap_or_else(|| Box::<DeviceId>::from(""));
+        let device_id = login_data.device_id;
 
         if cache::store(&rooms, since, username, uid, device_id).is_err() {
             error!("Error caching rooms");
@@ -558,7 +560,11 @@ impl AppOp {
                 }
             };
 
-            match room::join_room(login_data.server_url, login_data.access_token, room_id) {
+            match room::join_room(
+                login_data.session_client.homeserver().clone(),
+                login_data.access_token,
+                room_id,
+            ) {
                 Ok(jtr) => {
                     let jtr = Some(jtr);
                     APPOP!(set_join_to_room, (jtr));
@@ -700,7 +706,11 @@ impl AppOp {
         }
 
         thread::spawn(move || {
-            match room::get_room_avatar(login_data.server_url, login_data.access_token, room_id) {
+            match room::get_room_avatar(
+                login_data.session_client.homeserver().clone(),
+                login_data.access_token,
+                room_id,
+            ) {
                 Ok((room, avatar)) => {
                     APPOP!(set_room_avatar, (room, avatar));
                 }
@@ -753,7 +763,7 @@ impl AppOp {
         self.typing.insert(active_room.clone(), now);
         thread::spawn(move || {
             let query = room::send_typing(
-                login_data.server_url,
+                login_data.session_client.homeserver().clone(),
                 login_data.access_token,
                 login_data.uid,
                 active_room,

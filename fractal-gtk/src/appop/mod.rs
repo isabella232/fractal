@@ -8,6 +8,7 @@ use std::time::Duration;
 use fractal_api::identifiers::{DeviceId, RoomId, UserId};
 use fractal_api::r0::AccessToken;
 
+use fractal_api::Client as MatrixClient;
 use gtk::prelude::*;
 
 use crate::backend::ThreadPool;
@@ -74,11 +75,12 @@ impl RoomSearchPagination {
 
 #[derive(Clone, Debug)]
 pub struct LoginData {
-    pub access_token: AccessToken,
+    pub session_client: MatrixClient,
     pub uid: UserId,
+    pub access_token: AccessToken,
+    pub device_id: Box<DeviceId>,
     pub username: Option<String>,
     pub avatar: Option<PathBuf>,
-    pub server_url: Url,
     pub identity_url: Url,
 }
 
@@ -90,7 +92,6 @@ pub struct AppOp {
     pub sending_message: bool,
 
     pub login_data: Option<LoginData>,
-    pub device_id: Option<Box<DeviceId>>, // TODO: Shouldn't be optional
 
     pub active_room: Option<RoomId>,
     pub join_to_room: Option<RoomId>,
@@ -143,7 +144,6 @@ impl AppOp {
             room_settings: None,
             history: None,
             login_data: None,
-            device_id: None,
             syncing: false,
             msg_queue: vec![],
             sending_message: false,
@@ -177,19 +177,20 @@ impl AppOp {
         self.set_state(AppState::Loading);
 
         // FIXME: Username and uid should not be duplicated in cache.
-        if let Ok(data) = cache::load() {
+        let device_id = if let Ok(data) = cache::load() {
             let r: Vec<Room> = data.rooms.values().cloned().collect();
             self.set_rooms(r, true);
-            /* Make sure that since is never an empty string */
             self.since = data.since.filter(|s| !s.is_empty());
-            self.device_id = Some(data.device_id);
-        }
+            Some(data.device_id)
+        } else {
+            None
+        };
 
         // FIXME: Storing and getting the password is insecure.
         //        Only the access token should be used.
         if let Ok((username, password, server, id_url)) = self.get_pass() {
-            if let Ok((Some(access_token), uid)) = self.get_token() {
-                self.bk_login(uid, access_token, self.device_id.clone(), server, id_url);
+            if let (Ok((Some(access_token), uid)), Some(dev_id)) = (self.get_token(), device_id) {
+                self.bk_login(uid, access_token, dev_id, server, id_url);
             } else {
                 self.connect(username, password, server, id_url);
             }

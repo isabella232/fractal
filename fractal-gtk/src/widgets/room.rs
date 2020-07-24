@@ -120,7 +120,7 @@ impl<'a> RoomBox<'a> {
             let join_button = gtk::Button::with_label(i18n("Join").as_str());
             let room_id = room.id.clone();
             join_button.connect_clicked(move |_| {
-                let server_url = login_data.server_url.clone();
+                let server_url = login_data.session_client.homeserver().clone();
                 let access_token = login_data.access_token.clone();
                 let room_id = room_id.clone();
                 thread::spawn(move || {

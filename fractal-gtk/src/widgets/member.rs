@@ -60,7 +60,7 @@ impl<'a> MemberBox<'a> {
             download_to_cache(
                 self.op.thread_pool.clone(),
                 self.op.user_info_cache.clone(),
-                login_data.server_url,
+                login_data.session_client.homeserver().clone(),
                 login_data.access_token,
                 self.member.uid.clone(),
                 data,
@@ -105,7 +105,7 @@ impl<'a> MemberBox<'a> {
             download_to_cache(
                 self.op.thread_pool.clone(),
                 self.op.user_info_cache.clone(),
-                login_data.server_url,
+                login_data.session_client.homeserver().clone(),
                 login_data.access_token,
                 self.member.uid.clone(),
                 data,

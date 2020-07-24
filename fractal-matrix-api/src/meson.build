@@ -65,5 +65,4 @@ api_sources = files(
   'identity.rs',
   'lib.rs',
   'r0.rs',
-  'util.rs'
 )

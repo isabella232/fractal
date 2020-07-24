@@ -76,12 +76,15 @@ impl AppOp {
         let login_data = self.login_data.clone()?;
         let messages = self.history.as_ref()?.get_listbox();
         if let Some(ui_msg) = self.create_new_room_message(&msg) {
-            let mb = widgets::MessageBox::new(login_data.server_url, login_data.access_token)
-                .tmpwidget(
-                    self.thread_pool.clone(),
-                    self.user_info_cache.clone(),
-                    &ui_msg,
-                );
+            let mb = widgets::MessageBox::new(
+                login_data.session_client.homeserver().clone(),
+                login_data.access_token,
+            )
+            .tmpwidget(
+                self.thread_pool.clone(),
+                self.user_info_cache.clone(),
+                &ui_msg,
+            );
             let m = mb.get_listbox_row();
             messages.add(m);
 
@@ -118,7 +121,7 @@ impl AppOp {
         for t in self.msg_queue.iter().rev().filter(|m| m.msg.room == r.id) {
             if let Some(ui_msg) = self.create_new_room_message(&t.msg) {
                 let mb = widgets::MessageBox::new(
-                    login_data.server_url.clone(),
+                    login_data.session_client.homeserver().clone(),
                     login_data.access_token.clone(),
                 )
                 .tmpwidget(
@@ -165,7 +168,7 @@ impl AppOp {
             let event_id = last_message.id.clone()?;
             thread::spawn(move || {
                 match room::mark_as_read(
-                    login_data.server_url,
+                    login_data.session_client.homeserver().clone(),
                     login_data.access_token,
                     room_id,
                     event_id,
@@ -221,12 +224,20 @@ impl AppOp {
             match &next.msg.mtype[..] {
                 "m.image" | "m.file" | "m.audio" | "m.video" => {
                     thread::spawn(move || {
-                        attach_file(login_data.server_url, login_data.access_token, msg)
+                        attach_file(
+                            login_data.session_client.homeserver().clone(),
+                            login_data.access_token,
+                            msg,
+                        )
                     });
                 }
                 _ => {
                     thread::spawn(move || {
-                        match room::send_msg(login_data.server_url, login_data.access_token, msg) {
+                        match room::send_msg(
+                            login_data.session_client.homeserver().clone(),
+                            login_data.access_token,
+                            msg,
+                        ) {
                             Ok((txid, evid)) => {
                                 APPOP!(msg_sent, (txid, evid));
                                 let initial = false;

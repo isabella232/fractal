@@ -1,9 +1,9 @@
 use crate::r0::AccessToken;
+use matrix_sdk::identifiers::RoomAliasId;
+use matrix_sdk::identifiers::RoomId;
 use reqwest::blocking::Client;
 use reqwest::blocking::Request;
 use reqwest::Error;
-use ruma_identifiers::RoomAliasId;
-use ruma_identifiers::RoomId;
 use serde::ser::SerializeMap;
 use serde::{Deserialize, Serialize, Serializer};
 use url::Url;

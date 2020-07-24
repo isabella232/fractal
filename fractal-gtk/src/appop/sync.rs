@@ -30,7 +30,7 @@ impl AppOp {
             let since = self.since.clone().filter(|_| !initial);
             thread::spawn(move || {
                 match sync::sync(
-                    login_data.server_url,
+                    login_data.session_client.homeserver().clone(),
                     login_data.access_token,
                     login_data.uid,
                     join_to_room,

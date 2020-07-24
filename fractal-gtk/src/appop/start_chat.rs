@@ -19,7 +19,7 @@ impl AppOp {
         let member = user.0;
         thread::spawn(move || {
             match room::direct_chat(
-                login_data.server_url,
+                login_data.session_client.homeserver().clone(),
                 login_data.access_token,
                 login_data.uid,
                 member,

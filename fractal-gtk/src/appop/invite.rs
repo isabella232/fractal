@@ -165,7 +165,7 @@ impl AppOp {
         let login_data = unwrap_or_unit_return!(self.login_data.clone());
         if let Some(ref r) = self.active_room {
             for user in &self.invite_list {
-                let server = login_data.server_url.clone();
+                let server = login_data.session_client.homeserver().clone();
                 let access_token = login_data.access_token.clone();
                 let room_id = r.clone();
                 let user_id = user.0.uid.clone();
@@ -229,7 +229,7 @@ impl AppOp {
             if accept {
                 thread::spawn(move || {
                     match room::join_room(
-                        login_data.server_url,
+                        login_data.session_client.homeserver().clone(),
                         login_data.access_token,
                         room_id.into(),
                     ) {
@@ -245,8 +245,11 @@ impl AppOp {
                 });
             } else {
                 thread::spawn(move || {
-                    let query =
-                        room::leave_room(login_data.server_url, login_data.access_token, room_id);
+                    let query = room::leave_room(
+                        login_data.session_client.homeserver().clone(),
+                        login_data.access_token,
+                        room_id,
+                    );
                     if let Err(err) = query {
                         err.handle_error();
                     }

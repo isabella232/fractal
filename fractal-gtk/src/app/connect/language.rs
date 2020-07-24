@@ -27,7 +27,7 @@ impl App {
                     If the checker is modified by gtk due to the user switching the language, the op mutex is unlocked. */
                     if let Ok(op) = op.try_lock() {
                         if let (Some(active_room), Some(login_data)) = (op.active_room.as_ref(), op.login_data.as_ref()) {
-                            let server = login_data.server_url.clone();
+                            let server = login_data.session_client.homeserver().clone();
                             let access_token = login_data.access_token.clone();
                             let uid = login_data.uid.clone();
                             let room_id = active_room.clone();

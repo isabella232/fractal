@@ -1,16 +1,18 @@
 use log::error;
 
+use crate::app::RUNTIME;
 use crate::backend::register;
 use fractal_api::identifiers::{DeviceId, UserId};
 use fractal_api::r0::AccessToken;
-
 use fractal_api::url::Url;
+use fractal_api::Session;
 
 use crate::app::App;
 use crate::appop::AppOp;
 
 use crate::backend::HandleError;
 use crate::cache;
+use crate::client::get_matrix_client;
 
 use std::thread;
 
@@ -25,7 +27,7 @@ impl AppOp {
         &mut self,
         uid: UserId,
         access_token: AccessToken,
-        device: Option<Box<DeviceId>>,
+        device_id: Box<DeviceId>,
         server_url: Url,
         identity_url: Url,
     ) {
@@ -33,17 +35,28 @@ impl AppOp {
             error!("Can't store the token using libsecret");
         }
 
+        let matrix_client =
+            get_matrix_client(server_url).expect("Failed to login with the Matrix client");
+
         self.set_login_data(LoginData {
-            access_token,
-            uid,
+            session_client: matrix_client.clone(),
+            uid: uid.clone(),
+            access_token: access_token.clone(),
+            device_id: device_id.clone(),
             username: None,
             avatar: None,
-            server_url,
             identity_url,
         });
 
+        let _ = RUNTIME
+            .handle()
+            .block_on(matrix_client.restore_login(Session {
+                access_token: access_token.to_string(),
+                user_id: uid,
+                device_id,
+            }));
+
         self.set_state(AppState::NoRoom);
-        self.device_id = self.device_id.clone().or(device);
         self.since = None;
         self.get_username();
 
@@ -63,7 +76,6 @@ impl AppOp {
 
         self.set_state(AppState::Login);
         self.login_data = None;
-        self.device_id = None;
     }
 
     pub fn connect(&mut self, username: String, password: String, server: Url, identity: Url) {
@@ -97,7 +109,10 @@ impl AppOp {
         let login_data = unwrap_or_unit_return!(self.login_data.clone());
         let _ = self.delete_pass("fractal");
         thread::spawn(move || {
-            match register::logout(login_data.server_url, login_data.access_token) {
+            match register::logout(
+                login_data.session_client.homeserver().clone(),
+                login_data.access_token,
+            ) {
                 Ok(_) => {
                     APPOP!(bk_logout);
                 }

@@ -25,7 +25,7 @@ impl AppOp {
                 &window,
                 login_data.uid,
                 room.clone(),
-                login_data.server_url,
+                login_data.session_client.homeserver().clone(),
                 login_data.access_token,
             );
             let page = panel.create()?;

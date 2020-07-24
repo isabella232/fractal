@@ -25,7 +25,7 @@ pub fn new(window: &gtk::Window, op: Arc<Mutex<AppOp>>) -> gio::SimpleActionGrou
 
     change_avatar.connect_activate(clone!(@weak window => move |a, _| {
         let login_data = unwrap_or_unit_return!(op.lock().unwrap().login_data.clone());
-        let server_url = login_data.server_url;
+        let server_url = login_data.session_client.homeserver().clone();
         let access_token = login_data.access_token;
         let uid = login_data.uid;
 

@@ -1,8 +1,8 @@
 use crate::r0::AccessToken;
+use matrix_sdk::identifiers::{EventId, RoomId};
 use reqwest::blocking::Client;
 use reqwest::blocking::Request;
 use reqwest::Error;
-use ruma_identifiers::{EventId, RoomId};
 use serde::{Deserialize, Serialize};
 use url::Url;
 

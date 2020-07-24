@@ -17,7 +17,6 @@ documentation = "https://gnome.pages.gitlab.gnome.org/fractal/fractal_matrix_api
 
 [dependencies]
 gio = "0.9.0"
-ruma-identifiers = "0.17.1"
 serde_json = "1.0.48"
 
 [dependencies.serde]
@@ -31,3 +30,8 @@ features = ["blocking", "json", "gzip", "socks"]
 [dependencies.url]
 version = "2.1.1"
 features = ["serde"]
+
+[dependencies.matrix-sdk]
+git = "https://github.com/matrix-org/matrix-rust-sdk.git"
+rev = "0422bae92485b033d4f9b56f2331909653655609"
+features = ["unstable-synapse-quirks", "socks"]

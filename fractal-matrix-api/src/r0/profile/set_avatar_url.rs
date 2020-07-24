@@ -1,8 +1,8 @@
 use crate::r0::AccessToken;
+use matrix_sdk::identifiers::UserId;
 use reqwest::blocking::Client;
 use reqwest::blocking::Request;
 use reqwest::Error;
-use ruma_identifiers::UserId;
 use serde::Serialize;
 use url::Url;
 

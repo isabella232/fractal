@@ -1,10 +1,10 @@
 use super::Identifier;
 use crate::r0::AccessToken;
+use matrix_sdk::identifiers::DeviceId;
+use matrix_sdk::identifiers::UserId;
 use reqwest::blocking::Client;
 use reqwest::blocking::Request;
 use reqwest::Error;
-use ruma_identifiers::DeviceId;
-use ruma_identifiers::UserId;
 use serde::{Deserialize, Serialize};
 use url::Url;
 
@@ -33,7 +33,7 @@ pub enum Auth {
 pub struct Response {
     pub access_token: Option<AccessToken>,
     pub user_id: Option<UserId>,
-    pub device_id: Option<Box<DeviceId>>,
+    pub device_id: Box<DeviceId>,
 }
 
 pub fn request(base: Url, body: &Body) -> Result<Request, Error> {

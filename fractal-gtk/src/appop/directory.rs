@@ -16,7 +16,10 @@ impl AppOp {
     pub fn init_protocols(&self) {
         let login_data = unwrap_or_unit_return!(self.login_data.clone());
         thread::spawn(move || {
-            match directory::protocols(login_data.server_url, login_data.access_token) {
+            match directory::protocols(
+                login_data.session_client.homeserver().clone(),
+                login_data.access_token,
+            ) {
                 Ok(protocols) => {
                     APPOP!(set_protocols, (protocols));
                 }
@@ -136,7 +139,7 @@ impl AppOp {
         let rooms_since = self.directory_pagination.clone().into();
         thread::spawn(move || {
             let query = directory::room_search(
-                login_data.server_url,
+                login_data.session_client.homeserver().clone(),
                 login_data.access_token,
                 homeserver,
                 search_term,

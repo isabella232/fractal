@@ -34,7 +34,7 @@ impl AppOp {
                 main_window,
                 room,
                 &msg,
-                login_data.server_url,
+                login_data.session_client.homeserver().clone(),
                 login_data.access_token,
                 login_data.uid,
             );
@@ -46,7 +46,7 @@ impl AppOp {
                 let back_history = self.room_back_history.clone();
                 let actions = actions::Message::new(
                     self.thread_pool.clone(),
-                    login_data.server_url,
+                    login_data.session_client.homeserver().clone(),
                     login_data.access_token,
                     self.ui.clone(),
                     back_history,

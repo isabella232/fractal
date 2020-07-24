@@ -1,10 +1,10 @@
 use super::AuthenticationData;
 use crate::r0::AccessToken;
+use matrix_sdk::identifiers::DeviceId;
+use matrix_sdk::identifiers::UserId;
 use reqwest::blocking::Client;
 use reqwest::blocking::Request;
 use reqwest::Error;
-use ruma_identifiers::DeviceId;
-use ruma_identifiers::UserId;
 use serde::{Deserialize, Serialize};
 use std::ops::Not;
 use url::Url;

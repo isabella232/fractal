@@ -301,7 +301,7 @@ impl RoomHistory {
         let mut rh = RoomHistory {
             rows: Rc::new(RefCell::new(List::new(scroll))),
             access_token: login_data.access_token,
-            server_url: login_data.server_url,
+            server_url: login_data.session_client.homeserver().clone(),
             source_id: Rc::new(RefCell::new(None)),
             queue: Rc::new(RefCell::new(VecDeque::new())),
             edit_buffer: Rc::new(RefCell::new(VecDeque::new())),

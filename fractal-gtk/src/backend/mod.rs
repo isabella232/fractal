@@ -11,7 +11,7 @@ use std::path::PathBuf;
 use std::sync::{Arc, Condvar, Mutex};
 use std::thread;
 
-use crate::client::Client;
+use crate::client::ClientBlocking;
 use crate::util::cache_dir_path;
 use fractal_api::r0::context::get_context::request as get_context;
 use fractal_api::r0::context::get_context::Parameters as GetContextParameters;
@@ -31,7 +31,7 @@ pub mod sync;
 pub mod user;
 
 lazy_static! {
-    pub static ref HTTP_CLIENT: Client = Client::new();
+    pub static ref HTTP_CLIENT: ClientBlocking = ClientBlocking::new();
 }
 
 #[derive(Clone, Debug)]
@@ -187,13 +187,11 @@ pub fn dw_media(
     if fname.is_file() && (dest.is_none() || is_fname_recent) {
         Ok(fname)
     } else {
-        HTTP_CLIENT
-            .get_client()
-            .execute(request)?
-            .bytes()
-            .map_err(Into::into)
-            .and_then(|media| write(&fname, media).map_err(Into::into))
-            .and(Ok(fname))
+        let media = HTTP_CLIENT.get_client().execute(request)?.bytes()?;
+
+        write(&fname, media)?;
+
+        Ok(fname)
     }
 }
 

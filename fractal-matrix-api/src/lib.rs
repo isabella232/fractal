@@ -1,9 +1,7 @@
-#[macro_use]
 pub mod identity;
 pub mod r0;
 
-pub use reqwest;
-pub use ruma_identifiers as identifiers;
+pub use matrix_sdk::*;
 pub use url;
 
 #[cfg(test)]

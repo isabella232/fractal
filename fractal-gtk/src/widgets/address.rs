@@ -161,7 +161,7 @@ impl<'a> Address<'a> {
         let entry = self.entry.clone();
         let address = self.address.clone();
         let access_token = login_data.access_token;
-        let server_url = login_data.server_url;
+        let server_url = login_data.session_client.homeserver().clone();
         let id_server = login_data.identity_url;
         self.signal_id = Some(self.button.clone().connect_clicked(move |w| {
             if !w.get_sensitive() || !w.is_visible() {

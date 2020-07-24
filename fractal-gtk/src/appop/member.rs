@@ -193,7 +193,11 @@ impl AppOp {
     pub fn search_invite_user(&self, term: String) {
         let login_data = unwrap_or_unit_return!(self.login_data.clone());
         thread::spawn(move || {
-            match user::search(login_data.server_url, login_data.access_token, term) {
+            match user::search(
+                login_data.session_client.homeserver().clone(),
+                login_data.access_token,
+                term,
+            ) {
                 Ok(users) => {
                     APPOP!(user_search_finished, (users));
                 }

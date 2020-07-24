@@ -21,7 +21,7 @@ impl AppOp {
         let login_data = unwrap_or_unit_return!(self.login_data.clone());
 
         thread::spawn(clone!(@strong login_data => move || {
-            match user::get_username(login_data.server_url, login_data.access_token, login_data.uid) {
+            match user::get_username(login_data.session_client.homeserver().clone(), login_data.access_token, login_data.uid) {
                 Ok(username) => {
                     APPOP!(set_username, (username));
                 }
@@ -32,7 +32,11 @@ impl AppOp {
         }));
 
         thread::spawn(clone!(@strong login_data => move || {
-            match user::get_user_avatar(login_data.server_url, login_data.access_token, &login_data.uid) {
+            match user::get_user_avatar(
+                login_data.session_client.homeserver().clone(),
+                login_data.access_token,
+                &login_data.uid,
+            ) {
                 Ok((_, path)) => {
                     APPOP!(set_avatar, (path));
                 }
@@ -90,7 +94,7 @@ impl AppOp {
             download_to_cache(
                 self.thread_pool.clone(),
                 self.user_info_cache.clone(),
-                login_data.server_url.clone(),
+                login_data.session_client.homeserver().clone(),
                 login_data.access_token.clone(),
                 login_data.uid.clone(),
                 data,
@@ -116,7 +120,7 @@ impl AppOp {
                 download_to_cache(
                     self.thread_pool.clone(),
                     self.user_info_cache.clone(),
-                    login_data.server_url.clone(),
+                    login_data.session_client.homeserver().clone(),
                     login_data.access_token.clone(),
                     login_data.uid,
                     data,
