@@ -1,9 +1,8 @@
 scalable_dir = join_paths('hicolor', 'scalable', 'apps')
 
 install_data(
-  join_paths(scalable_dir, 'org.gnome.Fractal.svg'),
+  join_paths(scalable_dir, '@0@.svg'.format(application_id)),
   install_dir: join_paths(datadir, 'icons', scalable_dir),
-  rename: '@0@.svg'.format(application_id)
 )
 
 symbolic_dir = join_paths('hicolor', 'symbolic', 'apps')

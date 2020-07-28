@@ -12,7 +12,6 @@
         "development",
         "nightly"
     ],
-    "desktop-file-name-suffix" : " (Development)",
     "finish-args" : [
         "--share=network",
         "--share=ipc",
