@@ -261,6 +261,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
+            <property name="tooltip_text" translatable="yes">Toggle fullscreen</property>
             <child>
               <object class="GtkImage" id="full_screen_button_icon">
                 <property name="visible">True</property>
