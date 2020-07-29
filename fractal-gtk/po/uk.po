@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2020-07-14 06:43+0000\n"
-"PO-Revision-Date: 2020-07-14 13:33+0300\n"
+"POT-Creation-Date: 2020-07-29 06:07+0000\n"
+"PO-Revision-Date: 2020-07-29 16:58+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -102,7 +102,7 @@ msgstr "Написати на новому рядку"
 
 #: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:3
 #: fractal-gtk/res/org.gnome.Fractal.metainfo.xml.in.in:5
-#: fractal-gtk/res/ui/login_flow.ui:294 fractal-gtk/src/appop/mod.rs:211
+#: fractal-gtk/res/ui/login_flow.ui:294 fractal-gtk/src/appop/mod.rs:213
 msgid "Fractal"
 msgstr "Фрактал"
 
@@ -252,7 +252,7 @@ msgstr "Налаштування облікового запису"
 
 #: fractal-gtk/res/ui/account_settings.ui:602
 #: fractal-gtk/res/ui/main_window.ui:522 fractal-gtk/res/ui/main_window.ui:662
-#: fractal-gtk/res/ui/main_window.ui:762 fractal-gtk/res/ui/media_viewer.ui:248
+#: fractal-gtk/res/ui/main_window.ui:762 fractal-gtk/res/ui/media_viewer.ui:236
 #: fractal-gtk/res/ui/room_settings.ui:1034
 msgid "Back"
 msgstr "Назад"
@@ -488,9 +488,13 @@ msgstr "`моноширинний`"
 msgid "*italic*"
 msgstr "*курсив*"
 
-#: fractal-gtk/res/ui/media_viewer.ui:185
+#: fractal-gtk/res/ui/media_viewer.ui:173
 msgid "Loading more media"
 msgstr "Завантажити ще медіа"
+
+#: fractal-gtk/res/ui/media_viewer.ui:264
+msgid "Toggle fullscreen"
+msgstr "Увімкнути/вимкнути повноекранний режим"
 
 #: fractal-gtk/res/ui/members.ui:25 fractal-gtk/res/ui/room_settings.ui:940
 msgid "Search for room members"
@@ -726,12 +730,12 @@ msgstr "Інший Homeserver"
 msgid "Homeserver URL"
 msgstr "Адреса домашнього сервера"
 
-#: fractal-gtk/src/actions/account_settings.rs:35
+#: fractal-gtk/src/actions/account_settings.rs:34
 #: fractal-gtk/src/actions/room_settings.rs:43
 msgid "Images"
 msgstr "Зображення"
 
-#: fractal-gtk/src/actions/account_settings.rs:36
+#: fractal-gtk/src/actions/account_settings.rs:35
 #: fractal-gtk/src/actions/room_settings.rs:45
 msgid "Select a new avatar"
 msgstr "Виберіть новий аватар"
@@ -744,12 +748,12 @@ msgstr "Виберіть файл"
 msgid "This message has no source."
 msgstr "У цьому повідомленні немає джерела."
 
-#: fractal-gtk/src/actions/message.rs:155
-#: fractal-gtk/src/actions/message.rs:192
+#: fractal-gtk/src/actions/message.rs:159
+#: fractal-gtk/src/actions/message.rs:197
 msgid "Could not download the file"
 msgstr "Не вдалося завантажити файл"
 
-#: fractal-gtk/src/actions/message.rs:164
+#: fractal-gtk/src/actions/message.rs:168
 msgid "Couldn’t save file"
 msgstr "Не вдалося зберегти файл"
 
@@ -802,7 +806,7 @@ msgstr ""
 msgid "OK"
 msgstr "Гаразд"
 
-#: fractal-gtk/src/appop/account.rs:777
+#: fractal-gtk/src/appop/account.rs:780
 msgid "Are you sure you want to delete your account?"
 msgstr "Ви дійсно хочете видалити свій обліковий запис?"
 
@@ -838,27 +842,27 @@ msgstr "Вас запросили увійти в <b>{room_name}</b>"
 
 #. Translators: The placeholder is for the number of unread messages in the
 #. application
-#: fractal-gtk/src/appop/mod.rs:215
+#: fractal-gtk/src/appop/mod.rs:217
 msgid "Fractal [{}]"
 msgstr "Фрактал [{}]"
 
-#: fractal-gtk/src/appop/notify.rs:50
+#: fractal-gtk/src/appop/notify.rs:51
 msgid "An audio file has been added to the conversation."
 msgstr "До спілкування було додано файл звукових даних."
 
-#: fractal-gtk/src/appop/notify.rs:51
+#: fractal-gtk/src/appop/notify.rs:52
 msgid "An image has been added to the conversation."
 msgstr "До спілкування було додано файл зображення."
 
-#: fractal-gtk/src/appop/notify.rs:52
+#: fractal-gtk/src/appop/notify.rs:53
 msgid "A video has been added to the conversation."
 msgstr "До спілкування було додано файл відео."
 
-#: fractal-gtk/src/appop/notify.rs:53
+#: fractal-gtk/src/appop/notify.rs:54
 msgid "A file has been added to the conversation."
 msgstr "До спілкування було додано файл даних."
 
-#: fractal-gtk/src/appop/notify.rs:58
+#: fractal-gtk/src/appop/notify.rs:59
 msgid " (direct message)"
 msgstr " (приватне повідомлення)"
 
@@ -898,8 +902,8 @@ msgstr[3] "<b>{}</b> вводить повідомлення…"
 msgid "Syncing, this could take a while"
 msgstr "Синхронізація, це може зайняти деякий час"
 
-#: fractal-gtk/src/backend/directory.rs:38
-#: fractal-gtk/src/backend/directory.rs:72
+#: fractal-gtk/src/backend/directory.rs:39
+#: fractal-gtk/src/backend/directory.rs:80
 msgid "Error searching for rooms"
 msgstr "Помилка при пошуку кімнат"
 
@@ -907,43 +911,43 @@ msgstr "Помилка при пошуку кімнат"
 msgid "Can’t login, try again"
 msgstr "Не можна увійти, спробуйте ще раз"
 
-#: fractal-gtk/src/backend/room.rs:340
+#: fractal-gtk/src/backend/room.rs:349
 msgid "Error deleting message"
 msgstr "Помилка при видаленні повідомлення"
 
-#: fractal-gtk/src/backend/room.rs:385
+#: fractal-gtk/src/backend/room.rs:394
 msgid "Can’t join the room, try again."
 msgstr "Неможливо увійти в кімнату, спробуйте ще раз."
 
-#: fractal-gtk/src/backend/room.rs:635 fractal-gtk/src/backend/room.rs:692
+#: fractal-gtk/src/backend/room.rs:653 fractal-gtk/src/backend/room.rs:710
 msgid "Can’t create the room, try again"
 msgstr "Неможливо створити кімнату, спробуйте ще раз"
 
-#: fractal-gtk/src/backend/user.rs:162
+#: fractal-gtk/src/backend/user.rs:161
 msgid "Sorry, account settings can’t be loaded."
 msgstr "Вибачте, не вдалося завантажити параметри облікового запису."
 
-#: fractal-gtk/src/backend/user.rs:201
+#: fractal-gtk/src/backend/user.rs:200
 msgid "Email is already in use"
 msgstr "Ця електронна адреса вже використовується"
 
-#: fractal-gtk/src/backend/user.rs:205
+#: fractal-gtk/src/backend/user.rs:204
 msgid "Please enter a valid email address."
 msgstr "Будь ласка, введіть коректну адресу електронної пошти."
 
-#: fractal-gtk/src/backend/user.rs:209
+#: fractal-gtk/src/backend/user.rs:208
 msgid "Couldn’t add the email address."
 msgstr "Не вдалося додати адресу електронної пошти."
 
-#: fractal-gtk/src/backend/user.rs:218 fractal-gtk/src/backend/user.rs:296
+#: fractal-gtk/src/backend/user.rs:217 fractal-gtk/src/backend/user.rs:295
 msgid "The identity server is invalid."
 msgstr "Сервер профілів є некоректним."
 
-#: fractal-gtk/src/backend/user.rs:277
+#: fractal-gtk/src/backend/user.rs:276
 msgid "Phone number is already in use"
 msgstr "Цей номер телефону вже використовується"
 
-#: fractal-gtk/src/backend/user.rs:282
+#: fractal-gtk/src/backend/user.rs:281
 msgid ""
 "Please enter your phone number in the format: \n"
 " + your country code and your phone number."
@@ -951,15 +955,15 @@ msgstr ""
 "Будь ласка, введіть ваш номер телефону у такому форматі: \n"
 " + код вашої країни і ваш номер телефону."
 
-#: fractal-gtk/src/backend/user.rs:287
+#: fractal-gtk/src/backend/user.rs:286
 msgid "Couldn’t add the phone number."
 msgstr "Не вдалося додати номер телефону."
 
-#: fractal-gtk/src/backend/user.rs:443
+#: fractal-gtk/src/backend/user.rs:442
 msgid "Couldn’t change the password"
 msgstr "Не вдалося змінити пароль"
 
-#: fractal-gtk/src/backend/user.rs:487
+#: fractal-gtk/src/backend/user.rs:486
 msgid "Couldn’t delete the account"
 msgstr "Не вдалося видалити обліковий запис"
 
@@ -979,7 +983,7 @@ msgstr "_Зберегти"
 msgid "_Select"
 msgstr "_Виберіть"
 
-#: fractal-gtk/src/widgets/inline_player.rs:520
+#: fractal-gtk/src/widgets/inline_player.rs:521
 msgid "Could not retrieve file URI"
 msgstr "Не вдалося отримати URI файлу"
 
@@ -999,7 +1003,7 @@ msgstr ""
 msgid "Malformed server URL"
 msgstr "Помилкове форматування адреси сервера"
 
-#: fractal-gtk/src/widgets/media_viewer.rs:1028
+#: fractal-gtk/src/widgets/media_viewer.rs:1050
 msgid "Error while loading previous media"
 msgstr "Помилка при завантаженні попереднього медіа"
 
@@ -1019,57 +1023,57 @@ msgstr "Модератор"
 msgid "Privileged"
 msgstr "Привілейований"
 
-#: fractal-gtk/src/widgets/message.rs:91
+#: fractal-gtk/src/widgets/message.rs:90
 msgid "Uploading video."
 msgstr "Вивантажуємо відео."
 
-#: fractal-gtk/src/widgets/message.rs:96
+#: fractal-gtk/src/widgets/message.rs:95
 msgid "Uploading audio."
 msgstr "Вивантажуємо звукові дані."
 
-#: fractal-gtk/src/widgets/message.rs:101
+#: fractal-gtk/src/widgets/message.rs:100
 msgid "Uploading image."
 msgstr "Вивантажуємо зображення."
 
-#: fractal-gtk/src/widgets/message.rs:105
+#: fractal-gtk/src/widgets/message.rs:104
 msgid "Uploading file."
 msgstr "Вивантажуємо файл."
 
-#: fractal-gtk/src/widgets/message.rs:257
+#: fractal-gtk/src/widgets/message.rs:256
 #, c-format
 msgid "Last edited %c"
 msgstr "Востаннє редаговано %c"
 
-#: fractal-gtk/src/widgets/message.rs:468
-#: fractal-gtk/src/widgets/message.rs:583
+#: fractal-gtk/src/widgets/message.rs:480
+#: fractal-gtk/src/widgets/message.rs:595
 msgid "Save"
 msgstr "Зберегти"
 
-#: fractal-gtk/src/widgets/message.rs:597
+#: fractal-gtk/src/widgets/message.rs:609
 msgid "Open"
 msgstr "Відкрити"
 
 #. Use 12h time format (AM/PM)
-#: fractal-gtk/src/widgets/message.rs:617
+#: fractal-gtk/src/widgets/message.rs:629
 msgid "%l∶%M %p"
 msgstr "%l∶%M %p"
 
 #. Use 24 time format
-#: fractal-gtk/src/widgets/message.rs:620
+#: fractal-gtk/src/widgets/message.rs:632
 msgid "%R"
 msgstr "%R"
 
-#: fractal-gtk/src/widgets/room_history.rs:98
+#: fractal-gtk/src/widgets/room_history.rs:96
 msgid "New Messages"
 msgstr "Нові повідомлення"
 
 #. Translators: This is a date format in the day divider without the year
-#: fractal-gtk/src/widgets/room_history.rs:801
+#: fractal-gtk/src/widgets/room_history.rs:795
 msgid "%B %e"
 msgstr "%B %e"
 
 #. Translators: This is a date format in the day divider with the year
-#: fractal-gtk/src/widgets/room_history.rs:804
+#: fractal-gtk/src/widgets/room_history.rs:798
 msgid "%B %e, %Y"
 msgstr "%B %e, %Y"
 
