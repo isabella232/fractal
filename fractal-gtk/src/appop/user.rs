@@ -32,7 +32,7 @@ impl AppOp {
         }));
 
         thread::spawn(clone!(@strong login_data => move || {
-            match user::get_user_avatar(login_data.server_url, &login_data.uid) {
+            match user::get_user_avatar(login_data.server_url, login_data.access_token, &login_data.uid) {
                 Ok((_, path)) => {
                     APPOP!(set_avatar, (path));
                 }
@@ -91,6 +91,7 @@ impl AppOp {
                 self.thread_pool.clone(),
                 self.user_info_cache.clone(),
                 login_data.server_url.clone(),
+                login_data.access_token.clone(),
                 login_data.uid.clone(),
                 data,
             );
@@ -116,6 +117,7 @@ impl AppOp {
                     self.thread_pool.clone(),
                     self.user_info_cache.clone(),
                     login_data.server_url.clone(),
+                    login_data.access_token.clone(),
                     login_data.uid,
                     data,
                 );

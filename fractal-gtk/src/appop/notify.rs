@@ -45,6 +45,7 @@ impl AppOp {
 
     pub fn notify(&self, app: gtk::Application, room_id: &RoomId, id: &EventId) -> Option<()> {
         let server_url = self.login_data.clone()?.server_url;
+        let access_token = self.login_data.clone()?.access_token;
         let msg = self.get_message_by_id(room_id, id)?;
         let r = self.rooms.get(room_id)?;
         let short_body = match &msg.mtype[..] {
@@ -68,6 +69,7 @@ impl AppOp {
             self.thread_pool.clone(),
             self.user_info_cache.clone(),
             server_url,
+            access_token,
             msg.sender,
             tx,
         );

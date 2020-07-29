@@ -55,6 +55,7 @@ use fractal_api::r0::profile::get_display_name::request as get_display_name;
 use fractal_api::r0::profile::get_display_name::Parameters as GetDisplayNameParameters;
 use fractal_api::r0::profile::get_display_name::Response as GetDisplayNameResponse;
 use fractal_api::r0::profile::get_profile::request as get_profile;
+use fractal_api::r0::profile::get_profile::Parameters as GetProfileParameters;
 use fractal_api::r0::profile::get_profile::Response as GetProfileResponse;
 use fractal_api::r0::profile::set_avatar_url::request as set_avatar_url;
 use fractal_api::r0::profile::set_avatar_url::Body as SetAvatarUrlBody;
@@ -565,6 +566,7 @@ pub fn get_user_info_async(
     thread_pool: ThreadPool,
     user_info_cache: UserInfoCache,
     baseu: Url,
+    access_token: AccessToken,
     uid: UserId,
     tx: Sender<UserInfo>,
 ) {
@@ -576,7 +578,7 @@ pub fn get_user_info_async(
     }
 
     thread_pool.run(move || {
-        let info = get_user_avatar(baseu, &uid);
+        let info = get_user_avatar(baseu, access_token, &uid);
 
         if let Ok(ref i0) = info {
             user_info_cache.lock().unwrap().insert(uid, i0.clone());
@@ -658,9 +660,11 @@ impl HandleError for GetUserAvatarError {}
 
 pub fn get_user_avatar(
     base: Url,
+    access_token: AccessToken,
     user_id: &UserId,
 ) -> Result<(String, PathBuf), GetUserAvatarError> {
-    let request = get_profile(base.clone(), user_id)?;
+    let params = GetProfileParameters { access_token };
+    let request = get_profile(base.clone(), &params, user_id)?;
     let response: GetProfileResponse = HTTP_CLIENT.get_client().execute(request)?.json()?;
 
     let name = response

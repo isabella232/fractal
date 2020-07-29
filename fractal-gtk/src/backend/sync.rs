@@ -167,7 +167,7 @@ pub fn sync(
     };
 
     let params = SyncParameters {
-        access_token,
+        access_token: access_token.clone(),
         filter,
         include_state: IncludeState::Changed {
             since: since.clone().unwrap_or_default(),
@@ -192,7 +192,7 @@ pub fn sync(
     match query {
         Ok(response) => {
             if since.is_none() {
-                let rooms = Room::from_sync_response(&response, user_id, base)
+                let rooms = Room::from_sync_response(&response, user_id, access_token, base)
                     .map(|rooms| {
                         let def = join_to_room
                             .and_then(|jtr| rooms.iter().find(|x| x.id == jtr).cloned());
@@ -208,7 +208,8 @@ pub fn sync(
 
                 // New rooms
                 let update_rooms =
-                    Room::from_sync_response(&response, user_id.clone(), base).map_err(Into::into);
+                    Room::from_sync_response(&response, user_id.clone(), access_token, base)
+                        .map_err(Into::into);
 
                 // Message events
                 let room_messages = join

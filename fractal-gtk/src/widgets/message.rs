@@ -288,6 +288,7 @@ impl MessageBox {
             thread_pool,
             user_info_cache,
             self.server_url.clone(),
+            self.access_token.clone(),
             uid.clone(),
             data.clone(),
         );

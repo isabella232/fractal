@@ -545,6 +545,7 @@ impl AppOp {
             self.thread_pool.clone(),
             self.user_info_cache.clone(),
             login_data.server_url,
+            login_data.access_token,
             login_data.uid,
             data,
         );

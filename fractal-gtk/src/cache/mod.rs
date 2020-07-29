@@ -160,11 +160,19 @@ pub fn download_to_cache(
     thread_pool: ThreadPool,
     user_info_cache: UserInfoCache,
     server_url: Url,
+    access_token: AccessToken,
     uid: UserId,
     data: Rc<RefCell<AvatarData>>,
 ) {
     let (tx, rx) = channel::<(String, PathBuf)>();
-    user::get_user_info_async(thread_pool, user_info_cache, server_url, uid, tx);
+    user::get_user_info_async(
+        thread_pool,
+        user_info_cache,
+        server_url,
+        access_token,
+        uid,
+        tx,
+    );
 
     gtk::timeout_add(50, move || match rx.try_recv() {
         Err(TryRecvError::Empty) => Continue(true),

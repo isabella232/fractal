@@ -8,6 +8,7 @@ use either::Either;
 use fractal_api::identifiers::{Error as IdError, EventId, RoomId, UserId};
 use fractal_api::r0::directory::post_public_rooms::Chunk as PublicRoomsChunk;
 use fractal_api::r0::sync::sync_events::Response as SyncResponse;
+use fractal_api::r0::AccessToken;
 use fractal_api::url::{ParseError as UrlError, Url};
 use log::{debug, info};
 use serde::{Deserialize, Serialize};
@@ -134,6 +135,7 @@ impl Room {
     pub fn from_sync_response(
         response: &SyncResponse,
         user_id: UserId,
+        access_token: AccessToken,
         baseu: Url,
     ) -> Result<Vec<Self>, IdError> {
         // getting the list of direct rooms
@@ -208,7 +210,7 @@ impl Room {
                 if leave_id != user_id {
                     let kick_reason = &last_event["content"]["reason"];
                     if let Ok((kicker_alias, kicker_avatar)) =
-                        get_user_avatar(baseu.clone(), &leave_id)
+                        get_user_avatar(baseu.clone(), access_token.clone(), &leave_id)
                     {
                         let kicker = Member {
                             alias: Some(kicker_alias),
@@ -248,6 +250,7 @@ impl Room {
                     .map_or(Ok(None), |ev| {
                         Ok(get_user_avatar(
                             baseu.clone(),
+                            access_token.clone(),
                             &UserId::try_from(ev["sender"].as_str().unwrap_or_default())?,
                         )
                         .ok())
