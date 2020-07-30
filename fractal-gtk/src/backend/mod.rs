@@ -6,7 +6,7 @@ use log::error;
 use regex::Regex;
 use std::fmt::Debug;
 use std::fs::write;
-use std::io::{Error as IoError, Read};
+use std::io::Error as IoError;
 use std::path::PathBuf;
 use std::sync::{Arc, Condvar, Mutex};
 use std::thread;
@@ -191,10 +191,9 @@ pub fn dw_media(
             .get_client()
             .execute(request)?
             .bytes()
-            .collect::<Result<Vec<u8>, IoError>>()
-            .and_then(|media| write(&fname, media))
-            .and(Ok(fname))
             .map_err(Into::into)
+            .and_then(|media| write(&fname, media).map_err(Into::into))
+            .and(Ok(fname))
     }
 }
 
