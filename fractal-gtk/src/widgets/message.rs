@@ -513,7 +513,7 @@ impl MessageBox {
             );
 
             let play_button = gtk::Button::new();
-            let play_icon = gtk::Image::new_from_icon_name(
+            let play_icon = gtk::Image::from_icon_name(
                 Some("media-playback-start-symbolic"),
                 gtk::IconSize::Dialog,
             );
@@ -535,7 +535,7 @@ impl MessageBox {
 
             let menu_button = gtk::MenuButton::new();
             let three_dot_icon =
-                gtk::Image::new_from_icon_name(Some("view-more-symbolic"), gtk::IconSize::Button);
+                gtk::Image::from_icon_name(Some("view-more-symbolic"), gtk::IconSize::Button);
             menu_button.set_image(Some(&three_dot_icon));
             menu_button.get_style_context().add_class("osd");
             menu_button.get_style_context().add_class("round-button");

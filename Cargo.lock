@@ -919,10 +919,12 @@ dependencies = [
 
 [[package]]
 name = "gspell"
-version = "0.4.0"
-source = "git+https://gitlab.gnome.org/World/Rust/gspell-rs.git?rev=e4caf899ae387fa431bfa112cb3e40358b4b68ea#e4caf899ae387fa431bfa112cb3e40358b4b68ea"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8847f9b14fef52f6b02fee00009c3ca79b9d49f15f5dd724e8b9a81f07f15606"
 dependencies = [
  "gdk",
+ "gdk-pixbuf",
  "gdk-sys",
  "gio",
  "gio-sys",
@@ -937,9 +939,12 @@ dependencies = [
 
 [[package]]
 name = "gspell-sys"
-version = "0.4.0"
-source = "git+https://gitlab.gnome.org/World/Rust/gspell-rs.git?rev=e4caf899ae387fa431bfa112cb3e40358b4b68ea#e4caf899ae387fa431bfa112cb3e40358b4b68ea"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1ea17e07972015f24b381ec3a951601f7b3784b430aa60618bdb9b94038fe4b2"
 dependencies = [
+ "gdk-pixbuf-sys",
+ "gdk-sys",
  "glib-sys",
  "gobject-sys",
  "gtk-sys",
@@ -1418,8 +1423,9 @@ checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
 
 [[package]]
 name = "letter-avatar"
-version = "1.2.1"
-source = "git+https://gitlab.gnome.org/bilelmoussaoui/letter-avatar.git?branch=bump-gtk-rs#6df533cefc1f543c9bff2dee818030bf94730e19"
+version = "1.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "662660bd131a9c06b36730750de8049efb5d2c8e0c23b3b58e9dd87e61acc245"
 dependencies = [
  "cairo-rs",
  "pango",
@@ -1800,6 +1806,12 @@ dependencies = [
  "hermit-abi",
  "libc",
 ]
+
+[[package]]
+name = "object"
+version = "0.20.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1ab52be62400ca80aa00285d25253d7f7c437b7375c4de678f5405d3afe82ca5"
 
 [[package]]
 name = "once_cell"
@@ -2573,7 +2585,8 @@ dependencies = [
 [[package]]
 name = "sourceview4"
 version = "0.2.0"
-source = "git+https://gitlab.gnome.org/World/Rust/sourceview4-rs.git?rev=275d8beb8a41b2a10321b0fd890a31de4700ed59#275d8beb8a41b2a10321b0fd890a31de4700ed59"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "67cf21c78ea4fd60f3c321209952304d54d9ee8d543eaa321ec9d687525d65b0"
 dependencies = [
  "bitflags",
  "cairo-rs",
@@ -2595,7 +2608,8 @@ dependencies = [
 [[package]]
 name = "sourceview4-sys"
 version = "0.2.0"
-source = "git+https://gitlab.gnome.org/World/Rust/sourceview4-rs.git?rev=275d8beb8a41b2a10321b0fd890a31de4700ed59#275d8beb8a41b2a10321b0fd890a31de4700ed59"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1b24736d28cedce710e726ad2e511662e65f496ca54615724686fd14ad3bd490"
 dependencies = [
  "cairo-sys-rs",
  "gdk-pixbuf-sys",
