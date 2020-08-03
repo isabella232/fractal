@@ -12,6 +12,9 @@ vendor
 fractal-gtk/src/config.rs
 fractal-gtk/src/static_resources.rs
 
+subprojects/*
+!subprojects/*.wrap
+
 # Files created by Flatpak
 .flatpak-builder/
 fractal/
