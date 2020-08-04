@@ -105,6 +105,8 @@ pub fn room_search(
                 .map(Host::to_owned)
                 .map(Ok)
                 .unwrap_or_else(|| Host::parse(&hs))
+                // Remove the url::Host enum, we only need the domain string
+                .map(|host| host.to_string())
                 .map(Some)
         })
         .unwrap_or(Ok(None))

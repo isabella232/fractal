@@ -6,14 +6,13 @@ use ruma_identifiers::RoomAliasId;
 use ruma_identifiers::RoomId;
 use serde::ser::SerializeMap;
 use serde::{Deserialize, Serialize, Serializer};
-use url::Host;
 use url::Url;
 
 #[derive(Clone, Debug, Serialize)]
 pub struct Parameters {
     pub access_token: AccessToken,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub server: Option<Host<String>>,
+    pub server: Option<String>,
 }
 
 #[derive(Clone, Debug, Serialize)]
