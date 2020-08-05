@@ -1,8 +1,9 @@
 use log::error;
 use serde_json::json;
 
-use fractal_api::identifiers::{Error as IdError, EventId, RoomId, UserId};
+use fractal_api::identifiers::{Error as IdError, EventId, RoomId, RoomIdOrAliasId, UserId};
 use fractal_api::reqwest::Error as ReqwestError;
+use fractal_api::reqwest::StatusCode;
 use fractal_api::url::{ParseError as UrlError, Url};
 use std::fs;
 use std::io::Error as IoError;
@@ -18,6 +19,7 @@ use crate::actions::AppState;
 use crate::backend::HTTP_CLIENT;
 use crate::util::cache_dir_path;
 
+use crate::error::StandardErrorResponse;
 use crate::types::Member;
 use crate::types::Message;
 use crate::types::{Room, RoomMembership, RoomTag};
@@ -36,6 +38,7 @@ use fractal_api::r0::membership::invite_user::Body as InviteUserBody;
 use fractal_api::r0::membership::invite_user::Parameters as InviteUserParameters;
 use fractal_api::r0::membership::join_room_by_id_or_alias::request as join_room_req;
 use fractal_api::r0::membership::join_room_by_id_or_alias::Parameters as JoinRoomParameters;
+use fractal_api::r0::membership::join_room_by_id_or_alias::Response as JoinRoomResponse;
 use fractal_api::r0::membership::leave_room::request as leave_room_req;
 use fractal_api::r0::membership::leave_room::Parameters as LeaveRoomParameters;
 use fractal_api::r0::message::create_message_event::request as create_message_event;
@@ -376,24 +379,46 @@ pub fn redact_msg(
 }
 
 #[derive(Debug)]
-pub struct JoinRoomError(ReqwestError);
+pub enum JoinRoomError {
+    Request(ReqwestError),
+    Response(StandardErrorResponse),
+}
 
 impl From<ReqwestError> for JoinRoomError {
     fn from(err: ReqwestError) -> Self {
-        Self(err)
+        Self::Request(err)
+    }
+}
+
+impl From<StandardErrorResponse> for JoinRoomError {
+    fn from(err: StandardErrorResponse) -> Self {
+        Self::Response(err)
     }
 }
 
 impl HandleError for JoinRoomError {
     fn handle_error(&self) {
-        let err_str = format!("{:?}", self);
+        let err_str: String;
+        let info: Option<String>;
+
+        match self {
+            JoinRoomError::Request(error) => {
+                err_str = format!("{:?}", error);
+                info = None;
+            }
+            JoinRoomError::Response(error) => {
+                err_str = error.error.clone();
+                info = Some(error.error.clone());
+            }
+        };
+
         error!(
             "{}",
             remove_matrix_access_token_if_present(&err_str).unwrap_or(err_str)
         );
         let error = i18n("Can’t join the room, try again.").to_string();
         let state = AppState::NoRoom;
-        APPOP!(show_error, (error));
+        APPOP!(show_error_with_info, (error, info));
         APPOP!(set_state, (state));
     }
 }
@@ -401,7 +426,7 @@ impl HandleError for JoinRoomError {
 pub fn join_room(
     base: Url,
     access_token: AccessToken,
-    room_id: RoomId,
+    room_id: RoomIdOrAliasId,
 ) -> Result<RoomId, JoinRoomError> {
     let room_id_or_alias_id = room_id.clone().into();
 
@@ -411,9 +436,15 @@ pub fn join_room(
     };
 
     let request = join_room_req(base, &room_id_or_alias_id, &params)?;
-    HTTP_CLIENT.get_client().execute(request)?;
+    let response = HTTP_CLIENT.get_client().execute(request)?;
 
-    Ok(room_id)
+    if response.status() != StatusCode::OK {
+        let resp: StandardErrorResponse = response.json()?;
+        Err(JoinRoomError::Response(resp))
+    } else {
+        let resp: JoinRoomResponse = response.json()?;
+        Ok(resp.room_id)
+    }
 }
 
 #[derive(Debug)]

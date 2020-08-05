@@ -228,7 +228,11 @@ impl AppOp {
             let room_id = rid.clone();
             if accept {
                 thread::spawn(move || {
-                    match room::join_room(login_data.server_url, login_data.access_token, room_id) {
+                    match room::join_room(
+                        login_data.server_url,
+                        login_data.access_token,
+                        room_id.into(),
+                    ) {
                         Ok(jtr) => {
                             let jtr = Some(jtr);
                             APPOP!(set_join_to_room, (jtr));

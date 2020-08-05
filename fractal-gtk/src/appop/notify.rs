@@ -96,6 +96,13 @@ impl AppOp {
     pub fn show_error(&self, msg: String) {
         ErrorDialog::new(false, &msg);
     }
+
+    pub fn show_error_with_info(&self, msg: String, info: Option<String>) {
+        let dialog = ErrorDialog::new(false, &msg);
+        if let Some(text) = info {
+            dialog.set_property_secondary_text(Some(text.as_ref()));
+        }
+    }
 }
 
 fn dirty_truncate(s: &str, num_chars: usize) -> &str {

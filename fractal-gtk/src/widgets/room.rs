@@ -127,16 +127,16 @@ impl<'a> RoomBox<'a> {
                 let server_url = login_data.server_url.clone();
                 let access_token = login_data.access_token.clone();
                 let room_id = room_id.clone();
-                thread::spawn(
-                    move || match room::join_room(server_url, access_token, room_id) {
+                thread::spawn(move || {
+                    match room::join_room(server_url, access_token, room_id.into()) {
                         Ok(jtr) => {
                             let jtr = Some(jtr);
                             APPOP!(set_join_to_room, (jtr));
                             APPOP!(reload_rooms);
                         }
                         Err(err) => err.handle_error(),
-                    },
-                );
+                    }
+                });
             });
             join_button.set_property_width_request(JOIN_BUTTON_WIDTH);
 
