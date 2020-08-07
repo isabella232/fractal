@@ -70,7 +70,9 @@
                 "/include",
                 "/lib/pkgconfig",
                 "*.la",
-                "/share"
+                "/share/gir-1.0",
+                "/share/gtk-doc",
+                "/share/vala"
             ],
             "sources" : [
                 {
