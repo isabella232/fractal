@@ -18,9 +18,9 @@
     </screenshot>
   </screenshots>
   <releases>
-    <release version="4.4" type="stable" date="2020-02-28" urgency="high">
+    <release version="4.4" type="stable" date="2020-08-07" urgency="high">
       <description>
-        <p>This new major release is the result of 3 months of hard work.</p>
+        <p>This new major release is the result of 10 months of hard work.</p>
         <p>New features:</p>
         <ul>
           <li>Videos now have a preview directly in history</li>

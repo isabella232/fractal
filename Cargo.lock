@@ -578,7 +578,7 @@ checksum = "00b0228411908ca8685dba7fc2cdd70ec9990a6e753e89b6ac91a84c40fbaf4b"
 
 [[package]]
 name = "fractal-gtk"
-version = "4.2.2"
+version = "4.4.0"
 dependencies = [
  "cairo-rs",
  "chrono",
@@ -620,7 +620,7 @@ dependencies = [
 
 [[package]]
 name = "fractal-matrix-api"
-version = "4.2.2"
+version = "4.4.0"
 dependencies = [
  "gio",
  "reqwest",
