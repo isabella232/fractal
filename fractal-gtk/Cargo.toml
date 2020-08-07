@@ -77,6 +77,6 @@ version = "0.8.1"
 features = ["v2_56"]
 
 [dependencies.either]
-git = "https://github.com/aledomu/either.git"
-rev = "111c9bd4905c6b51d3d904ba42625f2b32246b59"
+git = "https://github.com/danigm/either.git"
+rev = "60c99bc0723491e2dfd42bbe9b485c5f9323e96b"
 features = ["serde_untagged"]
