@@ -1606,15 +1606,14 @@ checksum = "490cc448043f947bae3cbee9c203358d62dbee0db12107a74be5c30ccfd09771"
 
 [[package]]
 name = "mdl"
-version = "1.0.4"
+version = "1.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b9ab681f8a6f741dd30a3f4f103b35b3e92fa510e0ef82ee83833819cf739b75"
+checksum = "9408becfeee133226be6df86aee4018565e6e26f746510467d0f5a0f38bc5bd5"
 dependencies = [
+ "anyhow",
  "bincode",
- "failure",
  "lmdb",
  "serde",
- "serde_derive",
 ]
 
 [[package]]
