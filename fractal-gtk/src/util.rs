@@ -1,6 +1,6 @@
 use crate::globals::CACHE_PATH;
-use failure::format_err;
-use failure::Error as FailError;
+use anyhow::anyhow;
+use anyhow::Error as AnyhowError;
 use gdk::prelude::*;
 use gdk_pixbuf::Pixbuf;
 use gio::{Settings, SettingsExt, SettingsSchemaSource};
@@ -21,9 +21,9 @@ pub fn cache_dir_path(dir: Option<&str>, name: &str) -> Result<PathBuf, IoError>
     Ok(path.join(name))
 }
 
-pub fn get_pixbuf_data(pb: &Pixbuf) -> Result<Vec<u8>, FailError> {
+pub fn get_pixbuf_data(pb: &Pixbuf) -> Result<Vec<u8>, AnyhowError> {
     let image = cairo::ImageSurface::create(cairo::Format::ARgb32, pb.get_width(), pb.get_height())
-        .or_else(|_| Err(format_err!("Cairo Error")))?;
+        .or_else(|_| Err(anyhow!("Cairo Error")))?;
 
     let g = cairo::Context::new(&image);
     g.set_source_pixbuf(pb, 0.0, 0.0);

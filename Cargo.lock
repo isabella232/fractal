@@ -89,6 +89,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "anyhow"
+version = "1.0.32"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6b602bfe940d21c130f3895acd65221e8a61270debe89d628b9cb4e3ccb8569b"
+
+[[package]]
 name = "arrayref"
 version = "0.3.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -580,6 +586,7 @@ checksum = "00b0228411908ca8685dba7fc2cdd70ec9990a6e753e89b6ac91a84c40fbaf4b"
 name = "fractal-gtk"
 version = "4.4.0"
 dependencies = [
+ "anyhow",
  "cairo-rs",
  "chrono",
  "clap",
@@ -587,7 +594,6 @@ dependencies = [
  "directories",
  "dirs",
  "either 1.5.99",
- "failure",
  "fractal-matrix-api",
  "fragile",
  "gdk",
