@@ -49,19 +49,32 @@ pub struct Message {
     pub extra_content: Option<JsonValue>,
 }
 
+impl Eq for Message {}
+
 impl PartialEq for Message {
+    /// Compares equal if ids match.
     fn eq(&self, other: &Self) -> bool {
-        self.id == other.id
+        // - Panics if ids are None.
+        // - Assumes the date is a function of the id. That means, two Messages
+        //   with the same id will always have the same date.
+        self.id.as_ref().unwrap() == other.id.as_ref().unwrap()
+    }
+}
+
+impl Ord for Message {
+    /// Orders based on date, then id.
+    fn cmp(&self, other: &Self) -> Ordering {
+        match self.date.cmp(&other.date) {
+            // Panics if ids are None
+            Ordering::Equal => self.id.as_ref().unwrap().cmp(&other.id.as_ref().unwrap()),
+            date_order => date_order,
+        }
     }
 }
 
 impl PartialOrd for Message {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        if self == other {
-            Some(Ordering::Equal)
-        } else {
-            self.date.partial_cmp(&other.date)
-        }
+        Some(self.cmp(other))
     }
 }
 
