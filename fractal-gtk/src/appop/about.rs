@@ -19,7 +19,7 @@ impl AppOp {
         dialog.set_logo_icon_name(Some(config::APP_ID));
         dialog.set_comments(Some(i18n("A Matrix.org client for GNOME").as_str()));
         dialog.set_copyright(Some(
-            i18n("© 2017–2018 Daniel García Moreno, et al.").as_str(),
+            i18n("© 2017–2020 Daniel García Moreno, et al.").as_str(),
         ));
         dialog.set_license_type(gtk::License::Gpl30);
         dialog.set_modal(true);
