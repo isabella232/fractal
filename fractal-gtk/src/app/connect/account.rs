@@ -167,7 +167,7 @@ impl App {
                         if new != verify {
                             matching = false;
                         }
-                        if new != "" && verify != "" && old != "" {
+                        if !new.is_empty() && !verify.is_empty() && !old.is_empty() {
                             empty = false;
                         }
                     }
@@ -216,7 +216,7 @@ impl App {
         destruction_entry.connect_property_text_notify(
             clone!(@strong destruction_btn => move |w| {
                 if let Some(text) = w.get_text() {
-                    if text != "" {
+                    if !text.is_empty() {
                         destruction_btn.set_sensitive(true);
                         return;
                     }

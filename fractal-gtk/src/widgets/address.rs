@@ -137,7 +137,7 @@ impl<'a> Address<'a> {
         let medium = self.medium.clone();
         self.entry.connect_property_text_notify(move |w| {
             if let Some(text) = w.get_text() {
-                if text != "" {
+                if !text.is_empty() {
                     /* FIXME: use better validation */
                     match medium {
                         AddressType::Email => {

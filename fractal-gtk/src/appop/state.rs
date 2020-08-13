@@ -69,7 +69,7 @@ impl AppOp {
             _ => "",
         };
 
-        if widget_focus != "" {
+        if !widget_focus.is_empty() {
             self.ui
                 .builder
                 .get_object::<gtk::Widget>(widget_focus)

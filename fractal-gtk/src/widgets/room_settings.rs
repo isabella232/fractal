@@ -515,7 +515,7 @@ impl RoomSettings {
         let room = &self.room;
         let old_name = room.name.clone()?;
         let new_name = new_name?;
-        if new_name != "" && new_name != old_name {
+        if !new_name.is_empty() && new_name != old_name {
             return Some(new_name);
         }
 
@@ -526,7 +526,7 @@ impl RoomSettings {
         let room = &self.room;
         let old_name = room.topic.clone()?;
         let new_name = new_name?;
-        if new_name != "" && new_name != old_name {
+        if !new_name.is_empty() && new_name != old_name {
             return Some(new_name);
         }
 

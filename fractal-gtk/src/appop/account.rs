@@ -104,7 +104,7 @@ impl AppOp {
 
         entry.connect_property_text_notify(move |w| {
             if let Some(text) = w.get_text() {
-                if text != "" {
+                if !text.is_empty() {
                     button.set_sensitive(true);
                     return;
                 }
@@ -682,7 +682,7 @@ impl AppOp {
 
         if let Some(old) = old_password.get_text() {
             if let Some(new) = new_password.get_text() {
-                if old != "" && new != "" {
+                if !old.is_empty() && !new.is_empty() {
                     password_btn.set_sensitive(false);
                     password_btn_stack.set_visible_child_name("spinner");
                     thread::spawn(move || {

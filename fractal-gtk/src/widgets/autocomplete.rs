@@ -154,7 +154,7 @@ impl Autocomplete {
                         let end = buffer.get_end_iter();
 
                         match buffer.get_text(&start, &end, false) {
-                            Some(ref t) if t == "" => {
+                            Some(ref t) if t.is_empty() => {
                                 own.borrow_mut().autocomplete_enter();
                             }
                             None => {
