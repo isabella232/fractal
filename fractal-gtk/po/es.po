@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2020-07-31 11:53+0000\n"
-"PO-Revision-Date: 2020-08-13 10:49+0200\n"
+"POT-Creation-Date: 2020-08-13 10:34+0000\n"
+"PO-Revision-Date: 2020-08-14 10:29+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Spanish - Spain <gnome-es-list@gnome.org>\n"
 "Language: es_ES\n"
@@ -767,8 +767,9 @@ msgid "A Matrix.org client for GNOME"
 msgstr "Un cliente para GNOME de Matrix.org"
 
 #: fractal-gtk/src/appop/about.rs:22
-msgid "© 2017–2018 Daniel García Moreno, et al."
-msgstr "© 2017–2018 Daniel García Moreno, y colaboraciones"
+#| msgid "© 2017–2018 Daniel García Moreno, et al."
+msgid "© 2017–2020 Daniel García Moreno, et al."
+msgstr "© 2017–2019 Daniel García Moreno y colaboraciones"
 
 #: fractal-gtk/src/appop/about.rs:29
 msgid "Learn more about Fractal"
@@ -777,7 +778,7 @@ msgstr "Aprenda más acerca de Fractal"
 #: fractal-gtk/src/appop/about.rs:30
 msgid "translator-credits"
 msgstr ""
-"Daniel Mustieles García <daniel.mustieles@gmail.com>\n"
+"Daniel Mustieles García <daniel.mustieles@gmail.com>, 2018-2020\n"
 "Daniel García Moreno <danigm@wadobo.com>"
 
 #: fractal-gtk/src/appop/about.rs:45
@@ -830,17 +831,17 @@ msgstr "imagen"
 msgid "Invite to {name}"
 msgstr "Invitar a {name}"
 
-#: fractal-gtk/src/appop/invite.rs:265
+#: fractal-gtk/src/appop/invite.rs:269
 msgid "Join {room_name}?"
 msgstr "¿Unirse a {room_name}?"
 
-#: fractal-gtk/src/appop/invite.rs:270
+#: fractal-gtk/src/appop/invite.rs:274
 msgid ""
 "You’ve been invited to join <b>{room_name}</b> room by <b>{sender_name}</b>"
 msgstr ""
 "<b>{sender_name}</b> le ha invitado a unirse a la sala <b>{room_name}</b>"
 
-#: fractal-gtk/src/appop/invite.rs:275
+#: fractal-gtk/src/appop/invite.rs:279
 msgid "You’ve been invited to join <b>{room_name}</b>"
 msgstr "Le han invitado a unirse a <b>{room_name}</b>"
 
@@ -913,15 +914,15 @@ msgstr "Error al buscar salas"
 msgid "Can’t login, try again"
 msgstr "No se ha podido entrar, pruebe otra vez"
 
-#: fractal-gtk/src/backend/room.rs:349
+#: fractal-gtk/src/backend/room.rs:352
 msgid "Error deleting message"
 msgstr "Error al eliminar el mensaje"
 
-#: fractal-gtk/src/backend/room.rs:394
+#: fractal-gtk/src/backend/room.rs:419
 msgid "Can’t join the room, try again."
 msgstr "No se ha podido entrar en la sala, pruebe otra vez"
 
-#: fractal-gtk/src/backend/room.rs:653 fractal-gtk/src/backend/room.rs:710
+#: fractal-gtk/src/backend/room.rs:684 fractal-gtk/src/backend/room.rs:741
 msgid "Can’t create the room, try again"
 msgstr "No se ha podido crear la sala, pruebe otra vez"
 
