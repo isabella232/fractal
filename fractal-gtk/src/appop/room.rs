@@ -41,7 +41,7 @@ impl AppOp {
     pub fn remove_room(&mut self, id: RoomId) {
         self.rooms.remove(&id);
         self.unsent_messages.remove(&id);
-        self.roomlist.remove_room(id);
+        self.roomlist.remove_room(&id);
     }
 
     pub fn set_rooms(&mut self, rooms: Vec<Room>, clear_room_list: bool) {
@@ -111,7 +111,7 @@ impl AppOp {
                     roomlist.push(room.clone());
                 } else {
                     self.roomlist.add_room(room.clone());
-                    self.roomlist.moveup(room.id.clone());
+                    self.roomlist.moveup(&room.id);
                 }
                 self.rooms.insert(room.id.clone(), room);
             }
@@ -330,25 +330,22 @@ impl AppOp {
     // FIXME: This should be a special case in a generic
     //        function that leaves any room in any state.
     pub fn really_leave_active_room(&mut self) {
-        let login_data = unwrap_or_unit_return!(self.login_data.clone());
-        let r = unwrap_or_unit_return!(self.active_room.clone());
-        let room_id = r.clone();
-        thread::spawn(move || {
-            let query = room::leave_room(
-                login_data.session_client.homeserver().clone(),
-                login_data.access_token,
-                room_id,
-            );
+        let room_id = unwrap_or_unit_return!(self.active_room.clone());
+        let session_client =
+            unwrap_or_unit_return!(self.login_data.as_ref().map(|ld| ld.session_client.clone()));
+
+        self.rooms.remove(&room_id);
+        self.active_room = None;
+        self.clear_tmp_msgs();
+        self.set_state(AppState::NoRoom);
+        self.roomlist.remove_room(&room_id);
+
+        RUNTIME.spawn(async move {
+            let query = room::leave_room(session_client, &room_id).await;
             if let Err(err) = query {
                 err.handle_error();
             }
         });
-        self.rooms.remove(&r);
-        self.active_room = None;
-        self.clear_tmp_msgs();
-        self.set_state(AppState::NoRoom);
-
-        self.roomlist.remove_room(r);
     }
 
     pub fn leave_active_room(&self) {
@@ -580,7 +577,7 @@ impl AppOp {
         }
 
         self.roomlist.add_room(r.clone());
-        self.roomlist.moveup(r.id.clone());
+        self.roomlist.moveup(&r.id);
 
         self.set_active_room_by_id(r.id);
     }

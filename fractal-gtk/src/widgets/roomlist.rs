@@ -201,10 +201,10 @@ impl RoomListGroup {
         });
     }
 
-    pub fn remove_room(&mut self, room_id: RoomId) -> Option<RoomUpdated> {
-        self.rooms.remove(&room_id);
+    pub fn remove_room(&mut self, room_id: &RoomId) -> Option<RoomUpdated> {
+        self.rooms.remove(room_id);
         let mut rv = self.roomvec.lock().unwrap();
-        if let Some(idx) = rv.iter().position(|x| x.room.id == room_id) {
+        if let Some(idx) = rv.iter().position(|x| &x.room.id == room_id) {
             if let Some(row) = self.list.get_row_at_index(idx as i32) {
                 self.list.remove(&row);
             }
@@ -377,10 +377,10 @@ impl RoomListGroup {
         }
     }
 
-    pub fn moveup(&mut self, room_id: RoomId) {
+    pub fn moveup(&mut self, room_id: &RoomId) {
         let s = self.get_selected();
 
-        self.edit_room(&room_id, move |rv| {
+        self.edit_room(room_id, move |rv| {
             rv.up();
         });
         if let Some(r) = self.remove_room(room_id) {
@@ -618,7 +618,7 @@ impl RoomList {
         let f = self.fav.clone();
         let cb = acb.clone();
         self.connect_drop(favw, move |room_id| {
-            if let Some(room) = r.get().remove_room(room_id) {
+            if let Some(room) = r.get().remove_room(&room_id) {
                 cb(room.room.clone(), true);
                 f.get().add_room_up(room);
             }
@@ -628,7 +628,7 @@ impl RoomList {
         let r = self.rooms.clone();
         let f = self.fav.clone();
         self.connect_drop(rw, move |roomid| {
-            if let Some(room) = f.get().remove_room(roomid) {
+            if let Some(room) = f.get().remove_room(&roomid) {
                 acb(room.room.clone(), false);
                 r.get().add_room_up(room);
             }
@@ -649,8 +649,8 @@ impl RoomList {
         run_in_group!(self, &room_id, set_room_notifications, room_id, n, h);
     }
 
-    pub fn remove_room(&mut self, room_id: RoomId) -> Option<RoomUpdated> {
-        let ret = run_in_group!(self, &room_id, remove_room, room_id);
+    pub fn remove_room(&mut self, room_id: &RoomId) -> Option<RoomUpdated> {
+        let ret = run_in_group!(self, room_id, remove_room, room_id);
         self.show_and_hide();
         ret
     }
@@ -676,7 +676,7 @@ impl RoomList {
         run_in_group!(self, &room_id, rename_room, room_id, newname);
     }
 
-    pub fn moveup(&mut self, room_id: RoomId) {
+    pub fn moveup(&mut self, room_id: &RoomId) {
         run_in_group!(self, &room_id, moveup, room_id);
     }
 

@@ -217,43 +217,35 @@ impl AppOp {
         dialog.resize(300, 200);
     }
 
-    pub fn remove_inv(&mut self, room_id: RoomId) {
-        self.rooms.remove(&room_id);
+    pub fn remove_inv(&mut self, room_id: &RoomId) {
+        self.rooms.remove(room_id);
         self.roomlist.remove_room(room_id);
     }
 
     pub fn accept_inv(&mut self, accept: bool) {
-        let login_data = unwrap_or_unit_return!(self.login_data.clone());
-        if let Some(rid) = self.invitation_roomid.take() {
-            let room_id = rid.clone();
-            let session_client = login_data.session_client.clone();
+        let room_id = unwrap_or_unit_return!(self.invitation_roomid.take().clone());
+        let session_client =
+            unwrap_or_unit_return!(self.login_data.as_ref().map(|ld| ld.session_client.clone()));
+        self.remove_inv(&room_id);
+        RUNTIME.spawn(async move {
             if accept {
-                RUNTIME.spawn(async move {
-                    match room::join_room(session_client, &room_id.into()).await {
-                        Ok(jtr) => {
-                            let jtr = Some(jtr);
-                            APPOP!(set_join_to_room, (jtr));
-                            APPOP!(reload_rooms);
-                        }
-                        Err(err) => {
-                            err.handle_error();
-                        }
+                match room::join_room(session_client, &room_id.into()).await {
+                    Ok(jtr) => {
+                        let jtr = Some(jtr);
+                        APPOP!(set_join_to_room, (jtr));
+                        APPOP!(reload_rooms);
                     }
-                });
-            } else {
-                thread::spawn(move || {
-                    let query = room::leave_room(
-                        session_client.homeserver().clone(),
-                        login_data.access_token,
-                        room_id,
-                    );
-                    if let Err(err) = query {
+                    Err(err) => {
                         err.handle_error();
                     }
-                });
+                }
+            } else {
+                let query = room::leave_room(session_client, &room_id).await;
+                if let Err(err) = query {
+                    err.handle_error();
+                }
             }
-            self.remove_inv(rid);
-        }
+        });
     }
 
     /* FIXME: move to a widget */

@@ -423,7 +423,7 @@ impl AppOp {
                 }
             }
 
-            self.roomlist.moveup(msg.room.clone());
+            self.roomlist.moveup(&msg.room);
             self.roomlist.set_bold(msg.room.clone(), true);
         }
 

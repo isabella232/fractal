@@ -40,8 +40,6 @@ use fractal_api::r0::media::create_content::Response as CreateContentResponse;
 use fractal_api::r0::membership::invite_user::request as invite_user;
 use fractal_api::r0::membership::invite_user::Body as InviteUserBody;
 use fractal_api::r0::membership::invite_user::Parameters as InviteUserParameters;
-use fractal_api::r0::membership::leave_room::request as leave_room_req;
-use fractal_api::r0::membership::leave_room::Parameters as LeaveRoomParameters;
 use fractal_api::r0::message::create_message_event::request as create_message_event;
 use fractal_api::r0::message::create_message_event::Parameters as CreateMessageEventParameters;
 use fractal_api::r0::message::create_message_event::Response as CreateMessageEventResponse;
@@ -425,25 +423,21 @@ pub async fn join_room(
 }
 
 #[derive(Debug)]
-pub struct LeaveRoomError(ReqwestError);
+pub struct LeaveRoomError(MatrixError);
 
-impl From<ReqwestError> for LeaveRoomError {
-    fn from(err: ReqwestError) -> Self {
+impl From<MatrixError> for LeaveRoomError {
+    fn from(err: MatrixError) -> Self {
         Self(err)
     }
 }
 
 impl HandleError for LeaveRoomError {}
 
-pub fn leave_room(
-    base: Url,
-    access_token: AccessToken,
-    room_id: RoomId,
+pub async fn leave_room(
+    session_client: MatrixClient,
+    room_id: &RoomId,
 ) -> Result<(), LeaveRoomError> {
-    let params = LeaveRoomParameters { access_token };
-
-    let request = leave_room_req(base, &room_id, &params)?;
-    HTTP_CLIENT.get_client().execute(request)?;
+    session_client.leave_room(room_id).await?;
 
     Ok(())
 }
