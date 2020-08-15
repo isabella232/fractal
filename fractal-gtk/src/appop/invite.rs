@@ -5,7 +5,7 @@ use fractal_api::identifiers::{RoomId, UserId};
 use gtk::prelude::*;
 use std::thread;
 
-use crate::app::App;
+use crate::app::{App, RUNTIME};
 use crate::appop::member::SearchType;
 use crate::appop::AppOp;
 use crate::backend::HandleError;
@@ -226,13 +226,10 @@ impl AppOp {
         let login_data = unwrap_or_unit_return!(self.login_data.clone());
         if let Some(rid) = self.invitation_roomid.take() {
             let room_id = rid.clone();
+            let session_client = login_data.session_client.clone();
             if accept {
-                thread::spawn(move || {
-                    match room::join_room(
-                        login_data.session_client.homeserver().clone(),
-                        login_data.access_token,
-                        room_id.into(),
-                    ) {
+                RUNTIME.spawn(async move {
+                    match room::join_room(session_client, &room_id.into()).await {
                         Ok(jtr) => {
                             let jtr = Some(jtr);
                             APPOP!(set_join_to_room, (jtr));
@@ -246,7 +243,7 @@ impl AppOp {
             } else {
                 thread::spawn(move || {
                     let query = room::leave_room(
-                        login_data.session_client.homeserver().clone(),
+                        session_client.homeserver().clone(),
                         login_data.access_token,
                         room_id,
                     );

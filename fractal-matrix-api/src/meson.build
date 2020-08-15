@@ -22,7 +22,6 @@ api_sources = files(
   'r0/media/get_content.rs',
   'r0/media/get_content_thumbnail.rs',
   'r0/membership/invite_user.rs',
-  'r0/membership/join_room_by_id_or_alias.rs',
   'r0/membership/leave_room.rs',
   'r0/message/create_message_event.rs',
   'r0/message/get_message_events.rs',

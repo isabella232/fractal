@@ -2,18 +2,18 @@ use crate::util::i18n::i18n;
 
 use crate::backend::room;
 use gtk::prelude::*;
-use std::thread;
 
 use crate::model::room::Room;
 
 use crate::util::markup_text;
 
-use crate::app::App;
+use crate::app::{App, RUNTIME};
 use crate::appop::AppOp;
 use crate::backend::HandleError;
 
 use crate::widgets;
 use crate::widgets::AvatarExt;
+use fractal_api::identifiers::RoomIdOrAliasId;
 use gtk::WidgetExt;
 
 const AVATAR_SIZE: i32 = 60;
@@ -118,13 +118,12 @@ impl<'a> RoomBox<'a> {
             members_count.get_style_context().add_class("dim-label");
 
             let join_button = gtk::Button::with_label(i18n("Join").as_str());
-            let room_id = room.id.clone();
+            let room_id_or_alias: RoomIdOrAliasId = room.id.clone().into();
             join_button.connect_clicked(move |_| {
-                let server_url = login_data.session_client.homeserver().clone();
-                let access_token = login_data.access_token.clone();
-                let room_id = room_id.clone();
-                thread::spawn(move || {
-                    match room::join_room(server_url, access_token, room_id.into()) {
+                let session_client = login_data.session_client.clone();
+                let room_id_or_alias = room_id_or_alias.clone();
+                RUNTIME.spawn(async move {
+                    match room::join_room(session_client, &room_id_or_alias).await {
                         Ok(jtr) => {
                             let jtr = Some(jtr);
                             APPOP!(set_join_to_room, (jtr));

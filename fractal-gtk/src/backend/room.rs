@@ -1,10 +1,13 @@
 use log::error;
 use serde_json::json;
 
-use fractal_api::identifiers::{Error as IdError, EventId, RoomId, RoomIdOrAliasId, UserId};
 use fractal_api::reqwest::Error as ReqwestError;
-use fractal_api::reqwest::StatusCode;
 use fractal_api::url::{ParseError as UrlError, Url};
+use fractal_api::{
+    identifiers::{Error as IdError, EventId, RoomId, RoomIdOrAliasId, UserId},
+    Client as MatrixClient, Error as MatrixError, FromHttpResponseError as RumaResponseError,
+    ServerError,
+};
 use std::fs;
 use std::io::Error as IoError;
 use std::path::{Path, PathBuf};
@@ -19,7 +22,6 @@ use crate::actions::AppState;
 use crate::backend::HTTP_CLIENT;
 use crate::util::cache_dir_path;
 
-use crate::error::StandardErrorResponse;
 use crate::model::{
     member::Member,
     message::Message,
@@ -38,9 +40,6 @@ use fractal_api::r0::media::create_content::Response as CreateContentResponse;
 use fractal_api::r0::membership::invite_user::request as invite_user;
 use fractal_api::r0::membership::invite_user::Body as InviteUserBody;
 use fractal_api::r0::membership::invite_user::Parameters as InviteUserParameters;
-use fractal_api::r0::membership::join_room_by_id_or_alias::request as join_room_req;
-use fractal_api::r0::membership::join_room_by_id_or_alias::Parameters as JoinRoomParameters;
-use fractal_api::r0::membership::join_room_by_id_or_alias::Response as JoinRoomResponse;
 use fractal_api::r0::membership::leave_room::request as leave_room_req;
 use fractal_api::r0::membership::leave_room::Parameters as LeaveRoomParameters;
 use fractal_api::r0::message::create_message_event::request as create_message_event;
@@ -387,37 +386,21 @@ pub fn redact_msg(
 }
 
 #[derive(Debug)]
-pub enum JoinRoomError {
-    Request(ReqwestError),
-    Response(StandardErrorResponse),
-}
+pub struct JoinRoomError(MatrixError);
 
-impl From<ReqwestError> for JoinRoomError {
-    fn from(err: ReqwestError) -> Self {
-        Self::Request(err)
-    }
-}
-
-impl From<StandardErrorResponse> for JoinRoomError {
-    fn from(err: StandardErrorResponse) -> Self {
-        Self::Response(err)
+impl From<MatrixError> for JoinRoomError {
+    fn from(err: MatrixError) -> Self {
+        Self(err)
     }
 }
 
 impl HandleError for JoinRoomError {
     fn handle_error(&self) {
-        let err_str: String;
-        let info: Option<String>;
-
-        match self {
-            JoinRoomError::Request(error) => {
-                err_str = format!("{:?}", error);
-                info = None;
+        let (err_str, info) = match &self.0 {
+            MatrixError::RumaResponse(RumaResponseError::Http(ServerError::Known(error))) => {
+                (error.message.clone(), Some(error.message.clone()))
             }
-            JoinRoomError::Response(error) => {
-                err_str = error.error.clone();
-                info = Some(error.error.clone());
-            }
+            error => (error.to_string(), None),
         };
 
         error!(
@@ -431,28 +414,14 @@ impl HandleError for JoinRoomError {
     }
 }
 
-pub fn join_room(
-    base: Url,
-    access_token: AccessToken,
-    room_id: RoomIdOrAliasId,
+pub async fn join_room(
+    session_client: MatrixClient,
+    room_id_or_alias_id: &RoomIdOrAliasId,
 ) -> Result<RoomId, JoinRoomError> {
-    let room_id_or_alias_id = room_id;
-
-    let params = JoinRoomParameters {
-        access_token,
-        server_name: Default::default(),
-    };
-
-    let request = join_room_req(base, &room_id_or_alias_id, &params)?;
-    let response = HTTP_CLIENT.get_client().execute(request)?;
-
-    if response.status() != StatusCode::OK {
-        let resp: StandardErrorResponse = response.json()?;
-        Err(JoinRoomError::Response(resp))
-    } else {
-        let resp: JoinRoomResponse = response.json()?;
-        Ok(resp.room_id)
-    }
+    Ok(session_client
+        .join_room_by_id_or_alias(room_id_or_alias_id, Default::default())
+        .await?
+        .room_id)
 }
 
 #[derive(Debug)]

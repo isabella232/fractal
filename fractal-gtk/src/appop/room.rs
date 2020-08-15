@@ -10,7 +10,7 @@ use std::thread;
 
 use gtk::prelude::*;
 
-use crate::app::App;
+use crate::app::{App, RUNTIME};
 use crate::appop::AppOp;
 use crate::backend::HandleError;
 
@@ -550,21 +550,18 @@ impl AppOp {
             .trim()
             .try_into();
 
-        thread::spawn(move || {
-            let room_id = match try_room_id {
-                Ok(rid) => rid,
-                Err(_) => {
-                    let error = i18n("The room ID is malformed");
-                    APPOP!(show_error, (error));
-                    return;
-                }
-            };
+        let room_id = match try_room_id {
+            Ok(room_id) => room_id,
+            Err(_) => {
+                let error = i18n("The room ID is malformed");
+                APPOP!(show_error, (error));
+                return;
+            }
+        };
 
-            match room::join_room(
-                login_data.session_client.homeserver().clone(),
-                login_data.access_token,
-                room_id,
-            ) {
+        let session_client = login_data.session_client.clone();
+        RUNTIME.spawn(async move {
+            match room::join_room(session_client, &room_id).await {
                 Ok(jtr) => {
                     let jtr = Some(jtr);
                     APPOP!(set_join_to_room, (jtr));
