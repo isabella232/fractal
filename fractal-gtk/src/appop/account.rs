@@ -543,9 +543,9 @@ impl AppOp {
             None,
         );
         download_to_cache(
+            login_data.session_client.clone(),
             self.thread_pool.clone(),
             self.user_info_cache.clone(),
-            login_data.session_client.homeserver().clone(),
             login_data.access_token,
             login_data.uid,
             data,

@@ -1,6 +1,7 @@
 use crate::backend::{room, HandleError};
 use fractal_api::identifiers::UserId;
 use fractal_api::r0::AccessToken;
+use fractal_api::Client as MatrixClient;
 use glib::clone;
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -67,7 +68,7 @@ impl RoomSettings {
 
     /* creates a empty list with members.len() rows, the content will be loaded when the row is
      * drawn */
-    pub fn create(&mut self) -> Option<gtk::Box> {
+    pub fn create(&mut self, session_client: MatrixClient) -> Option<gtk::Box> {
         let page = self
             .builder
             .get_object::<gtk::Box>("room_settings_box")
@@ -86,7 +87,7 @@ impl RoomSettings {
             stack.set_visible_child_name("info")
         }
 
-        self.init_room_settings();
+        self.init_room_settings(session_client);
         self.connect();
 
         Some(page)
@@ -198,7 +199,7 @@ impl RoomSettings {
         self.switch_handler = Some(Rc::new(switch_handler));
     }
 
-    fn init_room_settings(&mut self) {
+    fn init_room_settings(&mut self, session_client: MatrixClient) {
         let name = self.room.name.clone();
         let topic = self.room.topic.clone();
         let mut is_room = true;
@@ -228,7 +229,7 @@ impl RoomSettings {
             ))
         };
 
-        self.room_settings_show_avatar(edit);
+        self.room_settings_show_avatar(session_client, edit);
         self.room_settings_show_room_name(name, edit);
         self.room_settings_show_room_topic(topic, is_room, edit);
         self.room_settings_show_room_type(description);
@@ -421,7 +422,7 @@ impl RoomSettings {
         None
     }
 
-    fn room_settings_show_avatar(&self, edit: bool) {
+    fn room_settings_show_avatar(&self, session_client: MatrixClient, edit: bool) {
         let container = self
             .builder
             .get_object::<gtk::Box>("room_settings_avatar_box")
@@ -437,11 +438,10 @@ impl RoomSettings {
             }
         }
 
-        let server = self.server_url.clone();
         let access_token = self.access_token.clone();
         let room_id = self.room.id.clone();
         thread::spawn(
-            move || match room::get_room_avatar(server, access_token, room_id) {
+            move || match room::get_room_avatar(session_client, access_token, room_id) {
                 Ok((room, avatar)) => {
                     APPOP!(set_room_avatar, (room, avatar));
                 }

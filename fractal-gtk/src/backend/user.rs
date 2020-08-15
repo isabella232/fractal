@@ -1,11 +1,13 @@
 use fractal_api::identifiers::UserId;
 use fractal_api::reqwest::Error as ReqwestError;
 use fractal_api::url::{ParseError as UrlError, Url};
+use fractal_api::Client as MatrixClient;
 use std::fs;
 use std::io::Error as IoError;
 
 use super::MediaError;
 use crate::actions::global::activate_action;
+use crate::app::RUNTIME;
 use crate::appop::UserInfoCache;
 use crate::backend::ThreadPool;
 use crate::backend::HTTP_CLIENT;
@@ -564,8 +566,8 @@ pub fn set_user_avatar(
 
 pub fn get_user_info_async(
     thread_pool: ThreadPool,
+    session_client: MatrixClient,
     user_info_cache: UserInfoCache,
-    baseu: Url,
     access_token: AccessToken,
     uid: UserId,
     tx: Sender<UserInfo>,
@@ -578,7 +580,7 @@ pub fn get_user_info_async(
     }
 
     thread_pool.run(move || {
-        let info = get_user_avatar(baseu, access_token, &uid);
+        let info = get_user_avatar(session_client, access_token, &uid);
 
         if let Ok(ref i0) = info {
             user_info_cache.lock().unwrap().insert(uid, i0.clone());
@@ -659,10 +661,11 @@ impl From<UrlError> for GetUserAvatarError {
 impl HandleError for GetUserAvatarError {}
 
 pub fn get_user_avatar(
-    base: Url,
+    session_client: MatrixClient,
     access_token: AccessToken,
     user_id: &UserId,
 ) -> Result<(String, PathBuf), GetUserAvatarError> {
+    let base = session_client.homeserver().clone();
     let params = GetProfileParameters { access_token };
     let request = get_profile(base.clone(), &params, user_id)?;
     let response: GetProfileResponse = HTTP_CLIENT.get_client().execute(request)?.json()?;
@@ -678,7 +681,12 @@ pub fn get_user_avatar(
         .transpose()?
         .map(|url| {
             let dest = cache_dir_path(None, &user_id.to_string())?;
-            dw_media(base, &url, ContentType::default_thumbnail(), Some(dest))
+            RUNTIME.handle().block_on(dw_media(
+                session_client,
+                &url,
+                ContentType::default_thumbnail(),
+                Some(dest),
+            ))
         })
         .unwrap_or_else(|| Ok(Default::default()))
         .map_err(GetUserAvatarError::Download)?;

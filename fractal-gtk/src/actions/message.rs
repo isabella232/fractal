@@ -1,18 +1,17 @@
-use crate::backend::{dw_media, media, room, ContentType, ThreadPool};
+use crate::backend::{dw_media, media, room, ContentType};
 use fractal_api::identifiers::RoomId;
 use fractal_api::r0::AccessToken;
+use fractal_api::Client as MatrixClient;
 use glib::clone;
 use log::error;
 use std::cell::RefCell;
 use std::fs;
 use std::process::Command;
 use std::rc::Rc;
-use std::sync::mpsc::channel;
-use std::sync::mpsc::TryRecvError;
-use std::sync::mpsc::{Receiver, Sender};
 use std::thread;
 
 use crate::actions::AppState;
+use crate::app::RUNTIME;
 use crate::backend::HandleError;
 use crate::model::message::Message;
 use crate::uibuilder::UI;
@@ -23,7 +22,6 @@ use gio::ActionGroupExt;
 use gio::ActionMapExt;
 use gio::SimpleAction;
 use gio::SimpleActionGroup;
-use glib::source::Continue;
 use gtk::prelude::*;
 
 use super::global::{get_event_id, get_message_by_id, get_room_id};
@@ -34,12 +32,12 @@ use crate::widgets::SourceDialog;
 
 /* This creates all actions the room history can perform */
 pub fn new(
-    thread_pool: ThreadPool,
-    server_url: Url,
+    session_client: MatrixClient,
     access_token: AccessToken,
     ui: UI,
     back_history: Rc<RefCell<Vec<AppState>>>,
 ) -> gio::SimpleActionGroup {
+    let server_url = session_client.homeserver().clone();
     let actions = SimpleActionGroup::new();
     /* Action for each message */
     let reply = SimpleAction::new("reply", glib::VariantTy::new("s").ok());
@@ -112,92 +110,69 @@ pub fn new(
         }
     }));
 
-    open_with.connect_activate(clone!(@strong server_url => move |_, data| {
-        if let Some(m) = get_message(data) {
-            if let Some(url) = m.url {
-                thread::spawn(clone!(@strong server_url => move || {
-                    match dw_media(server_url, &url, ContentType::Download, None) {
-                        Ok(fname) => {
-                            Command::new("xdg-open")
-                                .arg(&fname)
-                                .spawn()
-                                .expect("failed to execute process");
-                        }
-                        Err(err) => {
-                            err.handle_error()
-                        }
+    open_with.connect_activate(clone!(@strong session_client => move |_, data| {
+        if let Some(url) = get_message(data).and_then(|m| m.url) {
+            let session_client = session_client.clone();
+            RUNTIME.spawn(async move {
+                match dw_media(session_client, &url, ContentType::Download, None).await {
+                    Ok(fname) => {
+                        Command::new("xdg-open")
+                            .arg(&fname)
+                            .spawn()
+                            .expect("failed to execute process");
                     }
-                }));
-            }
+                    Err(err) => {
+                        err.handle_error()
+                    }
+                }
+            });
         }
     }));
 
     save_as.connect_activate(clone!(
-    @strong server_url,
-    @strong thread_pool,
+    @strong session_client,
     @weak parent as window
     => move |_, data| {
-        if let Some(m) = get_message(data) {
-            if let Some(url) = m.url {
-                let name = m.body;
+        if let Some((Some(url), name)) = get_message(data).map(|m| (m.url, m.body)) {
+            let session_client = session_client.clone();
+            let response = RUNTIME.spawn(async move {
+                media::get_media(session_client, &url).await
+            });
 
-                let (tx, rx): (
-                    Sender<media::MediaResult>,
-                    Receiver<media::MediaResult>,
-                ) = channel();
-
-                media::get_media_async(thread_pool.clone(), server_url.clone(), url, tx);
-
-                glib::timeout_add_local(
-                    50,
-                    clone!(
-                        @strong name,
-                        @weak window
-                        => @default-return Continue(true), move || match rx.try_recv() {
-                            Err(TryRecvError::Empty) => Continue(true),
-                            Err(TryRecvError::Disconnected) => {
-                                let msg = i18n("Could not download the file");
-                                ErrorDialog::new(false, &msg);
-
-                                Continue(true)
-                            },
-                            Ok(Ok(fname)) => {
-                                if let Some(path) = save(&window.upcast_ref(), &name, &[]) {
-                                    // TODO use glib to copy file
-                                    if fs::copy(fname, path).is_err() {
-                                        ErrorDialog::new(false, &i18n("Couldn’t save file"));
-                                    }
-                                }
-                                Continue(false)
-                            }
-                            Ok(Err(err)) => {
-                                error!("Media path could not be found due to error: {:?}", err);
-                                Continue(false)
+            glib::MainContext::default().spawn_local(async move {
+                match response.await {
+                    Err(_) => {
+                        let msg = i18n("Could not download the file");
+                        ErrorDialog::new(false, &msg);
+                    },
+                    Ok(Ok(fname)) => {
+                        if let Some(path) = save(&window.upcast_ref(), &name, &[]) {
+                            // TODO use glib to copy file
+                            if fs::copy(fname, path).is_err() {
+                                ErrorDialog::new(false, &i18n("Couldn’t save file"));
                             }
                         }
-                    ),
-                );
-            }
+                    }
+                    Ok(Err(err)) => {
+                        error!("Media path could not be found due to error: {:?}", err);
+                    }
+                }
+            });
         }
     }));
 
-    copy_image.connect_activate(clone!(@strong server_url => move |_, data| {
-        if let Some(m) = get_message(data) {
-            if let Some(url) = m.url {
-                let (tx, rx): (
-                    Sender<media::MediaResult>,
-                    Receiver<media::MediaResult>,
-                ) = channel();
+    copy_image.connect_activate(clone!(@strong session_client => move |_, data| {
+        if let Some(url) = get_message(data).and_then(|m| m.url) {
+            let session_client = session_client.clone();
+            let response = RUNTIME.spawn(async move {
+                media::get_media(session_client, &url).await
+            });
 
-                media::get_media_async(thread_pool.clone(), server_url.clone(), url, tx);
-
-                glib::timeout_add_local(50, move || match rx.try_recv() {
-                    Err(TryRecvError::Empty) => Continue(true),
-                    Err(TryRecvError::Disconnected) => {
+            glib::MainContext::default().spawn_local(async move {
+                match response.await {
+                    Err(_) => {
                         let msg = i18n("Could not download the file");
                         ErrorDialog::new(false, &msg);
-
-                        Continue(true)
                     }
                     Ok(Ok(fname)) => {
                         if let Ok(pixbuf) = gdk_pixbuf::Pixbuf::from_file(fname) {
@@ -205,14 +180,12 @@ pub fn new(
                             let clipboard = gtk::Clipboard::get(&atom);
                             clipboard.set_image(&pixbuf);
                         }
-                        Continue(false)
                     }
                     Ok(Err(err)) => {
                         error!("Image path could not be found due to error: {:?}", err);
-                        Continue(false)
                     }
-                });
-            }
+                }
+            });
         }
     }));
 

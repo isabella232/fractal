@@ -28,7 +28,7 @@ impl AppOp {
                 login_data.session_client.homeserver().clone(),
                 login_data.access_token,
             );
-            let page = panel.create()?;
+            let page = panel.create(login_data.session_client.clone())?;
 
             /* remove old panel */
             if let Some(widget) = stack.get_child_by_name("room-settings") {

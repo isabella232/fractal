@@ -3,13 +3,14 @@ use std::thread;
 
 use crate::backend::{directory, HandleError};
 
-use crate::app::App;
+use crate::app::{App, RUNTIME};
 use crate::appop::AppOp;
 
 use crate::widgets;
 
 use super::RoomSearchPagination;
 use crate::model::room::Room;
+use fractal_api::directory::RoomNetwork;
 use fractal_api::r0::thirdparty::get_supported_protocols::ProtocolInstance;
 
 impl AppOp {
@@ -44,14 +45,15 @@ impl AppOp {
     }
 
     pub fn search_rooms(&mut self) {
-        let login_data = unwrap_or_unit_return!(self.login_data.clone());
+        let session_client =
+            unwrap_or_unit_return!(self.login_data.as_ref().map(|ld| ld.session_client.clone()));
         let other_protocol_radio = self
             .ui
             .builder
             .get_object::<gtk::RadioButton>("other_protocol_radio")
             .expect("Can't find other_protocol_radio in ui file.");
 
-        let mut protocol = if other_protocol_radio.get_active() {
+        let protocol: Option<String> = if other_protocol_radio.get_active() {
             let protocol_combo = self
                 .ui
                 .builder
@@ -65,15 +67,12 @@ impl AppOp {
                 .expect("Can't find protocol_model in ui file.");
 
             let active = protocol_combo.get_active().map_or(-1, |uint| uint as i32);
-            match protocol_model.iter_nth_child(None, active) {
-                Some(it) => {
-                    let v = protocol_model.get_value(&it, 1);
-                    v.get().unwrap().unwrap()
-                }
-                None => String::new(),
-            }
+
+            protocol_model
+                .iter_nth_child(None, active)
+                .and_then(|it| protocol_model.get_value(&it, 1).get().ok()?)
         } else {
-            String::new()
+            None
         };
 
         let q = self
@@ -95,12 +94,9 @@ impl AppOp {
             .expect("Can't find other_homeserver_url in ui file.");
 
         let homeserver = if other_homeserver_radio.get_active() {
-            other_homeserver_url.get_text()
-        } else if protocol == "matrix.org" {
-            protocol = String::new();
-            String::from("matrix.org")
+            Some(other_homeserver_url.get_text())
         } else {
-            String::new()
+            None
         };
 
         if !self.directory_pagination.has_more() {
@@ -130,22 +126,24 @@ impl AppOp {
             q.set_sensitive(false);
         }
 
-        let search_term = q.get_text().to_string();
+        let search_term = Some(q.get_text().to_string()).filter(|s| !s.is_empty());
         if let RoomSearchPagination::NoMorePages = self.directory_pagination {
             // there are no more rooms. We don't need to request for more
             return;
         }
 
-        let rooms_since = self.directory_pagination.clone().into();
-        thread::spawn(move || {
+        let rooms_since: Option<String> = self.directory_pagination.clone().into();
+        RUNTIME.spawn(async move {
             let query = directory::room_search(
-                login_data.session_client.homeserver().clone(),
-                login_data.access_token,
-                homeserver,
-                search_term,
-                protocol,
-                rooms_since,
-            );
+                session_client,
+                homeserver.as_deref(),
+                search_term.as_deref(),
+                protocol
+                    .as_deref()
+                    .map_or(RoomNetwork::Matrix, RoomNetwork::ThirdParty),
+                rooms_since.as_deref(),
+            )
+            .await;
 
             match query {
                 Ok((rooms, rooms_since)) => {
@@ -188,7 +186,7 @@ impl AppOp {
         directory_stack.set_visible_child(&directory_clamp);
 
         let mut sorted_rooms = rooms;
-        sorted_rooms.sort_by_key(|a| -a.n_members);
+        sorted_rooms.sort_by_key(|a| -i128::from(a.n_members));
 
         for r in sorted_rooms.iter() {
             self.directory.push(r.clone());

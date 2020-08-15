@@ -48,9 +48,11 @@ impl AppOp {
     }
 
     pub fn add_room_message(&mut self, msg: &Message) -> Option<()> {
+        let session_client = self.login_data.as_ref()?.session_client.clone();
         if let Some(ui_msg) = self.create_new_room_message(msg) {
             if let Some(ref mut history) = self.history {
                 history.add_new_message(
+                    session_client,
                     self.thread_pool.clone(),
                     self.user_info_cache.clone(),
                     ui_msg,
@@ -61,9 +63,12 @@ impl AppOp {
     }
 
     pub fn remove_room_message(&mut self, msg: &Message) {
+        let session_client =
+            unwrap_or_unit_return!(self.login_data.as_ref().map(|ld| ld.session_client.clone()));
         if let Some(ui_msg) = self.create_new_room_message(msg) {
             if let Some(ref mut history) = self.history {
                 history.remove_message(
+                    session_client,
                     self.thread_pool.clone(),
                     self.user_info_cache.clone(),
                     ui_msg,
@@ -81,6 +86,7 @@ impl AppOp {
                 login_data.access_token,
             )
             .tmpwidget(
+                login_data.session_client.clone(),
                 self.thread_pool.clone(),
                 self.user_info_cache.clone(),
                 &ui_msg,
@@ -125,6 +131,7 @@ impl AppOp {
                     login_data.access_token.clone(),
                 )
                 .tmpwidget(
+                    login_data.session_client.clone(),
                     self.thread_pool.clone(),
                     self.user_info_cache.clone(),
                     &ui_msg,
@@ -441,6 +448,8 @@ impl AppOp {
         room_id: RoomId,
         prev_batch: Option<String>,
     ) {
+        let session_client =
+            unwrap_or_unit_return!(self.login_data.as_ref().map(|ld| ld.session_client.clone()));
         if let Some(r) = self.rooms.get_mut(&room_id) {
             r.prev_batch = prev_batch;
         }
@@ -462,6 +471,7 @@ impl AppOp {
 
         if let Some(ref mut history) = self.history {
             history.add_old_messages_in_batch(
+                session_client,
                 self.thread_pool.clone(),
                 self.user_info_cache.clone(),
                 list,

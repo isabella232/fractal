@@ -58,9 +58,9 @@ impl<'a> MemberBox<'a> {
         );
         if let Some(login_data) = self.op.login_data.clone() {
             download_to_cache(
+                login_data.session_client.clone(),
                 self.op.thread_pool.clone(),
                 self.op.user_info_cache.clone(),
-                login_data.session_client.homeserver().clone(),
                 login_data.access_token,
                 self.member.uid.clone(),
                 data,
@@ -103,9 +103,9 @@ impl<'a> MemberBox<'a> {
         );
         if let Some(login_data) = self.op.login_data.clone() {
             download_to_cache(
+                login_data.session_client.clone(),
                 self.op.thread_pool.clone(),
                 self.op.user_info_cache.clone(),
-                login_data.session_client.homeserver().clone(),
                 login_data.access_token,
                 self.member.uid.clone(),
                 data,

@@ -20,7 +20,7 @@ use fractal_api::r0::AccessToken;
 
 use fractal_api::identifiers::{EventId, RoomId, UserId};
 use fractal_api::reqwest::blocking::{Client, Response};
-use fractal_api::url::Url;
+use fractal_api::Client as MatrixClient;
 use log::error;
 use serde::de::DeserializeOwned;
 use serde_json::value::from_value;
@@ -117,7 +117,7 @@ pub enum SyncRet {
 }
 
 pub fn sync(
-    base: Url,
+    session_client: MatrixClient,
     access_token: AccessToken,
     user_id: UserId,
     join_to_room: Option<RoomId>,
@@ -125,6 +125,8 @@ pub fn sync(
     initial: bool,
     number_tries: u64,
 ) -> Result<SyncRet, SyncError> {
+    let base = session_client.homeserver().clone();
+
     let (timeout, filter) = if !initial {
         (time::Duration::from_secs(30), Default::default())
     } else {
@@ -190,13 +192,14 @@ pub fn sync(
     match query {
         Ok(response) => {
             if since.is_none() {
-                let rooms = Room::from_sync_response(&response, user_id, access_token, base)
-                    .map(|rooms| {
-                        let def = join_to_room
-                            .and_then(|jtr| rooms.iter().find(|x| x.id == jtr).cloned());
-                        (rooms, def)
-                    })
-                    .map_err(Into::into);
+                let rooms =
+                    Room::from_sync_response(session_client, &response, user_id, access_token)
+                        .map(|rooms| {
+                            let def = join_to_room
+                                .and_then(|jtr| rooms.iter().find(|x| x.id == jtr).cloned());
+                            (rooms, def)
+                        })
+                        .map_err(Into::into);
 
                 let next_batch = response.next_batch;
 
@@ -205,9 +208,13 @@ pub fn sync(
                 let join = &response.rooms.join;
 
                 // New rooms
-                let update_rooms =
-                    Room::from_sync_response(&response, user_id.clone(), access_token, base)
-                        .map_err(Into::into);
+                let update_rooms = Room::from_sync_response(
+                    session_client,
+                    &response,
+                    user_id.clone(),
+                    access_token,
+                )
+                .map_err(Into::into);
 
                 // Message events
                 let room_messages = join

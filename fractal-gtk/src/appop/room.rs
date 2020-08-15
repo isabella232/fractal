@@ -94,19 +94,19 @@ impl AppOp {
                 });
                 // Download the room avatar
                 // TODO: Use the avatar url returned by sync
-                let server = login_data.session_client.homeserver().clone();
+                let session_client = login_data.session_client.clone();
                 let access_token = login_data.access_token.clone();
                 let room_id = room.id.clone();
-                thread::spawn(
-                    move || match room::get_room_avatar(server, access_token, room_id) {
+                thread::spawn(move || {
+                    match room::get_room_avatar(session_client, access_token, room_id) {
                         Ok((room, avatar)) => {
                             APPOP!(set_room_avatar, (room, avatar));
                         }
                         Err(err) => {
                             err.handle_error();
                         }
-                    },
-                );
+                    }
+                });
                 if clear_room_list {
                     roomlist.push(room.clone());
                 } else {
@@ -246,11 +246,11 @@ impl AppOp {
         self.roomlist.select(&active_room);
 
         // getting room details
-        let server_url = login_data.session_client.homeserver().clone();
+        let session_client = login_data.session_client.clone();
         let access_token = login_data.access_token.clone();
         let a_room = active_room.clone();
         thread::spawn(
-            move || match room::get_room_avatar(server_url, access_token, a_room) {
+            move || match room::get_room_avatar(session_client, access_token, a_room) {
                 Ok((room, avatar)) => {
                     APPOP!(set_room_avatar, (room, avatar));
                 }
@@ -302,8 +302,7 @@ impl AppOp {
 
         let back_history = self.room_back_history.clone();
         let actions = actions::Message::new(
-            self.thread_pool.clone(),
-            login_data.session_client.homeserver().clone(),
+            login_data.session_client.clone(),
             login_data.access_token,
             self.ui.clone(),
             back_history,
@@ -311,6 +310,7 @@ impl AppOp {
         let history = widgets::RoomHistory::new(actions, active_room.clone(), self);
         self.history = if let Some(mut history) = history {
             history.create(
+                login_data.session_client,
                 self.thread_pool.clone(),
                 self.user_info_cache.clone(),
                 messages,
@@ -701,7 +701,7 @@ impl AppOp {
 
         thread::spawn(move || {
             match room::get_room_avatar(
-                login_data.session_client.homeserver().clone(),
+                login_data.session_client.clone(),
                 login_data.access_token,
                 room_id,
             ) {

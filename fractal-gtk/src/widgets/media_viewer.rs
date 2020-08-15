@@ -12,6 +12,7 @@ use crate::util::i18n::i18n;
 use either::Either;
 use fractal_api::identifiers::UserId;
 use fractal_api::url::Url;
+use fractal_api::Client as MatrixClient;
 use gdk::*;
 use glib::signal;
 use glib::source::Continue;
@@ -147,7 +148,7 @@ struct Data {
 }
 
 impl Data {
-    pub fn enter_full_screen(&mut self, thread_pool: ThreadPool) {
+    pub fn enter_full_screen(&mut self, session_client: MatrixClient) {
         self.main_window.fullscreen();
         self.is_fullscreen = true;
 
@@ -194,12 +195,12 @@ impl Data {
                 media_container.show();
             }
             _ => {
-                self.redraw_media_in_viewport(thread_pool);
+                self.redraw_media_in_viewport(session_client);
             }
         }
     }
 
-    pub fn leave_full_screen(&mut self, thread_pool: ThreadPool) {
+    pub fn leave_full_screen(&mut self, session_client: MatrixClient) {
         self.main_window.unfullscreen();
         self.is_fullscreen = false;
 
@@ -252,7 +253,7 @@ impl Data {
                 }
             }
             _ => {
-                self.redraw_media_in_viewport(thread_pool);
+                self.redraw_media_in_viewport(session_client);
             }
         }
     }
@@ -281,7 +282,7 @@ impl Data {
         }
     }
 
-    pub fn previous_media(&mut self, thread_pool: ThreadPool) -> bool {
+    pub fn previous_media(&mut self, session_client: MatrixClient) -> bool {
         if self.no_more_media {
             return true;
         }
@@ -295,12 +296,12 @@ impl Data {
                 set_header_title(&self.builder, name);
             }
 
-            self.redraw_media_in_viewport(thread_pool);
+            self.redraw_media_in_viewport(session_client);
             true
         }
     }
 
-    pub fn next_media(&mut self, thread_pool: ThreadPool) {
+    pub fn next_media(&mut self, session_client: MatrixClient) {
         if self.current_media_index >= self.media_list.len() - 1 {
             return;
         }
@@ -310,10 +311,10 @@ impl Data {
             set_header_title(&self.builder, name);
         }
 
-        self.redraw_media_in_viewport(thread_pool);
+        self.redraw_media_in_viewport(session_client);
     }
 
-    pub fn redraw_media_in_viewport(&mut self, thread_pool: ThreadPool) {
+    pub fn redraw_media_in_viewport(&mut self, session_client: MatrixClient) {
         let msg = &self.media_list[self.current_media_index];
         let url = unwrap_or_unit_return!(msg.url.clone());
         let media_container = self
@@ -330,13 +331,13 @@ impl Data {
                 let image = image::Image::new(self.server_url.clone(), Either::Left(url))
                     .shrink_to_fit(true)
                     .center(true)
-                    .build(thread_pool);
+                    .build(session_client);
                 media_container.add(&image.widget);
                 image.widget.show();
                 self.widget = Widget::Image(image);
             }
             "m.video" => {
-                let widget = self.create_video_widget(thread_pool, url);
+                let widget = self.create_video_widget(session_client, url);
                 media_container.add(&widget.outer_box);
                 self.widget = Widget::Video(widget);
                 media_container.show_all();
@@ -348,17 +349,16 @@ impl Data {
         self.set_nav_btn_visibility();
     }
 
-    fn create_video_widget(&self, thread_pool: ThreadPool, url: Url) -> VideoWidget {
+    fn create_video_widget(&self, session_client: MatrixClient, url: Url) -> VideoWidget {
         let with_controls = true;
         let player = VideoPlayerWidget::new(with_controls);
         let bx = gtk::Box::new(gtk::Orientation::Vertical, 0);
         let start_playing = true;
         PlayerExt::initialize_stream(
-            &player,
+            player.clone(),
+            session_client,
             url,
-            self.server_url.clone(),
-            thread_pool,
-            &bx,
+            bx.clone(),
             start_playing,
         );
 
@@ -642,7 +642,11 @@ impl MediaViewer {
         }
     }
 
-    pub fn create(&mut self, thread_pool: ThreadPool) -> Option<(gtk::Box, gtk::Box)> {
+    pub fn create(
+        &mut self,
+        session_client: MatrixClient,
+        thread_pool: ThreadPool,
+    ) -> Option<(gtk::Box, gtk::Box)> {
         let body = self
             .builder
             .get_object::<gtk::Box>("media_viewer_box")
@@ -651,14 +655,14 @@ impl MediaViewer {
             .builder
             .get_object::<gtk::Box>("media_viewer_headerbar_box")
             .expect("Can't find media_viewer_headerbar in ui file.");
-        self.connect_media_viewer_headerbar(thread_pool.clone());
-        self.connect_media_viewer_box(thread_pool);
+        self.connect_media_viewer_headerbar(session_client.clone());
+        self.connect_media_viewer_box(session_client, thread_pool);
         self.connect_stop_video_when_leaving();
 
         Some((body, header))
     }
 
-    pub fn display_media_viewer(&mut self, thread_pool: ThreadPool, media_msg: Message) {
+    pub fn display_media_viewer(&mut self, session_client: MatrixClient, media_msg: Message) {
         let url = unwrap_or_unit_return!(media_msg.url.clone());
 
         let previous_media_revealer = self
@@ -686,7 +690,7 @@ impl MediaViewer {
                     image::Image::new(self.data.borrow().server_url.clone(), Either::Left(url))
                         .shrink_to_fit(true)
                         .center(true)
-                        .build(thread_pool);
+                        .build(session_client);
 
                 media_container.add(&image.widget);
                 media_container.show_all();
@@ -694,7 +698,7 @@ impl MediaViewer {
                 self.data.borrow_mut().widget = Widget::Image(image);
             }
             "m.video" => {
-                let video_widget = self.data.borrow().create_video_widget(thread_pool, url);
+                let video_widget = self.data.borrow().create_video_widget(session_client, url);
                 media_container.add(&video_widget.outer_box);
                 media_container.show_all();
 
@@ -708,7 +712,7 @@ impl MediaViewer {
     }
 
     /* connect media viewer headerbar */
-    pub fn connect_media_viewer_headerbar(&self, thread_pool: ThreadPool) {
+    pub fn connect_media_viewer_headerbar(&self, session_client: MatrixClient) {
         let own = &self.data;
         let full_screen_button = self
             .builder
@@ -718,15 +722,19 @@ impl MediaViewer {
             let main_window = own.borrow().main_window.clone();
             if let Some(win) = main_window.get_window() {
                 if !win.get_state().contains(gdk::WindowState::FULLSCREEN) {
-                    own.borrow_mut().enter_full_screen(thread_pool.clone());
+                    own.borrow_mut().enter_full_screen(session_client.clone());
                 } else {
-                    own.borrow_mut().leave_full_screen(thread_pool.clone())
+                    own.borrow_mut().leave_full_screen(session_client.clone());
                 }
             }
         }));
     }
 
-    pub fn connect_media_viewer_box(&mut self, thread_pool: ThreadPool) {
+    pub fn connect_media_viewer_box(
+        &mut self,
+        session_client: MatrixClient,
+        thread_pool: ThreadPool,
+    ) {
         let full_screen_button = self
             .builder
             .get_object::<gtk::Button>("full_screen_button")
@@ -883,10 +891,11 @@ impl MediaViewer {
             .builder
             .get_object::<gtk::Button>("previous_media_button")
             .expect("Cant find previous_media_button in ui file.");
+        let s_client = session_client.clone();
         let t_pool = thread_pool.clone();
         previous_media_button.connect_clicked(clone!(@weak data => move |_| {
-            if !data.borrow_mut().previous_media(t_pool.clone()) {
-                load_more_media(t_pool.clone(), data, builder.clone());
+            if !data.borrow_mut().previous_media(s_client.clone()) {
+                load_more_media(s_client.clone(), t_pool.clone(), data, builder.clone());
             }
         }));
 
@@ -895,7 +904,7 @@ impl MediaViewer {
             .get_object::<gtk::Button>("next_media_button")
             .expect("Cant find next_media_button in ui file.");
         next_media_button.connect_clicked(clone!(@weak data => move |_| {
-            data.borrow_mut().next_media(thread_pool.clone());
+            data.borrow_mut().next_media(session_client.clone());
         }));
 
         let media_container = self
@@ -1014,7 +1023,12 @@ fn loading_state(ui: &gtk::Builder, val: bool) -> bool {
     val
 }
 
-fn load_more_media(thread_pool: ThreadPool, data: Rc<RefCell<Data>>, builder: gtk::Builder) {
+fn load_more_media(
+    session_client: MatrixClient,
+    thread_pool: ThreadPool,
+    data: Rc<RefCell<Data>>,
+    builder: gtk::Builder,
+) {
     data.borrow_mut().loading_more_media = loading_state(&builder, true);
 
     let msg = data.borrow().media_list[data.borrow().current_media_index].clone();
@@ -1067,10 +1081,10 @@ fn load_more_media(thread_pool: ThreadPool, data: Rc<RefCell<Data>>, builder: gt
                 data.borrow_mut().media_list = new_media_list;
                 data.borrow_mut().prev_batch = Some(prev_batch);
                 if img_msgs_count == 0 {
-                    load_more_media(thread_pool, data, builder.clone());
+                    load_more_media(session_client.clone(), thread_pool, data, builder.clone());
                 } else {
                     data.borrow_mut().current_media_index += img_msgs_count;
-                    data.borrow_mut().previous_media(thread_pool);
+                    data.borrow_mut().previous_media(session_client.clone());
                     data.borrow_mut().loading_more_media = loading_state(&ui, false);
                 }
 

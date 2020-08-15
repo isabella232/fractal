@@ -3,6 +3,7 @@ use crate::globals;
 use fractal_api::identifiers::{Error as IdError, EventId, RoomId};
 use fractal_api::reqwest::Error as ReqwestError;
 use fractal_api::url::Url;
+use fractal_api::Client as MatrixClient;
 use std::path::PathBuf;
 use std::sync::mpsc::Sender;
 
@@ -22,18 +23,18 @@ use super::{dw_media, get_prev_batch_from, ContentType, ThreadPool};
 pub type MediaResult = Result<PathBuf, MediaError>;
 pub type MediaList = (Vec<Message>, String);
 
-pub fn get_thumb_async(thread_pool: ThreadPool, baseu: Url, media: Url, tx: Sender<MediaResult>) {
-    thread_pool.run(move || {
-        let fname = dw_media(baseu, &media, ContentType::default_thumbnail(), None);
-        tx.send(fname).expect_log("Connection closed");
-    });
+pub async fn get_thumb(session_client: MatrixClient, media: &Url) -> MediaResult {
+    dw_media(
+        session_client,
+        media,
+        ContentType::default_thumbnail(),
+        None,
+    )
+    .await
 }
 
-pub fn get_media_async(thread_pool: ThreadPool, baseu: Url, media: Url, tx: Sender<MediaResult>) {
-    thread_pool.run(move || {
-        let fname = dw_media(baseu, &media, ContentType::Download, None);
-        tx.send(fname).expect_log("Connection closed");
-    });
+pub async fn get_media(session_client: MatrixClient, media: &Url) -> MediaResult {
+    dw_media(session_client, media, ContentType::Download, None).await
 }
 
 pub fn get_media_list_async(

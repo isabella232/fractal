@@ -5,6 +5,7 @@ use crate::util::cache_dir_path;
 use crate::util::ResultExpectLog;
 use fractal_api::r0::AccessToken;
 use fractal_api::url::Url;
+use fractal_api::Client as MatrixClient;
 use glib::source::Continue;
 use gtk::LabelExt;
 use serde::{Deserialize, Serialize};
@@ -156,9 +157,9 @@ pub fn remove_from_cache(user_info_cache: UserInfoCache, user_id: &UserId) {
 
 /// this downloads a avatar and stores it in the cache folder
 pub fn download_to_cache(
+    session_client: MatrixClient,
     thread_pool: ThreadPool,
     user_info_cache: UserInfoCache,
-    server_url: Url,
     access_token: AccessToken,
     uid: UserId,
     data: Rc<RefCell<AvatarData>>,
@@ -166,8 +167,8 @@ pub fn download_to_cache(
     let (tx, rx) = channel::<(String, PathBuf)>();
     user::get_user_info_async(
         thread_pool,
+        session_client,
         user_info_cache,
-        server_url,
         access_token,
         uid,
         tx,

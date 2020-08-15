@@ -5,11 +5,12 @@ use crate::model::member::Member;
 use crate::model::member::MemberList;
 use crate::model::message::Message;
 use either::Either;
-use fractal_api::identifiers::{Error as IdError, EventId, RoomId, UserId};
-use fractal_api::r0::directory::post_public_rooms::Chunk as PublicRoomsChunk;
+use fractal_api::directory::PublicRoomsChunk;
+use fractal_api::identifiers::{Error as IdError, EventId, RoomAliasId, RoomId, UserId};
 use fractal_api::r0::sync::sync_events::Response as SyncResponse;
 use fractal_api::r0::AccessToken;
 use fractal_api::url::{ParseError as UrlError, Url};
+use fractal_api::Client as MatrixClient;
 use log::{debug, info};
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
@@ -88,10 +89,10 @@ pub struct Room {
     pub avatar: Option<Url>,
     pub name: Option<String>,
     pub topic: Option<String>,
-    pub alias: Option<String>,
+    pub alias: Option<RoomAliasId>,
     pub guest_can_join: bool,
     pub world_readable: bool,
-    pub n_members: i32,
+    pub n_members: u64,
     pub members: MemberList,
     pub notifications: i32,
     pub highlight: i32,
@@ -134,10 +135,10 @@ impl Room {
     }
 
     pub fn from_sync_response(
+        session_client: MatrixClient,
         response: &SyncResponse,
         user_id: UserId,
         access_token: AccessToken,
-        baseu: Url,
     ) -> Result<Vec<Self>, IdError> {
         // getting the list of direct rooms
         let direct: HashSet<RoomId> = parse_m_direct(&response.account_data.events)
@@ -165,9 +166,9 @@ impl Room {
 
             let mut r = Self {
                 name: calculate_room_name(stevents, &user_id),
-                avatar: evc(stevents, "m.room.avatar", "url")
-                    .and_then(|ref url| Url::parse(url).ok()),
-                alias: evc(stevents, "m.room.canonical_alias", "alias"),
+                avatar: evc(stevents, "m.room.avatar", "url").and_then(|url| Url::parse(&url).ok()),
+                alias: evc(stevents, "m.room.canonical_alias", "alias")
+                    .and_then(|alias| RoomAliasId::try_from(alias).ok()),
                 topic: evc(stevents, "m.room.topic", "topic"),
                 direct: direct.contains(&k),
                 notifications: room.unread_notifications.notification_count,
@@ -211,7 +212,7 @@ impl Room {
                 if leave_id != user_id {
                     let kick_reason = &last_event["content"]["reason"];
                     if let Ok((kicker_alias, kicker_avatar)) =
-                        get_user_avatar(baseu.clone(), access_token.clone(), &leave_id)
+                        get_user_avatar(session_client.clone(), access_token.clone(), &leave_id)
                     {
                         let kicker = Member {
                             alias: Some(kicker_alias),
@@ -250,7 +251,7 @@ impl Room {
                     })
                     .map_or(Ok(None), |ev| {
                         Ok(get_user_avatar(
-                            baseu.clone(),
+                            session_client.clone(),
                             access_token.clone(),
                             &UserId::try_from(ev["sender"].as_str().unwrap_or_default())?,
                         )
@@ -266,8 +267,9 @@ impl Room {
                     Ok(Some(Self {
                         name: calculate_room_name(stevents, &user_id),
                         avatar: evc(stevents, "m.room.avatar", "url")
-                            .and_then(|ref url| Url::parse(url).ok()),
-                        alias: evc(stevents, "m.room.canonical_alias", "alias"),
+                            .and_then(|url| Url::parse(&url).ok()),
+                        alias: evc(stevents, "m.room.canonical_alias", "alias")
+                            .and_then(|alias| RoomAliasId::try_from(alias).ok()),
                         topic: evc(stevents, "m.room.topic", "topic"),
                         direct: direct.contains(&k),
                         ..Self::new(k.clone(), RoomMembership::Invited(inv_sender))
@@ -333,7 +335,7 @@ impl TryFrom<PublicRoomsChunk> for Room {
 
     fn try_from(input: PublicRoomsChunk) -> Result<Self, Self::Error> {
         Ok(Self {
-            alias: input.canonical_alias.as_ref().map(ToString::to_string),
+            alias: input.canonical_alias,
             name: input.name,
             avatar: input
                 .avatar_url
@@ -341,7 +343,7 @@ impl TryFrom<PublicRoomsChunk> for Room {
                 .map(|url| Url::parse(&url))
                 .transpose()?,
             topic: input.topic,
-            n_members: input.num_joined_members,
+            n_members: input.num_joined_members.into(),
             world_readable: input.world_readable,
             guest_can_join: input.guest_can_join,
             ..Self::new(input.room_id, RoomMembership::None)

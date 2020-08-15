@@ -1,11 +1,12 @@
-use fractal_api::identifiers::{EventId, RoomId};
+use fractal_api::identifiers::{EventId, RoomId, ServerName};
 use fractal_api::reqwest::Error as ReqwestError;
 use fractal_api::url::Url;
+use fractal_api::{Client as MatrixClient, Error as MatrixError};
 use lazy_static::lazy_static;
 use log::error;
 use regex::Regex;
+use std::convert::TryFrom;
 use std::fmt::Debug;
-use std::fs::write;
 use std::io::Error as IoError;
 use std::path::PathBuf;
 use std::sync::{Arc, Condvar, Mutex};
@@ -13,14 +14,13 @@ use std::thread;
 
 use crate::client::ClientBlocking;
 use crate::util::cache_dir_path;
+use fractal_api::api::r0::media::get_content::Request as GetContentRequest;
+use fractal_api::api::r0::media::get_content_thumbnail::Method;
+use fractal_api::api::r0::media::get_content_thumbnail::Request as GetContentThumbnailRequest;
+use fractal_api::assign;
 use fractal_api::r0::context::get_context::request as get_context;
 use fractal_api::r0::context::get_context::Parameters as GetContextParameters;
 use fractal_api::r0::context::get_context::Response as GetContextResponse;
-use fractal_api::r0::media::get_content::request as get_content;
-use fractal_api::r0::media::get_content::Parameters as GetContentParameters;
-use fractal_api::r0::media::get_content_thumbnail::request as get_content_thumbnail;
-use fractal_api::r0::media::get_content_thumbnail::Method;
-use fractal_api::r0::media::get_content_thumbnail::Parameters as GetContentThumbnailParameters;
 use fractal_api::r0::AccessToken;
 
 pub mod directory;
@@ -79,7 +79,7 @@ impl ThreadPool {
 
 pub enum ContentType {
     Download,
-    Thumbnail(u64, u64),
+    Thumbnail(u32, u32),
 }
 
 impl ContentType {
@@ -118,12 +118,12 @@ pub fn get_prev_batch_from(
 pub enum MediaError {
     MalformedMxcUrl,
     Io(IoError),
-    Reqwest(ReqwestError),
+    Matrix(MatrixError),
 }
 
-impl From<ReqwestError> for MediaError {
-    fn from(err: ReqwestError) -> Self {
-        Self::Reqwest(err)
+impl From<MatrixError> for MediaError {
+    fn from(err: MatrixError) -> Self {
+        Self::Matrix(err)
     }
 }
 
@@ -135,8 +135,8 @@ impl From<IoError> for MediaError {
 
 impl HandleError for MediaError {}
 
-pub fn dw_media(
-    base: Url,
+pub async fn dw_media(
+    session_client: MatrixClient,
     mxc: &Url,
     media_type: ContentType,
     dest: Option<PathBuf>,
@@ -145,26 +145,22 @@ pub fn dw_media(
         return Err(MediaError::MalformedMxcUrl);
     }
 
-    let server = mxc.host().ok_or(MediaError::MalformedMxcUrl)?.to_owned();
+    let server_name = mxc
+        .host()
+        .as_ref()
+        .map(ToString::to_string)
+        .and_then(|host| {
+            <&ServerName>::try_from(host.as_str())
+                .map(ToOwned::to_owned)
+                .ok()
+        })
+        .ok_or(MediaError::MalformedMxcUrl)?;
 
     let media_id = mxc
         .path_segments()
         .and_then(|mut ps| ps.next())
         .filter(|s| !s.is_empty())
         .ok_or(MediaError::MalformedMxcUrl)?;
-
-    let request = if let ContentType::Thumbnail(width, height) = media_type {
-        let params = GetContentThumbnailParameters {
-            width,
-            height,
-            method: Some(Method::Crop),
-            allow_remote: true,
-        };
-        get_content_thumbnail(base, &params, &server, &media_id)
-    } else {
-        let params = GetContentParameters::default();
-        get_content(base, &params, &server, &media_id)
-    }?;
 
     let default_fname = || {
         let dir = if media_type.is_thumbnail() {
@@ -185,14 +181,28 @@ pub fn dw_media(
         .map_or(false, |dur| dur.as_secs() < 60);
 
     if fname.is_file() && (dest.is_none() || is_fname_recent) {
-        Ok(fname)
-    } else {
-        let media = HTTP_CLIENT.get_client().execute(request)?.bytes()?;
-
-        write(&fname, media)?;
-
-        Ok(fname)
+        return Ok(fname);
     }
+
+    let media = if let ContentType::Thumbnail(width, height) = media_type {
+        let request = assign!(GetContentThumbnailRequest::new(
+                &media_id,
+                &server_name,
+                width.into(),
+                height.into(),
+            ), {
+            method: Some(Method::Crop),
+        });
+
+        session_client.send(request).await?.file
+    } else {
+        let request = GetContentRequest::new(&media_id, &server_name);
+        session_client.send(request).await?.file
+    };
+
+    tokio::fs::write(&fname, media).await?;
+
+    Ok(fname)
 }
 
 pub trait HandleError: Debug {

@@ -1,19 +1,20 @@
+use fractal_api::identifiers::{Error as IdentifierError, ServerName};
 use fractal_api::reqwest::Error as ReqwestError;
-use fractal_api::url::{Host, ParseError as UrlError, Url};
-use std::convert::TryInto;
+use fractal_api::url::{ParseError as UrlError, Url};
+use fractal_api::Client as MatrixClient;
+use fractal_api::Error as MatrixError;
+use std::convert::{TryFrom, TryInto};
 
 use crate::globals;
 
-use crate::backend::HTTP_CLIENT;
+use crate::backend::{MediaError, HTTP_CLIENT};
 use crate::util::cache_dir_path;
 
 use crate::model::room::Room;
-use fractal_api::r0::directory::post_public_rooms::request as post_public_rooms;
-use fractal_api::r0::directory::post_public_rooms::Body as PublicRoomsBody;
-use fractal_api::r0::directory::post_public_rooms::Filter as PublicRoomsFilter;
-use fractal_api::r0::directory::post_public_rooms::Parameters as PublicRoomsParameters;
-use fractal_api::r0::directory::post_public_rooms::Response as PublicRoomsResponse;
-use fractal_api::r0::directory::post_public_rooms::ThirdPartyNetworks;
+use fractal_api::api::r0::directory::get_public_rooms_filtered::Request as PublicRoomsFilteredRequest;
+use fractal_api::assign;
+use fractal_api::directory::Filter as PublicRoomsFilter;
+use fractal_api::directory::RoomNetwork;
 use fractal_api::r0::thirdparty::get_supported_protocols::request as get_supported_protocols;
 use fractal_api::r0::thirdparty::get_supported_protocols::Parameters as SupportedProtocolsParameters;
 use fractal_api::r0::thirdparty::get_supported_protocols::ProtocolInstance;
@@ -58,20 +59,27 @@ pub fn protocols(
 
 #[derive(Debug)]
 pub enum DirectorySearchError {
-    InvalidHomeserverUrl(UrlError),
-    Reqwest(ReqwestError),
+    Matrix(MatrixError),
+    MalformedServerName(IdentifierError),
     ParseUrl(UrlError),
+    Download(MediaError),
 }
 
-impl From<ReqwestError> for DirectorySearchError {
-    fn from(err: ReqwestError) -> Self {
-        Self::Reqwest(err)
+impl From<MatrixError> for DirectorySearchError {
+    fn from(err: MatrixError) -> Self {
+        Self::Matrix(err)
     }
 }
 
 impl From<UrlError> for DirectorySearchError {
     fn from(err: UrlError) -> Self {
         Self::ParseUrl(err)
+    }
+}
+
+impl From<MediaError> for DirectorySearchError {
+    fn from(err: MediaError) -> Self {
+        Self::Download(err)
     }
 }
 
@@ -83,69 +91,50 @@ impl HandleError for DirectorySearchError {
     }
 }
 
-pub fn room_search(
-    base: Url,
-    access_token: AccessToken,
-    homeserver: String,
-    generic_search_term: String,
-    third_party: String,
-    rooms_since: Option<String>,
+pub async fn room_search(
+    session_client: MatrixClient,
+    server: Option<&str>,
+    search_term: Option<&str>,
+    room_network: RoomNetwork<'_>,
+    rooms_since: Option<&str>,
 ) -> Result<(Vec<Room>, Option<String>), DirectorySearchError> {
-    let homeserver = Some(homeserver).filter(|hs| !hs.is_empty());
-    let generic_search_term = Some(generic_search_term).filter(|q| !q.is_empty());
-    let third_party = Some(third_party).filter(|tp| !tp.is_empty());
+    let server = server
+        .map(<&ServerName>::try_from)
+        .transpose()
+        .map_err(DirectorySearchError::MalformedServerName)?;
 
-    let server = homeserver
-        .map(|hs| {
-            Url::parse(&hs)
-                .ok()
-                .as_ref()
-                .and_then(Url::host)
-                .as_ref()
-                .map(Host::to_owned)
-                .map(Ok)
-                .unwrap_or_else(|| Host::parse(&hs))
-                // Remove the url::Host enum, we only need the domain string
-                .map(|host| host.to_string())
-                .map(Some)
-        })
-        .unwrap_or(Ok(None))
-        .map_err(DirectorySearchError::InvalidHomeserverUrl)?;
-
-    let params = PublicRoomsParameters {
-        access_token,
+    let request = assign!(PublicRoomsFilteredRequest::new(), {
         server,
-    };
-
-    let body = PublicRoomsBody {
-        limit: Some(globals::ROOM_DIRECTORY_LIMIT),
-        filter: Some(PublicRoomsFilter {
-            generic_search_term,
-        }),
+        limit: Some(globals::ROOM_DIRECTORY_LIMIT.into()),
         since: rooms_since,
-        third_party_networks: third_party
-            .map(ThirdPartyNetworks::Only)
-            .unwrap_or_default(),
-    };
+        filter: assign!(PublicRoomsFilter::new(), {
+            generic_search_term: search_term,
+        }),
+        room_network,
+    });
 
-    let request = post_public_rooms(base.clone(), &params, &body)?;
-    let response: PublicRoomsResponse = HTTP_CLIENT.get_client().execute(request)?.json()?;
+    let response = session_client.public_rooms_filtered(request).await?;
 
     let since = response.next_batch;
     let rooms = response
         .chunk
         .into_iter()
         .map(TryInto::try_into)
-        .inspect(|r: &Result<Room, _>| {
-            if let Ok(room) = r {
-                if let Some(avatar) = room.avatar.clone() {
-                    if let Ok(dest) = cache_dir_path(None, &room.id.to_string()) {
-                        let _ = dw_media(base.clone(), &avatar, ContentType::Download, Some(dest));
-                    }
-                }
+        .collect::<Result<Vec<Room>, UrlError>>()?;
+
+    for room in &rooms {
+        if let Some(avatar) = room.avatar.as_ref() {
+            if let Ok(dest) = cache_dir_path(None, room.id.as_str()) {
+                let _ = dw_media(
+                    session_client.clone(),
+                    avatar,
+                    ContentType::Download,
+                    Some(dest),
+                )
+                .await;
             }
-        })
-        .collect::<Result<_, UrlError>>()?;
+        }
+    }
 
     Ok((rooms, since))
 }

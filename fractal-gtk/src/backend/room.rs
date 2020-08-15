@@ -19,7 +19,8 @@ use std::time::Duration;
 use crate::globals;
 
 use crate::actions::AppState;
-use crate::backend::HTTP_CLIENT;
+use crate::app::RUNTIME;
+use crate::backend::{MediaError, HTTP_CLIENT};
 use crate::util::cache_dir_path;
 
 use crate::model::{
@@ -122,30 +123,46 @@ pub fn get_room_detail(
 }
 
 #[derive(Debug)]
-pub struct RoomAvatarError(ReqwestError);
+pub enum RoomAvatarError {
+    Reqwest(ReqwestError),
+    Download(MediaError),
+}
 
 impl From<ReqwestError> for RoomAvatarError {
     fn from(err: ReqwestError) -> Self {
-        Self(err)
+        Self::Reqwest(err)
+    }
+}
+
+impl From<MediaError> for RoomAvatarError {
+    fn from(err: MediaError) -> Self {
+        Self::Download(err)
     }
 }
 
 impl HandleError for RoomAvatarError {}
 
 pub fn get_room_avatar(
-    base: Url,
+    session_client: MatrixClient,
     access_token: AccessToken,
     room_id: RoomId,
 ) -> Result<(RoomId, Option<Url>), RoomAvatarError> {
+    let base = session_client.homeserver().clone();
+
     let params = GetStateEventsForKeyParameters { access_token };
 
-    let request = get_state_events_for_key(base.clone(), &params, &room_id, "m.room.avatar")?;
+    let request = get_state_events_for_key(base, &params, &room_id, "m.room.avatar")?;
     let response: JsonValue = HTTP_CLIENT.get_client().execute(request)?.json()?;
 
     let avatar = response["url"].as_str().and_then(|s| Url::parse(s).ok());
     let dest = cache_dir_path(None, &room_id.to_string()).ok();
     if let Some(ref avatar) = avatar {
-        let _ = dw_media(base, avatar, ContentType::default_thumbnail(), dest);
+        RUNTIME.handle().block_on(dw_media(
+            session_client,
+            avatar,
+            ContentType::default_thumbnail(),
+            dest,
+        ))?;
     }
 
     Ok((room_id, avatar))

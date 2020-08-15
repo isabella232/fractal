@@ -17,7 +17,7 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-use crate::backend::{media, ThreadPool};
+use crate::backend::media;
 use glib::clone;
 
 use gst::prelude::*;
@@ -40,13 +40,10 @@ use std::ops::Deref;
 use std::path::PathBuf;
 use std::rc::Rc;
 
-use std::sync::mpsc::channel;
-use std::sync::mpsc::TryRecvError;
-use std::sync::mpsc::{Receiver, Sender};
-
 use fractal_api::url::Url;
+use fractal_api::Client as MatrixClient;
 
-use crate::app::App;
+use crate::app::{App, RUNTIME};
 use crate::util::i18n::i18n;
 
 pub trait PlayerExt {
@@ -54,11 +51,10 @@ pub trait PlayerExt {
     fn pause(&self);
     fn stop(&self);
     fn initialize_stream(
-        player: &Rc<Self>,
+        player: Rc<Self>,
+        session_client: MatrixClient,
         media_url: Url,
-        server_url: Url,
-        thread_pool: ThreadPool,
-        bx: &gtk::Box,
+        bx: gtk::Box,
         start_playing: bool,
     );
     fn get_controls_container(player: &Rc<Self>) -> Option<gtk::Box>;
@@ -501,61 +497,51 @@ impl<T: MediaPlayer + 'static> PlayerExt for T {
     }
 
     fn initialize_stream(
-        player: &Rc<Self>,
+        player: Rc<Self>,
+        session_client: MatrixClient,
         media_url: Url,
-        server_url: Url,
-        thread_pool: ThreadPool,
-        bx: &gtk::Box,
+        bx: gtk::Box,
         start_playing: bool,
     ) {
+        let response =
+            RUNTIME.spawn(async move { media::get_media(session_client, &media_url).await });
         bx.set_opacity(0.3);
-        let (tx, rx): (Sender<media::MediaResult>, Receiver<media::MediaResult>) = channel();
-        media::get_media_async(thread_pool, server_url, media_url, tx);
         let local_path = player.get_local_path_access();
-        glib::timeout_add_local(
-            50,
-            clone!(@strong player, @strong bx => move || {
-                match rx.try_recv() {
-                    Err(TryRecvError::Empty) => Continue(true),
-                    Err(TryRecvError::Disconnected) => {
-                        let msg = i18n("Could not retrieve file URI");
-                        /* FIXME: don't use APPOP! */
-                        APPOP!(show_error, (msg));
-                        Continue(true)
-                    },
-                    Ok(Ok(path)) => {
-                        match Url::from_file_path(&path) {
-                            Ok(uri) => {
-                                *local_path.borrow_mut() = Some(path);
-                                if !start_playing {
-                                    if let Some(controls) = player.get_controls() {
-                                        if let Ok(duration) = get_media_duration(&uri) {
-                                            controls.timer.on_duration_changed(Duration(duration))
-                                        }
-                                    }
+        glib::MainContext::default().spawn_local(async move {
+            match response.await {
+                Err(_) => {
+                    let msg = i18n("Could not retrieve file URI");
+                    /* FIXME: don't use APPOP! */
+                    APPOP!(show_error, (msg));
+                }
+                Ok(Ok(path)) => match Url::from_file_path(&path) {
+                    Ok(uri) => {
+                        *local_path.borrow_mut() = Some(path);
+                        if !start_playing {
+                            if let Some(controls) = player.get_controls() {
+                                if let Ok(duration) = get_media_duration(&uri) {
+                                    controls.timer.on_duration_changed(Duration(duration))
                                 }
-                                player.get_player().set_uri(uri.as_str());
-                                if player.get_controls().is_some() {
-                                    ControlsConnection::init(&player);
-                                }
-                                bx.set_opacity(1.0);
-                                if start_playing {
-                                    player.play();
-                                }
-                            }
-                            Err(_) => {
-                                error!("Media path is not valid: {:?}", path);
                             }
                         }
-                        Continue(false)
+                        player.get_player().set_uri(uri.as_str());
+                        if player.get_controls().is_some() {
+                            ControlsConnection::init(&player);
+                        }
+                        bx.set_opacity(1.0);
+                        if start_playing {
+                            player.play();
+                        }
                     }
-                    Ok(Err(err)) => {
-                        error!("Media path could not be found due to error: {:?}", err);
-                        Continue(false)
+                    Err(_) => {
+                        error!("Media path is not valid: {:?}", path);
                     }
+                },
+                Ok(Err(err)) => {
+                    error!("Media path could not be found due to error: {:?}", err);
                 }
-            }),
-        );
+            }
+        });
     }
 
     fn get_controls_container(player: &Rc<Self>) -> Option<gtk::Box> {

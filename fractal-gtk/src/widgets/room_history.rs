@@ -19,7 +19,7 @@ use crate::widgets;
 use crate::widgets::{PlayerExt, VideoPlayerWidget};
 use fractal_api::identifiers::RoomId;
 use fractal_api::r0::AccessToken;
-use fractal_api::url::Url;
+use fractal_api::Client as MatrixClient;
 use gio::ActionMapExt;
 use gio::SimpleActionGroup;
 use glib::clone;
@@ -272,7 +272,6 @@ pub struct RoomHistory {
     /* Contains a list of msg ids to keep track of the displayed messages */
     rows: Rc<RefCell<List>>,
     access_token: AccessToken,
-    server_url: Url,
     source_id: Rc<RefCell<Option<source::SourceId>>>,
     queue: Rc<RefCell<VecDeque<MessageContent>>>,
     edit_buffer: Rc<RefCell<VecDeque<MessageContent>>>,
@@ -301,7 +300,6 @@ impl RoomHistory {
         let mut rh = RoomHistory {
             rows: Rc::new(RefCell::new(List::new(scroll))),
             access_token: login_data.access_token,
-            server_url: login_data.session_client.homeserver().clone(),
             source_id: Rc::new(RefCell::new(None)),
             queue: Rc::new(RefCell::new(VecDeque::new())),
             edit_buffer: Rc::new(RefCell::new(VecDeque::new())),
@@ -315,6 +313,7 @@ impl RoomHistory {
 
     pub fn create(
         &mut self,
+        session_client: MatrixClient,
         thread_pool: ThreadPool,
         user_info_cache: UserInfoCache,
         mut messages: Vec<MessageContent>,
@@ -328,9 +327,14 @@ impl RoomHistory {
         }
         let bottom = messages.split_off(position);
         messages.reverse();
-        self.add_old_messages_in_batch(thread_pool.clone(), user_info_cache.clone(), messages);
+        self.add_old_messages_in_batch(
+            session_client.clone(),
+            thread_pool.clone(),
+            user_info_cache.clone(),
+            messages,
+        );
         /* Add the rest of the messages after the new message divider */
-        self.add_new_messages_in_batch(thread_pool, user_info_cache, bottom);
+        self.add_new_messages_in_batch(session_client, thread_pool, user_info_cache, bottom);
 
         let rows = &self.rows;
         let id = glib::timeout_add_local(
@@ -446,7 +450,12 @@ impl RoomHistory {
         }));
     }
 
-    fn run_queue(&mut self, thread_pool: ThreadPool, user_info_cache: UserInfoCache) -> Option<()> {
+    fn run_queue(
+        &mut self,
+        session_client: MatrixClient,
+        thread_pool: ThreadPool,
+        user_info_cache: UserInfoCache,
+    ) -> Option<()> {
         let queue = self.queue.clone();
         let edit_buffer = self.edit_buffer.clone();
         let rows = self.rows.clone();
@@ -460,7 +469,6 @@ impl RoomHistory {
         } else {
             /* Lazy load initial messages */
             let source_id = self.source_id.clone();
-            let server_url = self.server_url.clone();
             let access_token = self.access_token.clone();
             *self.source_id.borrow_mut() = Some(glib::idle_add_local(move || {
                 let mut data = queue.borrow_mut();
@@ -517,11 +525,11 @@ impl RoomHistory {
                         rows.borrow_mut().new_divider_index = Some(new_divider_index);
                     }
                     item.widget = Some(create_row(
+                        session_client.clone(),
                         thread_pool.clone(),
                         user_info_cache.clone(),
                         item.clone(),
                         has_header,
-                        server_url.clone(),
                         access_token.clone(),
                         &rows,
                     ));
@@ -555,12 +563,13 @@ impl RoomHistory {
     /* This adds new incomming messages at then end of the list */
     pub fn add_new_message(
         &mut self,
+        session_client: MatrixClient,
         thread_pool: ThreadPool,
         user_info_cache: UserInfoCache,
         mut item: MessageContent,
     ) -> Option<()> {
         if item.msg.replace.is_some() {
-            self.replace_message(thread_pool, user_info_cache, item);
+            self.replace_message(session_client, thread_pool, user_info_cache, item);
             return None;
         }
         let mut rows = self.rows.borrow_mut();
@@ -593,11 +602,11 @@ impl RoomHistory {
         }
 
         let b = create_row(
+            session_client,
             thread_pool,
             user_info_cache,
             item.clone(),
             has_header,
-            self.server_url.clone(),
             self.access_token.clone(),
             &self.rows,
         );
@@ -608,6 +617,7 @@ impl RoomHistory {
 
     pub fn replace_message(
         &mut self,
+        session_client: MatrixClient,
         thread_pool: ThreadPool,
         user_info_cache: UserInfoCache,
         mut item: MessageContent,
@@ -631,11 +641,11 @@ impl RoomHistory {
         let msg_widget = msg.widget.clone()?;
 
         item.widget = Some(create_row(
+            session_client,
             thread_pool,
             user_info_cache,
             item.clone(),
             msg_widget.header,
-            self.server_url.clone(),
             self.access_token.clone(),
             &self.rows,
         ));
@@ -645,6 +655,7 @@ impl RoomHistory {
 
     pub fn remove_message(
         &mut self,
+        session_client: MatrixClient,
         thread_pool: ThreadPool,
         user_info_cache: UserInfoCache,
         item: MessageContent,
@@ -691,7 +702,13 @@ impl RoomHistory {
                     msg_next_cloned.redactable && msg_next_cloned.sender == msg_sender
                 })
             {
-                msg_widget.update_header(thread_pool, user_info_cache, msg_next_cloned, true);
+                msg_widget.update_header(
+                    session_client,
+                    thread_pool,
+                    user_info_cache,
+                    msg_next_cloned,
+                    true,
+                );
             }
         }
         None
@@ -699,19 +716,26 @@ impl RoomHistory {
 
     pub fn add_new_messages_in_batch(
         &mut self,
+        session_client: MatrixClient,
         thread_pool: ThreadPool,
         user_info_cache: UserInfoCache,
         messages: Vec<MessageContent>,
     ) -> Option<()> {
         /* TODO: use lazy loading */
         for item in messages {
-            self.add_new_message(thread_pool.clone(), user_info_cache.clone(), item);
+            self.add_new_message(
+                session_client.clone(),
+                thread_pool.clone(),
+                user_info_cache.clone(),
+                item,
+            );
         }
         None
     }
 
     pub fn add_old_messages_in_batch(
         &mut self,
+        session_client: MatrixClient,
         thread_pool: ThreadPool,
         user_info_cache: UserInfoCache,
         messages: Vec<MessageContent>,
@@ -721,7 +745,7 @@ impl RoomHistory {
         self.queue
             .borrow_mut()
             .append(&mut VecDeque::from(messages));
-        self.run_queue(thread_pool, user_info_cache);
+        self.run_queue(session_client, thread_pool, user_info_cache);
 
         None
     }
@@ -743,18 +767,20 @@ impl RoomHistory {
 
 /* This function creates the content for a Row based on the content of msg */
 fn create_row(
+    session_client: MatrixClient,
     thread_pool: ThreadPool,
     user_info_cache: UserInfoCache,
     row: MessageContent,
     has_header: bool,
-    server_url: Url,
     access_token: AccessToken,
     rows: &Rc<RefCell<List>>,
 ) -> widgets::MessageBox {
+    let server_url = session_client.homeserver().clone();
     /* we need to create a message with the username, so that we don't have to pass
      * all information to the widget creating each row */
     let mut mb = widgets::MessageBox::new(server_url, access_token);
     mb.create(
+        session_client,
         thread_pool,
         user_info_cache,
         &row,

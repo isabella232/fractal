@@ -2,7 +2,6 @@ pub mod account;
 pub mod config;
 pub mod contact;
 pub mod context;
-pub mod directory;
 pub mod filter;
 pub mod media;
 pub mod message;

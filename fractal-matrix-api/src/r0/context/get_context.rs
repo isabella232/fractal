@@ -45,7 +45,7 @@ pub fn request(
             "_matrix/client/r0/rooms/{}/context/{}",
             room_id, event_id,
         ))
-        .expect("Malformed URL in post_public_rooms");
+        .expect("Malformed URL in get_context");
 
     Client::new().get(url).query(params).build()
 }

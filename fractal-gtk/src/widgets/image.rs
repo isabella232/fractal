@@ -1,7 +1,9 @@
-use crate::backend::{media, ThreadPool};
+use crate::app::RUNTIME;
+use crate::backend::media;
 use crate::util::get_border_radius;
 use either::Either;
 use fractal_api::url::Url;
+use fractal_api::Client as MatrixClient;
 use gdk::prelude::GdkContextExt;
 use gdk_pixbuf::Pixbuf;
 use gdk_pixbuf::PixbufAnimation;
@@ -12,9 +14,6 @@ use gtk::prelude::*;
 use gtk::DrawingArea;
 use log::error;
 use std::path::{Path, PathBuf};
-use std::sync::mpsc::channel;
-use std::sync::mpsc::TryRecvError;
-use std::sync::mpsc::{Receiver, Sender};
 use std::sync::{Arc, Mutex};
 
 #[derive(Clone, Debug)]
@@ -99,9 +98,9 @@ impl Image {
         self
     }
 
-    pub fn build(self, thread_pool: ThreadPool) -> Image {
+    pub fn build(self, session_client: MatrixClient) -> Image {
         self.draw();
-        self.load_async(thread_pool);
+        self.load_async(session_client);
 
         self
     }
@@ -267,37 +266,33 @@ impl Image {
 
     /// If `path` starts with mxc this func download the img async, in other case the image is loaded
     /// in the `image` widget scaled to size
-    pub fn load_async(&self, thread_pool: ThreadPool) {
+    pub fn load_async(&self, session_client: MatrixClient) {
         match self.path.as_ref() {
             Either::Left(url) if url.scheme() == "mxc" => {
                 let mxc = url.clone();
                 // asyn load
-                let (tx, rx): (Sender<media::MediaResult>, Receiver<media::MediaResult>) =
-                    channel();
-                let command = if self.thumb {
-                    media::get_thumb_async
+                let response = if self.thumb {
+                    RUNTIME.spawn(async move { media::get_thumb(session_client, &mxc).await })
                 } else {
-                    media::get_media_async
+                    RUNTIME.spawn(async move { media::get_media(session_client, &mxc).await })
                 };
-                command(thread_pool, self.server_url.clone(), mxc, tx);
                 let local_path = self.local_path.clone();
                 let pix = self.pixbuf.clone();
                 let scaled = self.scaled.clone();
                 let da = self.widget.clone();
 
                 da.get_style_context().add_class("image-spinner");
-                glib::timeout_add_local(50, move || match rx.try_recv() {
-                    Err(TryRecvError::Empty) => Continue(true),
-                    Err(TryRecvError::Disconnected) => Continue(false),
-                    Ok(Ok(fname)) => {
-                        *local_path.lock().unwrap() = Some(fname.clone());
-                        load_pixbuf(pix.clone(), scaled.clone(), da.clone(), &fname);
-                        da.get_style_context().remove_class("image-spinner");
-                        Continue(false)
-                    }
-                    Ok(Err(err)) => {
-                        error!("Image path could not be found due to error: {:?}", err);
-                        Continue(false)
+                glib::MainContext::default().spawn_local(async move {
+                    match response.await {
+                        Err(_) => return,
+                        Ok(Ok(fname)) => {
+                            *local_path.lock().unwrap() = Some(fname.clone());
+                            load_pixbuf(pix.clone(), scaled.clone(), da.clone(), &fname);
+                            da.get_style_context().remove_class("image-spinner");
+                        }
+                        Ok(Err(err)) => {
+                            error!("Image path could not be found due to error: {:?}", err);
+                        }
                     }
                 });
             }

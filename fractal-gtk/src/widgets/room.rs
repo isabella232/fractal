@@ -13,7 +13,7 @@ use crate::backend::HandleError;
 
 use crate::widgets;
 use crate::widgets::AvatarExt;
-use fractal_api::identifiers::RoomIdOrAliasId;
+use fractal_api::identifiers::{RoomAliasId, RoomIdOrAliasId};
 use gtk::WidgetExt;
 
 const AVATAR_SIZE: i32 = 60;
@@ -59,18 +59,18 @@ impl<'a> RoomBox<'a> {
 
             let details_box = gtk::Box::new(gtk::Orientation::Vertical, 6);
 
-            let name = match room.name {
-                ref n if n.is_none() || n.clone().unwrap().is_empty() => room.alias.clone(),
-                ref n => n.clone(),
-            };
+            let name = room
+                .name
+                .as_ref()
+                .filter(|n| !n.is_empty())
+                .map(String::as_str)
+                .or(room.alias.as_ref().map(RoomAliasId::as_str))
+                .unwrap_or_default();
 
             let name_label = gtk::Label::new(None);
             name_label.set_line_wrap(true);
             name_label.set_line_wrap_mode(pango::WrapMode::WordChar);
-            name_label.set_markup(&format!(
-                "<b>{}</b>",
-                markup_text(&name.unwrap_or_default())
-            ));
+            name_label.set_markup(&format!("<b>{}</b>", markup_text(name)));
             name_label.set_justify(gtk::Justification::Left);
             name_label.set_halign(gtk::Align::Start);
             name_label.set_valign(gtk::Align::Start);
@@ -94,7 +94,10 @@ impl<'a> RoomBox<'a> {
             alias_label.set_line_wrap_mode(pango::WrapMode::WordChar);
             alias_label.set_markup(&format!(
                 "<span alpha=\"60%\">{}</span>",
-                room.alias.clone().unwrap_or_default()
+                room.alias
+                    .as_ref()
+                    .map(RoomAliasId::as_str)
+                    .unwrap_or_default()
             ));
             alias_label.set_justify(gtk::Justification::Left);
             alias_label.set_halign(gtk::Align::Start);
