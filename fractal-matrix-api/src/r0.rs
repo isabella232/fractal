@@ -5,7 +5,6 @@ pub mod context;
 pub mod directory;
 pub mod filter;
 pub mod media;
-pub mod membership;
 pub mod message;
 pub mod profile;
 pub mod pushrules;

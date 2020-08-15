@@ -37,9 +37,6 @@ use fractal_api::r0::filter::RoomEventFilter;
 use fractal_api::r0::media::create_content::request as create_content;
 use fractal_api::r0::media::create_content::Parameters as CreateContentParameters;
 use fractal_api::r0::media::create_content::Response as CreateContentResponse;
-use fractal_api::r0::membership::invite_user::request as invite_user;
-use fractal_api::r0::membership::invite_user::Body as InviteUserBody;
-use fractal_api::r0::membership::invite_user::Parameters as InviteUserParameters;
 use fractal_api::r0::message::create_message_event::request as create_message_event;
 use fractal_api::r0::message::create_message_event::Parameters as CreateMessageEventParameters;
 use fractal_api::r0::message::create_message_event::Response as CreateMessageEventResponse;
@@ -835,27 +832,22 @@ pub fn add_to_fav(
 }
 
 #[derive(Debug)]
-pub struct InviteError(ReqwestError);
+pub struct InviteError(MatrixError);
 
-impl From<ReqwestError> for InviteError {
-    fn from(err: ReqwestError) -> Self {
+impl From<MatrixError> for InviteError {
+    fn from(err: MatrixError) -> Self {
         Self(err)
     }
 }
 
 impl HandleError for InviteError {}
 
-pub fn invite(
-    base: Url,
-    access_token: AccessToken,
-    room_id: RoomId,
-    user_id: UserId,
+pub async fn invite(
+    session_client: MatrixClient,
+    room_id: &RoomId,
+    user_id: &UserId,
 ) -> Result<(), InviteError> {
-    let params = InviteUserParameters { access_token };
-    let body = InviteUserBody { user_id };
-
-    let request = invite_user(base, &room_id, &params, &body)?;
-    HTTP_CLIENT.get_client().execute(request)?;
+    session_client.invite_user_by_id(room_id, user_id).await?;
 
     Ok(())
 }

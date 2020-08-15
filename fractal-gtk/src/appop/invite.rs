@@ -3,7 +3,6 @@ use crate::util::i18n::{i18n, i18n_k};
 use crate::backend::room;
 use fractal_api::identifiers::{RoomId, UserId};
 use gtk::prelude::*;
-use std::thread;
 
 use crate::app::{App, RUNTIME};
 use crate::appop::member::SearchType;
@@ -165,12 +164,11 @@ impl AppOp {
         let login_data = unwrap_or_unit_return!(self.login_data.clone());
         if let Some(ref r) = self.active_room {
             for user in &self.invite_list {
-                let server = login_data.session_client.homeserver().clone();
-                let access_token = login_data.access_token.clone();
+                let session_client = login_data.session_client.clone();
                 let room_id = r.clone();
                 let user_id = user.0.uid.clone();
-                thread::spawn(move || {
-                    let query = room::invite(server, access_token, room_id, user_id);
+                RUNTIME.spawn(async move {
+                    let query = room::invite(session_client, &room_id, &user_id).await;
                     if let Err(err) = query {
                         err.handle_error();
                     }
