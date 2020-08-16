@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2020-07-29 06:07+0000\n"
-"PO-Revision-Date: 2020-08-02 13:33+0200\n"
+"POT-Creation-Date: 2020-08-13 10:34+0000\n"
+"PO-Revision-Date: 2020-08-16 10:12+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -764,8 +764,8 @@ msgid "A Matrix.org client for GNOME"
 msgstr "Klient sieci Matrix.org dla środowiska GNOME"
 
 #: fractal-gtk/src/appop/about.rs:22
-msgid "© 2017–2018 Daniel García Moreno, et al."
-msgstr "© 2017-2018 Daniel García Moreno i inni"
+msgid "© 2017–2020 Daniel García Moreno, et al."
+msgstr "© 2017-2020 Daniel García Moreno i inni"
 
 #: fractal-gtk/src/appop/about.rs:29
 msgid "Learn more about Fractal"
@@ -806,7 +806,7 @@ msgstr ""
 msgid "OK"
 msgstr "OK"
 
-#: fractal-gtk/src/appop/account.rs:780
+#: fractal-gtk/src/appop/account.rs:786
 msgid "Are you sure you want to delete your account?"
 msgstr "Na pewno usunąć konto?"
 
@@ -827,17 +827,17 @@ msgstr "obraz"
 msgid "Invite to {name}"
 msgstr "Zaproś do „{name}”"
 
-#: fractal-gtk/src/appop/invite.rs:265
+#: fractal-gtk/src/appop/invite.rs:269
 msgid "Join {room_name}?"
 msgstr "Dołączyć do pokoju „{room_name}”?"
 
-#: fractal-gtk/src/appop/invite.rs:270
+#: fractal-gtk/src/appop/invite.rs:274
 msgid ""
 "You’ve been invited to join <b>{room_name}</b> room by <b>{sender_name}</b>"
 msgstr ""
 "Otrzymano zaproszenie do pokoju <b>{room_name}</b> od <b>{sender_name}</b>"
 
-#: fractal-gtk/src/appop/invite.rs:275
+#: fractal-gtk/src/appop/invite.rs:279
 msgid "You’ve been invited to join <b>{room_name}</b>"
 msgstr "Otrzymano zaproszenie do pokoju <b>{room_name}</b>"
 
@@ -847,51 +847,51 @@ msgstr "Otrzymano zaproszenie do pokoju <b>{room_name}</b>"
 msgid "Fractal [{}]"
 msgstr "Fractal ({})"
 
-#: fractal-gtk/src/appop/notify.rs:51
+#: fractal-gtk/src/appop/notify.rs:52
 msgid "An audio file has been added to the conversation."
 msgstr "Plik dźwiękowy został dodany do rozmowy."
 
-#: fractal-gtk/src/appop/notify.rs:52
+#: fractal-gtk/src/appop/notify.rs:53
 msgid "An image has been added to the conversation."
 msgstr "Obraz został dodany do rozmowy."
 
-#: fractal-gtk/src/appop/notify.rs:53
+#: fractal-gtk/src/appop/notify.rs:54
 msgid "A video has been added to the conversation."
 msgstr "Film został dodany do rozmowy."
 
-#: fractal-gtk/src/appop/notify.rs:54
+#: fractal-gtk/src/appop/notify.rs:55
 msgid "A file has been added to the conversation."
 msgstr "Plik został dodany do rozmowy."
 
-#: fractal-gtk/src/appop/notify.rs:59
+#: fractal-gtk/src/appop/notify.rs:60
 msgid " (direct message)"
 msgstr " (bezpośrednia wiadomość)"
 
-#: fractal-gtk/src/appop/room.rs:357
+#: fractal-gtk/src/appop/room.rs:358
 msgid "Leave {room_name}?"
 msgstr "Opuścić pokój „{room_name}”?"
 
-#: fractal-gtk/src/appop/room.rs:565
+#: fractal-gtk/src/appop/room.rs:573
 msgid "The room ID is malformed"
 msgstr "Identyfikator pokoju jest błędnie sformatowany"
 
-#: fractal-gtk/src/appop/room.rs:635
+#: fractal-gtk/src/appop/room.rs:643
 msgid "EMPTY ROOM"
 msgstr "PUSTY POKÓJ"
 
-#: fractal-gtk/src/appop/room.rs:637
+#: fractal-gtk/src/appop/room.rs:645
 msgid "{m1} and {m2}"
 msgstr "{m1} i {m2}"
 
-#: fractal-gtk/src/appop/room.rs:638
+#: fractal-gtk/src/appop/room.rs:646
 msgid "{m1} and Others"
 msgstr "{m1} i inni"
 
-#: fractal-gtk/src/appop/room.rs:737
+#: fractal-gtk/src/appop/room.rs:745
 msgid "Several users are typing…"
 msgstr "Kilku użytkowników pisze…"
 
-#: fractal-gtk/src/appop/room.rs:740
+#: fractal-gtk/src/appop/room.rs:748
 msgid "<b>{}</b> is typing…"
 msgid_plural "<b>{}</b> and <b>{}</b> are typing…"
 msgstr[0] "<b>{}</b> pisze…"
@@ -911,43 +911,43 @@ msgstr "Błąd podczas wyszukiwania pokoi"
 msgid "Can’t login, try again"
 msgstr "Nie można się zalogować. Proszę spróbować ponownie."
 
-#: fractal-gtk/src/backend/room.rs:349
+#: fractal-gtk/src/backend/room.rs:352
 msgid "Error deleting message"
 msgstr "Błąd podczas usuwania wiadomości"
 
-#: fractal-gtk/src/backend/room.rs:394
+#: fractal-gtk/src/backend/room.rs:419
 msgid "Can’t join the room, try again."
 msgstr "Nie można dołączyć do pokoju. Proszę spróbować ponownie."
 
-#: fractal-gtk/src/backend/room.rs:653 fractal-gtk/src/backend/room.rs:710
+#: fractal-gtk/src/backend/room.rs:684 fractal-gtk/src/backend/room.rs:741
 msgid "Can’t create the room, try again"
 msgstr "Nie można utworzyć pokoju. Proszę spróbować ponownie."
 
-#: fractal-gtk/src/backend/user.rs:161
+#: fractal-gtk/src/backend/user.rs:162
 msgid "Sorry, account settings can’t be loaded."
 msgstr "Nie można wczytać ustawień konta."
 
-#: fractal-gtk/src/backend/user.rs:200
+#: fractal-gtk/src/backend/user.rs:201
 msgid "Email is already in use"
 msgstr "Adres e-mail jest już używany"
 
-#: fractal-gtk/src/backend/user.rs:204
+#: fractal-gtk/src/backend/user.rs:205
 msgid "Please enter a valid email address."
 msgstr "Proszę podać prawidłowy adres e-mail."
 
-#: fractal-gtk/src/backend/user.rs:208
+#: fractal-gtk/src/backend/user.rs:209
 msgid "Couldn’t add the email address."
 msgstr "Nie można dodać adresu e-mail."
 
-#: fractal-gtk/src/backend/user.rs:217 fractal-gtk/src/backend/user.rs:295
+#: fractal-gtk/src/backend/user.rs:218 fractal-gtk/src/backend/user.rs:296
 msgid "The identity server is invalid."
 msgstr "Serwer tożsamości jest nieprawidłowy."
 
-#: fractal-gtk/src/backend/user.rs:276
+#: fractal-gtk/src/backend/user.rs:277
 msgid "Phone number is already in use"
 msgstr "Numer telefonu jest już używany"
 
-#: fractal-gtk/src/backend/user.rs:281
+#: fractal-gtk/src/backend/user.rs:282
 msgid ""
 "Please enter your phone number in the format: \n"
 " + your country code and your phone number."
@@ -955,15 +955,15 @@ msgstr ""
 "Proszę podać numer telefonu w formacie: \n"
 " + kod kraju i numer telefonu."
 
-#: fractal-gtk/src/backend/user.rs:286
+#: fractal-gtk/src/backend/user.rs:287
 msgid "Couldn’t add the phone number."
 msgstr "Nie można dodać numeru telefonu."
 
-#: fractal-gtk/src/backend/user.rs:442
+#: fractal-gtk/src/backend/user.rs:443
 msgid "Couldn’t change the password"
 msgstr "Nie można zmienić hasła"
 
-#: fractal-gtk/src/backend/user.rs:486
+#: fractal-gtk/src/backend/user.rs:487
 msgid "Couldn’t delete the account"
 msgstr "Nie można usunąć konta"
 
@@ -1044,22 +1044,22 @@ msgstr "Wysyłanie pliku."
 msgid "Last edited %c"
 msgstr "Ostatnia modyfikacja: %c"
 
-#: fractal-gtk/src/widgets/message.rs:480
-#: fractal-gtk/src/widgets/message.rs:595
+#: fractal-gtk/src/widgets/message.rs:481
+#: fractal-gtk/src/widgets/message.rs:596
 msgid "Save"
 msgstr "Zapisuje"
 
-#: fractal-gtk/src/widgets/message.rs:609
+#: fractal-gtk/src/widgets/message.rs:610
 msgid "Open"
 msgstr "Otwiera"
 
 #. Use 12h time format (AM/PM)
-#: fractal-gtk/src/widgets/message.rs:629
+#: fractal-gtk/src/widgets/message.rs:630
 msgid "%l∶%M %p"
 msgstr "%-l∶%M %p"
 
 #. Use 24 time format
-#: fractal-gtk/src/widgets/message.rs:632
+#: fractal-gtk/src/widgets/message.rs:633
 msgid "%R"
 msgstr "%H∶%M"
 
