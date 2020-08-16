@@ -12,7 +12,6 @@ use std::fs;
 use std::io::Error as IoError;
 use std::path::{Path, PathBuf};
 
-use std::collections::HashMap;
 use std::convert::TryFrom;
 use std::time::Duration;
 
@@ -28,10 +27,18 @@ use crate::model::{
     message::Message,
     room::{Room, RoomMembership, RoomTag},
 };
-use fractal_api::r0::config::get_global_account_data::request as get_global_account_data;
-use fractal_api::r0::config::get_global_account_data::Parameters as GetGlobalAccountDataParameters;
-use fractal_api::r0::config::set_global_account_data::request as set_global_account_data;
-use fractal_api::r0::config::set_global_account_data::Parameters as SetGlobalAccountDataParameters;
+use fractal_api::api::r0::config::get_global_account_data::Request as GetGlobalAccountDataRequest;
+use fractal_api::api::r0::config::set_global_account_data::Request as SetGlobalAccountDataRequest;
+use fractal_api::api::r0::room::create_room::Request as CreateRoomRequest;
+use fractal_api::api::r0::room::create_room::RoomPreset;
+use fractal_api::api::r0::room::Visibility;
+use fractal_api::assign;
+use fractal_api::events::room::history_visibility::HistoryVisibility;
+use fractal_api::events::room::history_visibility::HistoryVisibilityEventContent;
+use fractal_api::events::AnyBasicEventContent;
+use fractal_api::events::AnyInitialStateEvent;
+use fractal_api::events::EventType;
+use fractal_api::events::InitialStateEvent;
 use fractal_api::r0::config::set_room_account_data::request as set_room_account_data;
 use fractal_api::r0::config::set_room_account_data::Parameters as SetRoomAccountDataParameters;
 use fractal_api::r0::filter::RoomEventFilter;
@@ -58,12 +65,6 @@ use fractal_api::r0::redact::redact_event::request as redact_event;
 use fractal_api::r0::redact::redact_event::Body as RedactEventBody;
 use fractal_api::r0::redact::redact_event::Parameters as RedactEventParameters;
 use fractal_api::r0::redact::redact_event::Response as RedactEventResponse;
-use fractal_api::r0::room::create_room::request as create_room;
-use fractal_api::r0::room::create_room::Body as CreateRoomBody;
-use fractal_api::r0::room::create_room::Parameters as CreateRoomParameters;
-use fractal_api::r0::room::create_room::Response as CreateRoomResponse;
-use fractal_api::r0::room::create_room::RoomPreset;
-use fractal_api::r0::room::Visibility;
 use fractal_api::r0::state::create_state_events_for_key::request as create_state_events_for_key;
 use fractal_api::r0::state::create_state_events_for_key::Parameters as CreateStateEventsForKeyParameters;
 use fractal_api::r0::state::get_state_events_for_key::request as get_state_events_for_key;
@@ -82,6 +83,7 @@ use fractal_api::r0::typing::Body as TypingNotificationBody;
 use fractal_api::r0::typing::Parameters as TypingNotificationParameters;
 use fractal_api::r0::AccessToken;
 
+use serde_json::value::to_raw_value;
 use serde_json::Value as JsonValue;
 
 use super::{
@@ -650,10 +652,10 @@ pub enum RoomType {
 }
 
 #[derive(Debug)]
-pub struct NewRoomError(ReqwestError);
+pub struct NewRoomError(MatrixError);
 
-impl From<ReqwestError> for NewRoomError {
-    fn from(err: ReqwestError) -> Self {
+impl From<MatrixError> for NewRoomError {
+    fn from(err: MatrixError) -> Self {
         Self(err)
     }
 }
@@ -673,28 +675,23 @@ impl HandleError for NewRoomError {
     }
 }
 
-pub fn new_room(
-    base: Url,
-    access_token: AccessToken,
+pub async fn new_room(
+    session_client: MatrixClient,
     name: String,
     privacy: RoomType,
 ) -> Result<Room, NewRoomError> {
-    let params = CreateRoomParameters { access_token };
-
     let (visibility, preset) = match privacy {
         RoomType::Public => (Visibility::Public, RoomPreset::PublicChat),
         RoomType::Private => (Visibility::Private, RoomPreset::PrivateChat),
     };
 
-    let body = CreateRoomBody {
-        name: Some(name.clone()),
-        visibility: Some(visibility),
+    let request = assign!(CreateRoomRequest::new(), {
+        name: Some(&name),
+        visibility: visibility,
         preset: Some(preset),
-        ..Default::default()
-    };
+    });
 
-    let request = create_room(base, &params, &body)?;
-    let response: CreateRoomResponse = HTTP_CLIENT.get_client().execute(request)?.json()?;
+    let response = session_client.create_room(request).await?;
 
     Ok(Room {
         name: Some(name),
@@ -704,13 +701,13 @@ pub fn new_room(
 
 #[derive(Debug)]
 pub enum DirectChatError {
-    Reqwest(ReqwestError),
-    EventsDeserialization(IdError),
+    Matrix(MatrixError),
+    EventsDeserialization,
 }
 
-impl From<ReqwestError> for DirectChatError {
-    fn from(err: ReqwestError) -> Self {
-        Self::Reqwest(err)
+impl From<MatrixError> for DirectChatError {
+    fn from(err: MatrixError) -> Self {
+        Self::Matrix(err)
     }
 }
 
@@ -730,84 +727,69 @@ impl HandleError for DirectChatError {
     }
 }
 
-fn update_direct_chats(
-    base: Url,
-    access_token: AccessToken,
-    user_id: UserId,
+async fn update_direct_chats(
+    session_client: MatrixClient,
+    user_id: &UserId,
     room_id: RoomId,
     user: Member,
 ) -> Result<(), DirectChatError> {
-    let params = GetGlobalAccountDataParameters {
-        access_token: access_token.clone(),
+    let event_type = EventType::Direct;
+
+    let request = GetGlobalAccountDataRequest::new(user_id, event_type.as_ref());
+    let response = session_client.send(request).await?;
+
+    let mut directs = match response
+        .account_data
+        .deserialize()
+        .map(|data| data.content())
+    {
+        Ok(AnyBasicEventContent::Direct(directs)) => directs,
+        _ => return Err(DirectChatError::EventsDeserialization),
     };
 
-    let request = get_global_account_data(base.clone(), &params, &user_id, "m.direct")?;
-    let response: JsonValue = HTTP_CLIENT.get_client().execute(request)?.json()?;
+    directs.entry(user.uid).or_default().push(room_id);
 
-    let mut directs = response
-        .as_object()
-        .into_iter()
-        .flatten()
-        .map(|(uid, rooms)| {
-            let roomlist = rooms
-                .as_array()
-                .unwrap()
-                .iter()
-                .map(|x| RoomId::try_from(x.as_str().unwrap_or_default()))
-                .collect::<Result<Vec<RoomId>, IdError>>()?;
-            Ok((UserId::try_from(uid.as_str())?, roomlist))
-        })
-        .collect::<Result<HashMap<UserId, Vec<RoomId>>, IdError>>()
-        .map_err(DirectChatError::EventsDeserialization)?;
+    let request = SetGlobalAccountDataRequest::new(
+        to_raw_value(&directs).or(Err(DirectChatError::EventsDeserialization))?,
+        event_type.as_ref(),
+        user_id,
+    );
 
-    if let Some(v) = directs.get_mut(&user.uid) {
-        v.push(room_id);
-    } else {
-        directs.insert(user.uid, vec![room_id]);
-    }
-
-    let params = SetGlobalAccountDataParameters { access_token };
-
-    let request = set_global_account_data(base, &params, &json!(directs), &user_id, "m.direct")?;
-    HTTP_CLIENT.get_client().execute(request)?;
+    session_client.send(request).await?;
 
     Ok(())
 }
 
-pub fn direct_chat(
-    base: Url,
-    access_token: AccessToken,
-    user_id: UserId,
+pub async fn direct_chat(
+    session_client: MatrixClient,
+    user_id: &UserId,
     user: Member,
 ) -> Result<Room, DirectChatError> {
-    let params = CreateRoomParameters {
-        access_token: access_token.clone(),
-    };
+    let invite = &[user.uid.clone()];
+    let initial_state = &[AnyInitialStateEvent::RoomHistoryVisibility(
+        InitialStateEvent {
+            state_key: Default::default(),
+            content: HistoryVisibilityEventContent::new(HistoryVisibility::Invited),
+        },
+    )];
 
-    let body = CreateRoomBody {
-        invite: vec![user.uid.clone()],
-        visibility: Some(Visibility::Private),
+    let request = assign!(CreateRoomRequest::new(), {
+        invite,
+        visibility: Visibility::Private,
         preset: Some(RoomPreset::PrivateChat),
         is_direct: true,
-        initial_state: vec![json!({
-            "type": "m.room.history_visibility",
-            "content": {
-                "history_visibility": "invited"
-            }
-        })],
-        ..Default::default()
-    };
+        initial_state,
+    });
 
-    let request = create_room(base.clone(), &params, &body)?;
-    let response: CreateRoomResponse = HTTP_CLIENT.get_client().execute(request)?.json()?;
+    let response = session_client.create_room(request).await?;
 
     update_direct_chats(
-        base,
-        access_token,
+        session_client.clone(),
         user_id,
         response.room_id.clone(),
         user.clone(),
-    )?;
+    )
+    .await?;
 
     Ok(Room {
         name: user.alias,

@@ -9,7 +9,6 @@ pub mod profile;
 pub mod pushrules;
 pub mod read_marker;
 pub mod redact;
-pub mod room;
 pub mod search;
 pub mod server;
 pub mod state;

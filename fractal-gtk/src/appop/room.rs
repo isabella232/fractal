@@ -378,8 +378,9 @@ impl AppOp {
     }
 
     pub fn create_new_room(&mut self) {
-        let login_data = unwrap_or_unit_return!(self.login_data.clone());
-        let name = self
+        let session_client =
+            unwrap_or_unit_return!(self.login_data.as_ref().map(|ld| ld.session_client.clone()));
+        let name_entry = self
             .ui
             .builder
             .get_object::<gtk::Entry>("new_room_name")
@@ -390,7 +391,7 @@ impl AppOp {
             .get_object::<gtk::ToggleButton>("private_visibility_button")
             .expect("Can't find private_visibility_button in ui file.");
 
-        let n = name.get_text().to_string();
+        let name = name_entry.get_text().to_string();
         // Since the switcher
         let privacy = if private.get_active() {
             room::RoomType::Private
@@ -398,14 +399,8 @@ impl AppOp {
             room::RoomType::Public
         };
 
-        let name = n;
-        thread::spawn(move || {
-            match room::new_room(
-                login_data.session_client.homeserver().clone(),
-                login_data.access_token,
-                name,
-                privacy,
-            ) {
+        RUNTIME.spawn(async move {
+            match room::new_room(session_client, name, privacy).await {
                 Ok(r) => {
                     APPOP!(new_room, (r));
                 }

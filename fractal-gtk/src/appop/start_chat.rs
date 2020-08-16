@@ -1,8 +1,7 @@
 use crate::backend::room;
 use gtk::prelude::*;
-use std::thread;
 
-use crate::app::App;
+use crate::app::{App, RUNTIME};
 use crate::appop::AppOp;
 use crate::appop::SearchType;
 use crate::backend::HandleError;
@@ -13,17 +12,14 @@ impl AppOp {
             return;
         }
 
-        let login_data = unwrap_or_unit_return!(self.login_data.clone());
-        let user = self.invite_list[0].clone();
+        let (session_client, user_id) = unwrap_or_unit_return!(self
+            .login_data
+            .as_ref()
+            .map(|ld| (ld.session_client.clone(), ld.uid.clone())));
+        let member = self.invite_list[0].0.clone();
 
-        let member = user.0;
-        thread::spawn(move || {
-            match room::direct_chat(
-                login_data.session_client.homeserver().clone(),
-                login_data.access_token,
-                login_data.uid,
-                member,
-            ) {
+        RUNTIME.spawn(async move {
+            match room::direct_chat(session_client, &user_id, member).await {
                 Ok(r) => {
                     APPOP!(new_room, (r));
                 }
