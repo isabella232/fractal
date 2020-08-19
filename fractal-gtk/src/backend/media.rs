@@ -1,24 +1,16 @@
 use super::MediaError;
 use crate::globals;
 use fractal_api::identifiers::{Error as IdError, EventId, RoomId};
-use fractal_api::reqwest::Error as ReqwestError;
 use fractal_api::url::Url;
-use fractal_api::Client as MatrixClient;
+use fractal_api::{Client as MatrixClient, Error as MatrixError};
 use std::path::PathBuf;
-use std::sync::mpsc::Sender;
-
-use crate::backend::HTTP_CLIENT;
-use crate::util::ResultExpectLog;
-use fractal_api::r0::AccessToken;
 
 use crate::model::message::Message;
-use fractal_api::r0::filter::RoomEventFilter;
-use fractal_api::r0::message::get_message_events::request as get_messages_events_req;
-use fractal_api::r0::message::get_message_events::Direction as GetMessagesEventsDirection;
-use fractal_api::r0::message::get_message_events::Parameters as GetMessagesEventsParams;
-use fractal_api::r0::message::get_message_events::Response as GetMessagesEventsResponse;
+use fractal_api::api::r0::filter::{RoomEventFilter, UrlFilter};
+use fractal_api::api::r0::message::get_message_events::Request as GetMessagesEventsRequest;
+use fractal_api::assign;
 
-use super::{dw_media, get_prev_batch_from, ContentType, ThreadPool};
+use super::{dw_media, get_prev_batch_from, ContentType};
 
 pub type MediaResult = Result<PathBuf, MediaError>;
 pub type MediaList = (Vec<Message>, String);
@@ -37,70 +29,63 @@ pub async fn get_media(session_client: MatrixClient, media: &Url) -> MediaResult
     dw_media(session_client, media, ContentType::Download, None).await
 }
 
-pub fn get_media_list_async(
-    thread_pool: ThreadPool,
-    baseu: Url,
-    access_token: AccessToken,
+pub async fn get_media_list(
+    session_client: MatrixClient,
     room_id: RoomId,
     first_media_id: EventId,
     prev_batch: Option<String>,
-    tx: Sender<MediaList>,
-) {
-    thread_pool.run(move || {
-        let media_list = prev_batch
-            // FIXME: This should never be an empty token
-            .or_else(|| get_prev_batch_from(baseu.clone(), access_token.clone(), &room_id, &first_media_id).ok())
-            .and_then(|from| {
-                get_room_media_list(
-                    baseu,
-                    access_token,
-                    &room_id,
-                    globals::PAGE_LIMIT as u64,
-                    from,
-                ).ok()
-            })
-            .unwrap_or_default();
-        tx.send(media_list).expect_log("Connection closed");
-    });
+) -> Option<MediaList> {
+    // FIXME: This should never be an empty token
+    let from = match prev_batch {
+        Some(prev_batch) => prev_batch,
+        None => get_prev_batch_from(session_client.clone(), &room_id, &first_media_id)
+            .await
+            .ok()?,
+    };
+
+    get_room_media_list(session_client, &room_id, globals::PAGE_LIMIT, &from)
+        .await
+        .ok()
 }
 
 enum GetRoomMediaListError {
-    Reqwest(ReqwestError),
+    Matrix(MatrixError),
     EventsDeserialization(IdError),
 }
 
-impl From<ReqwestError> for GetRoomMediaListError {
-    fn from(err: ReqwestError) -> Self {
-        Self::Reqwest(err)
+impl From<MatrixError> for GetRoomMediaListError {
+    fn from(err: MatrixError) -> Self {
+        Self::Matrix(err)
     }
 }
 
-fn get_room_media_list(
-    baseu: Url,
-    access_token: AccessToken,
+async fn get_room_media_list(
+    session_client: MatrixClient,
     room_id: &RoomId,
-    limit: u64,
-    prev_batch: String,
+    limit: u32,
+    from: &str,
 ) -> Result<MediaList, GetRoomMediaListError> {
-    let params = GetMessagesEventsParams {
-        access_token,
-        from: prev_batch,
-        to: None,
-        dir: GetMessagesEventsDirection::Backward,
-        limit,
-        filter: RoomEventFilter {
-            contains_url: true,
-            not_types: vec!["m.sticker"],
-            ..Default::default()
-        },
-    };
+    let not_types = &["m.sticker".into()];
 
-    let request = get_messages_events_req(baseu, &params, room_id)?;
-    let response: GetMessagesEventsResponse = HTTP_CLIENT.get_client().execute(request)?.json()?;
+    let request = assign!(GetMessagesEventsRequest::backward(room_id, from), {
+        to: None,
+        limit: limit.into(),
+        filter: Some(assign!(RoomEventFilter::empty(), {
+            url_filter: Some(UrlFilter::EventsWithUrl),
+            not_types,
+        })),
+    });
+
+    let response = session_client.room_messages(request).await?;
 
     let prev_batch = response.end.unwrap_or_default();
-    let evs = response.chunk.iter().rev();
-    let media_list = Message::from_json_events_iter(room_id, evs)
+    // Deserialization to JsonValue should not fail
+    let evs = response
+        .chunk
+        .iter()
+        .rev()
+        .map(|ev| serde_json::to_value(ev.json().get()).unwrap());
+    let media_list = Message::from_json_events(room_id, evs)
         .map_err(GetRoomMediaListError::EventsDeserialization)?;
 
     Ok((media_list, prev_batch))

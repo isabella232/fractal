@@ -1,3 +1,4 @@
+use crate::app::RUNTIME;
 use crate::backend::media;
 use crate::backend::ThreadPool;
 use fractal_api::r0::AccessToken;
@@ -29,9 +30,6 @@ use crate::widgets::ErrorDialog;
 use crate::widgets::PlayerExt;
 use crate::widgets::{MediaPlayer, VideoPlayerWidget};
 use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::mpsc::channel;
-use std::sync::mpsc::TryRecvError;
-use std::sync::mpsc::{Receiver, Sender};
 use std::sync::Arc;
 use std::sync::Mutex;
 
@@ -1035,38 +1033,24 @@ fn load_more_media(
     let roomid = msg.room.clone();
     let first_media_id = unwrap_or_unit_return!(msg.id);
     let prev_batch = data.borrow().prev_batch.clone();
-    let server_url = data.borrow().server_url.clone();
-    let access_token = data.borrow().access_token.clone();
 
-    let (tx, rx): (Sender<media::MediaList>, Receiver<media::MediaList>) = channel();
-    media::get_media_list_async(
-        thread_pool.clone(),
-        server_url,
-        access_token,
+    let media_list = RUNTIME.spawn(media::get_media_list(
+        session_client.clone(),
         roomid,
         first_media_id,
         prev_batch,
-        tx,
-    );
+    ));
 
-    let ui = builder.clone();
-    glib::timeout_add_local(
-        50,
-        clone!(
-        @weak data
-        => @default-return Continue(false), move || match rx.try_recv() {
-            Err(TryRecvError::Empty) => Continue(true),
-            Err(TryRecvError::Disconnected) => {
+    glib::MainContext::default().spawn_local(async move {
+        match media_list.await.map(Option::unwrap_or_default) {
+            Err(_) => {
                 data.borrow_mut().loading_error = true;
                 let err = i18n("Error while loading previous media");
                 ErrorDialog::new(false, &err);
-
-                Continue(false)
             }
             Ok((msgs, prev_batch)) => {
                 if msgs.is_empty() {
                     data.borrow_mut().no_more_media = true;
-                    return Continue(false);
                 }
 
                 let thread_pool = thread_pool.clone();
@@ -1085,11 +1069,9 @@ fn load_more_media(
                 } else {
                     data.borrow_mut().current_media_index += img_msgs_count;
                     data.borrow_mut().previous_media(session_client.clone());
-                    data.borrow_mut().loading_more_media = loading_state(&ui, false);
+                    data.borrow_mut().loading_more_media = loading_state(&builder, false);
                 }
-
-                Continue(false)
             }
-        }),
-    );
+        }
+    });
 }

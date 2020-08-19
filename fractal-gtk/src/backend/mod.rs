@@ -1,5 +1,4 @@
 use fractal_api::identifiers::{EventId, RoomId, ServerName};
-use fractal_api::reqwest::Error as ReqwestError;
 use fractal_api::url::Url;
 use fractal_api::{Client as MatrixClient, Error as MatrixError};
 use lazy_static::lazy_static;
@@ -14,14 +13,11 @@ use std::thread;
 
 use crate::client::ClientBlocking;
 use crate::util::cache_dir_path;
+use fractal_api::api::r0::context::get_context::Request as GetContextRequest;
 use fractal_api::api::r0::media::get_content::Request as GetContentRequest;
 use fractal_api::api::r0::media::get_content_thumbnail::Method;
 use fractal_api::api::r0::media::get_content_thumbnail::Request as GetContentThumbnailRequest;
 use fractal_api::assign;
-use fractal_api::r0::context::get_context::request as get_context;
-use fractal_api::r0::context::get_context::Parameters as GetContextParameters;
-use fractal_api::r0::context::get_context::Response as GetContextResponse;
-use fractal_api::r0::AccessToken;
 
 pub mod directory;
 pub mod media;
@@ -95,22 +91,20 @@ impl ContentType {
     }
 }
 
-pub fn get_prev_batch_from(
-    base: Url,
-    access_token: AccessToken,
+pub async fn get_prev_batch_from(
+    session_client: MatrixClient,
     room_id: &RoomId,
     event_id: &EventId,
-) -> Result<String, ReqwestError> {
-    let params = GetContextParameters {
-        access_token,
-        limit: 0,
-        filter: Default::default(),
-    };
+) -> Result<String, MatrixError> {
+    let request = assign!(GetContextRequest::new(room_id, event_id), {
+        limit: 0_u32.into(),
+    });
 
-    let request = get_context(base, &params, room_id, event_id)?;
-    let response: GetContextResponse = HTTP_CLIENT.get_client().execute(request)?.json()?;
-    let prev_batch = response.start.unwrap_or_default();
-
+    let prev_batch = session_client
+        .send(request)
+        .await?
+        .start
+        .unwrap_or_default();
     Ok(prev_batch)
 }
 

@@ -29,6 +29,8 @@ use crate::model::{
 };
 use fractal_api::api::r0::config::get_global_account_data::Request as GetGlobalAccountDataRequest;
 use fractal_api::api::r0::config::set_global_account_data::Request as SetGlobalAccountDataRequest;
+use fractal_api::api::r0::filter::RoomEventFilter;
+use fractal_api::api::r0::message::get_message_events::Request as GetMessagesEventsRequest;
 use fractal_api::api::r0::room::create_room::Request as CreateRoomRequest;
 use fractal_api::api::r0::room::create_room::RoomPreset;
 use fractal_api::api::r0::room::Visibility;
@@ -41,17 +43,12 @@ use fractal_api::events::EventType;
 use fractal_api::events::InitialStateEvent;
 use fractal_api::r0::config::set_room_account_data::request as set_room_account_data;
 use fractal_api::r0::config::set_room_account_data::Parameters as SetRoomAccountDataParameters;
-use fractal_api::r0::filter::RoomEventFilter;
 use fractal_api::r0::media::create_content::request as create_content;
 use fractal_api::r0::media::create_content::Parameters as CreateContentParameters;
 use fractal_api::r0::media::create_content::Response as CreateContentResponse;
 use fractal_api::r0::message::create_message_event::request as create_message_event;
 use fractal_api::r0::message::create_message_event::Parameters as CreateMessageEventParameters;
 use fractal_api::r0::message::create_message_event::Response as CreateMessageEventResponse;
-use fractal_api::r0::message::get_message_events::request as get_messages_events;
-use fractal_api::r0::message::get_message_events::Direction as GetMessagesEventsDirection;
-use fractal_api::r0::message::get_message_events::Parameters as GetMessagesEventsParams;
-use fractal_api::r0::message::get_message_events::Response as GetMessagesEventsResponse;
 use fractal_api::r0::pushrules::delete_room_rules::request as delete_room_rules;
 use fractal_api::r0::pushrules::delete_room_rules::Parameters as DelRoomRulesParams;
 use fractal_api::r0::pushrules::get_room_rules::request as get_room_rules;
@@ -212,13 +209,13 @@ pub fn get_room_members(
 #[derive(Debug)]
 pub enum RoomMessagesToError {
     MessageNotSent,
-    Reqwest(ReqwestError),
+    Matrix(MatrixError),
     EventsDeserialization(IdError),
 }
 
-impl From<ReqwestError> for RoomMessagesToError {
-    fn from(err: ReqwestError) -> Self {
-        Self::Reqwest(err)
+impl<T: Into<MatrixError>> From<T> for RoomMessagesToError {
+    fn from(err: T) -> Self {
+        Self::Matrix(err.into())
     }
 }
 
@@ -227,38 +224,37 @@ impl HandleError for RoomMessagesToError {}
 /* Load older messages starting by prev_batch
  * https://matrix.org/docs/spec/client_server/latest.html#get-matrix-client-r0-rooms-roomid-messages
  */
-pub fn get_room_messages(
-    base: Url,
-    access_token: AccessToken,
+pub async fn get_room_messages(
+    session_client: MatrixClient,
     room_id: RoomId,
-    from: String,
+    from: &str,
 ) -> Result<(Vec<Message>, RoomId, Option<String>), RoomMessagesToError> {
-    let params = GetMessagesEventsParams {
-        access_token,
-        from,
-        to: None,
-        dir: GetMessagesEventsDirection::Backward,
-        limit: globals::PAGE_LIMIT as u64,
-        filter: RoomEventFilter {
-            types: Some(vec!["m.room.message", "m.sticker"]),
-            ..Default::default()
-        },
-    };
+    let types = &["m.room.message".into(), "m.sticker".into()];
 
-    let request = get_messages_events(base, &params, &room_id)?;
-    let response: GetMessagesEventsResponse = HTTP_CLIENT.get_client().execute(request)?.json()?;
+    let request = assign!(GetMessagesEventsRequest::backward(&room_id, from), {
+        to: None,
+        limit: globals::PAGE_LIMIT.into(),
+        filter: Some(assign!(RoomEventFilter::empty(), {
+            types: Some(types),
+        })),
+    });
+
+    let response = session_client.room_messages(request).await?;
 
     let prev_batch = response.end;
-    let evs = response.chunk.iter().rev();
-    let list = Message::from_json_events_iter(&room_id, evs)
+    let evs = response
+        .chunk
+        .into_iter()
+        .rev()
+        .map(|ev| serde_json::to_value(ev.json().get()).unwrap());
+    let list = Message::from_json_events(&room_id, evs)
         .map_err(RoomMessagesToError::EventsDeserialization)?;
 
     Ok((list, room_id, prev_batch))
 }
 
-pub fn get_room_messages_from_msg(
-    base: Url,
-    access_token: AccessToken,
+pub async fn get_room_messages_from_msg(
+    session_client: MatrixClient,
     room_id: RoomId,
     msg: Message,
 ) -> Result<(Vec<Message>, RoomId, Option<String>), RoomMessagesToError> {
@@ -266,9 +262,9 @@ pub fn get_room_messages_from_msg(
 
     // first of all, we calculate the from param using the context api, then we call the
     // normal get_room_messages
-    let from = get_prev_batch_from(base.clone(), access_token.clone(), &room_id, event_id)?;
+    let from = get_prev_batch_from(session_client.clone(), &room_id, event_id).await?;
 
-    get_room_messages(base, access_token, room_id, from)
+    get_room_messages(session_client, room_id, &from).await
 }
 
 #[derive(Debug)]

@@ -17,7 +17,6 @@ use crate::model::message::Message;
 use crate::uibuilder::UI;
 use crate::util::i18n::i18n;
 use crate::App;
-use fractal_api::url::Url;
 use gio::ActionGroupExt;
 use gio::ActionMapExt;
 use gio::SimpleAction;
@@ -224,13 +223,10 @@ pub fn new(
         }
     }));
 
-    load_more_messages.connect_activate(clone!(
-    @strong server_url,
-    @strong access_token
-    => move |_, data| {
+    load_more_messages.connect_activate(move |_, data| {
         let id = get_room_id(data);
-        request_more_messages(server_url.clone(), access_token.clone(), id);
-    }));
+        request_more_messages(session_client.clone(), id);
+    });
 
     actions
 }
@@ -239,18 +235,14 @@ fn get_message(id: Option<&glib::Variant>) -> Option<Message> {
     get_event_id(id).as_ref().and_then(get_message_by_id)
 }
 
-fn request_more_messages(
-    server_url: Url,
-    access_token: AccessToken,
-    id: Option<RoomId>,
-) -> Option<()> {
+fn request_more_messages(session_client: MatrixClient, id: Option<RoomId>) -> Option<()> {
     let op = App::get_op()?;
     let op = op.lock().unwrap();
     let id = id?;
     let r = op.rooms.get(&id)?;
     if let Some(prev_batch) = r.prev_batch.clone() {
-        thread::spawn(move || {
-            match room::get_room_messages(server_url, access_token, id, prev_batch) {
+        RUNTIME.spawn(async move {
+            match room::get_room_messages(session_client, id, &prev_batch).await {
                 Ok((msgs, room, prev_batch)) => {
                     APPOP!(show_room_messages_top, (msgs, room, prev_batch));
                 }
@@ -261,8 +253,8 @@ fn request_more_messages(
         });
     } else if let Some(msg) = r.messages.iter().next().cloned() {
         // no prev_batch so we use the last message to calculate that in the backend
-        thread::spawn(move || {
-            match room::get_room_messages_from_msg(server_url, access_token, id, msg) {
+        RUNTIME.spawn(async move {
+            match room::get_room_messages_from_msg(session_client, id, msg).await {
                 Ok((msgs, room, prev_batch)) => {
                     APPOP!(show_room_messages_top, (msgs, room, prev_batch));
                 }
@@ -273,16 +265,16 @@ fn request_more_messages(
         });
     } else if let Some(from) = op.since.clone() {
         // no messages and no prev_batch so we use the last since
-        thread::spawn(
-            move || match room::get_room_messages(server_url, access_token, id, from) {
+        RUNTIME.spawn(async move {
+            match room::get_room_messages(session_client, id, &from).await {
                 Ok((msgs, room, prev_batch)) => {
                     APPOP!(show_room_messages_top, (msgs, room, prev_batch));
                 }
                 Err(err) => {
                     err.handle_error();
                 }
-            },
-        );
+            }
+        });
     }
     None
 }

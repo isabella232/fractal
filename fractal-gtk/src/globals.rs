@@ -5,7 +5,7 @@ use regex::Regex;
 use std::{path::PathBuf, time::Duration};
 
 pub const TIMEOUT: Duration = Duration::from_secs(80);
-pub const PAGE_LIMIT: i32 = 40;
+pub const PAGE_LIMIT: u32 = 40;
 pub const ROOM_DIRECTORY_LIMIT: u32 = 20;
 pub const DEVICE_NAME: &str = "Fractal";
 

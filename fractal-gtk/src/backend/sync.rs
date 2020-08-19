@@ -140,7 +140,7 @@ pub fn sync(
                 timeline: Some(RoomEventFilter {
                     types: Some(vec!["m.room.message", "m.sticker"]),
                     not_types: vec!["m.call.*"],
-                    limit: Some(globals::PAGE_LIMIT),
+                    limit: Some(globals::PAGE_LIMIT as i32),
                     ..Default::default()
                 }),
                 ephemeral: Some(RoomEventFilter {
@@ -220,8 +220,8 @@ pub fn sync(
                 let room_messages = join
                     .iter()
                     .try_fold(Vec::new(), |mut acum, (k, room)| {
-                        let events = room.timeline.events.iter();
-                        Message::from_json_events_iter(&k, events).map(|msgs| {
+                        let events = room.timeline.events.clone();
+                        Message::from_json_events(&k, events).map(|msgs| {
                             acum.extend(msgs);
                             acum
                         })

@@ -65,7 +65,7 @@ impl Message {
     /// List all supported types. By default a message map a m.room.message event, but there's
     /// other events that we want to show in the message history so we map other event types to our
     /// Message struct, like stickers
-    pub const TYPES: [&'static str; 2] = ["m.room.message", "m.sticker"];
+    const SUPPORTED_EVENTS: [&'static str; 2] = ["m.room.message", "m.sticker"];
 
     pub fn new(
         room: RoomId,
@@ -110,10 +110,10 @@ impl Message {
 
     /// Helper function to use in iterator filter of a matrix.org json response to filter supported
     /// events
-    pub fn supported_event(ev: &&JsonValue) -> bool {
+    fn supported_event(ev: &JsonValue) -> bool {
         let type_ = ev["type"].as_str().unwrap_or_default();
 
-        Self::TYPES.contains(&type_)
+        Self::SUPPORTED_EVENTS.contains(&type_)
     }
 
     /// Parses a matrix.org event and return a Message object
@@ -223,16 +223,14 @@ impl Message {
     ///
     /// * `roomid` - The messages room id
     /// * `events` - An iterator to the json events
-    pub fn from_json_events_iter<'a, I>(
-        room_id: &RoomId,
-        events: I,
-    ) -> Result<Vec<Message>, IdError>
+    pub fn from_json_events<I>(room_id: &RoomId, events: I) -> Result<Vec<Message>, IdError>
     where
-        I: Iterator<Item = &'a JsonValue>,
+        I: IntoIterator<Item = JsonValue>,
     {
         events
+            .into_iter()
             .filter(Message::supported_event)
-            .map(|msg| Message::parse_room_message(&room_id, msg))
+            .map(|msg| Message::parse_room_message(&room_id, &msg))
             .collect()
     }
 
