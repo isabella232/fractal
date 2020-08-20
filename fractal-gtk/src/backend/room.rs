@@ -34,6 +34,7 @@ use fractal_api::api::r0::message::get_message_events::Request as GetMessagesEve
 use fractal_api::api::r0::room::create_room::Request as CreateRoomRequest;
 use fractal_api::api::r0::room::create_room::RoomPreset;
 use fractal_api::api::r0::room::Visibility;
+use fractal_api::api::r0::typing::create_typing_event::Typing;
 use fractal_api::assign;
 use fractal_api::events::room::history_visibility::HistoryVisibility;
 use fractal_api::events::room::history_visibility::HistoryVisibilityEventContent;
@@ -75,9 +76,6 @@ use fractal_api::r0::tag::create_tag::Body as CreateTagBody;
 use fractal_api::r0::tag::create_tag::Parameters as CreateTagParameters;
 use fractal_api::r0::tag::delete_tag::request as delete_tag;
 use fractal_api::r0::tag::delete_tag::Parameters as DeleteTagParameters;
-use fractal_api::r0::typing::request as send_typing_notification;
-use fractal_api::r0::typing::Body as TypingNotificationBody;
-use fractal_api::r0::typing::Parameters as TypingNotificationParameters;
 use fractal_api::r0::AccessToken;
 
 use serde_json::value::to_raw_value;
@@ -326,27 +324,23 @@ pub fn send_msg(
 }
 
 #[derive(Debug)]
-pub struct SendTypingError(ReqwestError);
+pub struct SendTypingError(MatrixError);
 
-impl From<ReqwestError> for SendTypingError {
-    fn from(err: ReqwestError) -> Self {
+impl From<MatrixError> for SendTypingError {
+    fn from(err: MatrixError) -> Self {
         Self(err)
     }
 }
 
 impl HandleError for SendTypingError {}
 
-pub fn send_typing(
-    base: Url,
-    access_token: AccessToken,
-    user_id: UserId,
-    room_id: RoomId,
+pub async fn send_typing(
+    session_client: MatrixClient,
+    room_id: &RoomId,
 ) -> Result<(), SendTypingError> {
-    let params = TypingNotificationParameters { access_token };
-    let body = TypingNotificationBody::Typing(Duration::from_secs(4));
-
-    let request = send_typing_notification(base, &room_id, &user_id, &params, &body)?;
-    HTTP_CLIENT.get_client().execute(request)?;
+    session_client
+        .typing_notice(room_id, Typing::Yes(Duration::from_secs(4)))
+        .await?;
 
     Ok(())
 }

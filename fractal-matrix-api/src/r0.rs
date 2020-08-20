@@ -14,7 +14,6 @@ pub mod state;
 pub mod sync;
 pub mod tag;
 pub mod thirdparty;
-pub mod typing;
 
 use serde::{Deserialize, Serialize, Serializer};
 use std::convert::TryFrom;

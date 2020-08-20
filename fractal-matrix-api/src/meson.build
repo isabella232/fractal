@@ -46,7 +46,6 @@ api_sources = files(
   'r0/sync.rs',
   'r0/tag.rs',
   'r0/thirdparty.rs',
-  'r0/typing.rs',
   'identity.rs',
   'lib.rs',
   'r0.rs',

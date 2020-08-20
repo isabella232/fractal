@@ -739,7 +739,8 @@ impl AppOp {
     }
 
     pub fn send_typing(&mut self) {
-        let login_data = unwrap_or_unit_return!(self.login_data.clone());
+        let session_client =
+            unwrap_or_unit_return!(self.login_data.as_ref().map(|ld| ld.session_client.clone()));
         let active_room = unwrap_or_unit_return!(self.active_room.clone());
 
         let now = Instant::now();
@@ -750,13 +751,9 @@ impl AppOp {
             }
         }
         self.typing.insert(active_room.clone(), now);
-        thread::spawn(move || {
-            let query = room::send_typing(
-                login_data.session_client.homeserver().clone(),
-                login_data.access_token,
-                login_data.uid,
-                active_room,
-            );
+        RUNTIME.spawn(async move {
+            let query = room::send_typing(session_client, &active_room).await;
+
             if let Err(err) = query {
                 err.handle_error();
             }
