@@ -19,6 +19,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::thread;
 
+use crate::app::RUNTIME;
 use crate::appop::room::Force;
 use crate::appop::AppOp;
 use crate::App;
@@ -171,15 +172,11 @@ impl AppOp {
             let last_message = room.messages.last_mut()?;
             last_message.receipt.insert(uid, 0);
 
+            let session_client = login_data.session_client;
             let room_id = last_message.room.clone();
             let event_id = last_message.id.clone()?;
-            thread::spawn(move || {
-                match room::mark_as_read(
-                    login_data.session_client.homeserver().clone(),
-                    login_data.access_token,
-                    room_id,
-                    event_id,
-                ) {
+            RUNTIME.spawn(async move {
+                match room::mark_as_read(session_client, room_id, event_id).await {
                     Ok((r, _)) => {
                         APPOP!(clear_room_notifications, (r));
                     }

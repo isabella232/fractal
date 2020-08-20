@@ -56,9 +56,6 @@ use fractal_api::r0::pushrules::get_room_rules::request as get_room_rules;
 use fractal_api::r0::pushrules::get_room_rules::Parameters as GetRoomRulesParams;
 use fractal_api::r0::pushrules::set_room_rules::request as set_room_rules;
 use fractal_api::r0::pushrules::set_room_rules::Parameters as SetRoomRulesParams;
-use fractal_api::r0::read_marker::set_read_marker::request as set_read_marker;
-use fractal_api::r0::read_marker::set_read_marker::Body as SetReadMarkerBody;
-use fractal_api::r0::read_marker::set_read_marker::Parameters as SetReadMarkerParameters;
 use fractal_api::r0::redact::redact_event::request as redact_event;
 use fractal_api::r0::redact::redact_event::Body as RedactEventBody;
 use fractal_api::r0::redact::redact_event::Parameters as RedactEventParameters;
@@ -449,31 +446,24 @@ pub async fn leave_room(
 }
 
 #[derive(Debug)]
-pub struct MarkedAsReadError(ReqwestError);
+pub struct MarkedAsReadError(MatrixError);
 
-impl From<ReqwestError> for MarkedAsReadError {
-    fn from(err: ReqwestError) -> Self {
+impl From<MatrixError> for MarkedAsReadError {
+    fn from(err: MatrixError) -> Self {
         Self(err)
     }
 }
 
 impl HandleError for MarkedAsReadError {}
 
-pub fn mark_as_read(
-    base: Url,
-    access_token: AccessToken,
+pub async fn mark_as_read(
+    session_client: MatrixClient,
     room_id: RoomId,
     event_id: EventId,
 ) -> Result<(RoomId, EventId), MarkedAsReadError> {
-    let params = SetReadMarkerParameters { access_token };
-
-    let body = SetReadMarkerBody {
-        fully_read: event_id.clone(),
-        read: Some(event_id.clone()),
-    };
-
-    let request = set_read_marker(base, &params, &body, &room_id)?;
-    HTTP_CLIENT.get_client().execute(request)?;
+    session_client
+        .read_marker(&room_id, &event_id, Some(&event_id))
+        .await?;
 
     Ok((room_id, event_id))
 }
