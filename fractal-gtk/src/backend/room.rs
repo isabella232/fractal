@@ -1,16 +1,15 @@
 use log::error;
 use serde_json::json;
 
-use fractal_api::reqwest::Error as ReqwestError;
-use fractal_api::url::{ParseError as UrlError, Url};
 use fractal_api::{
     identifiers::{Error as IdError, EventId, RoomId, RoomIdOrAliasId, UserId},
+    reqwest::Error as ReqwestError,
+    url::{ParseError as UrlError, Url},
     Client as MatrixClient, Error as MatrixError, FromHttpResponseError as RumaResponseError,
     ServerError,
 };
-use std::fs;
 use std::io::Error as IoError;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 use std::convert::TryFrom;
 use std::time::Duration;
@@ -30,26 +29,28 @@ use crate::model::{
 use fractal_api::api::r0::config::get_global_account_data::Request as GetGlobalAccountDataRequest;
 use fractal_api::api::r0::config::set_global_account_data::Request as SetGlobalAccountDataRequest;
 use fractal_api::api::r0::filter::RoomEventFilter;
+use fractal_api::api::r0::media::create_content::Request as CreateContentRequest;
+use fractal_api::api::r0::media::create_content::Response as CreateContentResponse;
 use fractal_api::api::r0::message::get_message_events::Request as GetMessagesEventsRequest;
 use fractal_api::api::r0::room::create_room::Request as CreateRoomRequest;
 use fractal_api::api::r0::room::create_room::RoomPreset;
 use fractal_api::api::r0::room::Visibility;
+use fractal_api::api::r0::state::send_state_event_for_key::Request as SendStateEventForKeyRequest;
 use fractal_api::api::r0::typing::create_typing_event::Typing;
 use fractal_api::assign;
+use fractal_api::events::room::avatar::AvatarEventContent;
 use fractal_api::events::room::history_visibility::HistoryVisibility;
 use fractal_api::events::room::history_visibility::HistoryVisibilityEventContent;
+use fractal_api::events::room::message::MessageEventContent;
 use fractal_api::events::AnyBasicEventContent;
 use fractal_api::events::AnyInitialStateEvent;
+use fractal_api::events::AnyMessageEventContent;
+use fractal_api::events::AnyStateEventContent;
+use fractal_api::events::EventContent;
 use fractal_api::events::EventType;
 use fractal_api::events::InitialStateEvent;
 use fractal_api::r0::config::set_room_account_data::request as set_room_account_data;
 use fractal_api::r0::config::set_room_account_data::Parameters as SetRoomAccountDataParameters;
-use fractal_api::r0::media::create_content::request as create_content;
-use fractal_api::r0::media::create_content::Parameters as CreateContentParameters;
-use fractal_api::r0::media::create_content::Response as CreateContentResponse;
-use fractal_api::r0::message::create_message_event::request as create_message_event;
-use fractal_api::r0::message::create_message_event::Parameters as CreateMessageEventParameters;
-use fractal_api::r0::message::create_message_event::Response as CreateMessageEventResponse;
 use fractal_api::r0::pushrules::delete_room_rules::request as delete_room_rules;
 use fractal_api::r0::pushrules::delete_room_rules::Parameters as DelRoomRulesParams;
 use fractal_api::r0::pushrules::get_room_rules::request as get_room_rules;
@@ -76,6 +77,7 @@ use fractal_api::r0::tag::delete_tag::Parameters as DeleteTagParameters;
 use fractal_api::r0::AccessToken;
 
 use serde_json::value::to_raw_value;
+use serde_json::Error as ParseJsonError;
 use serde_json::Value as JsonValue;
 
 use super::{
@@ -263,61 +265,79 @@ pub async fn get_room_messages_from_msg(
 }
 
 #[derive(Debug)]
-pub struct SendMsgError(String);
+pub enum SendMsgError {
+    Matrix(MatrixError),
+    ParseEvent(ParseJsonError),
+}
 
-impl HandleError for SendMsgError {
-    fn handle_error(&self) {
-        error!("sending {}: retrying send", self.0);
-        APPOP!(retry_send);
+impl From<MatrixError> for SendMsgError {
+    fn from(err: MatrixError) -> Self {
+        Self::Matrix(err)
     }
 }
 
-pub fn send_msg(
-    base: Url,
-    access_token: AccessToken,
-    msg: Message,
-) -> Result<(String, Option<EventId>), SendMsgError> {
-    let room_id: RoomId = msg.room.clone();
+impl From<ParseJsonError> for SendMsgError {
+    fn from(err: ParseJsonError) -> Self {
+        Self::ParseEvent(err)
+    }
+}
 
-    let params = CreateMessageEventParameters { access_token };
+impl HandleError for SendMsgError {
+    fn handle_error(&self) {
+        match self {
+            Self::Matrix(matrix_err) => {
+                error!("Failed sending message, retrying send: {}", matrix_err);
+                APPOP!(retry_send);
+            }
+            Self::ParseEvent(parse_err) => {
+                error!(
+                    "Failed constructing the message event for sending. Please report upstream: {:?}",
+                    parse_err
+                );
+            }
+        }
+    }
+}
 
-    let mut body = json!({
+pub async fn send_msg(session_client: MatrixClient, msg: Message) -> Result<EventId, SendMsgError> {
+    let room_id: RoomId = msg.room;
+
+    let mut event = json!({
         "body": msg.body,
         "msgtype": msg.mtype,
     });
 
     if let Some(u) = msg.url.as_ref() {
-        body["url"] = json!(u);
+        event["url"] = json!(u);
     }
 
     if let (Some(f), Some(f_b)) = (msg.format.as_ref(), msg.formatted_body.as_ref()) {
-        body["formatted_body"] = json!(f_b);
-        body["format"] = json!(f);
+        event["formatted_body"] = json!(f_b);
+        event["format"] = json!(f);
     }
 
     let extra_content_map = msg
         .extra_content
-        .as_ref()
-        .and_then(|v| v.as_object())
-        .cloned()
-        .unwrap_or_default();
+        .into_iter()
+        .filter_map(|v| v.as_object().cloned())
+        .flatten();
 
     for (k, v) in extra_content_map {
-        body[k] = v;
+        event[k] = v;
     }
 
-    let txn_id = msg.get_txn_id();
+    let raw_event = to_raw_value(&event)?;
+    let message_event_content = MessageEventContent::from_parts("m.room.message", raw_event)?;
 
-    create_message_event(base, &params, &body, &room_id, "m.room.message", &txn_id)
-        .and_then(|request| {
-            let response = HTTP_CLIENT
-                .get_client()
-                .execute(request)?
-                .json::<CreateMessageEventResponse>()?;
+    let response = session_client
+        .room_send(
+            &room_id,
+            AnyMessageEventContent::RoomMessage(message_event_content),
+            None,
+        )
+        .await?;
 
-            Ok((txn_id.clone(), response.event_id))
-        })
-        .or(Err(SendMsgError(txn_id)))
+    Ok(response.event_id)
 }
 
 #[derive(Debug)]
@@ -528,13 +548,13 @@ pub fn set_room_topic(
 #[derive(Debug)]
 pub enum SetRoomAvatarError {
     Io(IoError),
-    Reqwest(ReqwestError),
+    Matrix(MatrixError),
     ParseUrl(UrlError),
 }
 
-impl From<ReqwestError> for SetRoomAvatarError {
-    fn from(err: ReqwestError) -> Self {
-        Self::Reqwest(err)
+impl From<MatrixError> for SetRoomAvatarError {
+    fn from(err: MatrixError) -> Self {
+        Self::Matrix(err)
     }
 }
 
@@ -542,7 +562,7 @@ impl From<AttachedFileError> for SetRoomAvatarError {
     fn from(err: AttachedFileError) -> Self {
         match err {
             AttachedFileError::Io(err) => Self::Io(err),
-            AttachedFileError::Reqwest(err) => Self::Reqwest(err),
+            AttachedFileError::Matrix(err) => Self::Matrix(err),
             AttachedFileError::ParseUrl(err) => Self::ParseUrl(err),
         }
     }
@@ -550,21 +570,19 @@ impl From<AttachedFileError> for SetRoomAvatarError {
 
 impl HandleError for SetRoomAvatarError {}
 
-pub fn set_room_avatar(
-    base: Url,
-    access_token: AccessToken,
-    room_id: RoomId,
-    avatar: PathBuf,
+pub async fn set_room_avatar(
+    session_client: MatrixClient,
+    room_id: &RoomId,
+    avatar: &Path,
 ) -> Result<(), SetRoomAvatarError> {
-    let params = CreateStateEventsForKeyParameters {
-        access_token: access_token.clone(),
-    };
-
-    let upload_file_response = upload_file(base.clone(), access_token, &avatar)?;
-
-    let body = json!({ "url": upload_file_response.content_uri.as_str() });
-    let request = create_state_events_for_key(base, &params, &body, &room_id, "m.room.avatar")?;
-    HTTP_CLIENT.get_client().execute(request)?;
+    let avatar_uri = upload_file(session_client.clone(), avatar)
+        .await?
+        .content_uri;
+    let content = &AnyStateEventContent::RoomAvatar(assign!(AvatarEventContent::new(), {
+        url: Some(avatar_uri),
+    }));
+    let request = SendStateEventForKeyRequest::new(room_id, "m.room.avatar", content);
+    session_client.send(request).await?;
 
     Ok(())
 }
@@ -572,13 +590,13 @@ pub fn set_room_avatar(
 #[derive(Debug)]
 pub enum AttachedFileError {
     Io(IoError),
-    Reqwest(ReqwestError),
+    Matrix(MatrixError),
     ParseUrl(UrlError),
 }
 
-impl From<ReqwestError> for AttachedFileError {
-    fn from(err: ReqwestError) -> Self {
-        Self::Reqwest(err)
+impl From<MatrixError> for AttachedFileError {
+    fn from(err: MatrixError) -> Self {
+        Self::Matrix(err)
     }
 }
 
@@ -605,24 +623,19 @@ impl HandleError for AttachedFileError {
     }
 }
 
-pub fn upload_file(
-    base: Url,
-    access_token: AccessToken,
+pub async fn upload_file(
+    session_client: MatrixClient,
     fname: &Path,
 ) -> Result<CreateContentResponse, AttachedFileError> {
-    let params_upload = CreateContentParameters {
-        access_token,
+    let file = tokio::fs::read(fname).await?;
+    let (ref content_type, _) = gio::content_type_guess(None, &file);
+
+    let request = assign!(CreateContentRequest::new(file), {
         filename: None,
-    };
+        content_type: Some(&content_type),
+    });
 
-    let contents = fs::read(fname)?;
-    let request = create_content(base, &params_upload, contents)?;
-
-    HTTP_CLIENT
-        .get_client()
-        .execute(request)?
-        .json()
-        .map_err(Into::into)
+    session_client.send(request).await.map_err(Into::into)
 }
 
 #[derive(Debug, Clone, Copy)]

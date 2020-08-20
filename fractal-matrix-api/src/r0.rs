@@ -3,7 +3,6 @@ pub mod config;
 pub mod contact;
 pub mod filter;
 pub mod media;
-pub mod message;
 pub mod profile;
 pub mod pushrules;
 pub mod redact;

@@ -22,10 +22,10 @@ impl AppOp {
         {
             let room = self.rooms.get(&self.active_room.clone()?)?;
             let mut panel = widgets::RoomSettings::new(
+                login_data.session_client.clone(),
                 &window,
                 login_data.uid,
                 room.clone(),
-                login_data.session_client.homeserver().clone(),
                 login_data.access_token,
             );
             let page = panel.create(login_data.session_client.clone())?;

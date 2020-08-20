@@ -35,12 +35,13 @@ pub struct RoomSettings {
 
 impl RoomSettings {
     pub fn new(
+        session_client: MatrixClient,
         window: &gtk::Window,
         uid: UserId,
         room: Room,
-        server_url: Url,
         access_token: AccessToken,
     ) -> RoomSettings {
+        let server_url = session_client.homeserver().clone();
         let builder = gtk::Builder::new();
 
         builder
@@ -51,7 +52,7 @@ impl RoomSettings {
             .get_object::<gtk::Stack>("room_settings_stack")
             .expect("Can't find room_settings_stack in ui file.");
 
-        let actions = actions::RoomSettings::new(&window, server_url.clone(), access_token.clone());
+        let actions = actions::RoomSettings::new(&window, session_client);
         stack.insert_action_group("room-settings", Some(&actions));
 
         RoomSettings {

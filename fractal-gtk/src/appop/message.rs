@@ -2,11 +2,10 @@ use crate::backend::{room, HandleError};
 use crate::model::fileinfo::ExtraContent;
 use comrak::{markdown_to_html, ComrakOptions};
 use fractal_api::identifiers::{EventId, RoomId};
-use fractal_api::r0::AccessToken;
 use fractal_api::url::Url;
+use fractal_api::Client as MatrixClient;
 use gdk_pixbuf::Pixbuf;
 use gio::prelude::FileExt;
-use glib::clone;
 use glib::source::Continue;
 use gtk::prelude::*;
 use lazy_static::lazy_static;
@@ -17,7 +16,6 @@ use serde_json::Value as JsonValue;
 use std::env::temp_dir;
 use std::fs;
 use std::path::{Path, PathBuf};
-use std::thread;
 
 use crate::app::RUNTIME;
 use crate::appop::room::Force;
@@ -189,14 +187,14 @@ impl AppOp {
         None
     }
 
-    pub fn msg_sent(&mut self, _txid: String, evid: Option<EventId>) -> Option<()> {
+    pub fn msg_sent(&mut self, evid: EventId) -> Option<()> {
         let messages = self.history.as_ref()?.get_listbox();
         if let Some(ref mut m) = self.msg_queue.pop() {
             if let Some(ref w) = m.widget {
                 messages.remove(w);
             }
             m.widget = None;
-            m.msg.id = evid;
+            m.msg.id = Some(evid);
             self.show_room_messages(vec![m.msg.clone()]);
         }
         self.force_dequeue_message();
@@ -217,7 +215,7 @@ impl AppOp {
     }
 
     pub fn dequeue_message(&mut self) -> Option<()> {
-        let login_data = self.login_data.clone()?;
+        let session_client = self.login_data.as_ref()?.session_client.clone();
         if self.sending_message {
             return None;
         }
@@ -225,25 +223,15 @@ impl AppOp {
         self.sending_message = true;
         if let Some(next) = self.msg_queue.last() {
             let msg = next.msg.clone();
-            match &next.msg.mtype[..] {
+            match next.msg.mtype.as_str() {
                 "m.image" | "m.file" | "m.audio" | "m.video" => {
-                    thread::spawn(move || {
-                        attach_file(
-                            login_data.session_client.homeserver().clone(),
-                            login_data.access_token,
-                            msg,
-                        )
-                    });
+                    RUNTIME.spawn(attach_file(session_client, msg));
                 }
                 _ => {
-                    thread::spawn(move || {
-                        match room::send_msg(
-                            login_data.session_client.homeserver().clone(),
-                            login_data.access_token,
-                            msg,
-                        ) {
-                            Ok((txid, evid)) => {
-                                APPOP!(msg_sent, (txid, evid));
+                    RUNTIME.spawn(async move {
+                        match room::send_msg(session_client, msg).await {
+                            Ok(evid) => {
+                                APPOP!(msg_sent, (evid));
                                 let initial = false;
                                 let number_tries = 0;
                                 APPOP!(sync, (initial, number_tries));
@@ -675,7 +663,7 @@ fn get_file_media_info(file: &Path, mimetype: &str) -> Option<JsonValue> {
 
 struct NonMediaMsg;
 
-fn attach_file(baseu: Url, tk: AccessToken, mut msg: Message) -> Result<(), NonMediaMsg> {
+async fn attach_file(session_client: MatrixClient, mut msg: Message) -> Result<(), NonMediaMsg> {
     let mut extra_content: Option<ExtraContent> = msg
         .extra_content
         .clone()
@@ -685,13 +673,14 @@ fn attach_file(baseu: Url, tk: AccessToken, mut msg: Message) -> Result<(), NonM
 
     match (msg.url.clone(), msg.local_path.as_ref(), thumb_url) {
         (Some(url), _, Some(thumb)) if url.scheme() == "mxc" && thumb.scheme() == "mxc" => {
-            send_msg_and_manage(baseu, tk, msg);
+            send_msg_and_manage(session_client, msg).await;
 
             Ok(())
         }
         (_, Some(local_path), _) => {
             if let Some(ref local_path_thumb) = msg.local_path_thumb {
-                let response = room::upload_file(baseu.clone(), tk.clone(), local_path_thumb)
+                let response = room::upload_file(session_client.clone(), local_path_thumb)
+                    .await
                     .and_then(|response| Url::parse(&response.content_uri).map_err(Into::into));
 
                 match response {
@@ -712,12 +701,11 @@ fn attach_file(baseu: Url, tk: AccessToken, mut msg: Message) -> Result<(), NonM
                 }
             }
 
-            let query =
-                room::upload_file(baseu.clone(), tk.clone(), local_path).and_then(|response| {
+            let query = room::upload_file(session_client.clone(), &local_path)
+                .await
+                .and_then(|response| {
                     msg.url = Some(Url::parse(&response.content_uri)?);
-                    thread::spawn(
-                        clone!(@strong msg => move || send_msg_and_manage(baseu, tk, msg)),
-                    );
+                    RUNTIME.spawn(send_msg_and_manage(session_client, msg.clone()));
 
                     Ok(msg)
                 });
@@ -737,10 +725,10 @@ fn attach_file(baseu: Url, tk: AccessToken, mut msg: Message) -> Result<(), NonM
     }
 }
 
-fn send_msg_and_manage(baseu: Url, tk: AccessToken, msg: Message) {
-    match room::send_msg(baseu, tk, msg) {
-        Ok((txid, evid)) => {
-            APPOP!(msg_sent, (txid, evid));
+async fn send_msg_and_manage(session_client: MatrixClient, msg: Message) {
+    match room::send_msg(session_client, msg).await {
+        Ok(evid) => {
+            APPOP!(msg_sent, (evid));
             let initial = false;
             let number_tries = 0;
             APPOP!(sync, (initial, number_tries));

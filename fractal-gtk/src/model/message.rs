@@ -102,6 +102,7 @@ impl Message {
     /// message body and the date.
     ///
     /// https://matrix.org/docs/spec/client_server/r0.3.0.html#put-matrix-client-r0-rooms-roomid-send-eventtype-txnid
+    // TODO: Return matrix_sdk::uuid::Uuid
     pub fn get_txn_id(&self) -> String {
         let msg_str = format!("{}{}{}", self.room, self.body, self.date);
         let digest = md5::compute(msg_str.as_bytes());
