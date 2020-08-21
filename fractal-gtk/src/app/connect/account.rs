@@ -105,7 +105,7 @@ impl App {
         let button = name_btn.clone();
         name_entry.connect_property_text_notify(clone!(@strong op => move |w| {
             let username = w.get_text();
-            if username != "" && op.try_lock()
+            if !username.is_empty() && op.try_lock()
                 .ok()
                 .and_then(|guard| guard.login_data.clone())
                 .and_then(|login_data| login_data.username)

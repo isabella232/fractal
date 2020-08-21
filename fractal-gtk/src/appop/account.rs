@@ -677,7 +677,7 @@ impl AppOp {
 
         let old = old_password.get_text();
         let new = new_password.get_text();
-        if old != ""&& new != "" {
+        if !old.is_empty() && !new.is_empty() {
             password_btn.set_sensitive(false);
             password_btn_stack.set_visible_child_name("spinner");
             thread::spawn(move || {
