@@ -729,7 +729,6 @@ impl RoomSettings {
             .expect("Can't find room_settings_notification_switch in ui file.");
 
         if let Some(handler) = &self.switch_handler {
-            println!("handler block");
             switch.block_signal(&handler);
         }
 
@@ -737,7 +736,6 @@ impl RoomSettings {
         switch.set_sensitive(sensitive);
 
         if let Some(handler) = &self.switch_handler {
-            println!("handler unblock");
             switch.unblock_signal(&handler);
         }
     }
