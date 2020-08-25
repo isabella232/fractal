@@ -1,17 +1,11 @@
 use crate::backend::room;
-use fractal_api::identifiers::{RoomId, ServerName};
-use fractal_api::r0::HostAndPort;
 use gtk::prelude::*;
-use std::convert::{TryFrom, TryInto};
 use std::thread;
 
-use crate::actions::AppState;
 use crate::app::App;
 use crate::appop::AppOp;
 use crate::appop::SearchType;
 use crate::backend::HandleError;
-
-use crate::types::{Room, RoomMembership, RoomTag};
 
 impl AppOp {
     pub fn start_chat(&mut self) {
@@ -22,14 +16,6 @@ impl AppOp {
         let login_data = unwrap_or_unit_return!(self.login_data.clone());
         let user = self.invite_list[0].clone();
 
-        let server_name: Box<ServerName> = HostAndPort::try_from(&login_data.server_url)
-            .expect("The server domain should have been validated")
-            .to_string()
-            .try_into()
-            .expect("A host with an optional port should always be a valid Matrix server name");
-        let internal_id = RoomId::new(&server_name);
-
-        let int_id = internal_id.clone();
         let member = user.0.clone();
         thread::spawn(move || {
             match room::direct_chat(
@@ -39,27 +25,15 @@ impl AppOp {
                 member,
             ) {
                 Ok(r) => {
-                    let id = Some(int_id);
-                    APPOP!(new_room, (r, id));
+                    APPOP!(new_room, (r));
                 }
                 Err(err) => {
-                    APPOP!(remove_room, (int_id));
                     err.handle_error();
                 }
             }
         });
 
         self.close_direct_chat_dialog();
-
-        let fakeroom = Room {
-            name: user.0.alias,
-            direct: true,
-            ..Room::new(internal_id.clone(), RoomMembership::Joined(RoomTag::None))
-        };
-
-        self.new_room(fakeroom, None);
-        self.set_active_room_by_id(internal_id);
-        self.set_state(AppState::Room);
     }
 
     pub fn show_direct_chat_dialog(&mut self) {

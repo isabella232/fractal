@@ -1,10 +1,9 @@
 use crate::backend::room;
 use crate::i18n::{i18n, i18n_k, ni18n_f};
-use fractal_api::identifiers::{DeviceId, RoomId, ServerName};
-use fractal_api::r0::HostAndPort;
+use fractal_api::identifiers::{DeviceId, RoomId};
 use fractal_api::url::Url;
 use log::{error, warn};
-use std::convert::{TryFrom, TryInto};
+use std::convert::TryInto;
 use std::fs::remove_file;
 use std::os::unix::fs;
 use std::thread;
@@ -394,13 +393,6 @@ impl AppOp {
             room::RoomType::Public
         };
 
-        let server_name: Box<ServerName> = HostAndPort::try_from(&login_data.server_url)
-            .expect("The server domain should have been validated")
-            .to_string()
-            .try_into()
-            .expect("A host with an optional port should always be a valid Matrix server name");
-        let internal_id = RoomId::new(&server_name);
-        let int_id = internal_id.clone();
         let name = n.clone();
         thread::spawn(move || {
             match room::new_room(
@@ -410,24 +402,13 @@ impl AppOp {
                 privacy,
             ) {
                 Ok(r) => {
-                    let id = Some(int_id);
-                    APPOP!(new_room, (r, id));
+                    APPOP!(new_room, (r));
                 }
                 Err(err) => {
-                    APPOP!(remove_room, (int_id));
                     err.handle_error();
                 }
             }
         });
-
-        let fakeroom = Room {
-            name: Some(n),
-            ..Room::new(internal_id.clone(), RoomMembership::Joined(RoomTag::None))
-        };
-
-        self.new_room(fakeroom, None);
-        self.set_active_room_by_id(internal_id);
-        self.set_state(AppState::Room);
     }
 
     pub fn cache_rooms(&self) {
@@ -587,11 +568,7 @@ impl AppOp {
         });
     }
 
-    pub fn new_room(&mut self, r: Room, internal_id: Option<RoomId>) {
-        if let Some(id) = internal_id {
-            self.remove_room(id);
-        }
-
+    pub fn new_room(&mut self, r: Room) {
         if !self.rooms.contains_key(&r.id) {
             self.rooms.insert(r.id.clone(), r.clone());
         }

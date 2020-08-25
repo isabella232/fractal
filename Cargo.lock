@@ -2389,7 +2389,6 @@ version = "0.17.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5917092ecf88dec0a9a1f39ed5755096f39dc23003dcc278a58805ee8be65dee"
 dependencies = [
- "rand 0.7.3",
  "ruma-identifiers-macros",
  "ruma-identifiers-validation",
  "serde",

@@ -86,7 +86,7 @@ impl HandleError for DirectorySearchError {
 pub fn room_search(
     base: Url,
     access_token: AccessToken,
-    homeserver: String, // TODO: Option<Use HostAndPort>?
+    homeserver: String,
     generic_search_term: String,
     third_party: String,
     rooms_since: Option<String>,
