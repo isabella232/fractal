@@ -175,7 +175,7 @@ impl Autocomplete {
                         };
                         if let Some(w) = widget {
                             let ev: &gdk::Event = ev;
-                            let _ = w.emit("button-press-event", &[ev]);
+                            let _ = w.emit("key-press-event", &[ev]);
                         }
                     } else if ev.get_keyval() != gdk::keys::constants::Tab {
                         return glib::signal::Inhibit(false);
@@ -190,7 +190,7 @@ impl Autocomplete {
                     let widget = { own.borrow_mut().autocomplete_arrow(-1) };
                     if let Some(w) = widget {
                         let ev: &gdk::Event = ev;
-                        let _ = w.emit("button-press-event", &[ev]);
+                        let _ = w.emit("key-press-event", &[ev]);
                     }
                 }
                 /* Arrow key */
@@ -203,7 +203,7 @@ impl Autocomplete {
 
                     if let Some(w) = widget {
                         let ev: &gdk::Event = ev;
-                        let _ = w.emit("button-press-event", &[ev]);
+                        let _ = w.emit("key-press-event", &[ev]);
                     }
                 }
                 _ => return glib::signal::Inhibit(false),
@@ -281,29 +281,33 @@ impl Autocomplete {
                             };
                             let widget_list = { own.borrow_mut().autocomplete_show_popover(list) };
                             for (alias, widget) in widget_list.iter() {
-                                widget.connect_button_press_event(clone!(
+                                widget.connect_key_press_event(clone!(
                                 @strong own,
                                 @strong alias
                                 => move |_, ev| {
                                     own.borrow_mut().autocomplete_insert(alias.clone());
-                                    if ev.is::<gdk::EventKey>() {
-                                        let ev = {
-                                            let ev: &gdk::Event = ev;
+                                    let ev = {
+                                        let ev: &gdk::Event = ev;
 
-                                            ev.clone()
-                                                .downcast::<gdk::EventKey>()
-                                                .unwrap()
-                                        };
-                                        /* Submit on enter */
-                                        if ev.get_keyval() == gdk::keys::constants::Return
-                                            || ev.get_keyval() == gdk::keys::constants::Tab
-                                        {
-                                            own.borrow_mut().autocomplete_enter();
-                                        }
-                                    }
-                                    else if ev.is::<gdk::EventButton>() {
+                                        ev.clone()
+                                            .downcast::<gdk::EventKey>()
+                                            .unwrap()
+                                    };
+                                    /* Submit on enter */
+                                    if ev.get_keyval() == gdk::keys::constants::Return
+                                        || ev.get_keyval() == gdk::keys::constants::Tab
+                                    {
                                         own.borrow_mut().autocomplete_enter();
                                     }
+                                    Inhibit(true)
+                                }));
+
+                                widget.connect_button_press_event(clone!(
+                                @strong own,
+                                @strong alias
+                                => move |_, _| {
+                                    own.borrow_mut().autocomplete_insert(alias.clone());
+                                    own.borrow_mut().autocomplete_enter();
                                     Inhibit(true)
                                 }));
                             }
