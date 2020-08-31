@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2020-07-17 06:58+0000\n"
-"PO-Revision-Date: 2020-07-19 13:52+0800\n"
+"POT-Creation-Date: 2020-08-13 10:34+0000\n"
+"PO-Revision-Date: 2020-08-31 10:04-0400\n"
 "Last-Translator: lumingzh <lumingzh@qq.com>\n"
 "Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0\n"
-"X-Generator: Gtranslator 3.36.0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 2.4.1\n"
 
 #: fractal-gtk/res/gtk/help-overlay.ui:13
 msgctxt "shortcut window"
@@ -100,7 +100,7 @@ msgstr "另起一行编写"
 
 #: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:3
 #: fractal-gtk/res/org.gnome.Fractal.metainfo.xml.in.in:5
-#: fractal-gtk/res/ui/login_flow.ui:294 fractal-gtk/src/appop/mod.rs:211
+#: fractal-gtk/res/ui/login_flow.ui:294 fractal-gtk/src/appop/mod.rs:213
 msgid "Fractal"
 msgstr "Fractal"
 
@@ -479,6 +479,10 @@ msgstr "*斜体*"
 msgid "Loading more media"
 msgstr "正在加载更多媒体"
 
+#: fractal-gtk/res/ui/media_viewer.ui:264
+msgid "Toggle fullscreen"
+msgstr "切换全屏"
+
 #: fractal-gtk/res/ui/members.ui:25 fractal-gtk/res/ui/room_settings.ui:940
 msgid "Search for room members"
 msgstr "搜索聊天室成员"
@@ -713,12 +717,12 @@ msgstr "其它主服务器"
 msgid "Homeserver URL"
 msgstr "主服务器网址"
 
-#: fractal-gtk/src/actions/account_settings.rs:35
+#: fractal-gtk/src/actions/account_settings.rs:34
 #: fractal-gtk/src/actions/room_settings.rs:43
 msgid "Images"
 msgstr "图像"
 
-#: fractal-gtk/src/actions/account_settings.rs:36
+#: fractal-gtk/src/actions/account_settings.rs:35
 #: fractal-gtk/src/actions/room_settings.rs:45
 msgid "Select a new avatar"
 msgstr "选择新头像"
@@ -731,12 +735,12 @@ msgstr "选择文件"
 msgid "This message has no source."
 msgstr "该消息没有来源。"
 
-#: fractal-gtk/src/actions/message.rs:155
-#: fractal-gtk/src/actions/message.rs:192
+#: fractal-gtk/src/actions/message.rs:159
+#: fractal-gtk/src/actions/message.rs:197
 msgid "Could not download the file"
 msgstr "无法下载该文件"
 
-#: fractal-gtk/src/actions/message.rs:164
+#: fractal-gtk/src/actions/message.rs:168
 msgid "Couldn’t save file"
 msgstr "无法保存文件"
 
@@ -749,8 +753,8 @@ msgid "A Matrix.org client for GNOME"
 msgstr "一个 GNOME Matrix.org 客户端"
 
 #: fractal-gtk/src/appop/about.rs:22
-msgid "© 2017–2018 Daniel García Moreno, et al."
-msgstr "© 2017–2018 Daniel García Moreno, et al."
+msgid "© 2017–2020 Daniel García Moreno, et al."
+msgstr "© 2017–2020 Daniel García Moreno, et al."
 
 #: fractal-gtk/src/appop/about.rs:29
 msgid "Learn more about Fractal"
@@ -788,7 +792,7 @@ msgstr ""
 msgid "OK"
 msgstr "确定"
 
-#: fractal-gtk/src/appop/account.rs:777
+#: fractal-gtk/src/appop/account.rs:786
 msgid "Are you sure you want to delete your account?"
 msgstr "您确定想要删除您的账号吗？"
 
@@ -809,70 +813,70 @@ msgstr "图像"
 msgid "Invite to {name}"
 msgstr "邀请到 {name}"
 
-#: fractal-gtk/src/appop/invite.rs:265
+#: fractal-gtk/src/appop/invite.rs:269
 msgid "Join {room_name}?"
 msgstr "加入 {room_name}？"
 
-#: fractal-gtk/src/appop/invite.rs:270
+#: fractal-gtk/src/appop/invite.rs:274
 msgid ""
 "You’ve been invited to join <b>{room_name}</b> room by <b>{sender_name}</b>"
 msgstr "您已被 <b>{sender_name}</b> 邀请加入 <b>{room_name}</b> 房间"
 
-#: fractal-gtk/src/appop/invite.rs:275
+#: fractal-gtk/src/appop/invite.rs:279
 msgid "You’ve been invited to join <b>{room_name}</b>"
 msgstr "您已被邀请加入 <b>{room_name}</b>"
 
 #. Translators: The placeholder is for the number of unread messages in the
 #. application
-#: fractal-gtk/src/appop/mod.rs:215
+#: fractal-gtk/src/appop/mod.rs:217
 msgid "Fractal [{}]"
 msgstr "Fractal [{}]"
 
-#: fractal-gtk/src/appop/notify.rs:50
+#: fractal-gtk/src/appop/notify.rs:52
 msgid "An audio file has been added to the conversation."
 msgstr "一个音频文件已被添加至该对话。"
 
-#: fractal-gtk/src/appop/notify.rs:51
+#: fractal-gtk/src/appop/notify.rs:53
 msgid "An image has been added to the conversation."
 msgstr "一幅图像已被添加至该对话。"
 
-#: fractal-gtk/src/appop/notify.rs:52
+#: fractal-gtk/src/appop/notify.rs:54
 msgid "A video has been added to the conversation."
 msgstr "一段视频已被添加至该对话。"
 
-#: fractal-gtk/src/appop/notify.rs:53
+#: fractal-gtk/src/appop/notify.rs:55
 msgid "A file has been added to the conversation."
 msgstr "一个文件已被添加至该对话。"
 
-#: fractal-gtk/src/appop/notify.rs:58
+#: fractal-gtk/src/appop/notify.rs:60
 msgid " (direct message)"
 msgstr "（直连消息）"
 
-#: fractal-gtk/src/appop/room.rs:357
+#: fractal-gtk/src/appop/room.rs:358
 msgid "Leave {room_name}?"
 msgstr "离开 {room_name}？"
 
-#: fractal-gtk/src/appop/room.rs:565
+#: fractal-gtk/src/appop/room.rs:573
 msgid "The room ID is malformed"
 msgstr "该聊天室标识异常"
 
-#: fractal-gtk/src/appop/room.rs:635
+#: fractal-gtk/src/appop/room.rs:643
 msgid "EMPTY ROOM"
 msgstr "空聊天室"
 
-#: fractal-gtk/src/appop/room.rs:637
+#: fractal-gtk/src/appop/room.rs:645
 msgid "{m1} and {m2}"
 msgstr "{m1} 和 {m2}"
 
-#: fractal-gtk/src/appop/room.rs:638
+#: fractal-gtk/src/appop/room.rs:646
 msgid "{m1} and Others"
 msgstr "{m1} 和其它"
 
-#: fractal-gtk/src/appop/room.rs:737
+#: fractal-gtk/src/appop/room.rs:745
 msgid "Several users are typing…"
 msgstr "几个用户正在输入…"
 
-#: fractal-gtk/src/appop/room.rs:740
+#: fractal-gtk/src/appop/room.rs:748
 msgid "<b>{}</b> is typing…"
 msgid_plural "<b>{}</b> and <b>{}</b> are typing…"
 msgstr[0] "<b>{}</b> 正在输入…"
@@ -881,8 +885,8 @@ msgstr[0] "<b>{}</b> 正在输入…"
 msgid "Syncing, this could take a while"
 msgstr "正在同步，这可能会花一段时间"
 
-#: fractal-gtk/src/backend/directory.rs:38
-#: fractal-gtk/src/backend/directory.rs:72
+#: fractal-gtk/src/backend/directory.rs:39
+#: fractal-gtk/src/backend/directory.rs:80
 msgid "Error searching for rooms"
 msgstr "搜索聊天室出错"
 
@@ -890,15 +894,15 @@ msgstr "搜索聊天室出错"
 msgid "Can’t login, try again"
 msgstr "无法登录，请重试"
 
-#: fractal-gtk/src/backend/room.rs:340
+#: fractal-gtk/src/backend/room.rs:352
 msgid "Error deleting message"
 msgstr "删除消息出错"
 
-#: fractal-gtk/src/backend/room.rs:385
+#: fractal-gtk/src/backend/room.rs:419
 msgid "Can’t join the room, try again."
 msgstr "无法加入该聊天室，请重试。"
 
-#: fractal-gtk/src/backend/room.rs:635 fractal-gtk/src/backend/room.rs:692
+#: fractal-gtk/src/backend/room.rs:684 fractal-gtk/src/backend/room.rs:741
 msgid "Can’t create the room, try again"
 msgstr "无法创建该聊天室，请重试"
 
@@ -919,9 +923,8 @@ msgid "Couldn’t add the email address."
 msgstr "无法添加该电子邮件地址。"
 
 #: fractal-gtk/src/backend/user.rs:218 fractal-gtk/src/backend/user.rs:296
-#| msgid "Identity server"
 msgid "The identity server is invalid."
-msgstr "该认证服务器无效"
+msgstr "该认证服务器无效。"
 
 #: fractal-gtk/src/backend/user.rs:277
 msgid "Phone number is already in use"
@@ -963,7 +966,7 @@ msgstr "保存(_S)"
 msgid "_Select"
 msgstr "选择(_S)"
 
-#: fractal-gtk/src/widgets/inline_player.rs:520
+#: fractal-gtk/src/widgets/inline_player.rs:521
 msgid "Could not retrieve file URI"
 msgstr "无法找回文件网址"
 
@@ -983,7 +986,7 @@ msgstr ""
 msgid "Malformed server URL"
 msgstr "有缺陷的服务器网址"
 
-#: fractal-gtk/src/widgets/media_viewer.rs:1047
+#: fractal-gtk/src/widgets/media_viewer.rs:1050
 msgid "Error while loading previous media"
 msgstr "加载之前的媒体时出错"
 
@@ -1003,57 +1006,57 @@ msgstr "仲裁者"
 msgid "Privileged"
 msgstr "特权用户"
 
-#: fractal-gtk/src/widgets/message.rs:91
+#: fractal-gtk/src/widgets/message.rs:90
 msgid "Uploading video."
 msgstr "正在上传视频。"
 
-#: fractal-gtk/src/widgets/message.rs:96
+#: fractal-gtk/src/widgets/message.rs:95
 msgid "Uploading audio."
 msgstr "正在上传音频。"
 
-#: fractal-gtk/src/widgets/message.rs:101
+#: fractal-gtk/src/widgets/message.rs:100
 msgid "Uploading image."
 msgstr "正在上传图像。"
 
-#: fractal-gtk/src/widgets/message.rs:105
+#: fractal-gtk/src/widgets/message.rs:104
 msgid "Uploading file."
 msgstr "正在上传文件。"
 
-#: fractal-gtk/src/widgets/message.rs:257
+#: fractal-gtk/src/widgets/message.rs:256
 #, c-format
 msgid "Last edited %c"
 msgstr "上次修改 %c"
 
-#: fractal-gtk/src/widgets/message.rs:468
-#: fractal-gtk/src/widgets/message.rs:583
+#: fractal-gtk/src/widgets/message.rs:481
+#: fractal-gtk/src/widgets/message.rs:596
 msgid "Save"
 msgstr "保存"
 
-#: fractal-gtk/src/widgets/message.rs:597
+#: fractal-gtk/src/widgets/message.rs:610
 msgid "Open"
 msgstr "打开"
 
 #. Use 12h time format (AM/PM)
-#: fractal-gtk/src/widgets/message.rs:617
+#: fractal-gtk/src/widgets/message.rs:630
 msgid "%l∶%M %p"
 msgstr "%l∶%M %p"
 
 #. Use 24 time format
-#: fractal-gtk/src/widgets/message.rs:620
+#: fractal-gtk/src/widgets/message.rs:633
 msgid "%R"
 msgstr "%R"
 
-#: fractal-gtk/src/widgets/room_history.rs:98
+#: fractal-gtk/src/widgets/room_history.rs:96
 msgid "New Messages"
 msgstr "新消息"
 
 #. Translators: This is a date format in the day divider without the year
-#: fractal-gtk/src/widgets/room_history.rs:801
+#: fractal-gtk/src/widgets/room_history.rs:795
 msgid "%B %e"
 msgstr "%B %e"
 
 #. Translators: This is a date format in the day divider with the year
-#: fractal-gtk/src/widgets/room_history.rs:804
+#: fractal-gtk/src/widgets/room_history.rs:798
 msgid "%B %e, %Y"
 msgstr "%B %e, %Y"
 
