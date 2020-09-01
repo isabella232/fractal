@@ -76,3 +76,7 @@ features = ["v2_56"]
 git = "https://github.com/danigm/either.git"
 rev = "60c99bc0723491e2dfd42bbe9b485c5f9323e96b"
 features = ["serde_untagged"]
+
+[dependencies.tokio]
+version = "0.2.22"
+features = ["rt-threaded"]

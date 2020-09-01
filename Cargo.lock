@@ -619,6 +619,7 @@ dependencies = [
  "serde",
  "serde_json",
  "sourceview4",
+ "tokio",
 ]
 
 [[package]]

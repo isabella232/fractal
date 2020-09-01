@@ -2,10 +2,12 @@ use gettextrs::{bindtextdomain, setlocale, textdomain, LocaleCategory};
 use gio::prelude::*;
 use glib::clone;
 use gtk::prelude::*;
+use lazy_static::lazy_static;
 use libhandy::prelude::*;
 use std::cell::RefCell;
 use std::rc::Rc;
 use std::sync::{Arc, Mutex, Weak};
+use tokio::runtime::Runtime as TokioRuntime;
 
 use log::error;
 
@@ -22,6 +24,11 @@ mod windowstate;
 use windowstate::WindowState;
 
 static mut OP: Option<Weak<Mutex<AppOp>>> = None;
+
+lazy_static! {
+    pub static ref RUNTIME: TokioRuntime = TokioRuntime::new().unwrap();
+}
+
 #[macro_export]
 macro_rules! APPOP {
     ($fn: ident, ($($x:ident),*) ) => {{
