@@ -1,0 +1,1084 @@
+# Slovenian translation for fractal.
+# Copyright (C) 2020 fractal's COPYRIGHT HOLDER
+# This file is distributed under the same license as the fractal package.
+#
+# Matej Urbančič <mateju@svn.gnome.org>, 2020–.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: fractal master\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
+"POT-Creation-Date: 2020-06-17 06:28+0000\n"
+"PO-Revision-Date: 2020-06-17 13:35+0200\n"
+"Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
+"Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
+"Language: sl_SI\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
+"%100==4 ? 3 : 0);\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Generator: Poedit 2.3\n"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:13
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Splošno"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:18
+msgctxt "shortcut window"
+msgid "Close the active room"
+msgstr "Zapre dejavno okno"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:25
+msgctxt "shortcut window"
+msgid "Open main menu"
+msgstr "Odpre glavni meni"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:32
+msgctxt "shortcut window"
+msgid "Open / close the room sidebar search"
+msgstr ""
+
+#: fractal-gtk/res/gtk/help-overlay.ui:39
+msgctxt "shortcut window"
+msgid "Open the previous room in the list"
+msgstr ""
+
+#: fractal-gtk/res/gtk/help-overlay.ui:46
+msgctxt "shortcut window"
+msgid "Open the next room in the list"
+msgstr ""
+
+#: fractal-gtk/res/gtk/help-overlay.ui:53
+msgctxt "shortcut window"
+msgid "Open the previous room with unread messages in the list"
+msgstr ""
+
+#: fractal-gtk/res/gtk/help-overlay.ui:60
+msgctxt "shortcut window"
+msgid "Open the next room with unread messages in the list"
+msgstr ""
+
+#: fractal-gtk/res/gtk/help-overlay.ui:67
+msgctxt "shortcut window"
+msgid "Open the first room of the list"
+msgstr ""
+
+#: fractal-gtk/res/gtk/help-overlay.ui:74
+msgctxt "shortcut window"
+msgid "Open the last room of the list"
+msgstr ""
+
+#: fractal-gtk/res/gtk/help-overlay.ui:81
+msgctxt "shortcut window"
+msgid "View older messages"
+msgstr ""
+
+#: fractal-gtk/res/gtk/help-overlay.ui:88
+msgctxt "shortcut window"
+msgid "View newer messages"
+msgstr ""
+
+#: fractal-gtk/res/gtk/help-overlay.ui:94
+msgctxt "shortcut window"
+msgid "Keyboard Shortcuts"
+msgstr "Tipkovne bližnjice\t"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:101
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Konča program"
+
+#: fractal-gtk/res/gtk/help-overlay.ui:110
+msgctxt "shortcut message"
+msgid "Composing a new message"
+msgstr ""
+
+#: fractal-gtk/res/gtk/help-overlay.ui:115
+msgctxt "shortcut message"
+msgid "Write on a new line"
+msgstr ""
+
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:3
+#: fractal-gtk/res/org.gnome.Fractal.metainfo.xml.in.in:5
+#: fractal-gtk/res/ui/login_flow.ui:294 fractal-gtk/src/appop/mod.rs:180
+msgid "Fractal"
+msgstr "Fractal"
+
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:4
+msgid ""
+"Fractal is a decentralized, secure messaging client for collaborative group "
+"communication."
+msgstr ""
+
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:5
+msgid "Fractal group messaging"
+msgstr ""
+
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:14
+msgid "Matrix;matrix.org;chat;irc;communications;talk;riot;"
+msgstr "Matrix;matrix.org;chat;irc;communications;talk;riot;klepet;čet;"
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:13
+msgid "Type of password and token storage"
+msgstr ""
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:14
+msgid "Type of password and token storage, default value is: Secret Service"
+msgstr ""
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:21
+msgid "If markdown sending is active"
+msgstr ""
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:22
+msgid "Whether support for sending markdown messages is on"
+msgstr ""
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:29
+msgid "X position of the main window on startup"
+msgstr ""
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:34
+msgid "Y position of the main window on startup"
+msgstr ""
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:39
+msgid "Width of the main window on startup"
+msgstr ""
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:44
+msgid "Height of the main window on startup"
+msgstr ""
+
+#: fractal-gtk/res/org.gnome.Fractal.gschema.xml:49
+msgid "Whether the main window is maximized on startup"
+msgstr ""
+
+#: fractal-gtk/res/org.gnome.Fractal.metainfo.xml.in.in:8
+msgid "Daniel García Moreno"
+msgstr "Daniel García Moreno"
+
+#: fractal-gtk/res/org.gnome.Fractal.metainfo.xml.in.in:9
+msgid "Matrix group messaging app"
+msgstr ""
+
+#: fractal-gtk/res/org.gnome.Fractal.metainfo.xml.in.in:11
+msgid ""
+"Fractal is a Matrix messaging app for GNOME written in Rust. Its interface "
+"is optimized for collaboration in large groups, such as free software "
+"projects."
+msgstr ""
+
+#: fractal-gtk/res/ui/account_settings.ui:73
+msgid "Other people can find you by searching for any of these identifiers."
+msgstr ""
+
+#: fractal-gtk/res/ui/account_settings.ui:101
+msgid "Name"
+msgstr "Ime"
+
+#: fractal-gtk/res/ui/account_settings.ui:124
+msgid "Type in your name"
+msgstr ""
+
+#: fractal-gtk/res/ui/account_settings.ui:153
+msgid "Email"
+msgstr "Elektronska pošta"
+
+#: fractal-gtk/res/ui/account_settings.ui:182
+msgid "Phone"
+msgstr "Telefon"
+
+#: fractal-gtk/res/ui/account_settings.ui:211
+msgid "Password"
+msgstr "Geslo"
+
+#: fractal-gtk/res/ui/account_settings.ui:278
+msgid "Advanced Information"
+msgstr "Napredne podrobnosti"
+
+#: fractal-gtk/res/ui/account_settings.ui:308
+msgid "Homeserver"
+msgstr ""
+
+#: fractal-gtk/res/ui/account_settings.ui:337
+msgid "Matrix ID"
+msgstr "Matrix ID"
+
+#: fractal-gtk/res/ui/account_settings.ui:366
+msgid "Device ID"
+msgstr "ID naprave"
+
+#: fractal-gtk/res/ui/account_settings.ui:421
+#: fractal-gtk/res/ui/account_settings.ui:502
+msgid "Deactivate Account"
+msgstr ""
+
+#: fractal-gtk/res/ui/account_settings.ui:447
+msgid ""
+"Deactivating your account means that you will lose all your messages, "
+"contacts, and files."
+msgstr ""
+
+#: fractal-gtk/res/ui/account_settings.ui:462
+msgid ""
+"To confirm that you really want to deactivate this account type in your "
+"password:"
+msgstr ""
+
+#: fractal-gtk/res/ui/account_settings.ui:487
+msgid "Also erase all messages"
+msgstr ""
+
+#: fractal-gtk/res/ui/account_settings.ui:586
+#: fractal-gtk/res/ui/main_menu.ui:109
+msgid "Account Settings"
+msgstr "Nastavitve računa"
+
+#: fractal-gtk/res/ui/account_settings.ui:602
+#: fractal-gtk/res/ui/main_window.ui:522 fractal-gtk/res/ui/main_window.ui:662
+#: fractal-gtk/res/ui/main_window.ui:762 fractal-gtk/res/ui/media_viewer.ui:248
+#: fractal-gtk/res/ui/room_settings.ui:1034
+msgid "Back"
+msgstr "Nazaj"
+
+#: fractal-gtk/res/ui/account_settings.ui:623
+msgid "Check your email"
+msgstr ""
+
+#: fractal-gtk/res/ui/account_settings.ui:626
+#: fractal-gtk/res/ui/direct_chat.ui:129 fractal-gtk/res/ui/invite_user.ui:129
+#: fractal-gtk/res/ui/join_room.ui:94 fractal-gtk/res/ui/leave_room.ui:32
+#: fractal-gtk/res/ui/new_room.ui:42 fractal-gtk/src/appop/account.rs:102
+#: fractal-gtk/src/appop/account.rs:173 fractal-gtk/src/appop/attach.rs:57
+msgid "Cancel"
+msgstr "Prekliči"
+
+#: fractal-gtk/res/ui/account_settings.ui:634
+msgid "Apply"
+msgstr "Uveljavi"
+
+#: fractal-gtk/res/ui/add_room_menu.ui:22
+msgid "Room Directory"
+msgstr ""
+
+#: fractal-gtk/res/ui/add_room_menu.ui:36
+msgid "Join Room"
+msgstr "Pridruži se klepetalnici"
+
+#: fractal-gtk/res/ui/add_room_menu.ui:63
+msgid "New Room"
+msgstr "Nova klepetalnica"
+
+#: fractal-gtk/res/ui/add_room_menu.ui:77
+msgid "New Direct Chat"
+msgstr ""
+
+#: fractal-gtk/res/ui/audio_player.ui:34 fractal-gtk/res/ui/audio_player.ui:50
+msgid "Play"
+msgstr "Predvajaj"
+
+#: fractal-gtk/res/ui/direct_chat.ui:126
+msgid "New direct chat"
+msgstr ""
+
+#: fractal-gtk/res/ui/direct_chat.ui:137
+msgid "Start chat"
+msgstr "Začni klepet"
+
+#: fractal-gtk/res/ui/filechooser.ui:61
+msgid "Select room image file"
+msgstr ""
+
+#: fractal-gtk/res/ui/invite.ui:18
+msgid "Invitation"
+msgstr "Povabilo"
+
+#: fractal-gtk/res/ui/invite.ui:33
+msgid "Reject"
+msgstr "Zavrni"
+
+#: fractal-gtk/res/ui/invite.ui:46
+msgid "Accept"
+msgstr "Sprejmi"
+
+#: fractal-gtk/res/ui/invite_user.ui:126 fractal-gtk/res/ui/invite_user.ui:137
+#: fractal-gtk/src/appop/invite.rs:151
+msgid "Invite"
+msgstr "Povabi"
+
+#: fractal-gtk/res/ui/join_room.ui:52
+msgid "ID or Alias"
+msgstr ""
+
+#: fractal-gtk/res/ui/join_room.ui:91
+msgid "Join room"
+msgstr "Pridruži se klepetalnici"
+
+#: fractal-gtk/res/ui/join_room.ui:102 fractal-gtk/src/widgets/room.rs:126
+msgid "Join"
+msgstr "Pridruži se"
+
+#: fractal-gtk/res/ui/kicked_room.ui:30 fractal-gtk/res/ui/msg_src_window.ui:32
+msgid "Close"
+msgstr "Zapri"
+
+#: fractal-gtk/res/ui/leave_room.ui:18
+msgid "Leave?"
+msgstr "Ali želite zapusti skupino?"
+
+#: fractal-gtk/res/ui/leave_room.ui:19
+msgid ""
+"Once you leave, you won’t be able to interact with people in the room "
+"anymore."
+msgstr ""
+
+#: fractal-gtk/res/ui/leave_room.ui:45
+msgid "Leave room"
+msgstr "Zapusti klepetalnico"
+
+#: fractal-gtk/res/ui/login_flow.ui:33
+msgid "Welcome to Fractal"
+msgstr ""
+
+#: fractal-gtk/res/ui/login_flow.ui:47 fractal-gtk/res/ui/login_flow.ui:371
+msgid "_Log In"
+msgstr "_Prijava"
+
+#: fractal-gtk/res/ui/login_flow.ui:59
+msgid "_Create Account"
+msgstr "_Ustvari račun"
+
+#: fractal-gtk/res/ui/login_flow.ui:95
+msgid "What is your Provider?"
+msgstr ""
+
+#: fractal-gtk/res/ui/login_flow.ui:124
+msgid "Matrix provider domain, e.g. myserver.co"
+msgstr ""
+
+#: fractal-gtk/res/ui/login_flow.ui:140
+msgid "The domain may not be empty."
+msgstr ""
+
+#: fractal-gtk/res/ui/login_flow.ui:166
+msgid "_User ID"
+msgstr "_ID uporabnika"
+
+#: fractal-gtk/res/ui/login_flow.ui:182
+msgid "_Password"
+msgstr "_Geslo"
+
+#: fractal-gtk/res/ui/login_flow.ui:214
+msgid "User name, email, or phone number"
+msgstr ""
+
+#: fractal-gtk/res/ui/login_flow.ui:247
+msgid "_Forgot Password?"
+msgstr ""
+
+#: fractal-gtk/res/ui/login_flow.ui:265
+msgid "Invalid username or password"
+msgstr ""
+
+#: fractal-gtk/res/ui/login_flow.ui:306
+msgid "Choose Provider"
+msgstr ""
+
+#: fractal-gtk/res/ui/login_flow.ui:329
+msgid "_Next"
+msgstr "_Naprej"
+
+#: fractal-gtk/res/ui/login_flow.ui:348
+msgid "Log In"
+msgstr "Prijava"
+
+#: fractal-gtk/res/ui/main_menu.ui:123
+msgid "Log Out"
+msgstr ""
+
+#: fractal-gtk/res/ui/main_menu.ui:150
+msgid "Keyboard _Shortcuts"
+msgstr "Tipkovne _bližnjice‫"
+
+#: fractal-gtk/res/ui/main_menu.ui:164
+msgid "_About Fractal"
+msgstr ""
+
+#: fractal-gtk/res/ui/main_window.ui:185
+msgid "No room selected"
+msgstr ""
+
+#: fractal-gtk/res/ui/main_window.ui:200
+msgid "Join a room to start chatting"
+msgstr ""
+
+#: fractal-gtk/res/ui/main_window.ui:210
+msgid "No room"
+msgstr ""
+
+#: fractal-gtk/res/ui/main_window.ui:291
+msgid "Chat"
+msgstr "Klepet"
+
+#: fractal-gtk/res/ui/main_window.ui:343
+msgid "Directory"
+msgstr "Mapa"
+
+#: fractal-gtk/res/ui/main_window.ui:367
+msgid "Loading"
+msgstr "Poteka nalaganje"
+
+#: fractal-gtk/res/ui/main_window.ui:412
+msgid "User"
+msgstr "Uporabnik"
+
+#: fractal-gtk/res/ui/main_window.ui:439
+msgid "Add"
+msgstr "Dodaj"
+
+#: fractal-gtk/res/ui/main_window.ui:469
+msgid "Room search"
+msgstr "Iskanje klepetalnic"
+
+#: fractal-gtk/res/ui/main_window.ui:596
+msgid "Room Menu"
+msgstr ""
+
+#: fractal-gtk/res/ui/main_window.ui:702
+#: fractal-gtk/res/ui/server_chooser_menu.ui:65
+#: fractal-gtk/src/app/connect/directory.rs:130
+msgid "Default Matrix Server"
+msgstr ""
+
+#: fractal-gtk/res/ui/markdown_popover.ui:23
+msgid "Markdown"
+msgstr "Markdown"
+
+#: fractal-gtk/res/ui/markdown_popover.ui:67
+msgid "> quote"
+msgstr ""
+
+#: fractal-gtk/res/ui/markdown_popover.ui:78
+msgid "**bold**"
+msgstr "**krepko**"
+
+#: fractal-gtk/res/ui/markdown_popover.ui:93
+msgid "`code`"
+msgstr "`koda`"
+
+#: fractal-gtk/res/ui/markdown_popover.ui:105
+msgid "*italic*"
+msgstr "*ležeče*"
+
+#: fractal-gtk/res/ui/media_viewer.ui:185
+msgid "Loading more media"
+msgstr ""
+
+#: fractal-gtk/res/ui/members.ui:25 fractal-gtk/res/ui/room_settings.ui:940
+msgid "Search for room members"
+msgstr ""
+
+#: fractal-gtk/res/ui/message_menu.ui:22
+msgid "Reply"
+msgstr "Odgovori"
+
+#: fractal-gtk/res/ui/message_menu.ui:34
+msgid "Open With…"
+msgstr ""
+
+#: fractal-gtk/res/ui/message_menu.ui:47
+msgid "Save Image As…"
+msgstr ""
+
+#: fractal-gtk/res/ui/message_menu.ui:60
+msgid "Save Video As…"
+msgstr ""
+
+#: fractal-gtk/res/ui/message_menu.ui:73
+msgid "Copy Image"
+msgstr ""
+
+#: fractal-gtk/res/ui/message_menu.ui:86
+msgid "Copy Selection"
+msgstr ""
+
+#: fractal-gtk/res/ui/message_menu.ui:99
+msgid "Copy Text"
+msgstr "Kopiraj besedilo"
+
+#: fractal-gtk/res/ui/message_menu.ui:114
+msgid "View Source"
+msgstr "Poglej vir"
+
+#: fractal-gtk/res/ui/message_menu.ui:139
+msgid "Delete Message"
+msgstr ""
+
+#: fractal-gtk/res/ui/msg_src_window.ui:21
+msgid "Message Source"
+msgstr "Izvorna koda sporočila"
+
+#: fractal-gtk/res/ui/msg_src_window.ui:24
+msgid "Copy To Clipboard"
+msgstr "Kopiraj v odložišče"
+
+#: fractal-gtk/res/ui/new_room.ui:14
+msgid "Private Chat"
+msgstr ""
+
+#: fractal-gtk/res/ui/new_room.ui:18 fractal-gtk/res/ui/new_room.ui:187
+msgid "Public"
+msgstr "Javno"
+
+#: fractal-gtk/res/ui/new_room.ui:39
+msgid "Create new room"
+msgstr ""
+
+#: fractal-gtk/res/ui/new_room.ui:50
+msgid "Create"
+msgstr "Ustvari"
+
+#: fractal-gtk/res/ui/new_room.ui:108
+msgid "Room name"
+msgstr "Ime klepetalnice"
+
+#: fractal-gtk/res/ui/new_room.ui:152
+msgid "Visibility"
+msgstr "Vidnost"
+
+#: fractal-gtk/res/ui/new_room.ui:171
+msgid "Private"
+msgstr "Zasebno"
+
+#: fractal-gtk/res/ui/password_dialog.ui:22
+#: fractal-gtk/src/widgets/file_dialog.rs:13
+#: fractal-gtk/src/widgets/file_dialog.rs:34
+msgid "_Cancel"
+msgstr "_Prekliči"
+
+#: fractal-gtk/res/ui/password_dialog.ui:35
+msgid "Ch_ange"
+msgstr "_Spremeni"
+
+#: fractal-gtk/res/ui/password_dialog.ui:133
+msgid "The passwords do not match."
+msgstr ""
+
+#: fractal-gtk/res/ui/password_dialog.ui:151
+msgid "_Verify New Password"
+msgstr "_Overi novo geslo"
+
+#: fractal-gtk/res/ui/password_dialog.ui:168
+msgid "_New Password"
+msgstr "_Novo geslo"
+
+#: fractal-gtk/res/ui/password_dialog.ui:212
+msgid "Current _Password"
+msgstr "Trenutno _geslo"
+
+#: fractal-gtk/res/ui/room_menu.ui:22
+msgid "Room Details"
+msgstr "Podrobnosti klepetalnice"
+
+#: fractal-gtk/res/ui/room_menu.ui:36
+msgid "Invite to This Room"
+msgstr ""
+
+#: fractal-gtk/res/ui/room_menu.ui:63
+msgid "Leave Room"
+msgstr "Zapusti klepetalnico"
+
+#: fractal-gtk/res/ui/room_settings.ui:92
+msgid "Unknown"
+msgstr "Neznano"
+
+#: fractal-gtk/res/ui/room_settings.ui:118
+msgid "Add name"
+msgstr "Dodaj ime"
+
+#: fractal-gtk/res/ui/room_settings.ui:150
+msgid "Add topic"
+msgstr ""
+
+#: fractal-gtk/res/ui/room_settings.ui:174
+msgid "Type in your room topic"
+msgstr ""
+
+#: fractal-gtk/res/ui/room_settings.ui:202
+msgid "No room description"
+msgstr ""
+
+#: fractal-gtk/res/ui/room_settings.ui:239
+msgid "Notifications"
+msgstr "Obvestila"
+
+#: fractal-gtk/res/ui/room_settings.ui:280
+msgid "Notification sounds"
+msgstr ""
+
+#: fractal-gtk/res/ui/room_settings.ui:325
+msgid "For all messages"
+msgstr ""
+
+#: fractal-gtk/res/ui/room_settings.ui:366
+msgid "Only for mentions"
+msgstr ""
+
+#: fractal-gtk/res/ui/room_settings.ui:397
+msgid "Shared Media"
+msgstr "Predstavne vsebine v souporabi"
+
+#: fractal-gtk/res/ui/room_settings.ui:444
+msgid "photos"
+msgstr "fotografije"
+
+#: fractal-gtk/res/ui/room_settings.ui:484
+msgid "videos"
+msgstr "videoposnetki"
+
+#: fractal-gtk/res/ui/room_settings.ui:524
+msgid "documents"
+msgstr ""
+
+#: fractal-gtk/res/ui/room_settings.ui:555
+msgid "New members can see"
+msgstr ""
+
+#: fractal-gtk/res/ui/room_settings.ui:600
+msgid "All room history"
+msgstr ""
+
+#: fractal-gtk/res/ui/room_settings.ui:641
+msgid "History after they were invited"
+msgstr ""
+
+#: fractal-gtk/res/ui/room_settings.ui:672
+msgid "Room Visibility"
+msgstr ""
+
+#: fractal-gtk/res/ui/room_settings.ui:719
+msgid "Allow guests"
+msgstr "Dovoli goste"
+
+#: fractal-gtk/res/ui/room_settings.ui:759
+msgid "Allow joining without invite"
+msgstr ""
+
+#: fractal-gtk/res/ui/room_settings.ui:799
+msgid "Publish in room directory"
+msgstr ""
+
+#: fractal-gtk/res/ui/room_settings.ui:830
+msgid "Join addresses"
+msgstr ""
+
+#: fractal-gtk/res/ui/room_settings.ui:889
+msgid "members"
+msgstr "člani"
+
+#: fractal-gtk/res/ui/room_settings.ui:905
+msgid "Invite New Member"
+msgstr ""
+
+#: fractal-gtk/res/ui/room_settings.ui:1018
+msgid "Details"
+msgstr "Podrobnosti"
+
+#: fractal-gtk/res/ui/scroll_widget.ui:63
+msgid "Scroll to bottom"
+msgstr ""
+
+#: fractal-gtk/res/ui/server_chooser_menu.ui:34
+msgid "Show rooms from:"
+msgstr ""
+
+#: fractal-gtk/res/ui/server_chooser_menu.ui:90
+msgid "Your homeserver"
+msgstr ""
+
+#: fractal-gtk/res/ui/server_chooser_menu.ui:134
+msgid "Other Protocol"
+msgstr ""
+
+#: fractal-gtk/res/ui/server_chooser_menu.ui:207
+msgid "Other Homeserver"
+msgstr ""
+
+#: fractal-gtk/res/ui/server_chooser_menu.ui:235
+msgid "Homeserver URL"
+msgstr ""
+
+#: fractal-gtk/src/actions/account_settings.rs:41
+#: fractal-gtk/src/actions/room_settings.rs:50
+msgid "Images"
+msgstr "Slike"
+
+#: fractal-gtk/src/actions/account_settings.rs:42
+#: fractal-gtk/src/actions/room_settings.rs:52
+msgid "Select a new avatar"
+msgstr ""
+
+#: fractal-gtk/src/actions/global.rs:297
+msgid "Select a file"
+msgstr "Izbor datoteke"
+
+#: fractal-gtk/src/actions/message.rs:79
+msgid "This message has no source."
+msgstr ""
+
+#: fractal-gtk/src/actions/message.rs:164
+#: fractal-gtk/src/actions/message.rs:203
+msgid "Could not download the file"
+msgstr ""
+
+#: fractal-gtk/src/actions/message.rs:174
+msgid "Couldn’t save file"
+msgstr ""
+
+#: fractal-gtk/src/actions/room_settings.rs:72
+msgid "Couldn’t open file"
+msgstr ""
+
+#: fractal-gtk/src/app/backend_loop.rs:97
+msgid "Couldn’t delete the account"
+msgstr ""
+
+#: fractal-gtk/src/app/backend_loop.rs:106
+msgid "Couldn’t change the password"
+msgstr ""
+
+#: fractal-gtk/src/app/backend_loop.rs:115
+msgid "Sorry, account settings can’t be loaded."
+msgstr ""
+
+#: fractal-gtk/src/app/backend_loop.rs:123
+msgid "Email is already in use"
+msgstr ""
+
+#: fractal-gtk/src/app/backend_loop.rs:127
+msgid "Please enter a valid email address."
+msgstr ""
+
+#: fractal-gtk/src/app/backend_loop.rs:131
+msgid "Couldn’t add the email address."
+msgstr ""
+
+#: fractal-gtk/src/app/backend_loop.rs:140
+msgid "Phone number is already in use"
+msgstr ""
+
+#: fractal-gtk/src/app/backend_loop.rs:145
+msgid ""
+"Please enter your phone number in the format: \n"
+" + your country code and your phone number."
+msgstr ""
+
+#: fractal-gtk/src/app/backend_loop.rs:150
+msgid "Couldn’t add the phone number."
+msgstr ""
+
+#: fractal-gtk/src/app/backend_loop.rs:165
+msgid "Can’t create the room, try again"
+msgstr ""
+
+#: fractal-gtk/src/app/backend_loop.rs:178
+msgid "Can’t join the room, try again."
+msgstr ""
+
+#: fractal-gtk/src/app/backend_loop.rs:191
+msgid "Can’t login, try again"
+msgstr ""
+
+#: fractal-gtk/src/app/backend_loop.rs:211
+msgid "Error sending message"
+msgstr ""
+
+#: fractal-gtk/src/app/backend_loop.rs:216
+msgid "Error deleting message"
+msgstr ""
+
+#: fractal-gtk/src/app/backend_loop.rs:220
+msgid "Error searching for rooms"
+msgstr ""
+
+#: fractal-gtk/src/appop/about.rs:21
+msgid "A Matrix.org client for GNOME"
+msgstr ""
+
+#: fractal-gtk/src/appop/about.rs:23
+msgid "© 2017–2018 Daniel García Moreno, et al."
+msgstr "© 2017–2018 Daniel García Moreno in drugi"
+
+#: fractal-gtk/src/appop/about.rs:30
+msgid "Learn more about Fractal"
+msgstr ""
+
+#: fractal-gtk/src/appop/about.rs:31
+msgid "translator-credits"
+msgstr "Matej Urbančič <mateju@svn.gnome.org>"
+
+#: fractal-gtk/src/appop/about.rs:46
+msgid "Name by"
+msgstr ""
+
+#: fractal-gtk/src/appop/account.rs:74
+msgid "The validation code is not correct."
+msgstr ""
+
+#: fractal-gtk/src/appop/account.rs:87
+msgid "Enter the code received via SMS"
+msgstr ""
+
+#: fractal-gtk/src/appop/account.rs:103 fractal-gtk/src/appop/account.rs:174
+msgid "Continue"
+msgstr "Nadaljuj"
+
+#: fractal-gtk/src/appop/account.rs:163
+msgid ""
+"In order to add this email address, go to your inbox and follow the link you "
+"received. Once you’ve done that, click Continue."
+msgstr ""
+
+#: fractal-gtk/src/appop/account.rs:240
+msgid "OK"
+msgstr "V redu"
+
+#: fractal-gtk/src/appop/account.rs:804
+msgid "Are you sure you want to delete your account?"
+msgstr ""
+
+#: fractal-gtk/src/appop/attach.rs:42
+msgid "Image from Clipboard"
+msgstr ""
+
+#: fractal-gtk/src/appop/attach.rs:58
+msgid "Send"
+msgstr "Pošlji"
+
+#. Filename for the attached image
+#: fractal-gtk/src/appop/attach.rs:87
+msgid "image"
+msgstr ""
+
+#: fractal-gtk/src/appop/invite.rs:149
+msgid "Invite to {name}"
+msgstr ""
+
+#: fractal-gtk/src/appop/invite.rs:262
+msgid "Join {room_name}?"
+msgstr ""
+
+#: fractal-gtk/src/appop/invite.rs:267
+msgid ""
+"You’ve been invited to join <b>{room_name}</b> room by <b>{sender_name}</b>"
+msgstr ""
+
+#: fractal-gtk/src/appop/invite.rs:272
+msgid "You’ve been invited to join <b>{room_name}</b>"
+msgstr ""
+
+#. Translators: The placeholder is for the number of unread messages in the
+#. application
+#: fractal-gtk/src/appop/mod.rs:184
+msgid "Fractal [{}]"
+msgstr ""
+
+#: fractal-gtk/src/appop/notify.rs:50
+msgid "An audio file has been added to the conversation."
+msgstr ""
+
+#: fractal-gtk/src/appop/notify.rs:51
+msgid "An image has been added to the conversation."
+msgstr ""
+
+#: fractal-gtk/src/appop/notify.rs:52
+msgid "A video has been added to the conversation."
+msgstr ""
+
+#: fractal-gtk/src/appop/notify.rs:53
+msgid "A file has been added to the conversation."
+msgstr ""
+
+#: fractal-gtk/src/appop/notify.rs:58
+msgid " (direct message)"
+msgstr ""
+
+#: fractal-gtk/src/appop/room.rs:339
+msgid "Leave {room_name}?"
+msgstr ""
+
+#: fractal-gtk/src/appop/room.rs:615
+msgid "EMPTY ROOM"
+msgstr ""
+
+#: fractal-gtk/src/appop/room.rs:617
+msgid "{m1} and {m2}"
+msgstr "{m1} in {m2}"
+
+#: fractal-gtk/src/appop/room.rs:618
+msgid "{m1} and Others"
+msgstr ""
+
+#: fractal-gtk/src/appop/room.rs:719
+msgid "Several users are typing…"
+msgstr ""
+
+#: fractal-gtk/src/appop/room.rs:722
+msgid "<b>{}</b> is typing…"
+msgid_plural "<b>{}</b> and <b>{}</b> are typing…"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: fractal-gtk/src/appop/sync.rs:10
+msgid "Syncing, this could take a while"
+msgstr ""
+
+#: fractal-gtk/src/uibuilder.rs:52
+msgid "You don’t have permission to post to this room"
+msgstr ""
+
+#: fractal-gtk/src/widgets/file_dialog.rs:9
+msgid "Save media as"
+msgstr "Shrani predstavno datoteko kot"
+
+#: fractal-gtk/src/widgets/file_dialog.rs:12
+msgid "_Save"
+msgstr "_Shrani"
+
+#: fractal-gtk/src/widgets/file_dialog.rs:33
+msgid "_Select"
+msgstr "_Izberi"
+
+#: fractal-gtk/src/widgets/inline_player.rs:524
+msgid "Could not retrieve file URI"
+msgstr ""
+
+#: fractal-gtk/src/widgets/kicked_dialog.rs:46
+msgid "You have been kicked from {}"
+msgstr ""
+
+#: fractal-gtk/src/widgets/kicked_dialog.rs:50
+msgid ""
+"Kicked by: {}\n"
+" “{}”"
+msgstr ""
+
+#: fractal-gtk/src/widgets/login.rs:101
+msgid "Malformed server URL"
+msgstr ""
+
+#: fractal-gtk/src/widgets/media_viewer.rs:1072
+msgid "Error while loading previous media"
+msgstr ""
+
+#: fractal-gtk/src/widgets/members_list.rs:52
+msgid "No matching members found"
+msgstr ""
+
+#: fractal-gtk/src/widgets/members_list.rs:168
+msgid "Admin"
+msgstr "Skrbnik"
+
+#: fractal-gtk/src/widgets/members_list.rs:169
+msgid "Moderator"
+msgstr "Moderator"
+
+#: fractal-gtk/src/widgets/members_list.rs:170
+msgid "Privileged"
+msgstr ""
+
+#: fractal-gtk/src/widgets/message.rs:84
+msgid "Uploading video."
+msgstr ""
+
+#: fractal-gtk/src/widgets/message.rs:89
+msgid "Uploading audio."
+msgstr ""
+
+#: fractal-gtk/src/widgets/message.rs:94
+msgid "Uploading image."
+msgstr ""
+
+#: fractal-gtk/src/widgets/message.rs:98
+msgid "Uploading file."
+msgstr ""
+
+#: fractal-gtk/src/widgets/message.rs:413
+#: fractal-gtk/src/widgets/message.rs:530
+msgid "Save"
+msgstr "Shrani"
+
+#: fractal-gtk/src/widgets/message.rs:546
+msgid "Open"
+msgstr "Odpri"
+
+#. Use 12h time format (AM/PM)
+#: fractal-gtk/src/widgets/message.rs:566
+msgid "%l∶%M %p"
+msgstr "%l∶%M %p"
+
+#. Use 24 time format
+#: fractal-gtk/src/widgets/message.rs:569
+msgid "%R"
+msgstr "%R"
+
+#: fractal-gtk/src/widgets/room_history.rs:91
+msgid "New Messages"
+msgstr "Nova sporočila"
+
+#. Translators: This is a date format in the day divider without the year
+#: fractal-gtk/src/widgets/room_history.rs:705
+msgid "%B %e"
+msgstr "%B %e"
+
+#. Translators: This is a date format in the day divider with the year
+#: fractal-gtk/src/widgets/room_history.rs:708
+msgid "%B %e, %Y"
+msgstr "%B %e, %Y"
+
+#: fractal-gtk/src/widgets/room_settings.rs:219
+msgid "Room · {} member"
+msgid_plural "Room · {} members"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: fractal-gtk/src/widgets/room_settings.rs:676
+msgid "{} member"
+msgid_plural "{} members"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: fractal-gtk/src/widgets/roomlist.rs:480
+msgid "Invites"
+msgstr ""
+
+#: fractal-gtk/src/widgets/roomlist.rs:481
+msgid "You don’t have any invitations"
+msgstr ""
+
+#: fractal-gtk/src/widgets/roomlist.rs:485
+msgid "Favorites"
+msgstr "Priljubljeno"
+
+#: fractal-gtk/src/widgets/roomlist.rs:486
+msgid "Drag and drop rooms here to add them to your favorites"
+msgstr ""
+
+#: fractal-gtk/src/widgets/roomlist.rs:490
+msgid "Rooms"
+msgstr "Klepetalnice"
+
+#: fractal-gtk/src/widgets/roomlist.rs:491
+msgid "You don’t have any rooms yet"
+msgstr ""
