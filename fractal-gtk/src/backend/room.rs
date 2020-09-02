@@ -91,7 +91,7 @@ use super::{
     dw_media, get_prev_batch_from, remove_matrix_access_token_if_present, ContentType, HandleError,
 };
 use crate::app::App;
-use crate::i18n::i18n;
+use crate::util::i18n::i18n;
 use crate::APPOP;
 
 #[derive(Debug)]

@@ -9,7 +9,7 @@ use crate::appop::AppOp;
 use crate::appop::AppState;
 use crate::backend::HandleError;
 
-use crate::i18n::i18n;
+use crate::util::i18n::i18n;
 use crate::widgets;
 use crate::widgets::AvatarExt;
 

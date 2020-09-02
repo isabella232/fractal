@@ -10,6 +10,7 @@ use gtk::prelude::*;
 
 use libhandy::ColumnExt;
 
+// This really requires to opt-out of the lint
 #[allow(dead_code)]
 #[derive(Debug, Clone, PartialEq)]
 enum Position {
@@ -17,10 +18,8 @@ enum Position {
     Bottom,
 }
 
-#[allow(dead_code)]
 pub struct ScrollWidget {
     upper: Rc<Cell<f64>>,
-    value: Rc<Cell<f64>>, // FIXME: is it really used anywhere?
     balance: Rc<Cell<Option<Position>>>,
     autoscroll: Rc<Cell<bool>>,
     /* whether a request for more messages has been send or not */
@@ -127,15 +126,9 @@ impl ScrollWidget {
             .get_vadjustment()
             .map(|adj| adj.get_upper())
             .unwrap_or_default();
-        let value = widgets
-            .view
-            .get_vadjustment()
-            .map(|adj| adj.get_value())
-            .unwrap_or_default();
 
         let mut scroll = ScrollWidget {
             widgets,
-            value: Rc::new(Cell::new(value)),
             upper: Rc::new(Cell::new(upper)),
             autoscroll: Rc::new(Cell::new(false)),
             request_sent: Rc::new(Cell::new(false)),

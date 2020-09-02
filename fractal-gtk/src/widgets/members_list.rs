@@ -7,8 +7,8 @@ use std::rc::Rc;
 use glib::signal;
 use gtk::prelude::*;
 
-use crate::i18n::i18n;
 use crate::types::Member;
+use crate::util::i18n::i18n;
 use crate::widgets;
 use crate::widgets::avatar::{AvatarBadgeColor, AvatarExt};
 
@@ -54,25 +54,6 @@ impl MembersList {
         b.show_all();
         self.error.hide();
         Some(b)
-    }
-
-    /* removes the content of the row with index i */
-    #[allow(dead_code)]
-    pub fn update(&self, uid: UserId) -> Option<()> {
-        let mut index = None;
-        for (i, member) in self.members.iter().enumerate() {
-            if member.uid == uid {
-                index = Some(i);
-                break;
-            }
-        }
-        let widget = self.container.get_row_at_index(index? as i32)?;
-        let child = widget.get_child()?;
-        widget.remove(&child);
-        /* We don't need to create a new widget because the draw signal
-         * will handle the creation */
-
-        None
     }
 
     pub fn connect(&self) {

@@ -14,9 +14,9 @@ use std::thread;
 
 use crate::actions::AppState;
 use crate::backend::HandleError;
-use crate::i18n::i18n;
 use crate::types::Message;
 use crate::uibuilder::UI;
+use crate::util::i18n::i18n;
 use crate::App;
 use fractal_api::url::Url;
 use gio::ActionGroupExt;

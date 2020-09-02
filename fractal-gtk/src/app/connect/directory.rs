@@ -1,6 +1,6 @@
 use glib::clone;
 
-use crate::i18n::i18n;
+use crate::util::i18n::i18n;
 
 use gtk::prelude::*;
 use libhandy::{Column, ColumnExt};

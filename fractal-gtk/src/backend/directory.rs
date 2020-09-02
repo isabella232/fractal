@@ -22,7 +22,7 @@ use fractal_api::r0::AccessToken;
 
 use super::{dw_media, ContentType, HandleError};
 use crate::app::App;
-use crate::i18n::i18n;
+use crate::util::i18n::i18n;
 use crate::APPOP;
 
 #[derive(Debug)]

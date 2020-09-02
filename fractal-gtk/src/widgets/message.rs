@@ -1,4 +1,4 @@
-use crate::i18n::i18n;
+use crate::util::i18n::i18n;
 use itertools::Itertools;
 
 use crate::appop::UserInfoCache;

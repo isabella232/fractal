@@ -1,4 +1,4 @@
-use crate::i18n::{i18n, i18n_k};
+use crate::util::i18n::{i18n, i18n_k};
 
 use crate::backend::room;
 use fractal_api::identifiers::{RoomId, UserId};

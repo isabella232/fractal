@@ -6,7 +6,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use std::thread;
 
-use crate::i18n::ni18n_f;
+use crate::util::i18n::ni18n_f;
 use fractal_api::url::Url;
 use gio::prelude::*;
 use gtk::prelude::*;
@@ -95,12 +95,6 @@ impl RoomSettings {
         self.connect();
 
         Some((body, header))
-    }
-
-    #[allow(dead_code)]
-    pub fn update_members_list(&self, uid: UserId) -> Option<()> {
-        self.members_list.clone()?.update(uid);
-        None
     }
 
     pub fn connect(&mut self) {

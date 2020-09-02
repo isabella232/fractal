@@ -26,6 +26,7 @@ pub enum RoomMembership {
     Left(Reason),
 }
 
+// This needs to opt-out of the lint to keep consistency
 #[allow(dead_code)]
 impl RoomMembership {
     pub fn is_joined(&self) -> bool {

@@ -1,9 +1,10 @@
+#![deny(dead_code, unused_imports, unused_variables)]
+
 mod backend;
 mod client;
 mod config;
 mod error;
 mod globals;
-mod i18n;
 #[macro_use]
 mod util;
 mod cache;

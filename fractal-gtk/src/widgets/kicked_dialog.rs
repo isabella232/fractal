@@ -1,4 +1,4 @@
-use crate::i18n::i18n_f;
+use crate::util::i18n::i18n_f;
 use glib::clone;
 use gtk::prelude::*;
 

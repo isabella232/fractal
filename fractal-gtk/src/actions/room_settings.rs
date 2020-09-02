@@ -11,7 +11,7 @@ use std::thread;
 
 use crate::app::App;
 use crate::backend::HandleError;
-use crate::i18n::i18n;
+use crate::util::i18n::i18n;
 
 use crate::widgets::ErrorDialog;
 use crate::widgets::FileDialog::open;

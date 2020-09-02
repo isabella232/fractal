@@ -95,24 +95,6 @@ impl Image {
         self
     }
 
-    #[allow(dead_code)]
-    pub fn fixed(mut self, f: bool) -> Image {
-        self.fixed_size = f;
-        self
-    }
-
-    #[allow(dead_code)]
-    pub fn circle(mut self, c: bool) -> Image {
-        self.circle = c;
-        self
-    }
-
-    #[allow(dead_code)]
-    pub fn thumb(mut self, t: bool) -> Image {
-        self.thumb = t;
-        self
-    }
-
     pub fn size(mut self, size: Option<(i32, i32)>) -> Image {
         self.max_size = size;
         self

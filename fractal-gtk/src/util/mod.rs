@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use crate::globals::CACHE_PATH;
 use anyhow::anyhow;
 use anyhow::Error as AnyhowError;
@@ -10,6 +12,8 @@ use std::fs::create_dir_all;
 use std::io::Error as IoError;
 use std::path::PathBuf;
 use std::sync::mpsc::SendError;
+
+pub mod i18n;
 
 pub fn cache_dir_path(dir: Option<&str>, name: &str) -> Result<PathBuf, IoError> {
     let path = CACHE_PATH.join(dir.unwrap_or_default());

@@ -75,7 +75,7 @@ use super::{dw_media, ContentType};
 
 use super::{remove_matrix_access_token_if_present, HandleError};
 use crate::app::App;
-use crate::i18n::i18n;
+use crate::util::i18n::i18n;
 use crate::APPOP;
 
 pub type UserInfo = (String, PathBuf);

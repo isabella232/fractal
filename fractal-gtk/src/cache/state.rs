@@ -1,7 +1,6 @@
 use lazy_static::lazy_static;
 use mdl::Cache;
 use mdl::Model;
-use mdl::Store;
 use serde::{Deserialize, Serialize};
 
 use anyhow::{anyhow, Error};
@@ -46,35 +45,6 @@ pub struct AppMsg {
 impl Model for AppState {
     fn key(&self) -> String {
         "state".to_string()
-    }
-}
-
-impl AppRoom {
-    #[allow(dead_code)]
-    fn store_msgs<S: Store>(&self, store: &S) -> Result<(), Error> {
-        for msg in self.room.borrow().messages.iter() {
-            let m = AppMsg { msg: msg.clone() };
-            m.store(store)?;
-        }
-
-        Ok(())
-    }
-
-    #[allow(dead_code)]
-    fn load_msgs<S: Store>(&mut self, store: &S) -> Result<(), Error> {
-        let key = format!("msg:{}", self.room.borrow().id);
-        let msgs: Vec<Message> = AppMsg::all(store, &key)?
-            .iter()
-            .map(|m| m.msg.clone())
-            .collect();
-        self.room.borrow_mut().messages = msgs;
-
-        Ok(())
-    }
-
-    #[allow(dead_code)]
-    fn clear_msgs(&self) {
-        self.room.borrow_mut().messages = vec![];
     }
 }
 
@@ -128,13 +98,6 @@ impl FCache {
         let fname = cache_dir_path(None, "cache.mdl")
             .or_else(|_| Err(anyhow!("Can't remove cache file")))?;
         remove_dir_all(fname).or_else(|_| Err(anyhow!("Can't remove cache file")))
-    }
-
-    #[allow(dead_code)]
-    pub fn get_room(&self, id: &str) -> Result<Room, Error> {
-        let cache = self.get_store();
-        let r = AppRoom::get(cache.as_ref().unwrap(), id)?;
-        Ok(r.room.into_inner())
     }
 
     pub fn get_rooms(&self) -> Result<Vec<Room>, Error> {

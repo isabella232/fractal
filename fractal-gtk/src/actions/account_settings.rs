@@ -1,5 +1,5 @@
 use crate::backend::{user, HandleError};
-use crate::i18n::i18n;
+use crate::util::i18n::i18n;
 use gio::prelude::*;
 use gio::SimpleAction;
 use gio::SimpleActionGroup;

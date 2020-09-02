@@ -101,6 +101,8 @@ app_sources = files(
   'model/message.rs',
   'model/mod.rs',
   'model/room.rs',
+  'util/i18n.rs',
+  'util/mod.rs',
   'widgets/address.rs',
   'widgets/autocomplete.rs',
   'widgets/avatar.rs',
@@ -130,15 +132,13 @@ app_sources = files(
   'config.rs.in',
   'error.rs',
   'globals.rs',
-  'i18n.rs',
   'main.rs',
   'passwd.rs',
   'static_resources.rs',
   'static_resources.rs.in',
   'types.rs',
   'uibuilder.rs',
-  'uitypes.rs',
-  'util.rs'
+  'uitypes.rs'
 )
 
 cargo_release = custom_target('cargo-build',

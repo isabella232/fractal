@@ -9,7 +9,7 @@ use crate::actions::global::AppState;
 use crate::actions::login::LoginState;
 use crate::appop::AppOp;
 use crate::globals;
-use crate::i18n::i18n;
+use crate::util::i18n::i18n;
 use crate::widgets::ErrorDialog;
 
 use crate::backend::register::get_well_known;

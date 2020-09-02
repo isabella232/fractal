@@ -14,7 +14,7 @@ use crate::backend::ThreadPool;
 use crate::cache::CacheMap;
 use fractal_api::url::Url;
 
-use crate::i18n;
+use crate::util::i18n;
 
 use crate::types::Member;
 use crate::types::Room;

@@ -20,7 +20,7 @@ use fractal_api::r0::Medium;
 
 use super::HandleError;
 use crate::app::App;
-use crate::i18n::i18n;
+use crate::util::i18n::i18n;
 use crate::APPOP;
 
 #[derive(Debug)]

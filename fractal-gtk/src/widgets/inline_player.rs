@@ -47,7 +47,7 @@ use std::sync::mpsc::{Receiver, Sender};
 use fractal_api::url::Url;
 
 use crate::app::App;
-use crate::i18n::i18n;
+use crate::util::i18n::i18n;
 
 pub trait PlayerExt {
     fn play(&self);

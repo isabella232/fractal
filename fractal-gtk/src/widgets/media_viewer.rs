@@ -8,7 +8,7 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
 
-use crate::i18n::i18n;
+use crate::util::i18n::i18n;
 use either::Either;
 use fractal_api::identifiers::UserId;
 use fractal_api::url::Url;

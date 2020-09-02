@@ -1,7 +1,7 @@
 use log::info;
 use std::thread;
 
-use crate::i18n::i18n;
+use crate::util::i18n::i18n;
 
 use crate::app::App;
 use crate::appop::AppOp;

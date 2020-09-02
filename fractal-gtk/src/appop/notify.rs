@@ -12,7 +12,7 @@ use std::sync::mpsc::channel;
 use std::sync::mpsc::TryRecvError;
 use std::sync::mpsc::{Receiver, Sender};
 
-use crate::i18n::i18n;
+use crate::util::i18n::i18n;
 
 use crate::appop::AppOp;
 
