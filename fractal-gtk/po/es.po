@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2020-08-13 10:34+0000\n"
+"POT-Creation-Date: 2020-08-14 09:11+0000\n"
 "PO-Revision-Date: 2020-08-14 10:29+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Spanish - Spain <gnome-es-list@gnome.org>\n"
@@ -357,7 +357,7 @@ msgstr "Abandonar sala"
 
 #: fractal-gtk/res/ui/login_flow.ui:33
 msgid "Welcome to Fractal"
-msgstr "Bienvenido a Fractal"
+msgstr "Bienvenido/a a Fractal"
 
 #: fractal-gtk/res/ui/login_flow.ui:47 fractal-gtk/res/ui/login_flow.ui:371
 msgid "_Log In"
@@ -767,7 +767,6 @@ msgid "A Matrix.org client for GNOME"
 msgstr "Un cliente para GNOME de Matrix.org"
 
 #: fractal-gtk/src/appop/about.rs:22
-#| msgid "© 2017–2018 Daniel García Moreno, et al."
 msgid "© 2017–2020 Daniel García Moreno, et al."
 msgstr "© 2017–2019 Daniel García Moreno y colaboraciones"
 
