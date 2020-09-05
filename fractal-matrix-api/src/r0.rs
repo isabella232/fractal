@@ -6,7 +6,6 @@ pub mod media;
 pub mod profile;
 pub mod pushrules;
 pub mod redact;
-pub mod search;
 pub mod server;
 pub mod state;
 pub mod sync;
@@ -102,8 +101,4 @@ impl From<String> for AccessToken {
     fn from(token: String) -> Self {
         Self(token)
     }
-}
-
-pub(crate) fn u64_is_10(number: &u64) -> bool {
-    number == &10
 }

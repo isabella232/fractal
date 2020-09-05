@@ -1,7 +1,7 @@
 use fractal_api::identifiers::UserId;
 use fractal_api::reqwest::Error as ReqwestError;
 use fractal_api::url::{ParseError as UrlError, Url};
-use fractal_api::Client as MatrixClient;
+use fractal_api::{Client as MatrixClient, Error as MatrixError};
 use std::fs;
 use std::io::Error as IoError;
 
@@ -20,6 +20,7 @@ use std::sync::mpsc::Sender;
 use std::thread;
 
 use crate::model::member::Member;
+use fractal_api::api::r0::user_directory::search_users::Request as UserDirectoryRequest;
 use fractal_api::identity::r0::association::msisdn::submit_token::request as submit_phone_token_req;
 use fractal_api::identity::r0::association::msisdn::submit_token::Body as SubmitPhoneTokenBody;
 use fractal_api::identity::r0::association::msisdn::submit_token::Response as SubmitPhoneTokenResponse;
@@ -65,10 +66,6 @@ use fractal_api::r0::profile::set_avatar_url::Parameters as SetAvatarUrlParamete
 use fractal_api::r0::profile::set_display_name::request as set_display_name;
 use fractal_api::r0::profile::set_display_name::Body as SetDisplayNameBody;
 use fractal_api::r0::profile::set_display_name::Parameters as SetDisplayNameParameters;
-use fractal_api::r0::search::user::request as user_directory;
-use fractal_api::r0::search::user::Body as UserDirectoryBody;
-use fractal_api::r0::search::user::Parameters as UserDirectoryParameters;
-use fractal_api::r0::search::user::Response as UserDirectoryResponse;
 use fractal_api::r0::AccessToken;
 use fractal_api::r0::Medium;
 use fractal_api::r0::ThreePIDCredentials;
@@ -593,13 +590,13 @@ pub fn get_user_info_async(
 
 #[derive(Debug)]
 pub enum UserSearchError {
-    Reqwest(ReqwestError),
+    Matrix(MatrixError),
     ParseUrl(UrlError),
 }
 
-impl From<ReqwestError> for UserSearchError {
-    fn from(err: ReqwestError) -> Self {
-        Self::Reqwest(err)
+impl From<MatrixError> for UserSearchError {
+    fn from(err: MatrixError) -> Self {
+        Self::Matrix(err)
     }
 }
 
@@ -611,19 +608,12 @@ impl From<UrlError> for UserSearchError {
 
 impl HandleError for UserSearchError {}
 
-pub fn search(
-    base: Url,
-    access_token: AccessToken,
-    search_term: String,
+pub async fn search(
+    session_client: MatrixClient,
+    search_term: &str,
 ) -> Result<Vec<Member>, UserSearchError> {
-    let params = UserDirectoryParameters { access_token };
-    let body = UserDirectoryBody {
-        search_term,
-        ..Default::default()
-    };
-
-    let request = user_directory(base, &params, &body)?;
-    let response: UserDirectoryResponse = HTTP_CLIENT.get_client().execute(request)?.json()?;
+    let request = UserDirectoryRequest::new(search_term);
+    let response = session_client.send(request).await?;
 
     response
         .results

@@ -1,6 +1,6 @@
 use either::Either;
+use fractal_api::api::r0::user_directory::search_users::User;
 use fractal_api::identifiers::UserId;
-use fractal_api::r0::search::user::User;
 use fractal_api::r0::sync::get_joined_members::RoomMember;
 use fractal_api::url::{ParseError as UrlError, Url};
 use serde::{Deserialize, Serialize};
@@ -44,7 +44,7 @@ impl TryFrom<User> for Member {
             alias: user.display_name,
             avatar: user
                 .avatar_url
-                .filter(|url| !url.is_empty())
+                .filter(|a| !a.is_empty())
                 .map(|url| Url::parse(&url))
                 .transpose()?
                 .map(Either::Left),

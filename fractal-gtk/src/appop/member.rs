@@ -9,9 +9,9 @@ use gtk::prelude::*;
 
 use std::collections::HashMap;
 use std::convert::TryFrom;
-use std::thread;
 
 use crate::actions::AppState;
+use crate::app::RUNTIME;
 use crate::appop::AppOp;
 use crate::widgets;
 use crate::App;
@@ -191,13 +191,10 @@ impl AppOp {
     }
 
     pub fn search_invite_user(&self, term: String) {
-        let login_data = unwrap_or_unit_return!(self.login_data.clone());
-        thread::spawn(move || {
-            match user::search(
-                login_data.session_client.homeserver().clone(),
-                login_data.access_token,
-                term,
-            ) {
+        let session_client =
+            unwrap_or_unit_return!(self.login_data.as_ref().map(|ld| ld.session_client.clone()));
+        RUNTIME.spawn(async move {
+            match user::search(session_client, &term).await {
                 Ok(users) => {
                     APPOP!(user_search_finished, (users));
                 }
