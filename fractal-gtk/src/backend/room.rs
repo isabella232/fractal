@@ -8,6 +8,7 @@ use fractal_api::{
     Client as MatrixClient, Error as MatrixError, FromHttpResponseError as RumaResponseError,
     ServerError,
 };
+use serde::Serialize;
 use std::io::Error as IoError;
 use std::path::Path;
 
@@ -28,6 +29,7 @@ use crate::model::{
 };
 use fractal_api::api::r0::config::get_global_account_data::Request as GetGlobalAccountDataRequest;
 use fractal_api::api::r0::config::set_global_account_data::Request as SetGlobalAccountDataRequest;
+use fractal_api::api::r0::config::set_room_account_data::Request as SetRoomAccountDataRequest;
 use fractal_api::api::r0::filter::RoomEventFilter;
 use fractal_api::api::r0::media::create_content::Request as CreateContentRequest;
 use fractal_api::api::r0::media::create_content::Response as CreateContentResponse;
@@ -49,8 +51,6 @@ use fractal_api::events::AnyStateEventContent;
 use fractal_api::events::EventContent;
 use fractal_api::events::EventType;
 use fractal_api::events::InitialStateEvent;
-use fractal_api::r0::config::set_room_account_data::request as set_room_account_data;
-use fractal_api::r0::config::set_room_account_data::Parameters as SetRoomAccountDataParameters;
 use fractal_api::r0::pushrules::delete_room_rules::request as delete_room_rules;
 use fractal_api::r0::pushrules::delete_room_rules::Parameters as DelRoomRulesParams;
 use fractal_api::r0::pushrules::get_room_rules::request as get_room_rules;
@@ -68,7 +68,6 @@ use fractal_api::r0::state::get_state_events_for_key::Parameters as GetStateEven
 use fractal_api::r0::sync::get_joined_members::request as get_joined_members;
 use fractal_api::r0::sync::get_joined_members::Parameters as JoinedMembersParameters;
 use fractal_api::r0::sync::get_joined_members::Response as JoinedMembersResponse;
-use fractal_api::r0::sync::sync_events::Language;
 use fractal_api::r0::tag::create_tag::request as create_tag;
 use fractal_api::r0::tag::create_tag::Body as CreateTagBody;
 use fractal_api::r0::tag::create_tag::Parameters as CreateTagParameters;
@@ -845,11 +844,17 @@ pub async fn invite(
 }
 
 #[derive(Debug)]
-pub struct ChangeLanguageError(ReqwestError);
+pub struct ChangeLanguageError(MatrixError);
 
-impl From<ReqwestError> for ChangeLanguageError {
-    fn from(err: ReqwestError) -> Self {
+impl From<MatrixError> for ChangeLanguageError {
+    fn from(err: MatrixError) -> Self {
         Self(err)
+    }
+}
+
+impl From<ParseJsonError> for ChangeLanguageError {
+    fn from(err: ParseJsonError) -> Self {
+        Self(err.into())
     }
 }
 
@@ -863,27 +868,25 @@ impl HandleError for ChangeLanguageError {
     }
 }
 
-pub fn set_language(
-    access_token: AccessToken,
-    base: Url,
-    user_id: UserId,
-    room_id: RoomId,
+#[derive(Clone, Debug, Serialize)]
+pub struct Language {
+    pub input_language: String,
+}
+
+pub async fn set_language(
+    session_client: MatrixClient,
+    user_id: &UserId,
+    room_id: &RoomId,
     input_language: String,
 ) -> Result<(), ChangeLanguageError> {
-    let params = SetRoomAccountDataParameters { access_token };
-
-    let body = json!(Language { input_language });
-
-    let request = set_room_account_data(
-        base,
-        &params,
-        &body,
-        &user_id,
-        &room_id,
+    let request = SetRoomAccountDataRequest::new(
+        to_raw_value(&Language { input_language })?,
         "org.gnome.fractal.language",
-    )?;
+        room_id,
+        user_id,
+    );
 
-    HTTP_CLIENT.get_client().execute(request)?;
+    session_client.send(request).await?;
 
     Ok(())
 }

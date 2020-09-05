@@ -1,8 +1,7 @@
-use crate::app::App;
+use crate::app::{App, RUNTIME};
 use crate::backend::{room, HandleError};
 use glib::object::Cast;
 use gtk::prelude::*;
-use std::thread;
 
 // The TextBufferExt alias is necessary to avoid conflict with gtk's TextBufferExt
 use gspell::{CheckerExt, TextBuffer, TextBufferExt as GspellTextBufferExt};
@@ -26,13 +25,11 @@ impl App {
                     due to the user switching rooms, the op mutex is locked already.
                     If the checker is modified by gtk due to the user switching the language, the op mutex is unlocked. */
                     if let Ok(op) = op.try_lock() {
-                        if let (Some(active_room), Some(login_data)) = (op.active_room.as_ref(), op.login_data.as_ref()) {
-                            let server = login_data.session_client.homeserver().clone();
-                            let access_token = login_data.access_token.clone();
+                        if let (Some(active_room), Some(login_data)) = (op.active_room.clone(), op.login_data.as_ref()) {
+                            let session_client = login_data.session_client.clone();
                             let uid = login_data.uid.clone();
-                            let room_id = active_room.clone();
-                            thread::spawn(move || {
-                                let query = room::set_language(access_token, server, uid, room_id, lang_code);
+                            RUNTIME.spawn(async move {
+                                let query = room::set_language(session_client, &uid, &active_room, lang_code).await;
                                 if let Err(err) = query {
                                     err.handle_error();
                                 }
