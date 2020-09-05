@@ -1,6 +1,5 @@
 use crate::backend::{dw_media, media, room, ContentType};
 use fractal_api::identifiers::RoomId;
-use fractal_api::r0::AccessToken;
 use fractal_api::Client as MatrixClient;
 use glib::clone;
 use log::error;
@@ -8,7 +7,6 @@ use std::cell::RefCell;
 use std::fs;
 use std::process::Command;
 use std::rc::Rc;
-use std::thread;
 
 use crate::actions::AppState;
 use crate::app::RUNTIME;
@@ -32,11 +30,9 @@ use crate::widgets::SourceDialog;
 /* This creates all actions the room history can perform */
 pub fn new(
     session_client: MatrixClient,
-    access_token: AccessToken,
     ui: UI,
     back_history: Rc<RefCell<Vec<AppState>>>,
 ) -> gio::SimpleActionGroup {
-    let server_url = session_client.homeserver().clone();
     let actions = SimpleActionGroup::new();
     /* Action for each message */
     let reply = SimpleAction::new("reply", glib::VariantTy::new("s").ok());
@@ -197,9 +193,8 @@ pub fn new(
         }
     });
 
-    let s = server_url.clone();
-    let tk = access_token.clone();
     delete.connect_activate(clone!(
+    @strong session_client,
     @weak back_history,
     @weak window
     => move |_, data| {
@@ -212,10 +207,9 @@ pub fn new(
             }
         }
         if let Some(msg) = get_message(data) {
-            let server = s.clone();
-            let access_token = tk.clone();
-            thread::spawn(move || {
-                let query = room::redact_msg(server, access_token, msg);
+            let session_client = session_client.clone();
+            RUNTIME.spawn(async move {
+                let query = room::redact_msg(session_client, msg).await;
                 if let Err(err) = query {
                     err.handle_error();
                 }

@@ -4,7 +4,6 @@ pub mod filter;
 pub mod media;
 pub mod profile;
 pub mod pushrules;
-pub mod redact;
 pub mod server;
 pub mod state;
 pub mod sync;

@@ -34,6 +34,7 @@ use fractal_api::api::r0::filter::RoomEventFilter;
 use fractal_api::api::r0::media::create_content::Request as CreateContentRequest;
 use fractal_api::api::r0::media::create_content::Response as CreateContentResponse;
 use fractal_api::api::r0::message::get_message_events::Request as GetMessagesEventsRequest;
+use fractal_api::api::r0::redact::redact_event::Request as RedactEventRequest;
 use fractal_api::api::r0::room::create_room::Request as CreateRoomRequest;
 use fractal_api::api::r0::room::create_room::RoomPreset;
 use fractal_api::api::r0::room::Visibility;
@@ -57,10 +58,6 @@ use fractal_api::r0::pushrules::get_room_rules::request as get_room_rules;
 use fractal_api::r0::pushrules::get_room_rules::Parameters as GetRoomRulesParams;
 use fractal_api::r0::pushrules::set_room_rules::request as set_room_rules;
 use fractal_api::r0::pushrules::set_room_rules::Parameters as SetRoomRulesParams;
-use fractal_api::r0::redact::redact_event::request as redact_event;
-use fractal_api::r0::redact::redact_event::Body as RedactEventBody;
-use fractal_api::r0::redact::redact_event::Parameters as RedactEventParameters;
-use fractal_api::r0::redact::redact_event::Response as RedactEventResponse;
 use fractal_api::r0::state::create_state_events_for_key::request as create_state_events_for_key;
 use fractal_api::r0::state::create_state_events_for_key::Parameters as CreateStateEventsForKeyParameters;
 use fractal_api::r0::state::get_state_events_for_key::request as get_state_events_for_key;
@@ -364,12 +361,12 @@ pub async fn send_typing(
 #[derive(Debug)]
 pub enum SendMsgRedactionError {
     MessageNotSent,
-    Reqwest(ReqwestError),
+    Matrix(MatrixError),
 }
 
-impl From<ReqwestError> for SendMsgRedactionError {
-    fn from(err: ReqwestError) -> Self {
-        Self::Reqwest(err)
+impl From<MatrixError> for SendMsgRedactionError {
+    fn from(err: MatrixError) -> Self {
+        Self::Matrix(err)
     }
 }
 
@@ -381,28 +378,17 @@ impl HandleError for SendMsgRedactionError {
     }
 }
 
-pub fn redact_msg(
-    base: Url,
-    access_token: AccessToken,
+pub async fn redact_msg(
+    session_client: MatrixClient,
     msg: Message,
-) -> Result<(EventId, Option<EventId>), SendMsgRedactionError> {
-    let room_id = &msg.room;
-    let txn_id = msg.get_txn_id();
-    let event_id = msg
-        .id
-        .as_ref()
-        .ok_or(SendMsgRedactionError::MessageNotSent)?;
+) -> Result<(EventId, EventId), SendMsgRedactionError> {
+    let ref txn_id = msg.get_txn_id();
+    let event_id = msg.id.ok_or(SendMsgRedactionError::MessageNotSent)?;
 
-    let params = RedactEventParameters { access_token };
+    let request = RedactEventRequest::new(&msg.room, &event_id, txn_id);
+    let response = session_client.send(request).await?;
 
-    let body = RedactEventBody {
-        reason: "Deletion requested by the sender".into(),
-    };
-
-    let request = redact_event(base, &params, &body, room_id, event_id, &txn_id)?;
-    let response: RedactEventResponse = HTTP_CLIENT.get_client().execute(request)?.json()?;
-
-    Ok((event_id.clone(), response.event_id))
+    Ok((event_id, response.event_id))
 }
 
 #[derive(Debug)]

@@ -303,7 +303,6 @@ impl AppOp {
         let back_history = self.room_back_history.clone();
         let actions = actions::Message::new(
             login_data.session_client.clone(),
-            login_data.access_token,
             self.ui.clone(),
             back_history,
         );

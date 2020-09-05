@@ -45,12 +45,8 @@ impl AppOp {
 
             if let Some(login_data) = self.login_data.clone() {
                 let back_history = self.room_back_history.clone();
-                let actions = actions::Message::new(
-                    login_data.session_client,
-                    login_data.access_token,
-                    self.ui.clone(),
-                    back_history,
-                );
+                let actions =
+                    actions::Message::new(login_data.session_client, self.ui.clone(), back_history);
                 header.insert_action_group("message", Some(&actions));
                 body.insert_action_group("message", Some(&actions));
             } else {
