@@ -1,6 +1,6 @@
+use crate::app::RUNTIME;
 use crate::appop::UserInfoCache;
 use crate::backend::user;
-use crate::backend::ThreadPool;
 use crate::util::cache_dir_path;
 use crate::util::ResultExpectLog;
 use fractal_api::r0::AccessToken;
@@ -16,7 +16,6 @@ use anyhow::Error;
 use fractal_api::identifiers::{DeviceId, UserId};
 use std::collections::HashMap;
 use std::hash::Hash;
-use std::path::PathBuf;
 use std::time::{Duration, Instant};
 
 use crate::globals;
@@ -158,28 +157,15 @@ pub fn remove_from_cache(user_info_cache: UserInfoCache, user_id: &UserId) {
 /// this downloads a avatar and stores it in the cache folder
 pub fn download_to_cache(
     session_client: MatrixClient,
-    thread_pool: ThreadPool,
     user_info_cache: UserInfoCache,
-    access_token: AccessToken,
     uid: UserId,
     data: Rc<RefCell<AvatarData>>,
 ) {
-    let (tx, rx) = channel::<(String, PathBuf)>();
-    user::get_user_info_async(
-        thread_pool,
-        session_client,
-        user_info_cache,
-        access_token,
-        uid,
-        tx,
-    );
+    let response = RUNTIME.spawn(user::get_user_info(session_client, user_info_cache, uid));
 
-    glib::timeout_add_local(50, move || match rx.try_recv() {
-        Err(TryRecvError::Empty) => Continue(true),
-        Err(TryRecvError::Disconnected) => Continue(false),
-        Ok(_resp) => {
+    glib::MainContext::default().spawn_local(async move {
+        if let Ok(_) = response.await {
             data.borrow_mut().redraw(None);
-            Continue(false)
         }
     });
 }

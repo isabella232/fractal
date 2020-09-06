@@ -56,12 +56,15 @@ impl<'a> MemberBox<'a> {
             badge,
             None,
         );
-        if let Some(login_data) = self.op.login_data.clone() {
+        if let Some(session_client) = self
+            .op
+            .login_data
+            .as_ref()
+            .map(|ld| ld.session_client.clone())
+        {
             download_to_cache(
-                login_data.session_client.clone(),
-                self.op.thread_pool.clone(),
+                session_client,
                 self.op.user_info_cache.clone(),
-                login_data.access_token,
                 self.member.uid.clone(),
                 data,
             );
@@ -101,12 +104,15 @@ impl<'a> MemberBox<'a> {
             None,
             None,
         );
-        if let Some(login_data) = self.op.login_data.clone() {
+        if let Some(session_client) = self
+            .op
+            .login_data
+            .as_ref()
+            .map(|ld| ld.session_client.clone())
+        {
             download_to_cache(
-                login_data.session_client.clone(),
-                self.op.thread_pool.clone(),
+                session_client,
                 self.op.user_info_cache.clone(),
-                login_data.access_token,
                 self.member.uid.clone(),
                 data,
             );

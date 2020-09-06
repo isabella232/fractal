@@ -8,8 +8,6 @@ use std::convert::TryFrom;
 use std::fmt::Debug;
 use std::io::Error as IoError;
 use std::path::PathBuf;
-use std::sync::{Arc, Condvar, Mutex};
-use std::thread;
 
 use crate::client::ClientBlocking;
 use crate::util::cache_dir_path;
@@ -28,49 +26,6 @@ pub mod user;
 
 lazy_static! {
     pub static ref HTTP_CLIENT: ClientBlocking = ClientBlocking::new();
-}
-
-#[derive(Clone, Debug)]
-pub struct ThreadPool {
-    thread_count: Arc<(Mutex<u8>, Condvar)>,
-    limit: u8,
-}
-
-impl ThreadPool {
-    pub fn new(limit: u8) -> Self {
-        ThreadPool {
-            thread_count: Arc::new((Mutex::new(0), Condvar::new())),
-            limit,
-        }
-    }
-
-    pub fn run<F>(&self, func: F)
-    where
-        F: FnOnce() + Send + 'static,
-    {
-        let thread_count = self.thread_count.clone();
-        let limit = self.limit;
-        thread::spawn(move || {
-            // waiting, less than {limit} threads at the same time
-            let &(ref num, ref cvar) = &*thread_count;
-            {
-                let mut start = num.lock().unwrap();
-                while *start >= limit {
-                    start = cvar.wait(start).unwrap()
-                }
-                *start += 1;
-            }
-
-            func();
-
-            // freeing the cvar for new threads
-            {
-                let mut counter = num.lock().unwrap();
-                *counter -= 1;
-            }
-            cvar.notify_one();
-        });
-    }
 }
 
 pub enum ContentType {

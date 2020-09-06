@@ -1,5 +1,6 @@
 use serde_json::Value as JsonValue;
 
+use crate::app::RUNTIME;
 use crate::backend::user::get_user_avatar;
 use crate::model::member::Member;
 use crate::model::member::MemberList;
@@ -8,7 +9,6 @@ use either::Either;
 use fractal_api::directory::PublicRoomsChunk;
 use fractal_api::identifiers::{Error as IdError, EventId, RoomAliasId, RoomId, UserId};
 use fractal_api::r0::sync::sync_events::Response as SyncResponse;
-use fractal_api::r0::AccessToken;
 use fractal_api::url::{ParseError as UrlError, Url};
 use fractal_api::Client as MatrixClient;
 use log::{debug, info};
@@ -138,7 +138,6 @@ impl Room {
         session_client: MatrixClient,
         response: &SyncResponse,
         user_id: UserId,
-        access_token: AccessToken,
     ) -> Result<Vec<Self>, IdError> {
         // getting the list of direct rooms
         let direct: HashSet<RoomId> = parse_m_direct(&response.account_data.events)
@@ -211,8 +210,9 @@ impl Room {
                 let leave_id = UserId::try_from(last_event["sender"].as_str().unwrap_or_default())?;
                 if leave_id != user_id {
                     let kick_reason = &last_event["content"]["reason"];
-                    if let Ok((kicker_alias, kicker_avatar)) =
-                        get_user_avatar(session_client.clone(), access_token.clone(), &leave_id)
+                    if let Ok((kicker_alias, kicker_avatar)) = RUNTIME
+                        .handle()
+                        .block_on(get_user_avatar(session_client.clone(), &leave_id))
                     {
                         let kicker = Member {
                             alias: Some(kicker_alias),
@@ -250,12 +250,11 @@ impl Room {
                             && x["state_key"] == user_id.to_string().as_str()
                     })
                     .map_or(Ok(None), |ev| {
-                        Ok(get_user_avatar(
-                            session_client.clone(),
-                            access_token.clone(),
-                            &UserId::try_from(ev["sender"].as_str().unwrap_or_default())?,
-                        )
-                        .ok())
+                        let user_id = UserId::try_from(ev["sender"].as_str().unwrap_or_default())?;
+                        let avatar = RUNTIME
+                            .handle()
+                            .block_on(get_user_avatar(session_client.clone(), &user_id));
+                        Ok(avatar.ok())
                     });
                 if let Some((alias, avatar)) = alias_avatar? {
                     let inv_sender = Member {

@@ -2,7 +2,6 @@ use crate::util::i18n::i18n;
 use itertools::Itertools;
 
 use crate::appop::UserInfoCache;
-use crate::backend::ThreadPool;
 use chrono::prelude::*;
 use either::Either;
 use fractal_api::r0::AccessToken;
@@ -73,7 +72,6 @@ impl MessageBox {
     pub fn create(
         &mut self,
         session_client: MatrixClient,
-        thread_pool: ThreadPool,
         user_info_cache: UserInfoCache,
         msg: &Message,
         has_header: bool,
@@ -110,7 +108,7 @@ impl MessageBox {
             _ if has_header => {
                 self.row.set_margin_top(12);
                 self.header = true;
-                self.widget(session_client, thread_pool, user_info_cache, msg)
+                self.widget(session_client, user_info_cache, msg)
             }
             _ => {
                 self.header = false;
@@ -131,18 +129,10 @@ impl MessageBox {
     pub fn tmpwidget(
         mut self,
         session_client: MatrixClient,
-        thread_pool: ThreadPool,
         user_info_cache: UserInfoCache,
         msg: &Message,
     ) -> MessageBox {
-        self.create(
-            session_client,
-            thread_pool,
-            user_info_cache,
-            msg,
-            true,
-            true,
-        );
+        self.create(session_client, user_info_cache, msg, true, true);
         {
             let w = self.get_listbox_row();
             w.get_style_context().add_class("msg-tmp");
@@ -153,7 +143,6 @@ impl MessageBox {
     pub fn update_header(
         &mut self,
         session_client: MatrixClient,
-        thread_pool: ThreadPool,
         user_info_cache: UserInfoCache,
         msg: Message,
         has_header: bool,
@@ -161,7 +150,7 @@ impl MessageBox {
         let w = if has_header && msg.mtype != RowType::Emote {
             self.row.set_margin_top(12);
             self.header = true;
-            self.widget(session_client, thread_pool, user_info_cache, &msg)
+            self.widget(session_client, user_info_cache, &msg)
         } else {
             if let RowType::Emote = msg.mtype {
                 self.row.set_margin_top(12);
@@ -179,7 +168,6 @@ impl MessageBox {
     fn widget(
         &mut self,
         session_client: MatrixClient,
-        thread_pool: ThreadPool,
         user_info_cache: UserInfoCache,
         msg: &Message,
     ) -> gtk::Box {
@@ -190,7 +178,7 @@ impl MessageBox {
         let msg_widget = gtk::Box::new(gtk::Orientation::Horizontal, 10);
         let content = self.build_room_msg_content(session_client.clone(), msg, false);
         /* Todo: make build_room_msg_avatar() faster (currently ~1ms) */
-        let avatar = self.build_room_msg_avatar(session_client, thread_pool, user_info_cache, msg);
+        let avatar = self.build_room_msg_avatar(session_client, user_info_cache, msg);
 
         msg_widget.pack_start(&avatar, false, false, 0);
         msg_widget.pack_start(&content, true, true, 0);
@@ -275,7 +263,6 @@ impl MessageBox {
     fn build_room_msg_avatar(
         &self,
         session_client: MatrixClient,
-        thread_pool: ThreadPool,
         user_info_cache: UserInfoCache,
         msg: &Message,
     ) -> widgets::Avatar {
@@ -297,14 +284,7 @@ impl MessageBox {
             self.username.set_text(&uid.to_string());
         }
 
-        download_to_cache(
-            session_client,
-            thread_pool,
-            user_info_cache,
-            self.access_token.clone(),
-            uid.clone(),
-            data.clone(),
-        );
+        download_to_cache(session_client, user_info_cache, uid.clone(), data.clone());
         download_to_cache_username(
             self.server_url.clone(),
             self.access_token.clone(),

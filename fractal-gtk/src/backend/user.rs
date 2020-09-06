@@ -7,19 +7,15 @@ use std::io::Error as IoError;
 
 use super::MediaError;
 use crate::actions::global::activate_action;
-use crate::app::RUNTIME;
 use crate::appop::UserInfoCache;
-use crate::backend::ThreadPool;
 use crate::backend::HTTP_CLIENT;
 use crate::util::cache_dir_path;
-use crate::util::ResultExpectLog;
 use log::error;
 use std::convert::TryInto;
 use std::path::PathBuf;
-use std::sync::mpsc::Sender;
-use std::thread;
 
 use crate::model::member::Member;
+use fractal_api::api::r0::profile::get_profile::Request as GetProfileRequest;
 use fractal_api::api::r0::user_directory::search_users::Request as UserDirectoryRequest;
 use fractal_api::identity::r0::association::msisdn::submit_token::request as submit_phone_token_req;
 use fractal_api::identity::r0::association::msisdn::submit_token::Body as SubmitPhoneTokenBody;
@@ -57,9 +53,6 @@ use fractal_api::r0::media::create_content::Response as CreateContentResponse;
 use fractal_api::r0::profile::get_display_name::request as get_display_name;
 use fractal_api::r0::profile::get_display_name::Parameters as GetDisplayNameParameters;
 use fractal_api::r0::profile::get_display_name::Response as GetDisplayNameResponse;
-use fractal_api::r0::profile::get_profile::request as get_profile;
-use fractal_api::r0::profile::get_profile::Parameters as GetProfileParameters;
-use fractal_api::r0::profile::get_profile::Response as GetProfileResponse;
 use fractal_api::r0::profile::set_avatar_url::request as set_avatar_url;
 use fractal_api::r0::profile::set_avatar_url::Body as SetAvatarUrlBody;
 use fractal_api::r0::profile::set_avatar_url::Parameters as SetAvatarUrlParameters;
@@ -561,31 +554,22 @@ pub fn set_user_avatar(
     Ok(avatar)
 }
 
-pub fn get_user_info_async(
-    thread_pool: ThreadPool,
+pub async fn get_user_info(
     session_client: MatrixClient,
     user_info_cache: UserInfoCache,
-    access_token: AccessToken,
     uid: UserId,
-    tx: Sender<UserInfo>,
-) {
+) -> Result<UserInfo, GetUserAvatarError> {
     if let Some(info) = user_info_cache.lock().unwrap().get(&uid).cloned() {
-        thread::spawn(move || {
-            tx.send(info).expect_log("Connection closed");
-        });
-        return;
+        return Ok(info);
     }
 
-    thread_pool.run(move || {
-        let info = get_user_avatar(session_client, access_token, &uid);
+    let info = get_user_avatar(session_client, &uid).await;
 
-        if let Ok(ref i0) = info {
-            user_info_cache.lock().unwrap().insert(uid, i0.clone());
-        }
+    if let Ok(ref i0) = info {
+        user_info_cache.lock().unwrap().insert(uid, i0.clone());
+    }
 
-        tx.send(info.unwrap_or_default())
-            .expect_log("Connection closed");
-    });
+    info
 }
 
 #[derive(Debug)]
@@ -625,14 +609,14 @@ pub async fn search(
 
 #[derive(Debug)]
 pub enum GetUserAvatarError {
-    Reqwest(ReqwestError),
+    Matrix(MatrixError),
     Download(MediaError),
     ParseUrl(UrlError),
 }
 
-impl From<ReqwestError> for GetUserAvatarError {
-    fn from(err: ReqwestError) -> Self {
-        Self::Reqwest(err)
+impl From<MatrixError> for GetUserAvatarError {
+    fn from(err: MatrixError) -> Self {
+        Self::Matrix(err)
     }
 }
 
@@ -650,36 +634,40 @@ impl From<UrlError> for GetUserAvatarError {
 
 impl HandleError for GetUserAvatarError {}
 
-pub fn get_user_avatar(
+pub async fn get_user_avatar(
     session_client: MatrixClient,
-    access_token: AccessToken,
     user_id: &UserId,
 ) -> Result<(String, PathBuf), GetUserAvatarError> {
-    let base = session_client.homeserver().clone();
-    let params = GetProfileParameters { access_token };
-    let request = get_profile(base.clone(), &params, user_id)?;
-    let response: GetProfileResponse = HTTP_CLIENT.get_client().execute(request)?.json()?;
+    let request = GetProfileRequest::new(user_id);
+    let response = session_client.send(request).await?;
 
-    let name = response
-        .displayname
-        .filter(|n| !n.is_empty())
-        .unwrap_or_else(|| user_id.to_string());
-
-    let img = response
+    let img = match response
         .avatar_url
         .map(|url| Url::parse(&url))
         .transpose()?
         .map(|url| {
-            let dest = cache_dir_path(None, &user_id.to_string())?;
-            RUNTIME.handle().block_on(dw_media(
+            (
+                url,
+                cache_dir_path(None, user_id.as_str()).map_err(MediaError::from),
+            )
+        }) {
+        Some((url, Ok(dest))) => {
+            dw_media(
                 session_client,
                 &url,
                 ContentType::default_thumbnail(),
                 Some(dest),
-            ))
-        })
-        .unwrap_or_else(|| Ok(Default::default()))
-        .map_err(GetUserAvatarError::Download)?;
+            )
+            .await
+        }
+        Some((_, Err(err))) => Err(err),
+        None => Ok(Default::default()),
+    }?;
+
+    let name = response
+        .displayname
+        .filter(|n| !n.is_empty())
+        .unwrap_or_else(|| user_id.as_str().to_owned());
 
     Ok((name, img))
 }

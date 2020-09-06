@@ -6,7 +6,7 @@ use glib::clone;
 use std::path::PathBuf;
 use std::thread;
 
-use crate::app::App;
+use crate::app::{App, RUNTIME};
 use crate::appop::AppOp;
 
 use crate::cache::download_to_cache;
@@ -31,12 +31,8 @@ impl AppOp {
             }
         }));
 
-        thread::spawn(clone!(@strong login_data => move || {
-            match user::get_user_avatar(
-                login_data.session_client.clone(),
-                login_data.access_token,
-                &login_data.uid,
-            ) {
+        RUNTIME.spawn(async move {
+            match user::get_user_avatar(login_data.session_client, &login_data.uid).await {
                 Ok((_, path)) => {
                     APPOP!(set_avatar, (path));
                 }
@@ -44,7 +40,7 @@ impl AppOp {
                     err.handle_error();
                 }
             }
-        }));
+        });
     }
 
     pub fn show_user_info(&self) {
@@ -93,9 +89,7 @@ impl AppOp {
             );
             download_to_cache(
                 login_data.session_client.clone(),
-                self.thread_pool.clone(),
                 self.user_info_cache.clone(),
-                login_data.access_token.clone(),
                 login_data.uid.clone(),
                 data,
             );
@@ -118,10 +112,8 @@ impl AppOp {
                     None,
                 );
                 download_to_cache(
-                    login_data.session_client.clone(),
-                    self.thread_pool.clone(),
+                    login_data.session_client,
                     self.user_info_cache.clone(),
-                    login_data.access_token.clone(),
                     login_data.uid,
                     data,
                 );

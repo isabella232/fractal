@@ -39,8 +39,7 @@ impl AppOp {
                 login_data.uid,
             );
             panel.display_media_viewer(login_data.session_client.clone(), msg);
-            let (body, header) =
-                panel.create(login_data.session_client.clone(), self.thread_pool.clone())?;
+            let (body, header) = panel.create(login_data.session_client.clone())?;
             *self.media_viewer.borrow_mut() = Some(panel);
 
             if let Some(login_data) = self.login_data.clone() {

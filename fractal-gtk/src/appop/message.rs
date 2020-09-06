@@ -50,12 +50,7 @@ impl AppOp {
         let session_client = self.login_data.as_ref()?.session_client.clone();
         if let Some(ui_msg) = self.create_new_room_message(msg) {
             if let Some(ref mut history) = self.history {
-                history.add_new_message(
-                    session_client,
-                    self.thread_pool.clone(),
-                    self.user_info_cache.clone(),
-                    ui_msg,
-                );
+                history.add_new_message(session_client, self.user_info_cache.clone(), ui_msg);
             }
         }
         None
@@ -66,12 +61,7 @@ impl AppOp {
             unwrap_or_unit_return!(self.login_data.as_ref().map(|ld| ld.session_client.clone()));
         if let Some(ui_msg) = self.create_new_room_message(msg) {
             if let Some(ref mut history) = self.history {
-                history.remove_message(
-                    session_client,
-                    self.thread_pool.clone(),
-                    self.user_info_cache.clone(),
-                    ui_msg,
-                );
+                history.remove_message(session_client, self.user_info_cache.clone(), ui_msg);
             }
         }
     }
@@ -86,7 +76,6 @@ impl AppOp {
             )
             .tmpwidget(
                 login_data.session_client.clone(),
-                self.thread_pool.clone(),
                 self.user_info_cache.clone(),
                 &ui_msg,
             );
@@ -131,7 +120,6 @@ impl AppOp {
                 )
                 .tmpwidget(
                     login_data.session_client.clone(),
-                    self.thread_pool.clone(),
                     self.user_info_cache.clone(),
                     &ui_msg,
                 );
@@ -410,8 +398,8 @@ impl AppOp {
                     .builder
                     .get_object("main_window")
                     .expect("Can't find main_window in ui file.");
-                if let (Some(app), Some(event_id)) = (window.get_application(), msg.id.as_ref()) {
-                    self.notify(app, &msg.room, event_id);
+                if let (Some(app), Some(event_id)) = (window.get_application(), msg.id.clone()) {
+                    self.notify(app, msg.room.clone(), event_id);
                 }
             }
 
@@ -455,12 +443,7 @@ impl AppOp {
         }
 
         if let Some(ref mut history) = self.history {
-            history.add_old_messages_in_batch(
-                session_client,
-                self.thread_pool.clone(),
-                self.user_info_cache.clone(),
-                list,
-            );
+            history.add_old_messages_in_batch(session_client, self.user_info_cache.clone(), list);
         }
     }
 

@@ -1,6 +1,5 @@
 use crate::app::RUNTIME;
 use crate::backend::media;
-use crate::backend::ThreadPool;
 use fractal_api::r0::AccessToken;
 use glib::clone;
 
@@ -640,11 +639,7 @@ impl MediaViewer {
         }
     }
 
-    pub fn create(
-        &mut self,
-        session_client: MatrixClient,
-        thread_pool: ThreadPool,
-    ) -> Option<(gtk::Box, gtk::Box)> {
+    pub fn create(&mut self, session_client: MatrixClient) -> Option<(gtk::Box, gtk::Box)> {
         let body = self
             .builder
             .get_object::<gtk::Box>("media_viewer_box")
@@ -654,7 +649,7 @@ impl MediaViewer {
             .get_object::<gtk::Box>("media_viewer_headerbar_box")
             .expect("Can't find media_viewer_headerbar in ui file.");
         self.connect_media_viewer_headerbar(session_client.clone());
-        self.connect_media_viewer_box(session_client, thread_pool);
+        self.connect_media_viewer_box(session_client);
         self.connect_stop_video_when_leaving();
 
         Some((body, header))
@@ -728,11 +723,7 @@ impl MediaViewer {
         }));
     }
 
-    pub fn connect_media_viewer_box(
-        &mut self,
-        session_client: MatrixClient,
-        thread_pool: ThreadPool,
-    ) {
+    pub fn connect_media_viewer_box(&mut self, session_client: MatrixClient) {
         let full_screen_button = self
             .builder
             .get_object::<gtk::Button>("full_screen_button")
@@ -889,13 +880,13 @@ impl MediaViewer {
             .builder
             .get_object::<gtk::Button>("previous_media_button")
             .expect("Cant find previous_media_button in ui file.");
-        let s_client = session_client.clone();
-        let t_pool = thread_pool.clone();
-        previous_media_button.connect_clicked(clone!(@weak data => move |_| {
-            if !data.borrow_mut().previous_media(s_client.clone()) {
-                load_more_media(s_client.clone(), t_pool.clone(), data, builder.clone());
-            }
-        }));
+        previous_media_button.connect_clicked(
+            clone!(@strong session_client, @weak data => move |_| {
+                if !data.borrow_mut().previous_media(session_client.clone()) {
+                    load_more_media(session_client.clone(), data, builder.clone());
+                }
+            }),
+        );
 
         let next_media_button = self
             .builder
@@ -1021,12 +1012,7 @@ fn loading_state(ui: &gtk::Builder, val: bool) -> bool {
     val
 }
 
-fn load_more_media(
-    session_client: MatrixClient,
-    thread_pool: ThreadPool,
-    data: Rc<RefCell<Data>>,
-    builder: gtk::Builder,
-) {
+fn load_more_media(session_client: MatrixClient, data: Rc<RefCell<Data>>, builder: gtk::Builder) {
     data.borrow_mut().loading_more_media = loading_state(&builder, true);
 
     let msg = data.borrow().media_list[data.borrow().current_media_index].clone();
@@ -1053,7 +1039,6 @@ fn load_more_media(
                     data.borrow_mut().no_more_media = true;
                 }
 
-                let thread_pool = thread_pool.clone();
                 let media_list = data.borrow().media_list.clone();
                 let img_msgs: Vec<Message> = msgs
                     .into_iter()
@@ -1065,7 +1050,7 @@ fn load_more_media(
                 data.borrow_mut().media_list = new_media_list;
                 data.borrow_mut().prev_batch = Some(prev_batch);
                 if img_msgs_count == 0 {
-                    load_more_media(session_client.clone(), thread_pool, data, builder.clone());
+                    load_more_media(session_client.clone(), data, builder.clone());
                 } else {
                     data.borrow_mut().current_media_index += img_msgs_count;
                     data.borrow_mut().previous_media(session_client.clone());

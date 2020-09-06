@@ -1,16 +1,12 @@
+use crate::app::RUNTIME;
 use crate::backend::user;
 use fractal_api::identifiers::{EventId, RoomId};
 use gio::ApplicationExt;
 use gio::FileExt;
 use gio::Notification;
-use glib::clone;
-use glib::source::Continue;
 use gtk::prelude::*;
 use log::info;
 use std::path::Path;
-use std::sync::mpsc::channel;
-use std::sync::mpsc::TryRecvError;
-use std::sync::mpsc::{Receiver, Sender};
 
 use crate::util::i18n::i18n;
 
@@ -43,12 +39,10 @@ impl AppOp {
         inapp.set_reveal_child(false);
     }
 
-    pub fn notify(&self, app: gtk::Application, room_id: &RoomId, id: &EventId) -> Option<()> {
-        let login_data = self.login_data.as_ref()?;
-        let access_token = login_data.access_token.clone();
-        let session_client = login_data.session_client.clone();
-        let msg = self.get_message_by_id(room_id, id)?;
-        let r = self.rooms.get(room_id)?;
+    pub fn notify(&self, app: gtk::Application, room_id: RoomId, id: EventId) -> Option<()> {
+        let session_client = self.login_data.as_ref()?.session_client.clone();
+        let msg = self.get_message_by_id(&room_id, &id)?;
+        let r = self.rooms.get(&room_id)?;
         let short_body = match &msg.mtype[..] {
             "m.audio" => i18n("An audio file has been added to the conversation."),
             "m.image" => i18n("An image has been added to the conversation."),
@@ -65,31 +59,19 @@ impl AppOp {
             String::new()
         };
 
-        let (tx, rx): (Sender<user::UserInfo>, Receiver<user::UserInfo>) = channel();
-        user::get_user_info_async(
-            self.thread_pool.clone(),
+        let response = RUNTIME.spawn(user::get_user_info(
             session_client,
             self.user_info_cache.clone(),
-            access_token,
             msg.sender,
-            tx,
-        );
+        ));
 
-        let room_id = room_id.to_string();
-        let id = id.to_string();
-        glib::timeout_add_local(
-            50,
-            clone!(@weak app => @default-return Continue(false), move || match rx.try_recv() {
-                Err(TryRecvError::Empty) => Continue(true),
-                Err(TryRecvError::Disconnected) => Continue(false),
-                Ok((name, avatar_path)) => {
-                    let title = format!("{}{}", name, title);
-                    let n = create_notification(&room_id, &title, &short_body, &avatar_path);
-                    app.send_notification(Some(id.as_str()), &n);
-                    Continue(false)
-                }
-            }),
-        );
+        glib::MainContext::default().spawn_local(async move {
+            if let Ok(Ok((name, avatar_path))) = response.await {
+                let title = format!("{}{}", name, title);
+                let n = create_notification(room_id.as_str(), &title, &short_body, &avatar_path);
+                app.send_notification(Some(id.as_str()), &n);
+            }
+        });
 
         None
     }

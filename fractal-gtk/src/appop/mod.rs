@@ -11,7 +11,6 @@ use fractal_api::r0::AccessToken;
 use fractal_api::Client as MatrixClient;
 use gtk::prelude::*;
 
-use crate::backend::ThreadPool;
 use crate::cache::CacheMap;
 use fractal_api::url::Url;
 
@@ -119,7 +118,6 @@ pub struct AppOp {
     pub leaflet: libhandy::Leaflet,
     pub deck: libhandy::Deck,
 
-    pub thread_pool: ThreadPool,
     pub user_info_cache: UserInfoCache,
 }
 
@@ -166,7 +164,6 @@ impl AppOp {
             leaflet,
             deck,
 
-            thread_pool: ThreadPool::new(20),
             user_info_cache: Arc::new(Mutex::new(
                 CacheMap::new().timeout(Duration::from_secs(60 * 60)),
             )),

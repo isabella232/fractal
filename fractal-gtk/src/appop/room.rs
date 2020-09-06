@@ -310,7 +310,6 @@ impl AppOp {
         self.history = if let Some(mut history) = history {
             history.create(
                 login_data.session_client,
-                self.thread_pool.clone(),
                 self.user_info_cache.clone(),
                 messages,
             );

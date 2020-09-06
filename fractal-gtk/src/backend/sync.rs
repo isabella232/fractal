@@ -192,14 +192,13 @@ pub fn sync(
     match query {
         Ok(response) => {
             if since.is_none() {
-                let rooms =
-                    Room::from_sync_response(session_client, &response, user_id, access_token)
-                        .map(|rooms| {
-                            let def = join_to_room
-                                .and_then(|jtr| rooms.iter().find(|x| x.id == jtr).cloned());
-                            (rooms, def)
-                        })
-                        .map_err(Into::into);
+                let rooms = Room::from_sync_response(session_client, &response, user_id)
+                    .map(|rooms| {
+                        let def = join_to_room
+                            .and_then(|jtr| rooms.iter().find(|x| x.id == jtr).cloned());
+                        (rooms, def)
+                    })
+                    .map_err(Into::into);
 
                 let next_batch = response.next_batch;
 
@@ -208,13 +207,9 @@ pub fn sync(
                 let join = &response.rooms.join;
 
                 // New rooms
-                let update_rooms = Room::from_sync_response(
-                    session_client,
-                    &response,
-                    user_id.clone(),
-                    access_token,
-                )
-                .map_err(Into::into);
+                let update_rooms =
+                    Room::from_sync_response(session_client, &response, user_id.clone())
+                        .map_err(Into::into);
 
                 // Message events
                 let room_messages = join
