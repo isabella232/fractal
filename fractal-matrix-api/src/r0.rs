@@ -7,7 +7,6 @@ pub mod pushrules;
 pub mod server;
 pub mod state;
 pub mod sync;
-pub mod tag;
 pub mod thirdparty;
 
 use serde::{Deserialize, Serialize, Serializer};

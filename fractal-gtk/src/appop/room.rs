@@ -148,11 +148,10 @@ impl AppOp {
             container.add(self.roomlist.widget());
 
             self.roomlist.connect_fav(move |room, tofav| {
-                let server = login_data.session_client.homeserver().clone();
-                let access_token = login_data.access_token.clone();
+                let session_client = login_data.session_client.clone();
                 let uid = login_data.uid.clone();
-                thread::spawn(move || {
-                    match room::add_to_fav(server, access_token, uid, room.id, tofav) {
+                RUNTIME.spawn(async move {
+                    match room::add_to_fav(session_client, &uid, room.id, tofav).await {
                         Ok((r, tofav)) => {
                             APPOP!(added_to_fav, (r, tofav));
                         }

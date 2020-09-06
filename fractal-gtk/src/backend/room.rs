@@ -39,12 +39,15 @@ use fractal_api::api::r0::room::create_room::Request as CreateRoomRequest;
 use fractal_api::api::r0::room::create_room::RoomPreset;
 use fractal_api::api::r0::room::Visibility;
 use fractal_api::api::r0::state::send_state_event_for_key::Request as SendStateEventForKeyRequest;
+use fractal_api::api::r0::tag::create_tag::Request as CreateTagRequest;
+use fractal_api::api::r0::tag::delete_tag::Request as DeleteTagRequest;
 use fractal_api::api::r0::typing::create_typing_event::Typing;
 use fractal_api::assign;
 use fractal_api::events::room::avatar::AvatarEventContent;
 use fractal_api::events::room::history_visibility::HistoryVisibility;
 use fractal_api::events::room::history_visibility::HistoryVisibilityEventContent;
 use fractal_api::events::room::message::MessageEventContent;
+use fractal_api::events::tag::TagInfo;
 use fractal_api::events::AnyBasicEventContent;
 use fractal_api::events::AnyInitialStateEvent;
 use fractal_api::events::AnyMessageEventContent;
@@ -65,11 +68,6 @@ use fractal_api::r0::state::get_state_events_for_key::Parameters as GetStateEven
 use fractal_api::r0::sync::get_joined_members::request as get_joined_members;
 use fractal_api::r0::sync::get_joined_members::Parameters as JoinedMembersParameters;
 use fractal_api::r0::sync::get_joined_members::Response as JoinedMembersResponse;
-use fractal_api::r0::tag::create_tag::request as create_tag;
-use fractal_api::r0::tag::create_tag::Body as CreateTagBody;
-use fractal_api::r0::tag::create_tag::Parameters as CreateTagParameters;
-use fractal_api::r0::tag::delete_tag::request as delete_tag;
-use fractal_api::r0::tag::delete_tag::Parameters as DeleteTagParameters;
 use fractal_api::r0::AccessToken;
 
 use serde_json::value::to_raw_value;
@@ -777,35 +775,40 @@ pub async fn direct_chat(
 }
 
 #[derive(Debug)]
-pub struct AddedToFavError(ReqwestError);
+pub struct AddedToFavError(MatrixError);
 
-impl From<ReqwestError> for AddedToFavError {
-    fn from(err: ReqwestError) -> Self {
+impl From<MatrixError> for AddedToFavError {
+    fn from(err: MatrixError) -> Self {
         Self(err)
     }
 }
 
 impl HandleError for AddedToFavError {}
 
-pub fn add_to_fav(
-    base: Url,
-    access_token: AccessToken,
-    user_id: UserId,
-    room_id: RoomId,
+pub async fn add_to_fav(
+    session_client: MatrixClient,
+    user_id: &UserId,
+    rid: RoomId,
     tofav: bool,
 ) -> Result<(RoomId, bool), AddedToFavError> {
-    let request = if tofav {
-        let params = CreateTagParameters { access_token };
-        let body = CreateTagBody { order: Some(0.5) };
-        create_tag(base, &user_id, &room_id, "m.favourite", &params, &body)
+    let tag = "m.favourite";
+    let room_id = &rid;
+    if tofav {
+        let request = CreateTagRequest::new(
+            user_id,
+            room_id,
+            tag,
+            assign!(TagInfo::new(), {
+                order: Some(0.5),
+            }),
+        );
+        session_client.send(request).await?;
     } else {
-        let params = DeleteTagParameters { access_token };
-        delete_tag(base, &user_id, &room_id, "m.favourite", &params)
-    }?;
+        let request = DeleteTagRequest::new(user_id, room_id, tag);
+        session_client.send(request).await?;
+    }
 
-    HTTP_CLIENT.get_client().execute(request)?;
-
-    Ok((room_id, tofav))
+    Ok((rid, tofav))
 }
 
 #[derive(Debug)]
