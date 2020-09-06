@@ -111,7 +111,7 @@ impl AppOp {
         let dialog = self
             .ui
             .builder
-            .get_object::<libhandy::Dialog>(dialogid)
+            .get_object::<gtk::Dialog>(dialogid)
             .expect("Can’t find invite_user_dialog in ui file.");
 
         dialog.resize(300, 200);
@@ -130,7 +130,7 @@ impl AppOp {
         let dialog = self
             .ui
             .builder
-            .get_object::<libhandy::Dialog>("invite_user_dialog")
+            .get_object::<gtk::Dialog>("invite_user_dialog")
             .expect("Can't find invite_user_dialog in ui file.");
         let scroll = self
             .ui
@@ -199,7 +199,7 @@ impl AppOp {
         let dialog = self
             .ui
             .builder
-            .get_object::<libhandy::Dialog>("invite_user_dialog")
+            .get_object::<gtk::Dialog>("invite_user_dialog")
             .expect("Can't find invite_user_dialog in ui file.");
 
         self.invite_list = vec![];

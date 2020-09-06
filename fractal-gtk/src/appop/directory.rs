@@ -1,5 +1,4 @@
 use gtk::prelude::*;
-use libhandy::Column;
 use std::thread;
 
 use crate::backend::{directory, HandleError};
@@ -178,12 +177,12 @@ impl AppOp {
             .builder
             .get_object::<gtk::Stack>("directory_stack")
             .expect("Can't find directory_stack in ui file.");
-        let directory_column = self
+        let directory_clamp = self
             .ui
             .builder
-            .get_object::<Column>("directory_column")
-            .expect("Can't find directory_column in ui file.");
-        directory_stack.set_visible_child(&directory_column);
+            .get_object::<libhandy::Clamp>("directory_clamp")
+            .expect("Can't find directory_clamp in ui file.");
+        directory_stack.set_visible_child(&directory_clamp);
 
         let mut sorted_rooms = rooms;
         sorted_rooms.sort_by_key(|a| -a.n_members);
@@ -216,11 +215,11 @@ impl AppOp {
             .builder
             .get_object::<gtk::Stack>("directory_stack")
             .expect("Can't find directory_stack in ui file.");
-        let directory_column = self
+        let directory_clamp = self
             .ui
             .builder
-            .get_object::<Column>("directory_column")
-            .expect("Can't find directory_column in ui file.");
-        directory_stack.set_visible_child(&directory_column);
+            .get_object::<libhandy::Clamp>("directory_clamp")
+            .expect("Can't find directory_clamp in ui file.");
+        directory_stack.set_visible_child(&directory_clamp);
     }
 }

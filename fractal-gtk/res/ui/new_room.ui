@@ -20,7 +20,7 @@
       </row>
     </data>
   </object>
-  <object class="HdyDialog" id="new_room_dialog">
+  <object class="GtkDialog" id="new_room_dialog">
     <property name="can_focus">False</property>
     <property name="modal">True</property>
     <property name="window_position">center</property>

@@ -47,7 +47,7 @@ impl UI {
         let sventry_stack = gtk::Stack::new();
 
         let sventry = SVEntry::default();
-        sventry_stack.add_named(&sventry.column, "Text Entry");
+        sventry_stack.add_named(&sventry.clamp, "Text Entry");
         let sventry_disabled = gtk::Label::new(Some(&i18n(
             "You don’t have permission to post to this room",
         )));

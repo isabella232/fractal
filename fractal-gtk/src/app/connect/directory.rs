@@ -3,7 +3,7 @@ use glib::clone;
 use crate::util::i18n::i18n;
 
 use gtk::prelude::*;
-use libhandy::{Column, ColumnExt};
+use libhandy::prelude::*;
 
 use crate::app::App;
 use crate::appop::RoomSearchPagination;
@@ -22,32 +22,32 @@ impl App {
             .get_object::<gtk::Stack>("directory_stack")
             .expect("Can't find directory_stack in ui file.");
 
-        let column = Column::new();
+        let clamp = libhandy::Clamp::new();
         let listbox = gtk::ListBox::new();
 
-        column.set_maximum_width(800);
-        column.set_hexpand(true);
-        column.set_vexpand(true);
-        column.set_margin_top(24);
-        column.set_margin_start(12);
-        column.set_margin_end(12);
+        clamp.set_maximum_size(800);
+        clamp.set_hexpand(true);
+        clamp.set_vexpand(true);
+        clamp.set_margin_top(24);
+        clamp.set_margin_start(12);
+        clamp.set_margin_end(12);
 
         let frame = gtk::Frame::new(None);
         frame.set_shadow_type(gtk::ShadowType::In);
         frame.add(&listbox);
         frame.get_style_context().add_class("room-directory");
-        column.add(&frame);
+        clamp.add(&frame);
         listbox.show();
         frame.show();
-        column.show();
-        directory_stack.add_named(&column, "directory_column");
+        clamp.show();
+        directory_stack.add_named(&clamp, "directory_clamp");
 
         self.ui
             .builder
             .expose_object::<gtk::ListBox>("directory_room_list", &listbox);
         self.ui
             .builder
-            .expose_object::<Column>("directory_column", &column);
+            .expose_object::<libhandy::Clamp>("directory_clamp", &clamp);
 
         let directory_choice_label = self
             .ui

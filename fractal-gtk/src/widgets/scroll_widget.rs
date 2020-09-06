@@ -8,7 +8,7 @@ use glib::clone;
 use glib::source::Continue;
 use gtk::prelude::*;
 
-use libhandy::ColumnExt;
+use libhandy::prelude::*;
 
 // This really requires to opt-out of the lint
 #[allow(dead_code)]
@@ -58,11 +58,11 @@ impl Widgets {
         // Create the listbox insteate of the following line
         //let messages = self.op.lock().unwrap().message_box.clone();
         let messages = gtk::ListBox::new();
-        let column = libhandy::Column::new();
-        column.set_maximum_width(800);
-        column.set_linear_growth_width(600);
-        column.set_hexpand(true);
-        column.set_vexpand(true);
+        let clamp = libhandy::Clamp::new();
+        clamp.set_maximum_size(800);
+        clamp.set_tightening_threshold(600);
+        clamp.set_hexpand(true);
+        clamp.set_vexpand(true);
 
         let typing_label = gtk::Label::new(None);
         typing_label.show();
@@ -79,14 +79,14 @@ impl Widgets {
         column_box.add(&messages);
         column_box.add(&typing_label);
         column_box.show();
-        column.add(&column_box);
-        column.show();
+        clamp.add(&column_box);
+        clamp.show();
 
         messages.get_style_context().add_class("messages-history");
         messages.show();
 
         container.get_style_context().add_class("messages-box");
-        container.add(&column);
+        container.add(&clamp);
 
         if let Some(adj) = view.get_vadjustment() {
             if let Some(child) = view.get_child() {

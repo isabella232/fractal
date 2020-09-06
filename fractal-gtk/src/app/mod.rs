@@ -109,22 +109,18 @@ impl App {
             .get_object::<gtk::Popover>("autocomplete_popover")
             .expect("Can't find autocomplete_popover in ui file.");
 
-        if let libhandy::Fold::Folded = leaflet.get_fold() {
+        if leaflet.get_folded() {
             container.get_style_context().add_class("folded-history");
             popover.get_style_context().add_class("narrow");
         }
 
-        leaflet.connect_property_fold_notify(clone!(@weak container => move |leaflet| {
-            match leaflet.get_fold() {
-                libhandy::Fold::Folded => {
-                    container.get_style_context().add_class("folded-history");
-                    popover.get_style_context().add_class("narrow");
-                }
-                libhandy::Fold::Unfolded => {
-                    container.get_style_context().remove_class("folded-history");
-                    popover.get_style_context().remove_class("narrow");
-                }
-                _ => (),
+        leaflet.connect_property_folded_notify(clone!(@weak container => move |leaflet| {
+            if leaflet.get_folded() {
+                container.get_style_context().add_class("folded-history");
+                popover.get_style_context().add_class("narrow");
+            } else {
+                container.get_style_context().remove_class("folded-history");
+                popover.get_style_context().remove_class("narrow");
             }
         }));
 

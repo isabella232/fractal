@@ -1,12 +1,12 @@
 use gtk::prelude::*;
-use libhandy::{Column, ColumnExt};
+use libhandy::prelude::*;
 use sourceview4::ViewExt;
 // This alias is necessary to avoid conflict with gtk's TextViewExt
 use gspell::TextViewExt as GspellTextViewExt;
 
 #[derive(Debug, Clone)]
 pub struct SVEntry {
-    pub column: Column,
+    pub clamp: libhandy::Clamp,
     pub container: gtk::Box,
     pub attach: gtk::Button,
     pub markdown: gtk::MenuButton,
@@ -20,10 +20,10 @@ pub struct SVEntry {
 
 impl Default for SVEntry {
     fn default() -> Self {
-        let column = Column::new();
-        column.set_maximum_width(800);
-        column.set_linear_growth_width(600);
-        column.set_vexpand(false);
+        let clamp = libhandy::Clamp::new();
+        clamp.set_maximum_size(800);
+        clamp.set_tightening_threshold(600);
+        clamp.set_vexpand(false);
 
         let container = gtk::Box::new(gtk::Orientation::Horizontal, 6);
         container.set_vexpand(false);
@@ -92,11 +92,11 @@ impl Default for SVEntry {
         container.pack_start(&entry_box, false, true, 0);
         container.pack_start(&send, false, false, 0);
 
-        column.add(&container);
-        column.show_all();
+        clamp.add(&container);
+        clamp.show_all();
 
         SVEntry {
-            column,
+            clamp,
             container,
             attach,
             markdown,

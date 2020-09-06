@@ -97,9 +97,6 @@
                     <class name="sidebar"/>
                 </style>
               </object>
-              <packing>
-                <property name="allow-visible">False</property>
-              </packing>
             </child>
             <child>
               <object class="GtkOverlay" id="inapp">
@@ -485,9 +482,6 @@
                       <class name="sidebar"/>
                     </style>
                   </object>
-                  <packing>
-                    <property name="allow-visible">False</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkHeaderBar" id="room_header_bar"> <!--right titlebar-->
@@ -665,11 +659,11 @@
                       </object>
                     </child>
                     <child type="title">
-                      <object class="HdyColumn">
+                      <object class="HdyClamp">
                         <property name="can_focus">False</property>
                         <property name="visible">True</property>
-                        <property name="maximum_width">288</property>
-                        <property name="linear_growth_width">288</property>
+                        <property name="maximum_size">288</property>
+                        <property name="tightening_threshold">288</property>
                         <child>
                           <object class="GtkSearchEntry" id="directory_search_entry">
                             <property name="visible">True</property>

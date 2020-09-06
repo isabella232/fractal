@@ -40,7 +40,7 @@ impl AppOp {
         let dialog = self
             .ui
             .builder
-            .get_object::<libhandy::Dialog>("direct_chat_dialog")
+            .get_object::<gtk::Dialog>("direct_chat_dialog")
             .expect("Can't find direct_chat_dialog in ui file.");
         let scroll = self
             .ui
@@ -83,7 +83,7 @@ impl AppOp {
         let dialog = self
             .ui
             .builder
-            .get_object::<libhandy::Dialog>("direct_chat_dialog")
+            .get_object::<gtk::Dialog>("direct_chat_dialog")
             .expect("Can't find direct_chat_dialog in ui file.");
 
         self.invite_list = vec![];
