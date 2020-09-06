@@ -237,7 +237,7 @@ impl MessageBox {
         let body = match msg.mtype {
             RowType::Sticker => self.build_room_msg_sticker(session_client, msg),
             RowType::Image => self.build_room_msg_image(session_client, msg),
-            RowType::Emote => self.build_room_msg_emote(msg),
+            RowType::Emote => self.build_room_msg_emote(session_client, msg),
             RowType::Audio => self.build_room_audio_player(session_client, msg),
             RowType::Video => self.build_room_video_player(session_client, msg),
             RowType::File => self.build_room_msg_file(msg),
@@ -284,14 +284,13 @@ impl MessageBox {
             self.username.set_text(&uid.to_string());
         }
 
-        download_to_cache(session_client, user_info_cache, uid.clone(), data.clone());
-        download_to_cache_username(
-            self.server_url.clone(),
-            self.access_token.clone(),
-            uid,
-            self.username.clone(),
-            Some(data),
+        download_to_cache(
+            session_client.clone(),
+            user_info_cache,
+            uid.clone(),
+            data.clone(),
         );
+        download_to_cache_username(session_client, uid, self.username.clone(), Some(data));
 
         avatar
     }
@@ -655,7 +654,7 @@ impl MessageBox {
         info
     }
 
-    fn build_room_msg_emote(&self, msg: &Message) -> gtk::Box {
+    fn build_room_msg_emote(&self, session_client: MatrixClient, msg: &Message) -> gtk::Box {
         let bx = gtk::Box::new(gtk::Orientation::Horizontal, 0);
         /* Use MXID till we have a alias */
         let sname = msg
@@ -667,8 +666,7 @@ impl MessageBox {
         let markup = markup_text(body);
 
         download_to_cache_username_emote(
-            self.server_url.clone(),
-            self.access_token.clone(),
+            session_client,
             msg.sender.clone(),
             &markup,
             msg_label.clone(),

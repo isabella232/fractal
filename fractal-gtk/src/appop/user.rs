@@ -1,10 +1,8 @@
 use gtk::prelude::*;
 
 use crate::backend::{user, HandleError};
-use glib::clone;
 
 use std::path::PathBuf;
-use std::thread;
 
 use crate::app::{App, RUNTIME};
 use crate::appop::AppOp;
@@ -18,10 +16,15 @@ use super::LoginData;
 
 impl AppOp {
     pub fn get_username(&self) {
-        let login_data = unwrap_or_unit_return!(self.login_data.clone());
+        let (session_client, user_id) = unwrap_or_unit_return!(self
+            .login_data
+            .as_ref()
+            .map(|ld| (ld.session_client.clone(), ld.uid.clone())));
 
-        thread::spawn(clone!(@strong login_data => move || {
-            match user::get_username(login_data.session_client.homeserver().clone(), login_data.access_token, login_data.uid) {
+        let s_client = session_client.clone();
+        let uid = user_id.clone();
+        RUNTIME.spawn(async move {
+            match user::get_username(s_client, &uid).await {
                 Ok(username) => {
                     APPOP!(set_username, (username));
                 }
@@ -29,10 +32,10 @@ impl AppOp {
                     err.handle_error();
                 }
             }
-        }));
+        });
 
         RUNTIME.spawn(async move {
-            match user::get_user_avatar(login_data.session_client, &login_data.uid).await {
+            match user::get_user_avatar(session_client, &user_id).await {
                 Ok((_, path)) => {
                     APPOP!(set_avatar, (path));
                 }

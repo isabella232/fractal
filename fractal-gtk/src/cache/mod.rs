@@ -2,14 +2,9 @@ use crate::app::RUNTIME;
 use crate::appop::UserInfoCache;
 use crate::backend::user;
 use crate::util::cache_dir_path;
-use crate::util::ResultExpectLog;
-use fractal_api::r0::AccessToken;
-use fractal_api::url::Url;
 use fractal_api::Client as MatrixClient;
-use glib::source::Continue;
 use gtk::LabelExt;
 use serde::{Deserialize, Serialize};
-use std::thread;
 
 use crate::model::room::{Room, RoomList};
 use anyhow::Error;
@@ -19,12 +14,6 @@ use std::hash::Hash;
 use std::time::{Duration, Instant};
 
 use crate::globals;
-
-/* includes for avatar download */
-use std::sync::mpsc::channel;
-use std::sync::mpsc::Receiver;
-use std::sync::mpsc::Sender;
-use std::sync::mpsc::TryRecvError;
 
 use crate::widgets::AvatarData;
 use std::cell::RefCell;
@@ -172,28 +161,25 @@ pub fn download_to_cache(
 
 /* Get username based on the MXID, we should cache the username */
 pub fn download_to_cache_username(
-    server_url: Url,
-    access_token: AccessToken,
+    session_client: MatrixClient,
     uid: UserId,
     label: gtk::Label,
     avatar: Option<Rc<RefCell<AvatarData>>>,
 ) {
-    let (ctx, rx): (Sender<String>, Receiver<String>) = channel();
-    thread::spawn(move || {
-        let query = user::get_username_async(server_url, access_token, uid);
-        ctx.send(query).expect_log("Connection closed");
+    let response = RUNTIME.spawn(async move {
+        user::get_username(session_client, &uid)
+            .await
+            .ok()
+            .flatten()
+            .unwrap_or_default()
     });
-    glib::timeout_add_local(50, move || match rx.try_recv() {
-        Err(TryRecvError::Empty) => Continue(true),
-        Err(TryRecvError::Disconnected) => Continue(false),
-        Ok(username) => {
+    glib::MainContext::default().spawn_local(async move {
+        if let Ok(username) = response.await {
             label.set_text(&username);
             if let Some(ref rc_data) = avatar {
                 let mut data = rc_data.borrow_mut();
                 data.redraw(Some(username));
             }
-
-            Continue(false)
         }
     });
 }
@@ -201,30 +187,27 @@ pub fn download_to_cache_username(
 /* Download username for a given MXID and update a emote message
  * FIXME: We should cache this request and do it before we need to display the username in an emote*/
 pub fn download_to_cache_username_emote(
-    server_url: Url,
-    access_token: AccessToken,
+    session_client: MatrixClient,
     uid: UserId,
     text: &str,
     label: gtk::Label,
     avatar: Option<Rc<RefCell<AvatarData>>>,
 ) {
-    let (ctx, rx): (Sender<String>, Receiver<String>) = channel();
-    thread::spawn(move || {
-        let query = user::get_username_async(server_url, access_token, uid);
-        ctx.send(query).expect_log("Connection closed");
+    let response = RUNTIME.spawn(async move {
+        user::get_username(session_client, &uid)
+            .await
+            .ok()
+            .flatten()
+            .unwrap_or_default()
     });
     let text = text.to_string();
-    glib::timeout_add_local(50, move || match rx.try_recv() {
-        Err(TryRecvError::Empty) => Continue(true),
-        Err(TryRecvError::Disconnected) => Continue(false),
-        Ok(username) => {
+    glib::MainContext::default().spawn_local(async move {
+        if let Ok(username) = response.await {
             label.set_markup(&format!("<b>{}</b> {}", &username, text));
             if let Some(ref rc_data) = avatar {
                 let mut data = rc_data.borrow_mut();
                 data.redraw(Some(username));
             }
-
-            Continue(false)
         }
     });
 }

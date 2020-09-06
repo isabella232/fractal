@@ -15,6 +15,7 @@ use std::convert::TryInto;
 use std::path::PathBuf;
 
 use crate::model::member::Member;
+use fractal_api::api::r0::profile::get_display_name::Request as GetDisplayNameRequest;
 use fractal_api::api::r0::profile::get_profile::Request as GetProfileRequest;
 use fractal_api::api::r0::user_directory::search_users::Request as UserDirectoryRequest;
 use fractal_api::identity::r0::association::msisdn::submit_token::request as submit_phone_token_req;
@@ -50,9 +51,6 @@ use fractal_api::r0::contact::request_verification_token_msisdn::Response as Pho
 use fractal_api::r0::media::create_content::request as create_content;
 use fractal_api::r0::media::create_content::Parameters as CreateContentParameters;
 use fractal_api::r0::media::create_content::Response as CreateContentResponse;
-use fractal_api::r0::profile::get_display_name::request as get_display_name;
-use fractal_api::r0::profile::get_display_name::Parameters as GetDisplayNameParameters;
-use fractal_api::r0::profile::get_display_name::Response as GetDisplayNameResponse;
 use fractal_api::r0::profile::set_avatar_url::request as set_avatar_url;
 use fractal_api::r0::profile::set_avatar_url::Body as SetAvatarUrlBody;
 use fractal_api::r0::profile::set_avatar_url::Parameters as SetAvatarUrlParameters;
@@ -73,43 +71,24 @@ use crate::APPOP;
 pub type UserInfo = (String, PathBuf);
 
 #[derive(Debug)]
-pub struct NameError(ReqwestError);
+pub struct NameError(MatrixError);
 
-impl From<ReqwestError> for NameError {
-    fn from(err: ReqwestError) -> Self {
+impl From<MatrixError> for NameError {
+    fn from(err: MatrixError) -> Self {
         Self(err)
     }
 }
 
 impl HandleError for NameError {}
 
-pub fn get_username(
-    base: Url,
-    access_token: AccessToken,
-    uid: UserId,
+pub async fn get_username(
+    session_client: MatrixClient,
+    user_id: &UserId,
 ) -> Result<Option<String>, NameError> {
-    let params = GetDisplayNameParameters { access_token };
-    let request = get_display_name(base, &params, &uid)?;
-    let response: GetDisplayNameResponse = HTTP_CLIENT.get_client().execute(request)?.json()?;
+    let request = GetDisplayNameRequest::new(user_id);
+    let response = session_client.send(request).await?;
 
     Ok(response.displayname)
-}
-
-// FIXME: This function manages errors *really* wrong and isn't more async
-// than the normal function. It should be removed.
-pub fn get_username_async(base: Url, access_token: AccessToken, uid: UserId) -> String {
-    let params = GetDisplayNameParameters { access_token };
-
-    get_display_name(base, &params, &uid)
-        .and_then(|request| {
-            HTTP_CLIENT
-                .get_client()
-                .execute(request)?
-                .json::<GetDisplayNameResponse>()
-        })
-        .ok()
-        .and_then(|response| response.displayname)
-        .unwrap_or_else(|| uid.to_string())
 }
 
 #[derive(Debug)]

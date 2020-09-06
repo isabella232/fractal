@@ -14,7 +14,6 @@ api_sources = files(
   'r0/contact/request_verification_token_email.rs',
   'r0/contact/request_verification_token_msisdn.rs',
   'r0/media/create_content.rs',
-  'r0/profile/get_display_name.rs',
   'r0/profile/set_avatar_url.rs',
   'r0/profile/set_display_name.rs',
   'r0/server/domain_info.rs',
