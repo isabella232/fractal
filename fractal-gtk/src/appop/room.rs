@@ -7,7 +7,6 @@ use log::{error, warn};
 use std::convert::TryInto;
 use std::fs::remove_file;
 use std::os::unix::fs;
-use std::thread;
 
 use gtk::prelude::*;
 
@@ -80,11 +79,10 @@ impl AppOp {
                 self.update_typing_notification();
             } else {
                 // Request all joined members for each new room
-                let server = login_data.session_client.homeserver().clone();
-                let access_token = login_data.access_token.clone();
+                let session_client = login_data.session_client.clone();
                 let room_id = room.id.clone();
-                thread::spawn(move || {
-                    match room::get_room_members(server, access_token, room_id) {
+                RUNTIME.spawn(async move {
+                    match room::get_room_members(session_client, room_id).await {
                         Ok((room, members)) => {
                             APPOP!(set_room_members, (room, members));
                         }

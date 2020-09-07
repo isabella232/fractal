@@ -1,7 +1,7 @@
 use either::Either;
+use fractal_api::api::r0::membership::joined_members::RoomMember;
 use fractal_api::api::r0::user_directory::search_users::User;
 use fractal_api::identifiers::UserId;
-use fractal_api::r0::sync::get_joined_members::RoomMember;
 use fractal_api::url::{ParseError as UrlError, Url};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;

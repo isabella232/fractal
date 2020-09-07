@@ -33,6 +33,7 @@ use fractal_api::api::r0::config::set_room_account_data::Request as SetRoomAccou
 use fractal_api::api::r0::filter::RoomEventFilter;
 use fractal_api::api::r0::media::create_content::Request as CreateContentRequest;
 use fractal_api::api::r0::media::create_content::Response as CreateContentResponse;
+use fractal_api::api::r0::membership::joined_members::Request as JoinedMembersRequest;
 use fractal_api::api::r0::message::get_message_events::Request as GetMessagesEventsRequest;
 use fractal_api::api::r0::redact::redact_event::Request as RedactEventRequest;
 use fractal_api::api::r0::room::create_room::Request as CreateRoomRequest;
@@ -65,9 +66,6 @@ use fractal_api::r0::pushrules::get_room_rules::request as get_room_rules;
 use fractal_api::r0::pushrules::get_room_rules::Parameters as GetRoomRulesParams;
 use fractal_api::r0::pushrules::set_room_rules::request as set_room_rules;
 use fractal_api::r0::pushrules::set_room_rules::Parameters as SetRoomRulesParams;
-use fractal_api::r0::sync::get_joined_members::request as get_joined_members;
-use fractal_api::r0::sync::get_joined_members::Parameters as JoinedMembersParameters;
-use fractal_api::r0::sync::get_joined_members::Response as JoinedMembersResponse;
 use fractal_api::r0::AccessToken;
 
 use serde_json::value::to_raw_value;
@@ -204,13 +202,13 @@ pub async fn get_room_avatar(
 
 #[derive(Debug)]
 pub enum RoomMembersError {
-    Reqwest(ReqwestError),
+    Matrix(MatrixError),
     ParseUrl(UrlError),
 }
 
-impl From<ReqwestError> for RoomMembersError {
-    fn from(err: ReqwestError) -> Self {
-        Self::Reqwest(err)
+impl From<MatrixError> for RoomMembersError {
+    fn from(err: MatrixError) -> Self {
+        Self::Matrix(err)
     }
 }
 
@@ -222,15 +220,12 @@ impl From<UrlError> for RoomMembersError {
 
 impl HandleError for RoomMembersError {}
 
-pub fn get_room_members(
-    base: Url,
-    access_token: AccessToken,
+pub async fn get_room_members(
+    session_client: MatrixClient,
     room_id: RoomId,
 ) -> Result<(RoomId, Vec<Member>), RoomMembersError> {
-    let params = JoinedMembersParameters { access_token };
-
-    let request = get_joined_members(base, &room_id, &params)?;
-    let response: JoinedMembersResponse = HTTP_CLIENT.get_client().execute(request)?.json()?;
+    let request = JoinedMembersRequest::new(&room_id);
+    let response = session_client.send(request).await?;
 
     let ms = response
         .joined

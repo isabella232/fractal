@@ -17,7 +17,6 @@ api_sources = files(
   'r0/profile/set_avatar_url.rs',
   'r0/profile/set_display_name.rs',
   'r0/server/domain_info.rs',
-  'r0/sync/get_joined_members.rs',
   'r0/sync/sync_events.rs',
   'r0/thirdparty/get_supported_protocols.rs',
   'r0/account.rs',
