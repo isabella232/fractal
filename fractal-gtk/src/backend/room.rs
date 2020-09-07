@@ -47,6 +47,7 @@ use fractal_api::events::room::avatar::AvatarEventContent;
 use fractal_api::events::room::history_visibility::HistoryVisibility;
 use fractal_api::events::room::history_visibility::HistoryVisibilityEventContent;
 use fractal_api::events::room::message::MessageEventContent;
+use fractal_api::events::room::name::NameEventContent;
 use fractal_api::events::tag::TagInfo;
 use fractal_api::events::AnyBasicEventContent;
 use fractal_api::events::AnyInitialStateEvent;
@@ -55,6 +56,7 @@ use fractal_api::events::AnyStateEventContent;
 use fractal_api::events::EventContent;
 use fractal_api::events::EventType;
 use fractal_api::events::InitialStateEvent;
+use fractal_api::events::InvalidInput as NameRoomEventInvalidInput;
 use fractal_api::r0::pushrules::delete_room_rules::request as delete_room_rules;
 use fractal_api::r0::pushrules::delete_room_rules::Parameters as DelRoomRulesParams;
 use fractal_api::r0::pushrules::get_room_rules::request as get_room_rules;
@@ -471,30 +473,34 @@ pub async fn mark_as_read(
     Ok((room_id, event_id))
 }
 #[derive(Debug)]
-pub struct SetRoomNameError(ReqwestError);
+pub enum SetRoomNameError {
+    Matrix(MatrixError),
+    InvalidName(NameRoomEventInvalidInput),
+}
 
-impl From<ReqwestError> for SetRoomNameError {
-    fn from(err: ReqwestError) -> Self {
-        Self(err)
+impl From<MatrixError> for SetRoomNameError {
+    fn from(err: MatrixError) -> Self {
+        Self::Matrix(err)
+    }
+}
+
+impl From<NameRoomEventInvalidInput> for SetRoomNameError {
+    fn from(err: NameRoomEventInvalidInput) -> Self {
+        Self::InvalidName(err)
     }
 }
 
 impl HandleError for SetRoomNameError {}
 
-pub fn set_room_name(
-    base: Url,
-    access_token: AccessToken,
-    room_id: RoomId,
+pub async fn set_room_name(
+    session_client: MatrixClient,
+    room_id: &RoomId,
     name: String,
 ) -> Result<(), SetRoomNameError> {
-    let params = CreateStateEventsForKeyParameters { access_token };
+    let content = &AnyStateEventContent::RoomName(NameEventContent::new(name)?);
+    let request = SendStateEventForKeyRequest::new(room_id, "m.room.name", content);
 
-    let body = json!({
-        "name": name,
-    });
-
-    let request = create_state_events_for_key(base, &params, &body, &room_id, "m.room.name")?;
-    HTTP_CLIENT.get_client().execute(request)?;
+    session_client.send(request).await?;
 
     Ok(())
 }

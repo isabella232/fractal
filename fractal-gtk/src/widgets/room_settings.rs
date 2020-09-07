@@ -14,7 +14,7 @@ use gtk::prelude::*;
 
 use crate::actions;
 use crate::actions::{ButtonState, StateExt};
-use crate::app::App;
+use crate::app::{App, RUNTIME};
 use crate::model::{member::Member, room::Room};
 use crate::util::markup_text;
 use crate::widgets;
@@ -88,13 +88,13 @@ impl RoomSettings {
             stack.set_visible_child_name("info")
         }
 
-        self.init_room_settings(session_client);
-        self.connect();
+        self.init_room_settings(session_client.clone());
+        self.connect(session_client);
 
         Some(page)
     }
 
-    pub fn connect(&mut self) {
+    pub fn connect(&mut self, session_client: MatrixClient) {
         let name_btn = self
             .builder
             .get_object::<gtk::Button>("room_settings_room_name_button")
@@ -145,7 +145,7 @@ impl RoomSettings {
         });
 
         name_btn.connect_clicked(clone!(@strong this => move |_| {
-            this.borrow_mut().update_room_name();
+            this.borrow_mut().update_room_name(session_client.clone());
         }));
 
         let button = topic_btn.clone();
@@ -490,7 +490,7 @@ impl RoomSettings {
         }
     }
 
-    pub fn update_room_name(&mut self) -> Option<()> {
+    pub fn update_room_name(&mut self, session_client: MatrixClient) -> Option<()> {
         let entry = self
             .builder
             .get_object::<gtk::Entry>("room_settings_room_name_entry")
@@ -501,7 +501,6 @@ impl RoomSettings {
             .expect("Can't find room_settings_name_button in ui file.");
 
         let new_name = entry.get_text().to_string();
-        let room = &self.room;
 
         let spinner = gtk::Spinner::new();
         spinner.start();
@@ -509,19 +508,17 @@ impl RoomSettings {
         button.set_sensitive(false);
         entry.set_editable(false);
 
-        let server = self.server_url.clone();
-        let access_token = self.access_token.clone();
-        let room_id = room.id.clone();
-        thread::spawn(
-            move || match room::set_room_name(server, access_token, room_id, new_name) {
+        let room_id = self.room.id.clone();
+        RUNTIME.spawn(async move {
+            match room::set_room_name(session_client, &room_id, new_name).await {
                 Ok(_) => {
                     APPOP!(show_new_room_name);
                 }
                 Err(err) => {
                     err.handle_error();
                 }
-            },
-        );
+            }
+        });
 
         None
     }
