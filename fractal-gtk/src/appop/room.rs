@@ -96,10 +96,9 @@ impl AppOp {
                 // Download the room avatar
                 // TODO: Use the avatar url returned by sync
                 let session_client = login_data.session_client.clone();
-                let access_token = login_data.access_token.clone();
                 let room_id = room.id.clone();
-                thread::spawn(move || {
-                    match room::get_room_avatar(session_client, access_token, room_id) {
+                RUNTIME.spawn(async move {
+                    match room::get_room_avatar(session_client, room_id).await {
                         Ok((room, avatar)) => {
                             APPOP!(set_room_avatar, (room, avatar));
                         }
@@ -247,18 +246,17 @@ impl AppOp {
 
         // getting room details
         let session_client = login_data.session_client.clone();
-        let access_token = login_data.access_token.clone();
         let a_room = active_room.clone();
-        thread::spawn(
-            move || match room::get_room_avatar(session_client, access_token, a_room) {
+        RUNTIME.spawn(async move {
+            match room::get_room_avatar(session_client, a_room).await {
                 Ok((room, avatar)) => {
                     APPOP!(set_room_avatar, (room, avatar));
                 }
                 Err(err) => {
                     err.handle_error();
                 }
-            },
-        );
+            }
+        });
 
         let session_client = login_data.session_client.clone();
         let a_room = active_room.clone();
@@ -684,17 +682,14 @@ impl AppOp {
     }
 
     pub fn new_room_avatar(&self, room_id: RoomId) {
-        let login_data = unwrap_or_unit_return!(self.login_data.clone());
+        let session_client =
+            unwrap_or_unit_return!(self.login_data.as_ref().map(|ld| ld.session_client.clone()));
         if !self.rooms.contains_key(&room_id) {
             return;
         }
 
-        thread::spawn(move || {
-            match room::get_room_avatar(
-                login_data.session_client.clone(),
-                login_data.access_token,
-                room_id,
-            ) {
+        RUNTIME.spawn(async move {
+            match room::get_room_avatar(session_client, room_id).await {
                 Ok((room, avatar)) => {
                     APPOP!(set_room_avatar, (room, avatar));
                 }

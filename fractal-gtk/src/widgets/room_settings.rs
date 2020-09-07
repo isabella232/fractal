@@ -439,18 +439,17 @@ impl RoomSettings {
             }
         }
 
-        let access_token = self.access_token.clone();
         let room_id = self.room.id.clone();
-        thread::spawn(
-            move || match room::get_room_avatar(session_client, access_token, room_id) {
+        RUNTIME.spawn(async move {
+            match room::get_room_avatar(session_client, room_id).await {
                 Ok((room, avatar)) => {
                     APPOP!(set_room_avatar, (room, avatar));
                 }
                 Err(err) => {
                     err.handle_error();
                 }
-            },
-        );
+            }
+        });
         let image = widgets::Avatar::avatar_new(Some(100));
         let _data = image.circle(
             self.room.id.to_string(),

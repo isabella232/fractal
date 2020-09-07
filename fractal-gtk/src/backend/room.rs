@@ -19,7 +19,6 @@ use std::time::Duration;
 use crate::globals;
 
 use crate::actions::AppState;
-use crate::app::RUNTIME;
 use crate::backend::{MediaError, HTTP_CLIENT};
 use crate::util::cache_dir_path;
 
@@ -66,8 +65,6 @@ use fractal_api::r0::pushrules::get_room_rules::request as get_room_rules;
 use fractal_api::r0::pushrules::get_room_rules::Parameters as GetRoomRulesParams;
 use fractal_api::r0::pushrules::set_room_rules::request as set_room_rules;
 use fractal_api::r0::pushrules::set_room_rules::Parameters as SetRoomRulesParams;
-use fractal_api::r0::state::get_state_events_for_key::request as get_state_events_for_key;
-use fractal_api::r0::state::get_state_events_for_key::Parameters as GetStateEventsForKeyParameters;
 use fractal_api::r0::sync::get_joined_members::request as get_joined_members;
 use fractal_api::r0::sync::get_joined_members::Parameters as JoinedMembersParameters;
 use fractal_api::r0::sync::get_joined_members::Response as JoinedMembersResponse;
@@ -141,13 +138,13 @@ pub async fn get_room_detail(
 
 #[derive(Debug)]
 pub enum RoomAvatarError {
-    Reqwest(ReqwestError),
+    Matrix(MatrixError),
     Download(MediaError),
 }
 
-impl From<ReqwestError> for RoomAvatarError {
-    fn from(err: ReqwestError) -> Self {
-        Self::Reqwest(err)
+impl From<MatrixError> for RoomAvatarError {
+    fn from(err: MatrixError) -> Self {
+        Self::Matrix(err)
     }
 }
 
@@ -157,29 +154,49 @@ impl From<MediaError> for RoomAvatarError {
     }
 }
 
+impl From<ParseJsonError> for RoomAvatarError {
+    fn from(err: ParseJsonError) -> Self {
+        Self::Matrix(err.into())
+    }
+}
+
 impl HandleError for RoomAvatarError {}
 
-pub fn get_room_avatar(
+pub async fn get_room_avatar(
     session_client: MatrixClient,
-    access_token: AccessToken,
     room_id: RoomId,
 ) -> Result<(RoomId, Option<Url>), RoomAvatarError> {
-    let base = session_client.homeserver().clone();
+    let request = GetStateEventForKeyRequest::new(&room_id, EventType::RoomAvatar, "");
 
-    let params = GetStateEventsForKeyParameters { access_token };
+    let response = match session_client.send(request).await {
+        Ok(response) => Some(response),
+        Err(MatrixError::RumaResponse(RumaResponseError::Http(ServerError::Known(
+            RumaClientError {
+                kind: RumaErrorKind::NotFound,
+                ..
+            },
+        )))) => None,
+        Err(err) => return Err(err.into()),
+    };
 
-    let request = get_state_events_for_key(base, &params, &room_id, "m.room.avatar")?;
-    let response: JsonValue = HTTP_CLIENT.get_client().execute(request)?.json()?;
+    let avatar = if let Some(res) = response {
+        serde_json::to_value(&res.content)?["url"]
+            .as_str()
+            .and_then(|s| Url::parse(s).ok())
+    } else {
+        None
+    };
 
-    let avatar = response["url"].as_str().and_then(|s| Url::parse(s).ok());
-    let dest = cache_dir_path(None, &room_id.to_string()).ok();
     if let Some(ref avatar) = avatar {
-        RUNTIME.handle().block_on(dw_media(
+        let dest = cache_dir_path(None, room_id.as_str()).ok();
+
+        dw_media(
             session_client,
             avatar,
             ContentType::default_thumbnail(),
             dest,
-        ))?;
+        )
+        .await?;
     }
 
     Ok((room_id, avatar))
