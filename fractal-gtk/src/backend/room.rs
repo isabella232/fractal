@@ -2,6 +2,7 @@ use log::error;
 use serde_json::json;
 
 use fractal_api::{
+    api::{error::ErrorKind as RumaErrorKind, Error as RumaClientError},
     identifiers::{Error as IdError, EventId, RoomId, RoomIdOrAliasId, UserId},
     reqwest::Error as ReqwestError,
     url::{ParseError as UrlError, Url},
@@ -38,6 +39,7 @@ use fractal_api::api::r0::redact::redact_event::Request as RedactEventRequest;
 use fractal_api::api::r0::room::create_room::Request as CreateRoomRequest;
 use fractal_api::api::r0::room::create_room::RoomPreset;
 use fractal_api::api::r0::room::Visibility;
+use fractal_api::api::r0::state::get_state_events_for_key::Request as GetStateEventForKeyRequest;
 use fractal_api::api::r0::state::send_state_event_for_key::Request as SendStateEventForKeyRequest;
 use fractal_api::api::r0::tag::create_tag::Request as CreateTagRequest;
 use fractal_api::api::r0::tag::delete_tag::Request as DeleteTagRequest;
@@ -85,32 +87,56 @@ use crate::APPOP;
 #[derive(Debug)]
 pub enum RoomDetailError {
     MalformedKey,
-    Reqwest(ReqwestError),
+    Matrix(MatrixError),
 }
 
-impl From<ReqwestError> for RoomDetailError {
-    fn from(err: ReqwestError) -> Self {
-        Self::Reqwest(err)
+impl From<MatrixError> for RoomDetailError {
+    fn from(err: MatrixError) -> Self {
+        Self::Matrix(err)
+    }
+}
+
+impl From<ParseJsonError> for RoomDetailError {
+    fn from(err: ParseJsonError) -> Self {
+        Self::Matrix(err.into())
     }
 }
 
 impl HandleError for RoomDetailError {}
 
-pub fn get_room_detail(
-    base: Url,
-    access_token: AccessToken,
+pub async fn get_room_detail(
+    session_client: MatrixClient,
     room_id: RoomId,
-    key: String,
-) -> Result<(RoomId, String, String), RoomDetailError> {
-    let k = key.split('.').last().ok_or(RoomDetailError::MalformedKey)?;
-    let params = GetStateEventsForKeyParameters { access_token };
+    event_type: EventType,
+) -> Result<(RoomId, EventType, String), RoomDetailError> {
+    let key = event_type
+        .as_ref()
+        .split('.')
+        .last()
+        .ok_or(RoomDetailError::MalformedKey)?;
 
-    let request = get_state_events_for_key(base, &params, &room_id, &key)?;
-    let response: JsonValue = HTTP_CLIENT.get_client().execute(request)?.json()?;
+    let request = GetStateEventForKeyRequest::new(&room_id, event_type.clone(), "");
 
-    let value = response[&k].as_str().map(Into::into).unwrap_or_default();
+    let response = match session_client.send(request).await {
+        Ok(response) => Some(response),
+        Err(MatrixError::RumaResponse(RumaResponseError::Http(ServerError::Known(
+            RumaClientError {
+                kind: RumaErrorKind::NotFound,
+                ..
+            },
+        )))) => None,
+        Err(err) => return Err(err.into()),
+    };
 
-    Ok((room_id, key, value))
+    let value = if let Some(res) = response {
+        serde_json::to_value(&res.content)?[&key]
+            .as_str()
+            .map(Into::into)
+    } else {
+        None
+    };
+
+    Ok((room_id, event_type, value.unwrap_or_default()))
 }
 
 #[derive(Debug)]

@@ -1,5 +1,6 @@
 use crate::backend::room;
 use crate::util::i18n::{i18n, i18n_k, ni18n_f};
+use fractal_api::events::EventType;
 use fractal_api::identifiers::RoomId;
 use fractal_api::url::Url;
 use log::{error, warn};
@@ -259,11 +260,10 @@ impl AppOp {
             },
         );
 
-        let server_url = login_data.session_client.homeserver().clone();
-        let access_token = login_data.access_token.clone();
+        let session_client = login_data.session_client.clone();
         let a_room = active_room.clone();
-        thread::spawn(move || {
-            match room::get_room_detail(server_url, access_token, a_room, "m.room.topic".into()) {
+        RUNTIME.spawn(async move {
+            match room::get_room_detail(session_client, a_room, EventType::RoomTopic).await {
                 Ok((room, key, value)) => {
                     let v = Some(value);
                     APPOP!(set_room_detail, (room, key, v));
@@ -287,8 +287,8 @@ impl AppOp {
                 }
             }
 
-            self.set_current_room_detail(String::from("m.room.name"), room.name.clone());
-            self.set_current_room_detail(String::from("m.room.topic"), room.topic.clone());
+            self.set_current_room_detail(EventType::RoomName, room.name.clone());
+            self.set_current_room_detail(EventType::RoomTopic, room.topic.clone());
         }
 
         self.append_tmp_msgs();
@@ -422,14 +422,13 @@ impl AppOp {
         };
     }
 
-    pub fn set_room_detail(&mut self, room_id: RoomId, key: String, value: Option<String>) {
+    pub fn set_room_detail(&mut self, room_id: RoomId, key: EventType, value: Option<String>) {
         if let Some(r) = self.rooms.get_mut(&room_id) {
-            let k: &str = &key;
-            match k {
-                "m.room.name" => {
+            match key {
+                EventType::RoomName => {
                     r.name = value.clone();
                 }
-                "m.room.topic" => {
+                EventType::RoomTopic => {
                     r.topic = value.clone();
                 }
                 _ => {}
@@ -472,11 +471,10 @@ impl AppOp {
         }
     }
 
-    pub fn set_current_room_detail(&self, key: String, value: Option<String>) {
+    pub fn set_current_room_detail(&self, key: EventType, value: Option<String>) {
         let value = value.unwrap_or_default();
-        let k: &str = &key;
-        match k {
-            "m.room.name" => {
+        match key {
+            EventType::RoomName => {
                 let name_label = self
                     .ui
                     .builder
@@ -485,7 +483,7 @@ impl AppOp {
 
                 name_label.set_text(&value);
             }
-            "m.room.topic" => {
+            EventType::RoomTopic => {
                 self.set_room_topic_label(Some(value));
             }
             _ => warn!("no key {}", key),
