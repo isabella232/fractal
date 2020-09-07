@@ -144,7 +144,7 @@ impl RoomSettings {
             let _ = button.emit("clicked", &[]);
         });
 
-        name_btn.connect_clicked(clone!(@strong this => move |_| {
+        name_btn.connect_clicked(clone!(@strong this, @strong session_client => move |_| {
             this.borrow_mut().update_room_name(session_client.clone());
         }));
 
@@ -154,7 +154,7 @@ impl RoomSettings {
         });
 
         topic_btn.connect_clicked(clone!(@strong this => move |_| {
-            this.borrow_mut().update_room_topic();
+            this.borrow_mut().update_room_topic(session_client.clone());
         }));
 
         if let Some(action) = self.actions.lookup_action("change-avatar") {
@@ -545,7 +545,7 @@ impl RoomSettings {
         None
     }
 
-    pub fn update_room_topic(&mut self) -> Option<()> {
+    pub fn update_room_topic(&mut self, session_client: MatrixClient) -> Option<()> {
         let name = self
             .builder
             .get_object::<gtk::Entry>("room_settings_room_topic_entry")
@@ -556,27 +556,23 @@ impl RoomSettings {
             .expect("Can't find room_settings_topic_button in ui file.");
         let topic = name.get_text().to_string();
 
-        let room = &self.room;
-
         let spinner = gtk::Spinner::new();
         spinner.start();
         button.set_image(Some(&spinner));
         button.set_sensitive(false);
         name.set_editable(false);
 
-        let server = self.server_url.clone();
-        let access_token = self.access_token.clone();
-        let room_id = room.id.clone();
-        thread::spawn(
-            move || match room::set_room_topic(server, access_token, room_id, topic) {
+        let room_id = self.room.id.clone();
+        RUNTIME.spawn(async move {
+            match room::set_room_topic(session_client, &room_id, topic).await {
                 Ok(_) => {
                     APPOP!(show_new_room_topic);
                 }
                 Err(err) => {
                     err.handle_error();
                 }
-            },
-        );
+            }
+        });
 
         None
     }

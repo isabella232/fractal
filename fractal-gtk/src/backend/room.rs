@@ -48,6 +48,7 @@ use fractal_api::events::room::history_visibility::HistoryVisibility;
 use fractal_api::events::room::history_visibility::HistoryVisibilityEventContent;
 use fractal_api::events::room::message::MessageEventContent;
 use fractal_api::events::room::name::NameEventContent;
+use fractal_api::events::room::topic::TopicEventContent;
 use fractal_api::events::tag::TagInfo;
 use fractal_api::events::AnyBasicEventContent;
 use fractal_api::events::AnyInitialStateEvent;
@@ -63,8 +64,6 @@ use fractal_api::r0::pushrules::get_room_rules::request as get_room_rules;
 use fractal_api::r0::pushrules::get_room_rules::Parameters as GetRoomRulesParams;
 use fractal_api::r0::pushrules::set_room_rules::request as set_room_rules;
 use fractal_api::r0::pushrules::set_room_rules::Parameters as SetRoomRulesParams;
-use fractal_api::r0::state::create_state_events_for_key::request as create_state_events_for_key;
-use fractal_api::r0::state::create_state_events_for_key::Parameters as CreateStateEventsForKeyParameters;
 use fractal_api::r0::state::get_state_events_for_key::request as get_state_events_for_key;
 use fractal_api::r0::state::get_state_events_for_key::Parameters as GetStateEventsForKeyParameters;
 use fractal_api::r0::sync::get_joined_members::request as get_joined_members;
@@ -506,30 +505,25 @@ pub async fn set_room_name(
 }
 
 #[derive(Debug)]
-pub struct SetRoomTopicError(ReqwestError);
+pub struct SetRoomTopicError(MatrixError);
 
-impl From<ReqwestError> for SetRoomTopicError {
-    fn from(err: ReqwestError) -> Self {
+impl From<MatrixError> for SetRoomTopicError {
+    fn from(err: MatrixError) -> Self {
         Self(err)
     }
 }
 
 impl HandleError for SetRoomTopicError {}
 
-pub fn set_room_topic(
-    base: Url,
-    access_token: AccessToken,
-    room_id: RoomId,
+pub async fn set_room_topic(
+    session_client: MatrixClient,
+    room_id: &RoomId,
     topic: String,
 ) -> Result<(), SetRoomTopicError> {
-    let params = CreateStateEventsForKeyParameters { access_token };
+    let content = &AnyStateEventContent::RoomTopic(TopicEventContent { topic });
+    let request = SendStateEventForKeyRequest::new(room_id, "m.room.topic", content);
 
-    let body = json!({
-        "topic": topic,
-    });
-
-    let request = create_state_events_for_key(base, &params, &body, &room_id, "m.room.topic")?;
-    HTTP_CLIENT.get_client().execute(request)?;
+    session_client.send(request).await?;
 
     Ok(())
 }
