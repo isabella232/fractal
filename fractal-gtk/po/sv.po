@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2020-07-29 06:07+0000\n"
-"PO-Revision-Date: 2020-07-30 13:32+0200\n"
+"POT-Creation-Date: 2020-08-13 10:34+0000\n"
+"PO-Revision-Date: 2020-09-07 13:47+0200\n"
 "Last-Translator: Anders Jonsson <anders.jonsson@norsjovallen.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.3.1\n"
+"X-Generator: Poedit 2.4.1\n"
 
 #: fractal-gtk/res/gtk/help-overlay.ui:13
 msgctxt "shortcut window"
@@ -761,8 +761,8 @@ msgid "A Matrix.org client for GNOME"
 msgstr "En Matrix.org-klient för GNOME"
 
 #: fractal-gtk/src/appop/about.rs:22
-msgid "© 2017–2018 Daniel García Moreno, et al."
-msgstr "© 2017–2018 Daniel García Moreno med flera."
+msgid "© 2017–2020 Daniel García Moreno, et al."
+msgstr "© 2017–2020 Daniel García Moreno med flera."
 
 #: fractal-gtk/src/appop/about.rs:29
 msgid "Learn more about Fractal"
@@ -804,7 +804,7 @@ msgstr ""
 msgid "OK"
 msgstr "OK"
 
-#: fractal-gtk/src/appop/account.rs:780
+#: fractal-gtk/src/appop/account.rs:786
 msgid "Are you sure you want to delete your account?"
 msgstr "Är du säker på att du vill ta bort ditt konto?"
 
@@ -825,18 +825,18 @@ msgstr "bild"
 msgid "Invite to {name}"
 msgstr "Bjud in till {name}"
 
-#: fractal-gtk/src/appop/invite.rs:265
+#: fractal-gtk/src/appop/invite.rs:269
 msgid "Join {room_name}?"
 msgstr "Gå in i {room_name}?"
 
-#: fractal-gtk/src/appop/invite.rs:270
+#: fractal-gtk/src/appop/invite.rs:274
 msgid ""
 "You’ve been invited to join <b>{room_name}</b> room by <b>{sender_name}</b>"
 msgstr ""
 "Du har bjudits in att gå in i rummet <b>{room_name}</b> av <b>{sender_name}</"
 "b>"
 
-#: fractal-gtk/src/appop/invite.rs:275
+#: fractal-gtk/src/appop/invite.rs:279
 msgid "You’ve been invited to join <b>{room_name}</b>"
 msgstr "Du har bjudits in att gå in i <b>{room_name}</b>"
 
@@ -846,51 +846,51 @@ msgstr "Du har bjudits in att gå in i <b>{room_name}</b>"
 msgid "Fractal [{}]"
 msgstr "Fractal [{}]"
 
-#: fractal-gtk/src/appop/notify.rs:51
+#: fractal-gtk/src/appop/notify.rs:52
 msgid "An audio file has been added to the conversation."
 msgstr "En ljudfil har lagts till i konversationen."
 
-#: fractal-gtk/src/appop/notify.rs:52
+#: fractal-gtk/src/appop/notify.rs:53
 msgid "An image has been added to the conversation."
 msgstr "En bild har lagts till i konversationen."
 
-#: fractal-gtk/src/appop/notify.rs:53
+#: fractal-gtk/src/appop/notify.rs:54
 msgid "A video has been added to the conversation."
 msgstr "Ett videoklipp har lagts till i konversationen."
 
-#: fractal-gtk/src/appop/notify.rs:54
+#: fractal-gtk/src/appop/notify.rs:55
 msgid "A file has been added to the conversation."
 msgstr "En fil har lagts till i konversationen."
 
-#: fractal-gtk/src/appop/notify.rs:59
+#: fractal-gtk/src/appop/notify.rs:60
 msgid " (direct message)"
 msgstr " (direktmeddelande)"
 
-#: fractal-gtk/src/appop/room.rs:357
+#: fractal-gtk/src/appop/room.rs:358
 msgid "Leave {room_name}?"
 msgstr "Lämna {room_name}?"
 
-#: fractal-gtk/src/appop/room.rs:565
+#: fractal-gtk/src/appop/room.rs:573
 msgid "The room ID is malformed"
 msgstr "Rums-ID:t är felaktigt utformat"
 
-#: fractal-gtk/src/appop/room.rs:635
+#: fractal-gtk/src/appop/room.rs:643
 msgid "EMPTY ROOM"
 msgstr "TOMT RUM"
 
-#: fractal-gtk/src/appop/room.rs:637
+#: fractal-gtk/src/appop/room.rs:645
 msgid "{m1} and {m2}"
 msgstr "{m1} och {m2}"
 
-#: fractal-gtk/src/appop/room.rs:638
+#: fractal-gtk/src/appop/room.rs:646
 msgid "{m1} and Others"
 msgstr "{m1} med flera"
 
-#: fractal-gtk/src/appop/room.rs:737
+#: fractal-gtk/src/appop/room.rs:745
 msgid "Several users are typing…"
 msgstr "Flera användare skriver…"
 
-#: fractal-gtk/src/appop/room.rs:740
+#: fractal-gtk/src/appop/room.rs:748
 msgid "<b>{}</b> is typing…"
 msgid_plural "<b>{}</b> and <b>{}</b> are typing…"
 msgstr[0] "<b>{}</b> skriver…"
@@ -909,43 +909,43 @@ msgstr "Fel vid sökning efter rum"
 msgid "Can’t login, try again"
 msgstr "Det går inte att logga in, försök igen"
 
-#: fractal-gtk/src/backend/room.rs:349
+#: fractal-gtk/src/backend/room.rs:352
 msgid "Error deleting message"
 msgstr "Fel vid borttagning av meddelande"
 
-#: fractal-gtk/src/backend/room.rs:394
+#: fractal-gtk/src/backend/room.rs:419
 msgid "Can’t join the room, try again."
 msgstr "Det går inte att gå in i rummet, försök igen."
 
-#: fractal-gtk/src/backend/room.rs:653 fractal-gtk/src/backend/room.rs:710
+#: fractal-gtk/src/backend/room.rs:684 fractal-gtk/src/backend/room.rs:741
 msgid "Can’t create the room, try again"
 msgstr "Det går inte att skapa rummet, försök igen"
 
-#: fractal-gtk/src/backend/user.rs:161
+#: fractal-gtk/src/backend/user.rs:162
 msgid "Sorry, account settings can’t be loaded."
 msgstr "Tyvärr, kontoinställningar kan inte läsas in."
 
-#: fractal-gtk/src/backend/user.rs:200
+#: fractal-gtk/src/backend/user.rs:201
 msgid "Email is already in use"
 msgstr "E-postadressen används redan"
 
-#: fractal-gtk/src/backend/user.rs:204
+#: fractal-gtk/src/backend/user.rs:205
 msgid "Please enter a valid email address."
 msgstr "Ange en giltig e-postadress."
 
-#: fractal-gtk/src/backend/user.rs:208
+#: fractal-gtk/src/backend/user.rs:209
 msgid "Couldn’t add the email address."
 msgstr "Kunde inte lägga till e-postadressen."
 
-#: fractal-gtk/src/backend/user.rs:217 fractal-gtk/src/backend/user.rs:295
+#: fractal-gtk/src/backend/user.rs:218 fractal-gtk/src/backend/user.rs:296
 msgid "The identity server is invalid."
 msgstr "Identitetsservern är ogiltig."
 
-#: fractal-gtk/src/backend/user.rs:276
+#: fractal-gtk/src/backend/user.rs:277
 msgid "Phone number is already in use"
 msgstr "Telefonnumret används redan"
 
-#: fractal-gtk/src/backend/user.rs:281
+#: fractal-gtk/src/backend/user.rs:282
 msgid ""
 "Please enter your phone number in the format: \n"
 " + your country code and your phone number."
@@ -953,15 +953,15 @@ msgstr ""
 "Ange ditt telefonnummer i formatet: \n"
 " + din landskod och ditt telefonnummer."
 
-#: fractal-gtk/src/backend/user.rs:286
+#: fractal-gtk/src/backend/user.rs:287
 msgid "Couldn’t add the phone number."
 msgstr "Kunde inte lägga till telefonnumret."
 
-#: fractal-gtk/src/backend/user.rs:442
+#: fractal-gtk/src/backend/user.rs:443
 msgid "Couldn’t change the password"
 msgstr "Kunde inte ändra lösenordet"
 
-#: fractal-gtk/src/backend/user.rs:486
+#: fractal-gtk/src/backend/user.rs:487
 msgid "Couldn’t delete the account"
 msgstr "Kunde inte ta bort kontot"
 
@@ -1042,22 +1042,22 @@ msgstr "Skickar fil."
 msgid "Last edited %c"
 msgstr "Senast redigerat %c"
 
-#: fractal-gtk/src/widgets/message.rs:480
-#: fractal-gtk/src/widgets/message.rs:595
+#: fractal-gtk/src/widgets/message.rs:481
+#: fractal-gtk/src/widgets/message.rs:596
 msgid "Save"
 msgstr "Spara"
 
-#: fractal-gtk/src/widgets/message.rs:609
+#: fractal-gtk/src/widgets/message.rs:610
 msgid "Open"
 msgstr "Öppna"
 
 #. Use 12h time format (AM/PM)
-#: fractal-gtk/src/widgets/message.rs:629
+#: fractal-gtk/src/widgets/message.rs:630
 msgid "%l∶%M %p"
 msgstr "%l∶%M %p"
 
 #. Use 24 time format
-#: fractal-gtk/src/widgets/message.rs:632
+#: fractal-gtk/src/widgets/message.rs:633
 msgid "%R"
 msgstr "%R"
 
