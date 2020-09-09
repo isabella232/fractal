@@ -4,7 +4,7 @@ use log::info;
 use std::path::PathBuf;
 use std::thread;
 
-use crate::app::App;
+use crate::app::{App, RUNTIME};
 use crate::appop::AppOp;
 use crate::appop::AppState;
 use crate::backend::HandleError;
@@ -597,7 +597,7 @@ impl AppOp {
             .expect("Can't find account_settings_name_button in ui file.");
 
         let old_username = login_data.username.clone().unwrap_or_default();
-        let username = name.get_text().to_string();
+        let username: String = name.get_text().into();
 
         if old_username != username {
             let spinner = gtk::Spinner::new();
@@ -605,16 +605,17 @@ impl AppOp {
             button.set_image(Some(&spinner));
             button.set_sensitive(false);
             name.set_editable(false);
-            thread::spawn(move || {
-                match user::set_username(
-                    login_data.session_client.homeserver().clone(),
-                    login_data.access_token,
-                    login_data.uid,
-                    username,
-                ) {
+            RUNTIME.spawn(async move {
+                let query = user::set_username(
+                    login_data.session_client,
+                    &login_data.uid,
+                    Some(username).filter(|u| !u.is_empty()),
+                )
+                .await;
+
+                match query {
                     Ok(username) => {
-                        let u = Some(username);
-                        APPOP!(show_new_username, (u));
+                        APPOP!(show_new_username, (username));
                     }
                     Err(err) => {
                         err.handle_error();

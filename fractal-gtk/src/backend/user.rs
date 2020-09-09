@@ -18,6 +18,7 @@ use crate::model::member::Member;
 use fractal_api::api::r0::profile::get_display_name::Request as GetDisplayNameRequest;
 use fractal_api::api::r0::profile::get_profile::Request as GetProfileRequest;
 use fractal_api::api::r0::profile::set_avatar_url::Request as SetAvatarUrlRequest;
+use fractal_api::api::r0::profile::set_display_name::Request as SetDisplayNameRequest;
 use fractal_api::api::r0::user_directory::search_users::Request as UserDirectoryRequest;
 use fractal_api::identity::r0::association::msisdn::submit_token::request as submit_phone_token_req;
 use fractal_api::identity::r0::association::msisdn::submit_token::Body as SubmitPhoneTokenBody;
@@ -49,9 +50,6 @@ use fractal_api::r0::contact::request_verification_token_msisdn::request as requ
 use fractal_api::r0::contact::request_verification_token_msisdn::Body as PhoneTokenBody;
 use fractal_api::r0::contact::request_verification_token_msisdn::Parameters as PhoneTokenParameters;
 use fractal_api::r0::contact::request_verification_token_msisdn::Response as PhoneTokenResponse;
-use fractal_api::r0::profile::set_display_name::request as set_display_name;
-use fractal_api::r0::profile::set_display_name::Body as SetDisplayNameBody;
-use fractal_api::r0::profile::set_display_name::Parameters as SetDisplayNameParameters;
 use fractal_api::r0::AccessToken;
 use fractal_api::r0::Medium;
 use fractal_api::r0::ThreePIDCredentials;
@@ -87,29 +85,23 @@ pub async fn get_username(
 }
 
 #[derive(Debug)]
-pub struct SetUserNameError(ReqwestError);
+pub struct SetUserNameError(MatrixError);
 
-impl From<ReqwestError> for SetUserNameError {
-    fn from(err: ReqwestError) -> Self {
+impl From<MatrixError> for SetUserNameError {
+    fn from(err: MatrixError) -> Self {
         Self(err)
     }
 }
 
 impl HandleError for SetUserNameError {}
 
-pub fn set_username(
-    base: Url,
-    access_token: AccessToken,
-    uid: UserId,
-    username: String,
-) -> Result<String, SetUserNameError> {
-    let params = SetDisplayNameParameters { access_token };
-    let body = SetDisplayNameBody {
-        displayname: Some(username.clone()),
-    };
-
-    let request = set_display_name(base, &params, &body, &uid)?;
-    HTTP_CLIENT.get_client().execute(request)?;
+pub async fn set_username(
+    session_client: MatrixClient,
+    user_id: &UserId,
+    username: Option<String>,
+) -> Result<Option<String>, SetUserNameError> {
+    let request = SetDisplayNameRequest::new(user_id, username.as_ref().map(String::as_str));
+    session_client.send(request).await?;
 
     Ok(username)
 }
