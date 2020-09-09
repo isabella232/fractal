@@ -1,7 +1,6 @@
 pub mod account;
 pub mod contact;
 pub mod filter;
-pub mod media;
 pub mod profile;
 pub mod server;
 pub mod sync;

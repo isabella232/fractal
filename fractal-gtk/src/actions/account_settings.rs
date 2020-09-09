@@ -5,9 +5,8 @@ use gio::SimpleAction;
 use gio::SimpleActionGroup;
 use glib::clone;
 use std::sync::{Arc, Mutex};
-use std::thread;
 
-use crate::app::App;
+use crate::app::{App, RUNTIME};
 use crate::appop::AppOp;
 
 use crate::widgets::FileDialog::open;
@@ -24,18 +23,17 @@ pub fn new(window: &gtk::Window, op: Arc<Mutex<AppOp>>) -> gio::SimpleActionGrou
     actions.add_action(&change_avatar);
 
     change_avatar.connect_activate(clone!(@weak window => move |a, _| {
-        let login_data = unwrap_or_unit_return!(op.lock().unwrap().login_data.clone());
-        let server_url = login_data.session_client.homeserver().clone();
-        let access_token = login_data.access_token;
-        let uid = login_data.uid;
+        let (session_client, uid) = unwrap_or_unit_return!(
+            op.lock().unwrap().login_data.as_ref().map(|ld| (ld.session_client.clone(), ld.uid.clone()))
+        );
 
         let filter = gtk::FileFilter::new();
         filter.add_mime_type("image/*");
         filter.set_name(Some(i18n("Images").as_str()));
         if let Some(path) = open(&window, i18n("Select a new avatar").as_str(), &[filter]) {
             a.change_state(&ButtonState::Insensitive.into());
-            thread::spawn(move || {
-                match user::set_user_avatar(server_url, access_token, uid, path) {
+            RUNTIME.spawn(async move {
+                match user::set_user_avatar(session_client, &uid, path).await {
                     Ok(path) => {
                         APPOP!(show_new_avatar, (path));
                     }

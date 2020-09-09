@@ -2,7 +2,6 @@ use fractal_api::identifiers::UserId;
 use fractal_api::reqwest::Error as ReqwestError;
 use fractal_api::url::{ParseError as UrlError, Url};
 use fractal_api::{Client as MatrixClient, Error as MatrixError};
-use std::fs;
 use std::io::Error as IoError;
 
 use super::MediaError;
@@ -14,9 +13,11 @@ use log::error;
 use std::convert::TryInto;
 use std::path::PathBuf;
 
+use super::room::AttachedFileError;
 use crate::model::member::Member;
 use fractal_api::api::r0::profile::get_display_name::Request as GetDisplayNameRequest;
 use fractal_api::api::r0::profile::get_profile::Request as GetProfileRequest;
+use fractal_api::api::r0::profile::set_avatar_url::Request as SetAvatarUrlRequest;
 use fractal_api::api::r0::user_directory::search_users::Request as UserDirectoryRequest;
 use fractal_api::identity::r0::association::msisdn::submit_token::request as submit_phone_token_req;
 use fractal_api::identity::r0::association::msisdn::submit_token::Body as SubmitPhoneTokenBody;
@@ -48,12 +49,6 @@ use fractal_api::r0::contact::request_verification_token_msisdn::request as requ
 use fractal_api::r0::contact::request_verification_token_msisdn::Body as PhoneTokenBody;
 use fractal_api::r0::contact::request_verification_token_msisdn::Parameters as PhoneTokenParameters;
 use fractal_api::r0::contact::request_verification_token_msisdn::Response as PhoneTokenResponse;
-use fractal_api::r0::media::create_content::request as create_content;
-use fractal_api::r0::media::create_content::Parameters as CreateContentParameters;
-use fractal_api::r0::media::create_content::Response as CreateContentResponse;
-use fractal_api::r0::profile::set_avatar_url::request as set_avatar_url;
-use fractal_api::r0::profile::set_avatar_url::Body as SetAvatarUrlBody;
-use fractal_api::r0::profile::set_avatar_url::Parameters as SetAvatarUrlParameters;
 use fractal_api::r0::profile::set_display_name::request as set_display_name;
 use fractal_api::r0::profile::set_display_name::Body as SetDisplayNameBody;
 use fractal_api::r0::profile::set_display_name::Parameters as SetDisplayNameParameters;
@@ -489,46 +484,39 @@ pub fn account_destruction(
 #[derive(Debug)]
 pub enum SetUserAvatarError {
     Io(IoError),
-    Reqwest(ReqwestError),
+    Matrix(MatrixError),
+    ParseUrl(UrlError),
 }
 
-impl From<IoError> for SetUserAvatarError {
-    fn from(err: IoError) -> Self {
-        Self::Io(err)
+impl From<MatrixError> for SetUserAvatarError {
+    fn from(err: MatrixError) -> Self {
+        Self::Matrix(err)
     }
 }
 
-impl From<ReqwestError> for SetUserAvatarError {
-    fn from(err: ReqwestError) -> Self {
-        Self::Reqwest(err)
+impl From<AttachedFileError> for SetUserAvatarError {
+    fn from(err: AttachedFileError) -> Self {
+        match err {
+            AttachedFileError::Io(err) => Self::Io(err),
+            AttachedFileError::Matrix(err) => Self::Matrix(err),
+            AttachedFileError::ParseUrl(err) => Self::ParseUrl(err),
+        }
     }
 }
 
 impl HandleError for SetUserAvatarError {}
 
-pub fn set_user_avatar(
-    base: Url,
-    access_token: AccessToken,
-    uid: UserId,
+pub async fn set_user_avatar(
+    session_client: MatrixClient,
+    user_id: &UserId,
     avatar: PathBuf,
 ) -> Result<PathBuf, SetUserAvatarError> {
-    let params_upload = CreateContentParameters {
-        access_token: access_token.clone(),
-        filename: None,
-    };
+    let avatar_url = super::room::upload_file(session_client.clone(), &avatar)
+        .await?
+        .content_uri;
 
-    let contents = fs::read(&avatar)?;
-    let request = create_content(base.clone(), &params_upload, contents)?;
-    let upload_response: CreateContentResponse =
-        HTTP_CLIENT.get_client().execute(request)?.json()?;
-
-    let params_avatar = SetAvatarUrlParameters { access_token };
-    let body = SetAvatarUrlBody {
-        avatar_url: Some(upload_response.content_uri),
-    };
-
-    let request = set_avatar_url(base, &params_avatar, &body, &uid)?;
-    HTTP_CLIENT.get_client().execute(request)?;
+    let request = SetAvatarUrlRequest::new(user_id, Some(&avatar_url));
+    session_client.send(request).await?;
 
     Ok(avatar)
 }
