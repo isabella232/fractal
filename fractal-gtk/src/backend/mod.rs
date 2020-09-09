@@ -1,6 +1,10 @@
 use fractal_api::identifiers::{EventId, RoomId, ServerName};
 use fractal_api::url::Url;
-use fractal_api::{Client as MatrixClient, Error as MatrixError};
+use fractal_api::{
+    api::{error::ErrorKind as RumaErrorKind, Error as RumaClientError},
+    Client as MatrixClient, Error as MatrixError, FromHttpResponseError as RumaResponseError,
+    ServerError,
+};
 use lazy_static::lazy_static;
 use log::error;
 use regex::Regex;
@@ -163,6 +167,21 @@ pub trait HandleError: Debug {
             remove_matrix_access_token_if_present(&err_str).unwrap_or(err_str)
         );
     }
+}
+
+// Returns the encapsulated error in case it originated at the Matrix API level
+pub(self) fn get_ruma_client_error(matrix_error: &MatrixError) -> Option<&RumaClientError> {
+    match matrix_error {
+        MatrixError::RumaResponse(RumaResponseError::Http(ServerError::Known(error))) => {
+            Some(error)
+        }
+        _ => None,
+    }
+}
+
+// Returns the kind of error in case it originated at the Matrix API level
+pub(self) fn get_ruma_error_kind(matrix_error: &MatrixError) -> Option<&RumaErrorKind> {
+    get_ruma_client_error(matrix_error).map(|ruma_err| &ruma_err.kind)
 }
 
 /// This function removes the value of the `access_token` query from a URL used for accessing the Matrix API.

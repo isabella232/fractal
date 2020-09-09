@@ -3,7 +3,6 @@ pub mod contact;
 pub mod filter;
 pub mod media;
 pub mod profile;
-pub mod pushrules;
 pub mod server;
 pub mod sync;
 pub mod thirdparty;

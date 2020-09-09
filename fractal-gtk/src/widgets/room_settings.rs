@@ -5,7 +5,6 @@ use fractal_api::Client as MatrixClient;
 use glib::clone;
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::thread;
 
 use crate::util::i18n::ni18n_f;
 use fractal_api::url::Url;
@@ -153,7 +152,7 @@ impl RoomSettings {
             let _ = button.emit("clicked", &[]);
         });
 
-        topic_btn.connect_clicked(clone!(@strong this => move |_| {
+        topic_btn.connect_clicked(clone!(@strong this, @strong session_client => move |_| {
             this.borrow_mut().update_room_topic(session_client.clone());
         }));
 
@@ -183,13 +182,12 @@ impl RoomSettings {
             clone!(@strong this => move |switch| {
                 let active = switch.get_active();
                 let notify = if active { room::RoomNotify::All } else { room::RoomNotify::DontNotify };
-                let server = this.borrow().server_url.clone();
-                let access_token = this.borrow().access_token.clone();
                 let room_id = this.borrow().room.id.clone();
                 switch.set_sensitive(false);
+                let session_client = session_client.clone();
 
-                thread::spawn(move || {
-                    if let Err(err) = room::set_pushrules(server, access_token, room_id, notify) {
+                RUNTIME.spawn(async move {
+                    if let Err(err) = room::set_pushrules(session_client, &room_id, notify).await {
                         err.handle_error();
                     }
                     let sensitive = true;
@@ -230,12 +228,12 @@ impl RoomSettings {
             ))
         };
 
-        self.room_settings_show_avatar(session_client, edit);
+        self.room_settings_show_avatar(session_client.clone(), edit);
         self.room_settings_show_room_name(name, edit);
         self.room_settings_show_room_topic(topic, is_room, edit);
         self.room_settings_show_room_type(description);
         self.room_settings_show_members(members);
-        self.room_settings_show_notifications();
+        self.room_settings_show_notifications(session_client);
 
         /* admin parts */
         self.room_settings_show_group_room(is_room || is_group);
@@ -672,7 +670,7 @@ impl RoomSettings {
         None
     }
 
-    fn room_settings_show_notifications(&mut self) {
+    fn room_settings_show_notifications(&mut self, session_client: MatrixClient) {
         let switch = self
             .builder
             .get_object::<gtk::Switch>("room_settings_notification_switch")
@@ -680,14 +678,12 @@ impl RoomSettings {
 
         switch.set_sensitive(false);
 
-        let server = self.server_url.clone();
-        let access_token = self.access_token.clone();
         let room_id = self.room.id.clone();
 
-        thread::spawn(move || {
+        RUNTIME.spawn(async move {
             let mut active = true;
             let mut sensitive = true;
-            match room::get_pushrules(server, access_token, room_id) {
+            match room::get_pushrules(session_client, &room_id).await {
                 Ok(room::RoomNotify::DontNotify) => {
                     active = false;
                 }

@@ -4,7 +4,6 @@ use serde_json::json;
 use fractal_api::{
     api::{error::ErrorKind as RumaErrorKind, Error as RumaClientError},
     identifiers::{Error as IdError, EventId, RoomId, RoomIdOrAliasId, UserId},
-    reqwest::Error as ReqwestError,
     url::{ParseError as UrlError, Url},
     Client as MatrixClient, Error as MatrixError, FromHttpResponseError as RumaResponseError,
     ServerError,
@@ -19,7 +18,7 @@ use std::time::Duration;
 use crate::globals;
 
 use crate::actions::AppState;
-use crate::backend::{MediaError, HTTP_CLIENT};
+use crate::backend::MediaError;
 use crate::util::cache_dir_path;
 
 use crate::model::{
@@ -35,6 +34,10 @@ use fractal_api::api::r0::media::create_content::Request as CreateContentRequest
 use fractal_api::api::r0::media::create_content::Response as CreateContentResponse;
 use fractal_api::api::r0::membership::joined_members::Request as JoinedMembersRequest;
 use fractal_api::api::r0::message::get_message_events::Request as GetMessagesEventsRequest;
+use fractal_api::api::r0::push::delete_pushrule::Request as DeleteRoomRulesRequest;
+use fractal_api::api::r0::push::get_pushrule::Request as GetRoomRulesRequest;
+use fractal_api::api::r0::push::set_pushrule::Request as SetRoomRulesRequest;
+use fractal_api::api::r0::push::RuleKind;
 use fractal_api::api::r0::redact::redact_event::Request as RedactEventRequest;
 use fractal_api::api::r0::room::create_room::Request as CreateRoomRequest;
 use fractal_api::api::r0::room::create_room::RoomPreset;
@@ -60,20 +63,15 @@ use fractal_api::events::EventContent;
 use fractal_api::events::EventType;
 use fractal_api::events::InitialStateEvent;
 use fractal_api::events::InvalidInput as NameRoomEventInvalidInput;
-use fractal_api::r0::pushrules::delete_room_rules::request as delete_room_rules;
-use fractal_api::r0::pushrules::delete_room_rules::Parameters as DelRoomRulesParams;
-use fractal_api::r0::pushrules::get_room_rules::request as get_room_rules;
-use fractal_api::r0::pushrules::get_room_rules::Parameters as GetRoomRulesParams;
-use fractal_api::r0::pushrules::set_room_rules::request as set_room_rules;
-use fractal_api::r0::pushrules::set_room_rules::Parameters as SetRoomRulesParams;
-use fractal_api::r0::AccessToken;
+use fractal_api::push::Action;
+use fractal_api::push::Tweak;
 
 use serde_json::value::to_raw_value;
 use serde_json::Error as ParseJsonError;
-use serde_json::Value as JsonValue;
 
 use super::{
-    dw_media, get_prev_batch_from, remove_matrix_access_token_if_present, ContentType, HandleError,
+    dw_media, get_prev_batch_from, get_ruma_error_kind, remove_matrix_access_token_if_present,
+    ContentType, HandleError,
 };
 use crate::app::App;
 use crate::util::i18n::i18n;
@@ -926,10 +924,10 @@ pub enum RoomNotify {
 }
 
 #[derive(Debug)]
-pub struct PushRulesError(ReqwestError);
+pub struct PushRulesError(MatrixError);
 
-impl From<ReqwestError> for PushRulesError {
-    fn from(err: ReqwestError) -> Self {
+impl From<MatrixError> for PushRulesError {
+    fn from(err: MatrixError) -> Self {
         Self(err)
     }
 }
@@ -940,66 +938,61 @@ impl HandleError for PushRulesError {
     }
 }
 
-pub fn get_pushrules(
-    base: Url,
-    access_token: AccessToken,
-    room_id: RoomId,
+pub async fn get_pushrules(
+    session_client: MatrixClient,
+    room_id: &RoomId,
 ) -> Result<RoomNotify, PushRulesError> {
-    let params = GetRoomRulesParams { access_token };
+    let request = GetRoomRulesRequest::new("global", RuleKind::Room, room_id.as_str());
 
-    let request = get_room_rules(base, &params, &room_id)?;
-
-    let mut value = RoomNotify::NotSet;
-
-    let response: Result<JsonValue, _> = HTTP_CLIENT.get_client().execute(request)?.json();
-
-    if let Ok(js) = response {
-        if let Some(array) = js["actions"].as_array() {
-            for v in array {
-                match v.as_str().unwrap_or_default() {
-                    "notify" => value = RoomNotify::All,
-                    "dont_notify" => value = RoomNotify::DontNotify,
-                    _ => {}
-                };
-            }
+    let value = match session_client.send(request).await {
+        Ok(response) => {
+            response
+                .rule
+                .actions
+                .iter()
+                .fold(RoomNotify::NotSet, |notify_value, action| match action {
+                    Action::Notify => RoomNotify::All,
+                    Action::DontNotify => RoomNotify::DontNotify,
+                    _ => notify_value,
+                })
         }
-    }
+        // This has to be handled because the pushrule is not always sent previously
+        Err(ref err) if get_ruma_error_kind(err) == Some(&RumaErrorKind::NotFound) => {
+            RoomNotify::NotSet
+        }
+        Err(err) => return Err(err.into()),
+    };
 
     Ok(value)
 }
 
-pub fn set_pushrules(
-    base: Url,
-    access_token: AccessToken,
-    room_id: RoomId,
+pub async fn set_pushrules(
+    session_client: MatrixClient,
+    room_id: &RoomId,
     notify: RoomNotify,
 ) -> Result<(), PushRulesError> {
-    if let RoomNotify::NotSet = notify {
-        return delete_pushrules(base, access_token, room_id);
-    }
-
-    let params = SetRoomRulesParams { access_token };
-    let js = match notify {
-        RoomNotify::DontNotify => json!({"actions": ["dont_notify"]}),
-        RoomNotify::All => json!({
-            "actions": ["notify", {"set_tweak": "sound", "value": "default"}]
-        }),
-        _ => json!({}),
+    let actions = match notify {
+        RoomNotify::NotSet => return delete_pushrules(session_client, room_id).await,
+        RoomNotify::DontNotify => vec![Action::DontNotify],
+        RoomNotify::All => vec![
+            Action::Notify,
+            Action::SetTweak(Tweak::Sound(String::from("default"))),
+        ],
     };
 
-    let request = set_room_rules(base, &params, &room_id, &js)?;
+    let request = SetRoomRulesRequest::new("global", RuleKind::Room, room_id.as_str(), actions);
 
-    HTTP_CLIENT.get_client().execute(request)?;
+    session_client.send(request).await?;
+
     Ok(())
 }
 
-pub fn delete_pushrules(
-    base: Url,
-    access_token: AccessToken,
-    room_id: RoomId,
+pub async fn delete_pushrules(
+    session_client: MatrixClient,
+    room_id: &RoomId,
 ) -> Result<(), PushRulesError> {
-    let params = DelRoomRulesParams { access_token };
-    let request = delete_room_rules(base, &params, &room_id)?;
-    HTTP_CLIENT.get_client().execute(request)?;
+    let request = DeleteRoomRulesRequest::new("global", RuleKind::Room, room_id.as_str());
+    session_client.send(request).await?;
+
     Ok(())
 }
