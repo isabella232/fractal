@@ -17,6 +17,7 @@ use glib::signal;
 use glib::source::Continue;
 use gtk::prelude::*;
 use gtk::Overlay;
+use libhandy::HeaderBarExt;
 
 use crate::types::Message;
 use crate::types::Room;
@@ -157,7 +158,7 @@ impl Data {
             .expect("Can't find media_viewer_headerbar_box in ui file.");
         let media_viewer_headerbar = self
             .builder
-            .get_object::<gtk::HeaderBar>("media_viewer_headerbar")
+            .get_object::<libhandy::HeaderBar>("media_viewer_headerbar")
             .expect("Can't find media_viewer_headerbar in ui file.");
         let headerbar_revealer = self
             .builder
@@ -209,7 +210,7 @@ impl Data {
             .expect("Can't find media_viewer_headerbar_box in ui file.");
         let media_viewer_headerbar = self
             .builder
-            .get_object::<gtk::HeaderBar>("media_viewer_headerbar")
+            .get_object::<libhandy::HeaderBar>("media_viewer_headerbar")
             .expect("Can't find media_viewer_headerbar in ui file.");
         let headerbar_revealer = self
             .builder
@@ -225,7 +226,6 @@ impl Data {
         }
 
         media_viewer_headerbar.pack_start(&media_viewer_back_button);
-        media_viewer_headerbar.set_child_position(&media_viewer_back_button, 0);
         media_viewer_headerbar.set_show_close_button(true);
 
         let full_screen_button_icon = self
@@ -991,7 +991,7 @@ impl MediaViewer {
 
 fn set_header_title(ui: &gtk::Builder, title: &str) {
     let media_viewer_headerbar = ui
-        .get_object::<gtk::HeaderBar>("media_viewer_headerbar")
+        .get_object::<libhandy::HeaderBar>("media_viewer_headerbar")
         .expect("Cant find media_viewer_headerbar in ui file.");
     media_viewer_headerbar.set_title(Some(title));
 }

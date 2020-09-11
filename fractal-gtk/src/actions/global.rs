@@ -13,8 +13,9 @@ use fractal_api::identifiers::{EventId, RoomId};
 use gio::prelude::*;
 use gio::SimpleAction;
 use gtk::prelude::*;
+use libhandy::prelude::*;
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum AppState {
     Login,
     Loading,
@@ -81,6 +82,7 @@ pub fn new(app: &gtk::Application, op: &Arc<Mutex<AppOp>>) {
     let main_menu = SimpleAction::new("main_menu", None);
 
     let open_room = SimpleAction::new("open-room", glib::VariantTy::new("s").ok());
+    let deck_back = SimpleAction::new("deck-back", None);
     let back = SimpleAction::new("back", None);
     let media_viewer = SimpleAction::new("open-media-viewer", glib::VariantTy::new("s").ok());
     let account = SimpleAction::new("open-account-settings", None);
@@ -115,6 +117,7 @@ pub fn new(app: &gtk::Application, op: &Arc<Mutex<AppOp>>) {
     app.add_action(&shortcuts);
     app.add_action(&about);
     app.add_action(&open_room);
+    app.add_action(&deck_back);
     app.add_action(&back);
     app.add_action(&directory);
     app.add_action(&room_settings);
@@ -272,6 +275,13 @@ pub fn new(app: &gtk::Application, op: &Arc<Mutex<AppOp>>) {
         back.borrow_mut().push(AppState::MediaViewer);
     }));
 
+    deck_back.connect_activate(clone!(@strong op => move |_, _| {
+        let deck = op.lock().unwrap().deck.clone();
+        if deck.get_can_swipe_back() {
+            deck.navigate(libhandy::NavigationDirection::Back);
+        }
+    }));
+
     let mv = op.lock().unwrap().media_viewer.clone();
     let back_weak = Rc::downgrade(&back_history);
     back.connect_activate(clone!(@weak mv => move |_, _| {
@@ -344,6 +354,7 @@ pub fn new(app: &gtk::Application, op: &Arc<Mutex<AppOp>>) {
     app.set_accels_for_action("app.older-messages", &["Page_Up"]);
     app.set_accels_for_action("app.newer-messages", &["Page_Down"]);
     app.set_accels_for_action("app.back", &["Escape"]);
+    app.set_accels_for_action("app.deck-back", &["Escape"]);
     app.set_accels_for_action("app.main_menu", &["F10"]);
 
     // connect mouse back button to app.back action

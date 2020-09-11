@@ -5,7 +5,84 @@
   <object class="GtkBox" id="media_viewer_box">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="homogeneous">True</property>
+    <property name="orientation">vertical</property>
+    <child>
+      <object class="GtkBox" id="media_viewer_headerbar_box">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <child>
+          <object class="HdyHeaderBar" id="media_viewer_headerbar">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <!-- Translators: This string is replaced not user-visible -->
+            <property name="title">Media viewer</property>
+            <property name="show_close_button">True</property>
+            <child>
+              <object class="GtkButton" id="media_viewer_back_button">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="action_name">app.deck-back</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="icon_name">go-previous-symbolic</property>
+                  </object>
+                </child>
+                <child internal-child="accessible">
+                  <object class="AtkObject" id="media_viewer_back_button-atkobject">
+                    <property name="AtkObject::accessible-name" translatable="yes">Back</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuButton" id="media_viewer_menu_button">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="icon_name">view-more-symbolic</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="pack_type">end</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="full_screen_button">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="tooltip_text" translatable="yes">Toggle fullscreen</property>
+                <child>
+                  <object class="GtkImage" id="full_screen_button_icon">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="icon_name">view-fullscreen-symbolic</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="pack_type">end</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+    </child>
     <child>
       <object class="GtkOverlay">
         <property name="visible">True</property>
@@ -205,81 +282,6 @@
         <property name="expand">True</property>
         <property name="fill">True</property>
         <property name="position">1</property>
-      </packing>
-    </child>
-  </object>
-  <object class="GtkBox" id="media_viewer_headerbar_box">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <child>
-      <object class="GtkHeaderBar" id="media_viewer_headerbar">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <!-- Translators: This string is replaced not user-visible -->
-        <property name="title">Media viewer</property>
-        <property name="show_close_button">True</property>
-        <child>
-          <object class="GtkButton" id="media_viewer_back_button">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="action_name">app.back</property>
-            <child>
-              <object class="GtkImage">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="icon_name">go-previous-symbolic</property>
-              </object>
-            </child>
-            <child internal-child="accessible">
-              <object class="AtkObject" id="media_viewer_back_button-atkobject">
-                <property name="AtkObject::accessible-name" translatable="yes">Back</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkMenuButton" id="media_viewer_menu_button">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <child>
-              <object class="GtkImage">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="icon_name">view-more-symbolic</property>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="pack_type">end</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="full_screen_button">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="tooltip_text" translatable="yes">Toggle fullscreen</property>
-            <child>
-              <object class="GtkImage" id="full_screen_button_icon">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="icon_name">view-fullscreen-symbolic</property>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="pack_type">end</property>
-            <property name="position">2</property>
-          </packing>
-        </child>
-      </object>
-      <packing>
-        <property name="expand">True</property>
-        <property name="fill">True</property>
-        <property name="position">0</property>
       </packing>
     </child>
   </object>

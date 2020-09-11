@@ -116,6 +116,7 @@ pub struct AppOp {
 
     pub directory: Vec<Room>,
     pub leaflet: libhandy::Leaflet,
+    pub deck: libhandy::Deck,
 
     pub thread_pool: ThreadPool,
     pub user_info_cache: UserInfoCache,
@@ -127,8 +128,12 @@ impl AppOp {
     pub fn new(ui: uibuilder::UI) -> AppOp {
         let leaflet = ui
             .builder
-            .get_object::<libhandy::Leaflet>("header_leaflet")
-            .expect("Couldn't find header_leaflet in ui file");
+            .get_object::<libhandy::Leaflet>("chat_page")
+            .expect("Couldn't find chat_page in ui file");
+        let deck = ui
+            .builder
+            .get_object::<libhandy::Deck>("main_deck")
+            .expect("Couldn't find main_deck in ui file");
 
         AppOp {
             ui,
@@ -159,6 +164,7 @@ impl AppOp {
 
             directory: vec![],
             leaflet,
+            deck,
 
             thread_pool: ThreadPool::new(20),
             user_info_cache: Arc::new(Mutex::new(

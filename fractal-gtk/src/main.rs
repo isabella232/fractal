@@ -1,4 +1,6 @@
 #![deny(dead_code, unused_imports, unused_variables)]
+#[macro_use]
+extern crate glib;
 
 mod backend;
 mod client;

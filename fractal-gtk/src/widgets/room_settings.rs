@@ -68,15 +68,11 @@ impl RoomSettings {
 
     /* creates a empty list with members.len() rows, the content will be loaded when the row is
      * drawn */
-    pub fn create(&mut self) -> Option<(gtk::Box, gtk::Box)> {
-        let body = self
+    pub fn create(&mut self) -> Option<gtk::Box> {
+        let page = self
             .builder
             .get_object::<gtk::Box>("room_settings_box")
             .expect("Can't find room_settings_box in ui file.");
-        let header = self
-            .builder
-            .get_object::<gtk::Box>("room_settings_headerbar")
-            .expect("Can't find room_settings_headerbar in ui file.");
         let stack = self
             .builder
             .get_object::<gtk::Stack>("room_settings_stack")
@@ -94,7 +90,7 @@ impl RoomSettings {
         self.init_room_settings();
         self.connect();
 
-        Some((body, header))
+        Some(page)
     }
 
     pub fn connect(&mut self) {

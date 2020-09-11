@@ -66,6 +66,7 @@ app_sources = files(
   'app/connect/new_room.rs',
   'app/connect/roomlist_search.rs',
   'app/connect/send.rs',
+  'app/connect/swipeable_widgets.rs',
   'app/mod.rs',
   'app/windowstate.rs',
   'appop/about.rs',

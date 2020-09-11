@@ -1,6 +1,5 @@
-use log::{debug, warn};
-use std::cell::RefCell;
-use std::rc::Rc;
+use libhandy::prelude::*;
+use log::warn;
 
 use gio::prelude::*;
 use gio::SimpleAction;
@@ -41,8 +40,7 @@ impl ToString for LoginState {
 }
 
 pub fn new(
-    stack: &gtk::Stack,
-    headers: &gtk::Stack,
+    deck: &libhandy::Deck,
     server_entry: &gtk::Entry,
     err_label: &gtk::Label,
 ) -> SimpleActionGroup {
@@ -60,8 +58,8 @@ pub fn new(
     actions.add_action(&back);
     actions.add_action(&login);
 
-    create_account.connect_activate(clone!(@weak stack => move |_, _| {
-        let toplevel = stack
+    create_account.connect_activate(clone!(@weak deck => move |_, _| {
+        let toplevel = deck
             .get_toplevel()
             .expect("Could not grab toplevel widget")
             .downcast::<gtk::Window>()
@@ -73,40 +71,25 @@ pub fn new(
         }
     }));
 
-    let back_history: Rc<RefCell<Vec<LoginState>>> = Rc::new(RefCell::new(vec![]));
-
-    server_chooser.connect_activate(
-        clone!(@weak stack, @weak back_history as back => move |_, _| {
-            let state = LoginState::ServerChooser;
-            stack.set_visible_child_name(&state.to_string());
-            back.borrow_mut().push(state);
-        }),
-    );
+    server_chooser.connect_activate(clone!(@weak deck => move |_, _| {
+        deck.navigate(libhandy::NavigationDirection::Forward);
+    }));
 
     credentials.connect_activate(clone!(
-    @weak stack,
-    @weak back_history as back,
+    @weak err_label,
     @weak server_entry,
-    @weak err_label
-    => move |_, _| {
+    @weak deck => move |_, _| {
         if server_entry.get_text().is_empty() {
             err_label.show();
         } else {
             err_label.hide();
-            let state = LoginState::Credentials;
-            stack.set_visible_child_name(&state.to_string());
-            back.borrow_mut().push(state);
+            deck.navigate(libhandy::NavigationDirection::Forward);
         }
     }));
 
-    back.connect_activate(clone!(@weak stack => move |_, _| {
-        back_history.borrow_mut().pop();
-        if let Some(state) = back_history.borrow().last() {
-            debug!("Go back to state {}", state.to_string());
-            stack.set_visible_child_name(&state.to_string());
-        } else {
-            debug!("There is no state to go back to. Go back to state greeter");
-            stack.set_visible_child_name(&LoginState::Greeter.to_string());
+    back.connect_activate(clone!(@weak deck => move |_, _| {
+        if let Some(_) = deck.get_adjacent_child(libhandy::NavigationDirection::Back) {
+            deck.navigate(libhandy::NavigationDirection::Back);
         }
     }));
 
@@ -123,8 +106,7 @@ pub fn new(
         })
     });
 
-    stack.insert_action_group("login", Some(&actions));
-    headers.insert_action_group("login", Some(&actions));
+    deck.insert_action_group("login", Some(&actions));
 
     actions
 }

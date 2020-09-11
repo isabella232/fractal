@@ -2,6 +2,7 @@ use fractal_api::url::Url;
 use gio::prelude::*;
 use glib::clone;
 use gtk::prelude::*;
+use libhandy::prelude::*;
 use log::info;
 
 use crate::actions;
@@ -18,8 +19,7 @@ use std::sync::{Arc, Mutex};
 
 #[derive(Debug, Clone)]
 pub struct LoginWidget {
-    pub container: gtk::Stack,
-    pub headers: gtk::Stack,
+    pub container: libhandy::Deck,
     pub server_entry: gtk::Entry,
     pub username_entry: gtk::Entry,
     pub password_entry: gtk::Entry,
@@ -157,8 +157,7 @@ impl Default for LoginWidget {
     fn default() -> Self {
         let builder = gtk::Builder::from_resource("/org/gnome/Fractal/ui/login_flow.ui");
 
-        let container: gtk::Stack = builder.get_object("login_flow_stack").unwrap();
-        let headers: gtk::Stack = builder.get_object("login_flow_headers").unwrap();
+        let container: libhandy::Deck = builder.get_object("login_flow_deck").unwrap();
         let server_entry = builder.get_object("server_chooser_entry").unwrap();
         let username_entry = builder.get_object("username_entry").unwrap();
         let password_entry = builder.get_object("password_entry").unwrap();
@@ -166,14 +165,12 @@ impl Default for LoginWidget {
         let server_err_label = builder.get_object("server_err_label").unwrap();
         let credentials_err_label = builder.get_object("credentials_err_label").unwrap();
 
-        let actions = actions::Login::new(&container, &headers, &server_entry, &server_err_label);
+        let actions = actions::Login::new(&container, &server_entry, &server_err_label);
 
         container.show_all();
-        headers.show_all();
 
         LoginWidget {
             container,
-            headers,
             server_entry,
             username_entry,
             password_entry,

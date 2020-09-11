@@ -162,7 +162,7 @@ pub fn new(
                                 Continue(true)
                             },
                             Ok(Ok(fname)) => {
-                                if let Some(path) = save(&window, &name, &[]) {
+                                if let Some(path) = save(&window.upcast_ref(), &name, &[]) {
                                     // TODO use glib to copy file
                                     if fs::copy(fname, path).is_err() {
                                         ErrorDialog::new(false, &i18n("Couldn’t save file"));

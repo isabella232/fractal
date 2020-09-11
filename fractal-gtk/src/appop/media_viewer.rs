@@ -18,13 +18,8 @@ impl AppOp {
         let stack = self
             .ui
             .builder
-            .get_object::<gtk::Stack>("main_content_stack")
-            .expect("Can't find main_content_stack in ui file.");
-        let stack_header = self
-            .ui
-            .builder
-            .get_object::<gtk::Stack>("headerbar_stack")
-            .expect("Can't find headerbar_stack in ui file.");
+            .get_object::<gtk::Stack>("subview_stack")
+            .expect("Can't find subview_stack in ui file.");
 
         let main_window = self
             .ui
@@ -66,12 +61,8 @@ impl AppOp {
             if let Some(widget) = stack.get_child_by_name("media-viewer") {
                 stack.remove(&widget);
             }
-            if let Some(widget) = stack_header.get_child_by_name("media-viewer") {
-                stack_header.remove(&widget);
-            }
 
             stack.add_named(&body, "media-viewer");
-            stack_header.add_named(&header, "media-viewer");
         }
 
         self.set_state(AppState::MediaViewer);

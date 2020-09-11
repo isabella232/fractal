@@ -11,6 +11,7 @@ mod markdown;
 mod new_room;
 mod roomlist_search;
 mod send;
+mod swipeable_widgets;
 
 use crate::app::App;
 
@@ -34,5 +35,6 @@ impl App {
         self.connect_direct_chat();
 
         self.connect_roomlist_search();
+        self.connect_swipeable_widgets();
     }
 }

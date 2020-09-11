@@ -41,7 +41,7 @@ macro_rules! APPOP {
 // Our application struct for containing all the state we have to carry around.
 // TODO: subclass gtk::Application once possible
 pub struct App {
-    main_window: gtk::ApplicationWindow,
+    main_window: libhandy::ApplicationWindow,
     /* Add widget directly here in place of uibuilder::UI*/
     ui: uibuilder::UI,
 
@@ -71,7 +71,7 @@ impl App {
         );
 
         let ui = uibuilder::UI::new();
-        let window: gtk::ApplicationWindow = ui
+        let window: libhandy::ApplicationWindow = ui
             .builder
             .get_object("main_window")
             .expect("Couldn't find main_window in ui file.");
@@ -98,8 +98,8 @@ impl App {
 
         let leaflet = ui
             .builder
-            .get_object::<libhandy::Leaflet>("chat_state_leaflet")
-            .expect("Can't find chat_state_leaflet in ui file.");
+            .get_object::<libhandy::Leaflet>("chat_page")
+            .expect("Can't find chat_page in ui file.");
         let container = ui
             .builder
             .get_object::<gtk::Box>("history_container")
@@ -124,33 +124,28 @@ impl App {
             }
         }));
 
-        let stack = ui
+        let view_stack = ui
             .builder
-            .get_object::<gtk::Stack>("main_content_stack")
-            .expect("Can't find main_content_stack in ui file.");
-        let stack_header = ui
-            .builder
-            .get_object::<gtk::Stack>("headerbar_stack")
-            .expect("Can't find headerbar_stack in ui file.");
+            .get_object::<gtk::Stack>("subview_stack")
+            .expect("Can't find subview_stack in ui file.");
 
-        /* Add account settings view to the main stack */
+        /* Add account settings view to the view stack */
         let child = ui
             .builder
             .get_object::<gtk::Box>("account_settings_box")
             .expect("Can't find account_settings_box in ui file.");
-        let child_header = ui
-            .builder
-            .get_object::<gtk::Box>("account_settings_headerbar")
-            .expect("Can't find account_settings_headerbar in ui file.");
-        stack.add_named(&child, "account-settings");
-        stack_header.add_named(&child_header, "account-settings");
+        view_stack.add_named(&child, "account-settings");
 
         let op = Arc::new(Mutex::new(AppOp::new(ui.clone())));
 
+        let main_stack = ui
+            .builder
+            .get_object::<gtk::Stack>("main_content_stack")
+            .expect("Can't find main_content_stack in ui file.");
+
         // Add login view to the main stack
         let login = widgets::LoginWidget::new(&op);
-        stack.add_named(&login.container, "login");
-        stack_header.add_named(&login.headers, "login");
+        main_stack.add_named(&login.container, "login");
 
         gtk_app.set_accels_for_action("login.back", &["Escape"]);
 
@@ -175,6 +170,9 @@ impl App {
         // Create application
         let app = App::new(gtk_app);
 
+        // Initialize libhandy
+        libhandy::init();
+
         gtk_app.connect_activate(clone!(@weak app => move |_| {
             app.on_activate();
         }));
@@ -186,7 +184,8 @@ impl App {
 
         app.main_window.connect_delete_event(move |window, _| {
             let settings: gio::Settings = gio::Settings::new("org.gnome.Fractal");
-            let window_state = WindowState::from_window(window);
+            let w = window.upcast_ref();
+            let window_state = WindowState::from_window(w);
             if let Err(err) = window_state.save_in_gsettings(&settings) {
                 error!("Can't save the window settings: {:?}", err);
             }

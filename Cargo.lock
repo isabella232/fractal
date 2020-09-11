@@ -563,6 +563,7 @@ dependencies = [
  "gstreamer-pbutils",
  "gstreamer-player",
  "gtk",
+ "gtk-sys",
  "html2pango",
  "itertools 0.8.2",
  "lazy_static",
