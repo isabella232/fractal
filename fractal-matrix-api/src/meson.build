@@ -10,7 +10,6 @@ api_sources = files(
   'r0/account/register.rs',
   'r0/contact/create.rs',
   'r0/contact/delete.rs',
-  'r0/contact/get_identifiers.rs',
   'r0/contact/request_verification_token_email.rs',
   'r0/contact/request_verification_token_msisdn.rs',
   'r0/server/domain_info.rs',

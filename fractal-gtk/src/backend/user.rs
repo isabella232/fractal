@@ -15,6 +15,8 @@ use std::path::PathBuf;
 
 use super::room::AttachedFileError;
 use crate::model::member::Member;
+use fractal_api::api::r0::contact::get_contacts::Request as GetContactsRequest;
+use fractal_api::api::r0::contact::get_contacts::ThirdPartyIdentifier;
 use fractal_api::api::r0::profile::get_display_name::Request as GetDisplayNameRequest;
 use fractal_api::api::r0::profile::get_profile::Request as GetProfileRequest;
 use fractal_api::api::r0::profile::set_avatar_url::Request as SetAvatarUrlRequest;
@@ -38,10 +40,6 @@ use fractal_api::r0::contact::create::Parameters as AddThreePIDParameters;
 use fractal_api::r0::contact::delete::request as delete_contact;
 use fractal_api::r0::contact::delete::Body as DeleteThreePIDBody;
 use fractal_api::r0::contact::delete::Parameters as DeleteThreePIDParameters;
-use fractal_api::r0::contact::get_identifiers::request as get_identifiers;
-use fractal_api::r0::contact::get_identifiers::Parameters as ThirdPartyIDParameters;
-use fractal_api::r0::contact::get_identifiers::Response as ThirdPartyIDResponse;
-use fractal_api::r0::contact::get_identifiers::ThirdPartyIdentifier;
 use fractal_api::r0::contact::request_verification_token_email::request as request_contact_verification_token_email;
 use fractal_api::r0::contact::request_verification_token_email::Body as EmailTokenBody;
 use fractal_api::r0::contact::request_verification_token_email::Parameters as EmailTokenParameters;
@@ -109,8 +107,8 @@ pub async fn set_username(
 #[derive(Debug)]
 pub struct GetThreePIDError;
 
-impl From<ReqwestError> for GetThreePIDError {
-    fn from(_: ReqwestError) -> Self {
+impl From<MatrixError> for GetThreePIDError {
+    fn from(_: MatrixError) -> Self {
         Self
     }
 }
@@ -126,14 +124,10 @@ impl HandleError for GetThreePIDError {
     }
 }
 
-pub fn get_threepid(
-    base: Url,
-    access_token: AccessToken,
+pub async fn get_threepid(
+    session_client: MatrixClient,
 ) -> Result<Vec<ThirdPartyIdentifier>, GetThreePIDError> {
-    let params = ThirdPartyIDParameters { access_token };
-
-    let request = get_identifiers(base, &params)?;
-    let response: ThirdPartyIDResponse = HTTP_CLIENT.get_client().execute(request)?.json()?;
+    let response = session_client.send(GetContactsRequest::new()).await?;
 
     Ok(response.threepids)
 }

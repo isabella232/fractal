@@ -14,8 +14,8 @@ use crate::widgets;
 use crate::widgets::AvatarExt;
 
 use crate::cache::{download_to_cache, remove_from_cache};
-use fractal_api::r0::contact::get_identifiers::ThirdPartyIdentifier;
-use fractal_api::r0::Medium;
+use fractal_api::api::r0::contact::get_contacts::ThirdPartyIdentifier;
+use fractal_api::thirdparty::Medium;
 
 use super::LoginData;
 
@@ -25,12 +25,10 @@ impl AppOp {
     }
 
     pub fn get_three_pid(&self) {
-        let login_data = unwrap_or_unit_return!(self.login_data.clone());
-        thread::spawn(move || {
-            match user::get_threepid(
-                login_data.session_client.homeserver().clone(),
-                login_data.access_token,
-            ) {
+        let session_client =
+            unwrap_or_unit_return!(self.login_data.as_ref().map(|ld| ld.session_client.clone()));
+        RUNTIME.spawn(async move {
+            match user::get_threepid(session_client).await {
                 Ok(list) => {
                     let l = Some(list);
                     APPOP!(set_three_pid, (l));
@@ -433,7 +431,7 @@ impl AppOp {
                             );
                         }
                     }
-                    Medium::MsIsdn => {
+                    Medium::MSISDN => {
                         if first_phone {
                             empty_phone.update(Some(item.address));
                             let entry = widgets::Address::new(widgets::AddressType::Phone, &self)
@@ -461,6 +459,7 @@ impl AppOp {
                             );
                         }
                     }
+                    medium => log::warn!("Medium type not managed: {:?}", medium),
                 }
             }
         }
