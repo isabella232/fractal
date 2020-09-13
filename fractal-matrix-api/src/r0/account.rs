@@ -1,4 +1,3 @@
-pub mod change_password;
 pub mod deactivate;
 pub mod login;
 pub mod logout;

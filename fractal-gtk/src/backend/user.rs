@@ -2,6 +2,7 @@ use fractal_api::identifiers::UserId;
 use fractal_api::reqwest::Error as ReqwestError;
 use fractal_api::url::{ParseError as UrlError, Url};
 use fractal_api::{Client as MatrixClient, Error as MatrixError};
+use std::collections::BTreeMap;
 use std::io::Error as IoError;
 
 use super::MediaError;
@@ -15,19 +16,19 @@ use std::path::PathBuf;
 
 use super::room::AttachedFileError;
 use crate::model::member::Member;
+use fractal_api::api::r0::account::change_password::Request as ChangePasswordRequest;
 use fractal_api::api::r0::contact::get_contacts::Request as GetContactsRequest;
 use fractal_api::api::r0::contact::get_contacts::ThirdPartyIdentifier;
 use fractal_api::api::r0::profile::get_display_name::Request as GetDisplayNameRequest;
 use fractal_api::api::r0::profile::get_profile::Request as GetProfileRequest;
 use fractal_api::api::r0::profile::set_avatar_url::Request as SetAvatarUrlRequest;
 use fractal_api::api::r0::profile::set_display_name::Request as SetDisplayNameRequest;
+use fractal_api::api::r0::uiaa::AuthData;
 use fractal_api::api::r0::user_directory::search_users::Request as UserDirectoryRequest;
+use fractal_api::assign;
 use fractal_api::identity::r0::association::msisdn::submit_token::request as submit_phone_token_req;
 use fractal_api::identity::r0::association::msisdn::submit_token::Body as SubmitPhoneTokenBody;
 use fractal_api::identity::r0::association::msisdn::submit_token::Response as SubmitPhoneTokenResponse;
-use fractal_api::r0::account::change_password::request as change_password_req;
-use fractal_api::r0::account::change_password::Body as ChangePasswordBody;
-use fractal_api::r0::account::change_password::Parameters as ChangePasswordParameters;
 use fractal_api::r0::account::deactivate::request as deactivate;
 use fractal_api::r0::account::deactivate::Body as DeactivateBody;
 use fractal_api::r0::account::deactivate::Parameters as DeactivateParameters;
@@ -58,6 +59,7 @@ use super::{remove_matrix_access_token_if_present, HandleError};
 use crate::app::App;
 use crate::util::i18n::i18n;
 use crate::APPOP;
+use serde_json::json;
 
 pub type UserInfo = (String, PathBuf);
 
@@ -382,10 +384,10 @@ pub fn delete_three_pid(
 }
 
 #[derive(Debug)]
-pub struct ChangePasswordError(ReqwestError);
+pub struct ChangePasswordError(MatrixError);
 
-impl From<ReqwestError> for ChangePasswordError {
-    fn from(err: ReqwestError) -> Self {
+impl From<MatrixError> for ChangePasswordError {
+    fn from(err: MatrixError) -> Self {
         Self(err)
     }
 }
@@ -402,25 +404,34 @@ impl HandleError for ChangePasswordError {
     }
 }
 
-pub fn change_password(
-    base: Url,
-    access_token: AccessToken,
-    user: String,
+pub async fn change_password(
+    session_client: MatrixClient,
+    user_id: &UserId,
     old_password: String,
-    new_password: String,
+    new_password: &str,
 ) -> Result<(), ChangePasswordError> {
-    let params = ChangePasswordParameters { access_token };
-    let body = ChangePasswordBody {
-        new_password,
-        auth: Some(AuthenticationData::Password {
-            identifier: Identifier::new(UserIdentifier::User { user }),
-            password: old_password,
-            session: None,
-        }),
+    let auth_parameters = {
+        let mut param = BTreeMap::new();
+        let identifier = json!({
+            "type": "m.id.user",
+            "user": user_id.localpart(),
+        });
+
+        param.insert(String::from("identifier"), identifier);
+        param.insert(String::from("password"), json!(old_password));
+
+        param
     };
 
-    let request = change_password_req(base, &params, &body)?;
-    HTTP_CLIENT.get_client().execute(request)?;
+    let request = assign!(ChangePasswordRequest::new(new_password), {
+        auth: Some(AuthData::DirectRequest {
+            kind: "m.login.password",
+            session: None,
+            auth_parameters,
+        }),
+    });
+
+    session_client.send(request).await?;
 
     Ok(())
 }

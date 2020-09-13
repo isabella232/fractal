@@ -649,7 +649,10 @@ impl AppOp {
     }
 
     pub fn set_new_password(&mut self) {
-        let login_data = unwrap_or_unit_return!(self.login_data.clone());
+        let (session_client, user_id) = unwrap_or_unit_return!(self
+            .login_data
+            .as_ref()
+            .map(|ld| (ld.session_client.clone(), ld.uid.clone())));
         let old_password = self
             .ui
             .builder
@@ -671,19 +674,13 @@ impl AppOp {
             .get_object::<gtk::Stack>("account_settings_password_stack")
             .expect("Can't find account_settings_password_stack in ui file.");
 
-        let old = old_password.get_text();
-        let new = new_password.get_text();
+        let old: String = old_password.get_text().into();
+        let new: String = new_password.get_text().into();
         if !old.is_empty() && !new.is_empty() {
             password_btn.set_sensitive(false);
             password_btn_stack.set_visible_child_name("spinner");
-            thread::spawn(move || {
-                match user::change_password(
-                    login_data.session_client.homeserver().clone(),
-                    login_data.access_token,
-                    login_data.uid.localpart().into(),
-                    old.to_string(),
-                    new.to_string(),
-                ) {
+            RUNTIME.spawn(async move {
+                match user::change_password(session_client, &user_id, old, &new).await {
                     Ok(_) => {
                         APPOP!(password_changed);
                     }

@@ -3,7 +3,6 @@ api_sources = files(
   'identity/r0/association/msisdn.rs',
   'identity/r0/association.rs',
   'identity/r0.rs',
-  'r0/account/change_password.rs',
   'r0/account/deactivate.rs',
   'r0/account/login.rs',
   'r0/account/logout.rs',
