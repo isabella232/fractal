@@ -1,7 +1,6 @@
 pub mod deactivate;
 pub mod login;
 pub mod logout;
-pub mod register;
 
 use crate::r0::{Medium, ThreePIDCredentials};
 use serde::Serialize;
