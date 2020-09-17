@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fractal master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
 "POT-Creation-Date: 2020-09-16 14:00+0000\n"
-"PO-Revision-Date: 2020-09-17 19:11+0200\n"
+"PO-Revision-Date: 2020-09-17 19:24+0200\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
@@ -238,7 +238,7 @@ msgstr "Za potvrđivanje deaktiviranja ovog računa, utipkajte lozinku:"
 
 #: fractal-gtk/res/ui/account_settings.ui:487
 msgid "Also erase all messages"
-msgstr "Isto izbriši sve poruke"
+msgstr "Isto obriši sve poruke"
 
 #: fractal-gtk/res/ui/account_settings.ui:586
 #: fractal-gtk/res/ui/main_menu.ui:109
@@ -274,7 +274,7 @@ msgstr "Imenik soba"
 
 #: fractal-gtk/res/ui/add_room_menu.ui:36
 msgid "Join Room"
-msgstr "Also erase all messages sobi"
+msgstr "Pristupi sobi"
 
 #: fractal-gtk/res/ui/add_room_menu.ui:63
 msgid "New Room"
@@ -298,7 +298,7 @@ msgstr "Započni razgovor"
 
 #: fractal-gtk/res/ui/filechooser.ui:61
 msgid "Select room image file"
-msgstr "Odaberite datoteku sliku sobe"
+msgstr "Odaberite datoteku slike sobe"
 
 #: fractal-gtk/res/ui/invite.ui:18
 msgid "Invitation"
@@ -617,7 +617,7 @@ msgstr "Dodaj temu"
 
 #: fractal-gtk/res/ui/room_settings.ui:174
 msgid "Type in your room topic"
-msgstr "Upipite temu svoje sobe"
+msgstr "Upišite temu svoje sobe"
 
 #: fractal-gtk/res/ui/room_settings.ui:202
 msgid "No room description"
@@ -775,7 +775,7 @@ msgstr ""
 
 #: fractal-gtk/src/appop/about.rs:45
 msgid "Name by"
-msgstr "Naziv po"
+msgstr "Ime po"
 
 #: fractal-gtk/src/appop/account.rs:68
 msgid "The validation code is not correct."
@@ -923,7 +923,7 @@ msgstr "Nažalost, postavke računa se ne mogu učitati."
 
 #: fractal-gtk/src/backend/user.rs:201
 msgid "Email is already in use"
-msgstr "E-pošta se već koristi"
+msgstr "Adresa e-pošte se već koristi"
 
 #: fractal-gtk/src/backend/user.rs:205
 msgid "Please enter a valid email address."
