@@ -2,13 +2,14 @@ use crate::backend::user;
 use fractal_api::r0::AccessToken;
 use fractal_api::r0::Medium;
 use fractal_api::url::Url;
+use fractal_api::Client as MatrixClient;
 use glib::signal;
 use gtk::prelude::*;
 use rand::distributions::Alphanumeric;
 use rand::{thread_rng, Rng};
 use std::thread;
 
-use crate::app::App;
+use crate::app::{App, RUNTIME};
 use crate::appop::AppOp;
 use crate::backend::HandleError;
 
@@ -161,7 +162,7 @@ impl<'a> Address<'a> {
         let entry = self.entry.clone();
         let address = self.address.clone();
         let access_token = login_data.access_token;
-        let server_url = login_data.session_client.homeserver().clone();
+        let session_client = login_data.session_client;
         let id_server = login_data.identity_url;
         self.signal_id = Some(self.button.clone().connect_clicked(move |w| {
             if !w.get_sensitive() || !w.is_visible() {
@@ -182,16 +183,21 @@ impl<'a> Address<'a> {
             match action {
                 Some(AddressAction::Delete) => {
                     if let Some(address) = address.clone() {
-                        delete_address(medium, address, server_url.clone(), access_token.clone());
+                        delete_address(
+                            medium,
+                            address,
+                            session_client.homeserver().clone(),
+                            access_token.clone(),
+                        );
                     }
                 }
                 Some(AddressAction::Add) => {
                     let address = entry.get_text().to_string();
                     add_address(
+                        session_client.clone(),
                         medium,
                         id_server.clone(),
                         address,
-                        server_url.clone(),
                         access_token.clone(),
                     );
                 }
@@ -215,37 +221,42 @@ fn delete_address(medium: Medium, address: String, server_url: Url, access_token
 }
 
 fn add_address(
+    session_client: MatrixClient,
     medium: Medium,
     id_server: Url,
     address: String,
-    server_url: Url,
     access_token: AccessToken,
 ) {
+    let server_url = session_client.homeserver().clone();
     let secret: String = thread_rng().sample_iter(&Alphanumeric).take(36).collect();
-    thread::spawn(move || match medium {
+    match medium {
         Medium::MsIsdn => {
-            match user::get_phone_token(server_url, access_token, id_server, address, secret) {
-                Ok((sid, secret)) => {
-                    let sid = Some(sid);
-                    let secret = Some(secret);
-                    APPOP!(get_token_phone, (sid, secret))
+            thread::spawn(move || {
+                match user::get_phone_token(server_url, access_token, id_server, address, secret) {
+                    Ok((sid, secret)) => {
+                        let sid = Some(sid);
+                        let secret = Some(secret);
+                        APPOP!(get_token_phone, (sid, secret))
+                    }
+                    Err(err) => {
+                        err.handle_error();
+                    }
                 }
-                Err(err) => {
-                    err.handle_error();
-                }
-            }
+            });
         }
         Medium::Email => {
-            match user::get_email_token(server_url, access_token, id_server, address, secret) {
-                Ok((sid, secret)) => {
-                    let sid = Some(sid);
-                    let secret = Some(secret);
-                    APPOP!(get_token_email, (sid, secret));
+            RUNTIME.spawn(async move {
+                match user::get_email_token(session_client, &address, secret).await {
+                    Ok((sid, secret)) => {
+                        let sid = Some(sid);
+                        let secret = Some(secret);
+                        APPOP!(get_token_email, (sid, secret));
+                    }
+                    Err(err) => {
+                        err.handle_error();
+                    }
                 }
-                Err(err) => {
-                    err.handle_error();
-                }
-            }
+            });
         }
-    });
+    };
 }

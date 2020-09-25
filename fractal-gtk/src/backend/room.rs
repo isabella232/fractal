@@ -2,7 +2,7 @@ use log::error;
 use serde_json::json;
 
 use fractal_api::{
-    api::{error::ErrorKind as RumaErrorKind, Error as RumaClientError},
+    api::error::ErrorKind as RumaErrorKind,
     identifiers::{Error as IdError, EventId, RoomId, RoomIdOrAliasId, UserId},
     url::{ParseError as UrlError, Url},
     Client as MatrixClient, Error as MatrixError, FromHttpResponseError as RumaResponseError,
@@ -112,12 +112,7 @@ pub async fn get_room_detail(
 
     let response = match session_client.send(request).await {
         Ok(response) => Some(response),
-        Err(MatrixError::RumaResponse(RumaResponseError::Http(ServerError::Known(
-            RumaClientError {
-                kind: RumaErrorKind::NotFound,
-                ..
-            },
-        )))) => None,
+        Err(err) if get_ruma_error_kind(&err) == Some(&RumaErrorKind::NotFound) => None,
         Err(err) => return Err(err.into()),
     };
 
@@ -166,12 +161,7 @@ pub async fn get_room_avatar(
 
     let response = match session_client.send(request).await {
         Ok(response) => Some(response),
-        Err(MatrixError::RumaResponse(RumaResponseError::Http(ServerError::Known(
-            RumaClientError {
-                kind: RumaErrorKind::NotFound,
-                ..
-            },
-        )))) => None,
+        Err(err) if get_ruma_error_kind(&err) == Some(&RumaErrorKind::NotFound) => None,
         Err(err) => return Err(err.into()),
     };
 

@@ -1,3 +1,4 @@
+use fractal_api::api::error::ErrorKind as RumaErrorKind;
 use fractal_api::identifiers::UserId;
 use fractal_api::reqwest::Error as ReqwestError;
 use fractal_api::url::{ParseError as UrlError, Url};
@@ -17,6 +18,7 @@ use std::path::PathBuf;
 use super::room::AttachedFileError;
 use crate::model::member::Member;
 use fractal_api::api::r0::account::change_password::Request as ChangePasswordRequest;
+use fractal_api::api::r0::account::request_3pid_management_token_via_email::Request as EmailTokenRequest;
 use fractal_api::api::r0::contact::get_contacts::Request as GetContactsRequest;
 use fractal_api::api::r0::contact::get_contacts::ThirdPartyIdentifier;
 use fractal_api::api::r0::profile::get_display_name::Request as GetDisplayNameRequest;
@@ -41,10 +43,6 @@ use fractal_api::r0::contact::create::Parameters as AddThreePIDParameters;
 use fractal_api::r0::contact::delete::request as delete_contact;
 use fractal_api::r0::contact::delete::Body as DeleteThreePIDBody;
 use fractal_api::r0::contact::delete::Parameters as DeleteThreePIDParameters;
-use fractal_api::r0::contact::request_verification_token_email::request as request_contact_verification_token_email;
-use fractal_api::r0::contact::request_verification_token_email::Body as EmailTokenBody;
-use fractal_api::r0::contact::request_verification_token_email::Parameters as EmailTokenParameters;
-use fractal_api::r0::contact::request_verification_token_email::Response as EmailTokenResponse;
 use fractal_api::r0::contact::request_verification_token_msisdn::request as request_contact_verification_token_msisdn;
 use fractal_api::r0::contact::request_verification_token_msisdn::Body as PhoneTokenBody;
 use fractal_api::r0::contact::request_verification_token_msisdn::Parameters as PhoneTokenParameters;
@@ -55,7 +53,7 @@ use fractal_api::r0::ThreePIDCredentials;
 
 use super::{dw_media, ContentType};
 
-use super::{remove_matrix_access_token_if_present, HandleError};
+use super::{get_ruma_error_kind, remove_matrix_access_token_if_present, HandleError};
 use crate::app::App;
 use crate::util::i18n::i18n;
 use crate::APPOP;
@@ -135,79 +133,46 @@ pub async fn get_threepid(
 }
 
 #[derive(Debug)]
-pub enum GetTokenEmailError {
-    IdentityServerUrl(UrlError),
-    Reqwest(ReqwestError),
-    TokenUsed,
-    Denied,
-}
+pub struct GetTokenEmailError(MatrixError);
 
-impl From<ReqwestError> for GetTokenEmailError {
-    fn from(err: ReqwestError) -> Self {
-        Self::Reqwest(err)
+impl From<MatrixError> for GetTokenEmailError {
+    fn from(err: MatrixError) -> Self {
+        Self(err)
     }
 }
 
 impl HandleError for GetTokenEmailError {
     fn handle_error(&self) {
-        match self {
-            Self::TokenUsed => {
-                let error = i18n("Email is already in use");
-                APPOP!(show_error_dialog_in_settings, (error));
-            }
-            Self::Denied => {
-                let error = i18n("Please enter a valid email address.");
-                APPOP!(show_error_dialog_in_settings, (error));
-            }
-            Self::Reqwest(err) => {
-                let error = i18n("Couldn’t add the email address.");
-                let err_str = format!("{:?}", err);
-                error!(
-                    "{}",
-                    remove_matrix_access_token_if_present(&err_str).unwrap_or(err_str)
-                );
-                APPOP!(show_error_dialog_in_settings, (error));
-            }
-            Self::IdentityServerUrl(err) => {
-                let error = i18n("The identity server is invalid.");
-                error!("The identity server is invalid: {:?}", err);
-                APPOP!(show_error_dialog_in_settings, (error));
-            }
+        let err = &self.0;
+        let ruma_error_kind = get_ruma_error_kind(err);
+
+        if ruma_error_kind == Some(&RumaErrorKind::ThreepidInUse) {
+            let error = i18n("Email is already in use");
+            APPOP!(show_error_dialog_in_settings, (error));
+        } else if ruma_error_kind == Some(&RumaErrorKind::ThreepidDenied) {
+            let error = i18n("Please enter a valid email address.");
+            APPOP!(show_error_dialog_in_settings, (error));
+        } else {
+            let error = i18n("Couldn’t add the email address.");
+            let err_str = format!("{:?}", err);
+            error!(
+                "{}",
+                remove_matrix_access_token_if_present(&err_str).unwrap_or(err_str)
+            );
+            APPOP!(show_error_dialog_in_settings, (error));
         }
     }
 }
 
-pub fn get_email_token(
-    base: Url,
-    access_token: AccessToken,
-    identity: Url,
-    email: String,
+pub async fn get_email_token(
+    session_client: MatrixClient,
+    email: &str,
     client_secret: String,
 ) -> Result<(String, String), GetTokenEmailError> {
-    use EmailTokenResponse::*;
+    let request = EmailTokenRequest::new(&client_secret, email, 1_u32.into());
+    let response = session_client.send(request).await?;
 
-    let params = EmailTokenParameters { access_token };
-    let body = EmailTokenBody {
-        id_server: identity
-            .try_into()
-            .map_err(GetTokenEmailError::IdentityServerUrl)?,
-        client_secret: client_secret.clone(),
-        email,
-        send_attempt: 1,
-        next_link: None,
-    };
-
-    let request = request_contact_verification_token_email(base, &params, &body)?;
-
-    match HTTP_CLIENT
-        .get_client()
-        .execute(request)?
-        .json::<EmailTokenResponse>()?
-    {
-        Passed(info) => Ok((info.sid, client_secret)),
-        Failed(info) if info.errcode == "M_THREEPID_IN_USE" => Err(GetTokenEmailError::TokenUsed),
-        Failed(_) => Err(GetTokenEmailError::Denied),
-    }
+    Ok((response.sid, client_secret))
 }
 
 #[derive(Debug)]

@@ -8,7 +8,6 @@ api_sources = files(
   'r0/account/logout.rs',
   'r0/contact/create.rs',
   'r0/contact/delete.rs',
-  'r0/contact/request_verification_token_email.rs',
   'r0/contact/request_verification_token_msisdn.rs',
   'r0/server/domain_info.rs',
   'r0/sync/sync_events.rs',
