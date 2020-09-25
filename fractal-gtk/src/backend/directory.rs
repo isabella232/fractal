@@ -1,25 +1,21 @@
 use fractal_api::identifiers::{Error as IdentifierError, ServerName};
-use fractal_api::reqwest::Error as ReqwestError;
-use fractal_api::url::{ParseError as UrlError, Url};
+use fractal_api::url::ParseError as UrlError;
 use fractal_api::Client as MatrixClient;
 use fractal_api::Error as MatrixError;
 use std::convert::{TryFrom, TryInto};
 
 use crate::globals;
 
-use crate::backend::{MediaError, HTTP_CLIENT};
+use crate::backend::MediaError;
 use crate::util::cache_dir_path;
 
 use crate::model::room::Room;
 use fractal_api::api::r0::directory::get_public_rooms_filtered::Request as PublicRoomsFilteredRequest;
+use fractal_api::api::r0::thirdparty::get_protocols::Request as GetProtocolsRequest;
 use fractal_api::assign;
 use fractal_api::directory::Filter as PublicRoomsFilter;
 use fractal_api::directory::RoomNetwork;
-use fractal_api::r0::thirdparty::get_supported_protocols::request as get_supported_protocols;
-use fractal_api::r0::thirdparty::get_supported_protocols::Parameters as SupportedProtocolsParameters;
-use fractal_api::r0::thirdparty::get_supported_protocols::ProtocolInstance;
-use fractal_api::r0::thirdparty::get_supported_protocols::Response as SupportedProtocolsResponse;
-use fractal_api::r0::AccessToken;
+use fractal_api::thirdparty::ProtocolInstance;
 
 use super::{dw_media, ContentType, HandleError};
 use crate::app::App;
@@ -29,8 +25,8 @@ use crate::APPOP;
 #[derive(Debug)]
 pub struct DirectoryProtocolsError;
 
-impl From<ReqwestError> for DirectoryProtocolsError {
-    fn from(_: ReqwestError) -> Self {
+impl From<MatrixError> for DirectoryProtocolsError {
+    fn from(_: MatrixError) -> Self {
         Self
     }
 }
@@ -43,17 +39,15 @@ impl HandleError for DirectoryProtocolsError {
     }
 }
 
-pub fn protocols(
-    base: Url,
-    access_token: AccessToken,
+pub async fn protocols(
+    session_client: MatrixClient,
 ) -> Result<Vec<ProtocolInstance>, DirectoryProtocolsError> {
-    let params = SupportedProtocolsParameters { access_token };
-    let request = get_supported_protocols(base, &params)?;
-    let response: SupportedProtocolsResponse = HTTP_CLIENT.get_client().execute(request)?.json()?;
-
-    Ok(response
+    Ok(session_client
+        .send(GetProtocolsRequest::new())
+        .await?
+        .protocols
         .into_iter()
-        .flat_map(|(_, protocol)| protocol.instances.into_iter())
+        .flat_map(|(_, protocol)| protocol.instances)
         .collect())
 }
 

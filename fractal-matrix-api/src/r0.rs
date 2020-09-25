@@ -3,7 +3,6 @@ pub mod contact;
 pub mod filter;
 pub mod server;
 pub mod sync;
-pub mod thirdparty;
 
 use serde::{Deserialize, Serialize, Serializer};
 use std::convert::TryFrom;

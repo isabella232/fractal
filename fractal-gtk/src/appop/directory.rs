@@ -1,5 +1,4 @@
 use gtk::prelude::*;
-use std::thread;
 
 use crate::backend::{directory, HandleError};
 
@@ -11,16 +10,14 @@ use crate::widgets;
 use super::RoomSearchPagination;
 use crate::model::room::Room;
 use fractal_api::directory::RoomNetwork;
-use fractal_api::r0::thirdparty::get_supported_protocols::ProtocolInstance;
+use fractal_api::thirdparty::ProtocolInstance;
 
 impl AppOp {
     pub fn init_protocols(&self) {
-        let login_data = unwrap_or_unit_return!(self.login_data.clone());
-        thread::spawn(move || {
-            match directory::protocols(
-                login_data.session_client.homeserver().clone(),
-                login_data.access_token,
-            ) {
+        let session_client =
+            unwrap_or_unit_return!(self.login_data.as_ref().map(|ld| ld.session_client.clone()));
+        RUNTIME.spawn(async move {
+            match directory::protocols(session_client).await {
                 Ok(protocols) => {
                     APPOP!(set_protocols, (protocols));
                 }
@@ -40,7 +37,7 @@ impl AppOp {
         combo.clear();
 
         for p in protocols {
-            combo.insert_with_values(None, &[0, 1], &[&p.desc, &p.id]);
+            combo.insert_with_values(None, &[0, 1], &[&p.desc, &p.network_id]);
         }
     }
 
