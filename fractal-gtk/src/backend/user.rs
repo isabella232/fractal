@@ -19,6 +19,7 @@ use super::room::AttachedFileError;
 use crate::model::member::Member;
 use fractal_api::api::r0::account::change_password::Request as ChangePasswordRequest;
 use fractal_api::api::r0::account::request_3pid_management_token_via_email::Request as EmailTokenRequest;
+use fractal_api::api::r0::account::request_3pid_management_token_via_msisdn::Request as PhoneTokenRequest;
 use fractal_api::api::r0::contact::get_contacts::Request as GetContactsRequest;
 use fractal_api::api::r0::contact::get_contacts::ThirdPartyIdentifier;
 use fractal_api::api::r0::profile::get_display_name::Request as GetDisplayNameRequest;
@@ -43,10 +44,6 @@ use fractal_api::r0::contact::create::Parameters as AddThreePIDParameters;
 use fractal_api::r0::contact::delete::request as delete_contact;
 use fractal_api::r0::contact::delete::Body as DeleteThreePIDBody;
 use fractal_api::r0::contact::delete::Parameters as DeleteThreePIDParameters;
-use fractal_api::r0::contact::request_verification_token_msisdn::request as request_contact_verification_token_msisdn;
-use fractal_api::r0::contact::request_verification_token_msisdn::Body as PhoneTokenBody;
-use fractal_api::r0::contact::request_verification_token_msisdn::Parameters as PhoneTokenParameters;
-use fractal_api::r0::contact::request_verification_token_msisdn::Response as PhoneTokenResponse;
 use fractal_api::r0::AccessToken;
 use fractal_api::r0::Medium;
 use fractal_api::r0::ThreePIDCredentials;
@@ -176,82 +173,48 @@ pub async fn get_email_token(
 }
 
 #[derive(Debug)]
-pub enum GetTokenPhoneError {
-    IdentityServerUrl(UrlError),
-    Reqwest(ReqwestError),
-    TokenUsed,
-    Denied,
-}
+pub struct GetTokenPhoneError(MatrixError);
 
-impl From<ReqwestError> for GetTokenPhoneError {
-    fn from(err: ReqwestError) -> Self {
-        Self::Reqwest(err)
+impl From<MatrixError> for GetTokenPhoneError {
+    fn from(err: MatrixError) -> Self {
+        Self(err)
     }
 }
 
 impl HandleError for GetTokenPhoneError {
     fn handle_error(&self) {
-        match self {
-            Self::TokenUsed => {
-                let error = i18n("Phone number is already in use");
-                APPOP!(show_error_dialog_in_settings, (error));
-            }
-            Self::Denied => {
-                let error = i18n(
-                    "Please enter your phone number in the format: \n + your country code and your phone number.",
-                );
-                APPOP!(show_error_dialog_in_settings, (error));
-            }
-            Self::Reqwest(err) => {
-                let error = i18n("Couldn’t add the phone number.");
-                let err_str = format!("{:?}", err);
-                error!(
-                    "{}",
-                    remove_matrix_access_token_if_present(&err_str).unwrap_or(err_str)
-                );
-                APPOP!(show_error_dialog_in_settings, (error));
-            }
-            Self::IdentityServerUrl(err) => {
-                let error = i18n("The identity server is invalid.");
-                error!("The identity server is invalid: {:?}", err);
-                APPOP!(show_error_dialog_in_settings, (error));
-            }
+        let err = &self.0;
+        let ruma_error_kind = get_ruma_error_kind(err);
+
+        if ruma_error_kind == Some(&RumaErrorKind::ThreepidInUse) {
+            let error = i18n("Phone number is already in use");
+            APPOP!(show_error_dialog_in_settings, (error));
+        } else if ruma_error_kind == Some(&RumaErrorKind::ThreepidDenied) {
+            let error = i18n(
+                "Please enter your phone number in the format: \n + your country code and your phone number.",
+            );
+            APPOP!(show_error_dialog_in_settings, (error));
+        } else {
+            let error = i18n("Couldn’t add the phone number.");
+            let err_str = format!("{:?}", err);
+            error!(
+                "{}",
+                remove_matrix_access_token_if_present(&err_str).unwrap_or(err_str)
+            );
+            APPOP!(show_error_dialog_in_settings, (error));
         }
     }
 }
 
-pub fn get_phone_token(
-    base: Url,
-    access_token: AccessToken,
-    identity: Url,
-    phone_number: String,
+pub async fn get_phone_token(
+    session_client: MatrixClient,
+    phone_number: &str,
     client_secret: String,
 ) -> Result<(String, String), GetTokenPhoneError> {
-    use PhoneTokenResponse::*;
+    let request = PhoneTokenRequest::new(&client_secret, "", phone_number, 1_u32.into());
+    let response = session_client.send(request).await?;
 
-    let params = PhoneTokenParameters { access_token };
-    let body = PhoneTokenBody {
-        id_server: identity
-            .try_into()
-            .map_err(GetTokenPhoneError::IdentityServerUrl)?,
-        client_secret: client_secret.clone(),
-        phone_number,
-        country: String::new(),
-        send_attempt: 1,
-        next_link: None,
-    };
-
-    let request = request_contact_verification_token_msisdn(base, &params, &body)?;
-
-    match HTTP_CLIENT
-        .get_client()
-        .execute(request)?
-        .json::<PhoneTokenResponse>()?
-    {
-        Passed(info) => Ok((info.sid, client_secret)),
-        Failed(info) if info.errcode == "M_THREEPID_IN_USE" => Err(GetTokenPhoneError::TokenUsed),
-        Failed(_) => Err(GetTokenPhoneError::Denied),
-    }
+    Ok((response.sid, client_secret))
 }
 
 #[derive(Debug)]

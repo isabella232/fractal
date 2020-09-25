@@ -163,7 +163,6 @@ impl<'a> Address<'a> {
         let address = self.address.clone();
         let access_token = login_data.access_token;
         let session_client = login_data.session_client;
-        let id_server = login_data.identity_url;
         self.signal_id = Some(self.button.clone().connect_clicked(move |w| {
             if !w.get_sensitive() || !w.is_visible() {
                 return;
@@ -193,13 +192,7 @@ impl<'a> Address<'a> {
                 }
                 Some(AddressAction::Add) => {
                     let address = entry.get_text().to_string();
-                    add_address(
-                        session_client.clone(),
-                        medium,
-                        id_server.clone(),
-                        address,
-                        access_token.clone(),
-                    );
+                    add_address(session_client.clone(), medium, address);
                 }
                 _ => {}
             }
@@ -220,43 +213,31 @@ fn delete_address(medium: Medium, address: String, server_url: Url, access_token
     });
 }
 
-fn add_address(
-    session_client: MatrixClient,
-    medium: Medium,
-    id_server: Url,
-    address: String,
-    access_token: AccessToken,
-) {
-    let server_url = session_client.homeserver().clone();
+fn add_address(session_client: MatrixClient, medium: Medium, address: String) {
     let secret: String = thread_rng().sample_iter(&Alphanumeric).take(36).collect();
-    match medium {
-        Medium::MsIsdn => {
-            thread::spawn(move || {
-                match user::get_phone_token(server_url, access_token, id_server, address, secret) {
-                    Ok((sid, secret)) => {
-                        let sid = Some(sid);
-                        let secret = Some(secret);
-                        APPOP!(get_token_phone, (sid, secret))
-                    }
-                    Err(err) => {
-                        err.handle_error();
-                    }
+
+    RUNTIME.spawn(async move {
+        match medium {
+            Medium::MsIsdn => match user::get_phone_token(session_client, &address, secret).await {
+                Ok((sid, secret)) => {
+                    let sid = Some(sid);
+                    let secret = Some(secret);
+                    APPOP!(get_token_phone, (sid, secret))
                 }
-            });
-        }
-        Medium::Email => {
-            RUNTIME.spawn(async move {
-                match user::get_email_token(session_client, &address, secret).await {
-                    Ok((sid, secret)) => {
-                        let sid = Some(sid);
-                        let secret = Some(secret);
-                        APPOP!(get_token_email, (sid, secret));
-                    }
-                    Err(err) => {
-                        err.handle_error();
-                    }
+                Err(err) => {
+                    err.handle_error();
                 }
-            });
+            },
+            Medium::Email => match user::get_email_token(session_client, &address, secret).await {
+                Ok((sid, secret)) => {
+                    let sid = Some(sid);
+                    let secret = Some(secret);
+                    APPOP!(get_token_email, (sid, secret));
+                }
+                Err(err) => {
+                    err.handle_error();
+                }
+            },
         }
-    };
+    });
 }
