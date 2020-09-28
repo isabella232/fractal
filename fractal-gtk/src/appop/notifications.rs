@@ -8,7 +8,7 @@ impl AppOp {
         self.update_title();
     }
 
-    pub fn set_room_notifications(&mut self, room_id: RoomId, n: i32, h: i32) {
+    pub fn set_room_notifications(&mut self, room_id: RoomId, n: u64, h: u64) {
         if let Some(r) = self.rooms.get_mut(&room_id) {
             r.notifications = n;
             r.highlight = h;

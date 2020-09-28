@@ -1,8 +1,6 @@
 pub mod account;
 pub mod contact;
-pub mod filter;
 pub mod server;
-pub mod sync;
 
 use serde::{Deserialize, Serialize, Serializer};
 use std::convert::TryFrom;

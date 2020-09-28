@@ -129,7 +129,7 @@ struct Data {
     server_url: Url,
     access_token: AccessToken,
     uid: UserId,
-    admins: HashMap<UserId, i32>,
+    admins: HashMap<UserId, i64>,
 
     widget: Widget,
     media_list: Vec<Message>,

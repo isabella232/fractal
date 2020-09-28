@@ -1,15 +1,20 @@
 use chrono::prelude::*;
 use chrono::DateTime;
-use chrono::TimeZone;
 use fractal_api::{
-    identifiers::{Error as IdError, EventId, RoomId, UserId},
+    events::{
+        room::message::{MessageEventContent, RedactedMessageEventContent, Relation},
+        sticker::{RedactedStickerEventContent, StickerEventContent},
+        AnyMessageEvent, AnyRedactedMessageEvent, AnyRedactedSyncMessageEvent, AnyRoomEvent,
+        AnySyncMessageEvent, AnySyncRoomEvent, EventContent, MessageEvent, RedactedMessageEvent,
+    },
+    identifiers::{EventId, RoomId, UserId},
     url::Url,
 };
 use serde::{Deserialize, Serialize};
 use serde_json::Value as JsonValue;
 use std::cmp::Ordering;
 use std::collections::HashMap;
-use std::convert::TryInto;
+use std::convert::TryFrom;
 use std::path::PathBuf;
 
 //FIXME make properties private
@@ -61,12 +66,311 @@ impl PartialOrd for Message {
     }
 }
 
-impl Message {
-    /// List all supported types. By default a message map a m.room.message event, but there's
-    /// other events that we want to show in the message history so we map other event types to our
-    /// Message struct, like stickers
-    const SUPPORTED_EVENTS: [&'static str; 2] = ["m.room.message", "m.sticker"];
+impl From<MessageEvent<MessageEventContent>> for Message {
+    fn from(msg: MessageEvent<MessageEventContent>) -> Self {
+        let source = serde_json::to_string_pretty(&msg).ok();
 
+        let initial_message = Self {
+            sender: msg.sender,
+            date: msg.origin_server_ts.into(),
+            room: msg.room_id,
+            // It is mandatory for a message event to have
+            // an event_id field
+            id: Some(msg.event_id),
+            mtype: String::new(),
+            body: String::new(),
+            url: None,
+            local_path: None,
+            thumb: None,
+            local_path_thumb: None,
+            formatted_body: None,
+            format: None,
+            source,
+            receipt: HashMap::new(),
+            redacted: false,
+            in_reply_to: None,
+            replace: None,
+            extra_content: None,
+        };
+
+        match msg.content {
+            MessageEventContent::Audio(content) => Self {
+                mtype: String::from("m.audio"),
+                body: content.body,
+                url: content.url.and_then(|u| Url::parse(&u).ok()),
+                ..initial_message
+            },
+            MessageEventContent::File(content) => {
+                let url = content.url.and_then(|u| Url::parse(&u).ok());
+                Self {
+                    mtype: String::from("m.file"),
+                    body: content.body,
+                    url: url.clone(),
+                    thumb: content
+                        .info
+                        .and_then(|c_info| Url::parse(&c_info.thumbnail_url?).ok())
+                        .or(url),
+                    ..initial_message
+                }
+            }
+            MessageEventContent::Image(content) => {
+                let url = content.url.and_then(|u| Url::parse(&u).ok());
+                Self {
+                    mtype: String::from("m.image"),
+                    body: content.body,
+                    url: url.clone(),
+                    thumb: content
+                        .info
+                        .and_then(|c_info| Url::parse(&c_info.thumbnail_url?).ok())
+                        .or(url),
+                    ..initial_message
+                }
+            }
+            MessageEventContent::Video(content) => {
+                let url = content.url.and_then(|u| Url::parse(&u).ok());
+                Self {
+                    mtype: String::from("m.video"),
+                    body: content.body,
+                    url: url.clone(),
+                    thumb: content
+                        .info
+                        .and_then(|c_info| Url::parse(&c_info.thumbnail_url?).ok())
+                        .or(url),
+                    ..initial_message
+                }
+            }
+            MessageEventContent::Text(content) => {
+                let (in_reply_to, replace) =
+                    content.relates_to.map_or(Default::default(), |r| match r {
+                        Relation::Replacement(rep) => (None, Some(rep.event_id)),
+                        Relation::Reply { in_reply_to } => (Some(in_reply_to.event_id), None),
+                        _ => (None, None),
+                    });
+                let (body, formatted, in_reply_to) = content.new_content.map_or(
+                    (content.body, content.formatted, in_reply_to),
+                    |nc| {
+                        let in_reply_to = nc.relates_to.and_then(|r| match r {
+                            Relation::Reply { in_reply_to } => Some(in_reply_to.event_id),
+                            _ => None,
+                        });
+
+                        (nc.body, nc.formatted, in_reply_to)
+                    },
+                );
+                let (formatted_body, format) = formatted.map_or(Default::default(), |f| {
+                    (Some(f.body), Some(f.format.as_str().into()))
+                });
+
+                Self {
+                    mtype: String::from("m.text"),
+                    body,
+                    formatted_body,
+                    format,
+                    in_reply_to,
+                    replace,
+                    ..initial_message
+                }
+            }
+            MessageEventContent::Emote(content) => {
+                let (formatted_body, format): (Option<String>, Option<String>) =
+                    content.formatted.map_or((None, None), |f| {
+                        (Some(f.body), Some(f.format.as_str().into()))
+                    });
+                Self {
+                    mtype: String::from("m.emote"),
+                    body: content.body,
+                    formatted_body,
+                    format,
+                    ..initial_message
+                }
+            }
+            MessageEventContent::Location(content) => Self {
+                mtype: String::from("m.location"),
+                body: content.body,
+                ..initial_message
+            },
+            MessageEventContent::Notice(content) => {
+                let (in_reply_to, replace) =
+                    content.relates_to.map_or(Default::default(), |r| match r {
+                        Relation::Replacement(rep) => (None, Some(rep.event_id)),
+                        Relation::Reply { in_reply_to } => (Some(in_reply_to.event_id), None),
+                        _ => (None, None),
+                    });
+                let (body, formatted, in_reply_to) = content.new_content.map_or(
+                    (content.body, content.formatted, in_reply_to),
+                    |nc| {
+                        let in_reply_to = nc.relates_to.and_then(|r| match r {
+                            Relation::Reply { in_reply_to } => Some(in_reply_to.event_id),
+                            _ => None,
+                        });
+
+                        (nc.body, nc.formatted, in_reply_to)
+                    },
+                );
+                let (formatted_body, format) = formatted.map_or(Default::default(), |f| {
+                    (Some(f.body), Some(f.format.as_str().into()))
+                });
+
+                Self {
+                    mtype: String::from("m.notice"),
+                    body,
+                    formatted_body,
+                    format,
+                    in_reply_to,
+                    replace,
+                    ..initial_message
+                }
+            }
+            MessageEventContent::ServerNotice(content) => Self {
+                mtype: String::from("m.server_notice"),
+                body: content.body,
+                ..initial_message
+            },
+            _ => initial_message,
+        }
+    }
+}
+
+impl From<RedactedMessageEvent<RedactedMessageEventContent>> for Message {
+    fn from(msg: RedactedMessageEvent<RedactedMessageEventContent>) -> Self {
+        let source = serde_json::to_string_pretty(&msg).ok();
+
+        Self {
+            sender: msg.sender,
+            date: msg.origin_server_ts.into(),
+            room: msg.room_id,
+            // It is mandatory for a message event to have
+            // an event_id field
+            id: Some(msg.event_id),
+            mtype: String::from(msg.content.event_type()),
+            body: String::new(),
+            url: None,
+            local_path: None,
+            thumb: None,
+            local_path_thumb: None,
+            formatted_body: None,
+            format: None,
+            source,
+            receipt: HashMap::new(),
+            redacted: true,
+            in_reply_to: None,
+            replace: None,
+            extra_content: None,
+        }
+    }
+}
+
+impl From<MessageEvent<StickerEventContent>> for Message {
+    fn from(msg: MessageEvent<StickerEventContent>) -> Self {
+        let source = serde_json::to_string_pretty(&msg).ok();
+        let url = Url::parse(&msg.content.url).ok();
+
+        Self {
+            sender: msg.sender,
+            date: msg.origin_server_ts.into(),
+            room: msg.room_id,
+            // It is mandatory for a message event to have
+            // an event_id field
+            id: Some(msg.event_id),
+            mtype: String::from(msg.content.event_type()),
+            body: msg.content.body,
+            url: url.clone(),
+            local_path: None,
+            thumb: msg
+                .content
+                .info
+                .thumbnail_url
+                .and_then(|thumb| Url::parse(&thumb).ok())
+                .or(url),
+            local_path_thumb: None,
+            formatted_body: None,
+            format: None,
+            source,
+            receipt: HashMap::new(),
+            redacted: false,
+            in_reply_to: None,
+            replace: None,
+            extra_content: None,
+        }
+    }
+}
+
+impl From<RedactedMessageEvent<RedactedStickerEventContent>> for Message {
+    fn from(msg: RedactedMessageEvent<RedactedStickerEventContent>) -> Self {
+        let source = serde_json::to_string_pretty(&msg).ok();
+
+        Self {
+            sender: msg.sender,
+            date: msg.origin_server_ts.into(),
+            room: msg.room_id,
+            // It is mandatory for a message event to have
+            // an event_id field
+            id: Some(msg.event_id),
+            mtype: String::from(msg.content.event_type()),
+            body: String::new(),
+            url: None,
+            local_path: None,
+            thumb: None,
+            local_path_thumb: None,
+            formatted_body: None,
+            format: None,
+            source,
+            receipt: HashMap::new(),
+            redacted: true,
+            in_reply_to: None,
+            replace: None,
+            extra_content: None,
+        }
+    }
+}
+
+impl TryFrom<AnyRoomEvent> for Message {
+    type Error = ();
+
+    fn try_from(event: AnyRoomEvent) -> Result<Self, Self::Error> {
+        match event {
+            AnyRoomEvent::Message(AnyMessageEvent::RoomMessage(room_messages_event)) => {
+                Ok(Self::from(room_messages_event))
+            }
+            AnyRoomEvent::Message(AnyMessageEvent::Sticker(sticker_event)) => {
+                Ok(Self::from(sticker_event))
+            }
+            AnyRoomEvent::RedactedMessage(AnyRedactedMessageEvent::RoomMessage(
+                redacted_room_messages_event,
+            )) => Ok(Self::from(redacted_room_messages_event)),
+            AnyRoomEvent::RedactedMessage(AnyRedactedMessageEvent::Sticker(
+                redacted_sticker_event,
+            )) => Ok(Self::from(redacted_sticker_event)),
+            _ => Err(()),
+        }
+    }
+}
+
+impl TryFrom<(RoomId, AnySyncRoomEvent)> for Message {
+    type Error = ();
+
+    fn try_from((room_id, event): (RoomId, AnySyncRoomEvent)) -> Result<Self, Self::Error> {
+        match event {
+            AnySyncRoomEvent::Message(AnySyncMessageEvent::RoomMessage(room_messages_event)) => {
+                Ok(Self::from(room_messages_event.into_full_event(room_id)))
+            }
+            AnySyncRoomEvent::Message(AnySyncMessageEvent::Sticker(sticker_event)) => {
+                Ok(Self::from(sticker_event.into_full_event(room_id)))
+            }
+            AnySyncRoomEvent::RedactedMessage(AnyRedactedSyncMessageEvent::RoomMessage(
+                redacted_room_messages_event,
+            )) => Ok(Self::from(
+                redacted_room_messages_event.into_full_event(room_id),
+            )),
+            AnySyncRoomEvent::RedactedMessage(AnyRedactedSyncMessageEvent::Sticker(
+                redacted_sticker_event,
+            )) => Ok(Self::from(redacted_sticker_event.into_full_event(room_id))),
+            _ => Err(()),
+        }
+    }
+}
+
+impl Message {
     pub fn new(
         room: RoomId,
         sender: UserId,
@@ -107,132 +411,6 @@ impl Message {
         let msg_str = format!("{}{}{}", self.room, self.body, self.date);
         let digest = md5::compute(msg_str.as_bytes());
         format!("{:x}", digest)
-    }
-
-    /// Helper function to use in iterator filter of a matrix.org json response to filter supported
-    /// events
-    fn supported_event(ev: &JsonValue) -> bool {
-        let type_ = ev["type"].as_str().unwrap_or_default();
-
-        Self::SUPPORTED_EVENTS.contains(&type_)
-    }
-
-    /// Parses a matrix.org event and return a Message object
-    ///
-    /// # Arguments
-    ///
-    /// * `roomid` - The message room id
-    /// * `msg` - The message event as Json
-    pub fn parse_room_message(room_id: &RoomId, msg: &JsonValue) -> Result<Message, IdError> {
-        let sender: UserId = msg["sender"].as_str().unwrap_or_default().try_into()?;
-
-        let timestamp = msg["origin_server_ts"].as_i64().unwrap_or_default() / 1000;
-        let server_timestamp: DateTime<Local> = Local.timestamp(timestamp, 0);
-
-        let id: EventId = msg["event_id"].as_str().unwrap_or_default().try_into()?;
-        let type_ = msg["type"].as_str().unwrap_or_default();
-
-        let redacted = msg["unsigned"].get("redacted_because") != None;
-
-        let mut message = Message {
-            sender,
-            date: server_timestamp,
-            room: room_id.clone(),
-            // It is mandatory for a message event to have
-            // an event_id field
-            id: Some(id),
-            mtype: type_.to_string(),
-            body: String::new(),
-            url: None,
-            local_path: None,
-            thumb: None,
-            local_path_thumb: None,
-            formatted_body: None,
-            format: None,
-            source: serde_json::to_string_pretty(&msg).ok(),
-            receipt: HashMap::new(),
-            redacted,
-            in_reply_to: None,
-            replace: None,
-            extra_content: None,
-        };
-
-        let c = &msg["content"];
-        match type_ {
-            "m.room.message" => message.parse_m_room_message(c),
-            "m.sticker" => message.parse_m_sticker(c),
-            _ => {}
-        };
-
-        Ok(message)
-    }
-
-    fn parse_m_room_message(&mut self, mut c: &JsonValue) {
-        let rel_type = c["m.relates_to"]["rel_type"]
-            .as_str()
-            .map(String::from)
-            .unwrap_or_default();
-
-        if rel_type == "m.replace" {
-            self.replace = c["m.relates_to"]["event_id"]
-                .as_str()
-                .and_then(|evid| evid.try_into().ok());
-            c = &c["m.new_content"];
-        }
-
-        let mtype = c["msgtype"].as_str().map(String::from).unwrap_or_default();
-        let body = c["body"].as_str().map(String::from).unwrap_or_default();
-        let formatted_body = c["formatted_body"].as_str().map(String::from);
-        let format = c["format"].as_str().map(String::from);
-
-        match mtype.as_str() {
-            "m.image" | "m.file" | "m.video" | "m.audio" => {
-                self.url = c["url"].as_str().map(Url::parse).and_then(Result::ok);
-                self.thumb = c["info"]["thumbnail_url"]
-                    .as_str()
-                    .map(Url::parse)
-                    .and_then(Result::ok)
-                    .or_else(|| Some(self.url.clone()?));
-            }
-            "m.text" => {
-                // Only m.text messages can be replies for backward compatibility
-                // https://matrix.org/docs/spec/client_server/r0.4.0.html#rich-replies
-                self.in_reply_to = c["m.relates_to"]["m.in_reply_to"]["event_id"]
-                    .as_str()
-                    .and_then(|evid| evid.try_into().ok());
-            }
-            _ => {}
-        };
-
-        self.mtype = mtype;
-        self.body = body;
-        self.formatted_body = formatted_body;
-        self.format = format;
-    }
-
-    fn parse_m_sticker(&mut self, c: &JsonValue) {
-        self.url = c["url"].as_str().map(Url::parse).and_then(Result::ok);
-        self.thumb = c["info"]["thumbnail_url"]
-            .as_str()
-            .map(Url::parse)
-            .and_then(Result::ok)
-            .or_else(|| Some(self.url.clone()?));
-        self.body = c["body"].as_str().map(String::from).unwrap_or_default();
-    }
-
-    /// Create a vec of Message from a json event list
-    ///
-    /// * `roomid` - The messages room id
-    /// * `events` - An iterator to the json events
-    pub fn from_json_events<I>(room_id: &RoomId, events: I) -> Result<Vec<Message>, IdError>
-    where
-        I: IntoIterator<Item = JsonValue>,
-    {
-        events
-            .into_iter()
-            .filter(Message::supported_event)
-            .map(|msg| Message::parse_room_message(&room_id, &msg))
-            .collect()
     }
 
     pub fn set_receipt(&mut self, receipt: HashMap<UserId, i64>) {

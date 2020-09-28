@@ -81,4 +81,4 @@ features = ["serde_untagged"]
 
 [dependencies.tokio]
 version = "0.2.22"
-features = ["rt-threaded"]
+features = ["rt-threaded", "time"]

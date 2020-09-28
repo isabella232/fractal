@@ -3,7 +3,7 @@ use serde_json::json;
 
 use fractal_api::{
     api::error::ErrorKind as RumaErrorKind,
-    identifiers::{Error as IdError, EventId, RoomId, RoomIdOrAliasId, UserId},
+    identifiers::{EventId, RoomId, RoomIdOrAliasId, UserId},
     url::{ParseError as UrlError, Url},
     Client as MatrixClient, Error as MatrixError, FromHttpResponseError as RumaResponseError,
     ServerError,
@@ -12,7 +12,7 @@ use serde::Serialize;
 use std::io::Error as IoError;
 use std::path::Path;
 
-use std::convert::TryFrom;
+use std::convert::{TryFrom, TryInto};
 use std::time::Duration;
 
 use crate::globals;
@@ -228,7 +228,6 @@ pub async fn get_room_members(
 pub enum RoomMessagesToError {
     MessageNotSent,
     Matrix(MatrixError),
-    EventsDeserialization(IdError),
 }
 
 impl<T: Into<MatrixError>> From<T> for RoomMessagesToError {
@@ -260,13 +259,17 @@ pub async fn get_room_messages(
     let response = session_client.room_messages(request).await?;
 
     let prev_batch = response.end;
-    let evs = response
+    let list: Vec<Message> = response
         .chunk
         .into_iter()
         .rev()
-        .map(|ev| serde_json::to_value(ev.json().get()).unwrap());
-    let list = Message::from_json_events(&room_id, evs)
-        .map_err(RoomMessagesToError::EventsDeserialization)?;
+        .filter_map(|ev| {
+            ev.deserialize()
+                .map(TryInto::try_into)
+                .map(Result::ok)
+                .transpose()
+        })
+        .collect::<Result<_, _>>()?;
 
     Ok((list, room_id, prev_batch))
 }

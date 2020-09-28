@@ -257,19 +257,18 @@ impl AppOp {
         let empty = String::new();
         let room_name = room_name.unwrap_or(&empty);
         let title = i18n_k("Join {room_name}?", &[("room_name", &room_name)]);
-        let secondary;
-        if let Some(ref sender) = sender {
+        let secondary = if let Some(ref sender) = sender {
             let sender_name = sender.get_alias();
-            secondary = i18n_k(
+            i18n_k(
                 "You’ve been invited to join <b>{room_name}</b> room by <b>{sender_name}</b>",
                 &[("room_name", &room_name), ("sender_name", &sender_name)],
-            );
+            )
         } else {
-            secondary = i18n_k(
+            i18n_k(
                 "You’ve been invited to join <b>{room_name}</b>",
                 &[("room_name", &room_name)],
-            );
-        }
+            )
+        };
 
         dialog.set_property_text(Some(title.as_str()));
         dialog.set_property_secondary_use_markup(true);

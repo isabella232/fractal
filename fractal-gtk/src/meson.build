@@ -81,7 +81,6 @@ app_sources = files(
   'backend/user.rs',
   'cache/mod.rs',
   'cache/state.rs',
-  'model/event.rs',
   'model/fileinfo.rs',
   'model/member.rs',
   'model/message.rs',

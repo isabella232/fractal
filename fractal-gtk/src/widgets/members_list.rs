@@ -18,13 +18,13 @@ pub struct MembersList {
     search_entry: gtk::SearchEntry,
     error: gtk::Label,
     members: Vec<Member>,
-    admins: HashMap<UserId, i32>,
+    admins: HashMap<UserId, i64>,
 }
 
 impl MembersList {
     pub fn new(
         members: Vec<Member>,
-        admins: HashMap<UserId, i32>,
+        admins: HashMap<UserId, i64>,
         search_entry: gtk::SearchEntry,
     ) -> MembersList {
         MembersList {
@@ -96,7 +96,7 @@ impl MembersList {
     }
 }
 
-fn create_row(member: Member, power_level: Option<i32>) -> Option<gtk::ListBoxRow> {
+fn create_row(member: Member, power_level: Option<i64>) -> Option<gtk::ListBoxRow> {
     let row = gtk::ListBoxRow::new();
     row.connect_draw(clone!(@strong member => move |w, _| {
         if w.get_child().is_none() {
@@ -111,7 +111,7 @@ fn create_row(member: Member, power_level: Option<i32>) -> Option<gtk::ListBoxRo
 }
 
 /* creating the row is quite slow, therefore we have a small delay when scrolling the members list */
-fn load_row_content(member: Member, power_level: Option<i32>) -> gtk::Box {
+fn load_row_content(member: Member, power_level: Option<i64>) -> gtk::Box {
     let b = gtk::Box::new(gtk::Orientation::Horizontal, 12);
 
     // Power level badge colour
@@ -188,7 +188,7 @@ fn load_row_content(member: Member, power_level: Option<i32>) -> gtk::Box {
 fn add_rows(
     container: gtk::ListBox,
     members: Vec<Member>,
-    admins: HashMap<UserId, i32>,
+    admins: HashMap<UserId, i64>,
 ) -> Option<usize> {
     /* Load just enough members to fill atleast the visible list */
     for member in members.iter() {

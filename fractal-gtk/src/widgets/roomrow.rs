@@ -76,7 +76,7 @@ impl RoomRow {
         rr
     }
 
-    pub fn set_notifications(&mut self, n: i32, h: i32) {
+    pub fn set_notifications(&mut self, n: u64, h: u64) {
         self.room.notifications = n;
         self.room.highlight = h;
         self.notifications.set_text(&format!("{}", n));

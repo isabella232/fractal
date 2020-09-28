@@ -1,4 +1,3 @@
-use crate::derror;
 use fractal_api::identifiers::{Error as IdError, UserId};
 use fractal_api::r0::AccessToken;
 use fractal_api::url::ParseError;
@@ -9,6 +8,12 @@ pub enum Error {
     SecretServiceError,
     UrlParseError(ParseError),
     IdParseError(IdError),
+}
+
+impl From<secret_service::SsError> for Error {
+    fn from(_: secret_service::SsError) -> Error {
+        Error::SecretServiceError
+    }
 }
 
 impl From<ParseError> for Error {
@@ -22,8 +27,6 @@ impl From<IdError> for Error {
         Error::IdParseError(err)
     }
 }
-
-derror!(secret_service::SsError, Error::SecretServiceError);
 
 pub trait PasswordStorage {
     fn delete_pass(&self, key: &str) -> Result<(), Error> {

@@ -1,8 +1,9 @@
 use super::MediaError;
 use crate::globals;
-use fractal_api::identifiers::{Error as IdError, EventId, RoomId};
+use fractal_api::identifiers::{EventId, RoomId};
 use fractal_api::url::Url;
 use fractal_api::{Client as MatrixClient, Error as MatrixError};
+use std::convert::TryInto;
 use std::path::PathBuf;
 
 use crate::model::message::Message;
@@ -48,14 +49,11 @@ pub async fn get_media_list(
         .ok()
 }
 
-enum GetRoomMediaListError {
-    Matrix(MatrixError),
-    EventsDeserialization(IdError),
-}
+struct GetRoomMediaListError(MatrixError);
 
-impl From<MatrixError> for GetRoomMediaListError {
-    fn from(err: MatrixError) -> Self {
-        Self::Matrix(err)
+impl<T: Into<MatrixError>> From<T> for GetRoomMediaListError {
+    fn from(err: T) -> Self {
+        Self(err.into())
     }
 }
 
@@ -79,14 +77,18 @@ async fn get_room_media_list(
     let response = session_client.room_messages(request).await?;
 
     let prev_batch = response.end.unwrap_or_default();
-    // Deserialization to JsonValue should not fail
-    let evs = response
+
+    let media_list = response
         .chunk
-        .iter()
+        .into_iter()
         .rev()
-        .map(|ev| serde_json::to_value(ev.json().get()).unwrap());
-    let media_list = Message::from_json_events(room_id, evs)
-        .map_err(GetRoomMediaListError::EventsDeserialization)?;
+        .filter_map(|ev| {
+            ev.deserialize()
+                .map(TryInto::try_into)
+                .map(Result::ok)
+                .transpose()
+        })
+        .collect::<Result<_, _>>()?;
 
     Ok((media_list, prev_batch))
 }

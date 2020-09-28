@@ -190,7 +190,7 @@ impl RoomListGroup {
             .count()
     }
 
-    pub fn set_room_notifications(&mut self, room_id: RoomId, n: i32, h: i32) {
+    pub fn set_room_notifications(&mut self, room_id: RoomId, n: u64, h: u64) {
         if let Some(ref mut r) = self.rooms.get_mut(&room_id) {
             r.set_notifications(n, h);
         }
@@ -645,7 +645,7 @@ impl RoomList {
             + self.rooms.get().rooms_with_notifications()
     }
 
-    pub fn set_room_notifications(&mut self, room_id: RoomId, n: i32, h: i32) {
+    pub fn set_room_notifications(&mut self, room_id: RoomId, n: u64, h: u64) {
         run_in_group!(self, &room_id, set_room_notifications, room_id, n, h);
     }
 

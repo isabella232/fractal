@@ -1,9 +1,6 @@
-use log::info;
-use std::thread;
-
 use crate::util::i18n::i18n;
 
-use crate::app::App;
+use crate::app::{App, RUNTIME};
 use crate::appop::AppOp;
 use crate::backend::{
     sync::{self, RoomElement, SyncRet},
@@ -19,7 +16,7 @@ impl AppOp {
         }
     }
 
-    pub fn sync(&mut self, initial: bool, number_tries: u64) {
+    pub fn sync(&mut self, initial: bool, number_tries: u32) {
         if let (Some(login_data), false) = (self.login_data.clone(), self.syncing) {
             self.syncing = true;
             // for the initial sync we set the since to None to avoid long syncing
@@ -28,16 +25,18 @@ impl AppOp {
             // https://matrix.org/docs/spec/client_server/latest.html#syncing
             let join_to_room = self.join_to_room.clone();
             let since = self.since.clone().filter(|_| !initial);
-            thread::spawn(move || {
-                match sync::sync(
-                    login_data.session_client.clone(),
-                    login_data.access_token,
+            RUNTIME.spawn(async move {
+                let query = sync::sync(
+                    login_data.session_client,
                     login_data.uid,
                     join_to_room,
                     since,
                     initial,
                     number_tries,
-                ) {
+                )
+                .await;
+
+                match query {
                     Ok(SyncRet::NoSince { rooms, next_batch }) => {
                         match rooms {
                             Ok((rooms, default)) => {
@@ -56,13 +55,11 @@ impl AppOp {
                             }
                         };
 
-                        info!("SYNC");
                         let s = Some(next_batch);
                         APPOP!(synced, (s));
                     }
                     Ok(SyncRet::WithSince {
                         update_rooms,
-                        room_messages,
                         room_notifications,
                         update_rooms_2,
                         other,
@@ -71,15 +68,9 @@ impl AppOp {
                         match update_rooms {
                             Ok(rooms) => {
                                 let clear_room_list = false;
+                                let msgs: Vec<_> =
+                                    rooms.iter().flat_map(|r| &r.messages).cloned().collect();
                                 APPOP!(set_rooms, (rooms, clear_room_list));
-                            }
-                            Err(err) => {
-                                err.handle_error();
-                            }
-                        }
-
-                        match room_messages {
-                            Ok(msgs) => {
                                 APPOP!(show_room_messages, (msgs));
                             }
                             Err(err) => {
@@ -99,8 +90,14 @@ impl AppOp {
 
                         for (room_id, unread_notifications) in room_notifications {
                             let r = room_id;
-                            let n = unread_notifications.notification_count;
-                            let h = unread_notifications.highlight_count;
+                            let n: u64 = unread_notifications
+                                .notification_count
+                                .map(Into::into)
+                                .unwrap_or_default();
+                            let h: u64 = unread_notifications
+                                .highlight_count
+                                .map(Into::into)
+                                .unwrap_or_default();
                             APPOP!(set_room_notifications, (r, n, h));
                         }
 
@@ -133,7 +130,6 @@ impl AppOp {
                             }
                         }
 
-                        info!("SYNC");
                         let s = Some(next_batch);
                         APPOP!(synced, (s));
                     }
@@ -152,7 +148,7 @@ impl AppOp {
         self.initial_sync(false);
     }
 
-    pub fn sync_error(&mut self, number_tries: u64) {
+    pub fn sync_error(&mut self, number_tries: u32) {
         self.syncing = false;
         self.sync(false, number_tries);
     }

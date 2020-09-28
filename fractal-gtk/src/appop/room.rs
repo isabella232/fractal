@@ -53,10 +53,11 @@ impl AppOp {
         for room in rooms {
             // removing left rooms
             if let RoomMembership::Left(kicked) = room.membership.clone() {
-                if let Reason::Kicked(reason, kicker) = kicked {
+                if let Reason::Kicked(reason, kicker_uid) = kicked {
                     if let Some(r) = self.rooms.get(&room.id) {
                         let room_name = r.name.clone().unwrap_or_default();
-                        self.kicked_room(room_name, reason, kicker.alias.unwrap_or_default());
+                        let kicker = r.members.get(&kicker_uid);
+                        self.kicked_room(room_name, reason, kicker);
                     }
                 }
                 if self.active_room.as_ref().map_or(false, |x| x == &room.id) {
@@ -182,8 +183,9 @@ impl AppOp {
             if let Some(language) = room.language.clone() {
                 self.set_language(language);
             }
-            if let RoomMembership::Invited(ref sender) = room.membership {
-                self.show_inv_dialog(Some(sender), room.name.as_ref());
+            if let RoomMembership::Invited(ref sender_uid) = room.membership {
+                let sender = room.members.get(sender_uid);
+                self.show_inv_dialog(sender, room.name.as_ref());
                 self.invitation_roomid = Some(room.id.clone());
                 return;
             }
@@ -359,7 +361,7 @@ impl AppOp {
         dialog.present();
     }
 
-    pub fn kicked_room(&self, room_name: String, reason: String, kicker: String) {
+    pub fn kicked_room(&self, room_name: String, reason: String, kicker: Option<&Member>) {
         let parent: gtk::Window = self
             .ui
             .builder
@@ -367,7 +369,15 @@ impl AppOp {
             .expect("Can't find main_window in ui file.");
         let viewer = widgets::KickedDialog::new();
         viewer.set_parent_window(&parent);
-        viewer.show(&room_name, &reason, &kicker);
+        let kicker_str = kicker
+            .map(|k| {
+                k.alias
+                    .as_ref()
+                    .map(String::as_str)
+                    .unwrap_or(k.uid.as_str())
+            })
+            .unwrap_or_default();
+        viewer.show(&room_name, &reason, kicker_str);
     }
 
     pub fn create_new_room(&mut self) {

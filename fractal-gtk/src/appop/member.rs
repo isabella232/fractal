@@ -1,6 +1,10 @@
 use crate::backend::{user, HandleError};
 use either::Either;
 use fractal_api::{
+    events::{
+        room::member::{MemberEventContent, MembershipState},
+        StateEvent,
+    },
     identifiers::{RoomId, UserId},
     url::Url,
 };
@@ -16,7 +20,7 @@ use crate::appop::AppOp;
 use crate::widgets;
 use crate::App;
 
-use crate::model::{event::Event, member::Member};
+use crate::model::member::Member;
 
 #[derive(Debug, Clone)]
 pub enum SearchType {
@@ -25,7 +29,7 @@ pub enum SearchType {
 }
 
 impl AppOp {
-    pub fn member_level(&self, member: &Member) -> i32 {
+    pub fn member_level(&self, member: &Member) -> i64 {
         self.active_room
             .as_ref()
             .and_then(|a_room| self.rooms.get(a_room)?.admins.get(&member.uid))
@@ -49,28 +53,28 @@ impl AppOp {
         }
     }
 
-    pub fn room_member_event(&mut self, ev: Event) {
+    pub fn room_member_event(&mut self, ev: StateEvent<MemberEventContent>) {
         // NOTE: maybe we should show this events in the message list to notify enters and leaves
         // to the user
 
         let sender = ev.sender;
-        match ev.content["membership"].as_str() {
-            Some("leave") => {
-                if let Some(r) = self.rooms.get_mut(&ev.room) {
+        match ev.content.membership {
+            MembershipState::Leave => {
+                if let Some(r) = self.rooms.get_mut(&ev.room_id) {
                     r.members.remove(&sender);
                 }
             }
-            Some("join") => {
+            MembershipState::Join => {
                 let m = Member {
-                    avatar: ev.content["avatar_url"]
-                        .as_str()
-                        .map(Url::parse)
-                        .and_then(Result::ok)
+                    avatar: ev
+                        .content
+                        .avatar_url
+                        .and_then(|u| Url::parse(&u).ok())
                         .map(Either::Left),
-                    alias: ev.content["displayname"].as_str().map(String::from),
+                    alias: ev.content.displayname,
                     uid: sender,
                 };
-                if let Some(r) = self.rooms.get_mut(&ev.room.clone()) {
+                if let Some(r) = self.rooms.get_mut(&ev.room_id) {
                     r.members.insert(m.uid.clone(), m);
                 }
             }
