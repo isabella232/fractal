@@ -1,11 +1,11 @@
 use crate::app::RUNTIME;
 use crate::backend::user;
-use fractal_api::identifiers::{EventId, RoomId};
 use gio::ApplicationExt;
 use gio::FileExt;
 use gio::Notification;
 use gtk::prelude::*;
 use log::info;
+use matrix_sdk::identifiers::{EventId, RoomId};
 use std::path::Path;
 
 use crate::util::i18n::i18n;

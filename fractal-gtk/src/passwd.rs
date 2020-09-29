@@ -1,7 +1,7 @@
-use fractal_api::identifiers::{Error as IdError, UserId};
-use fractal_api::r0::AccessToken;
-use fractal_api::url::ParseError;
-use fractal_api::url::Url;
+use crate::api::r0::AccessToken;
+use matrix_sdk::identifiers::{Error as IdError, UserId};
+use url::ParseError;
+use url::Url;
 
 #[derive(Debug)]
 pub enum Error {
@@ -58,10 +58,10 @@ pub trait PasswordStorage {
 
 mod ss_storage {
     use super::Error;
-    use fractal_api::identifiers::UserId;
-    use fractal_api::r0::AccessToken;
-    use fractal_api::url::Url;
+    use crate::api::r0::AccessToken;
+    use matrix_sdk::identifiers::UserId;
     use std::convert::TryFrom;
+    use url::Url;
 
     use secret_service::{Collection, EncryptionType, SecretService, SsError};
 

@@ -2,11 +2,9 @@ use crate::model::message::Message;
 use crate::widgets;
 use chrono::prelude::DateTime;
 use chrono::prelude::Local;
-use fractal_api::{
-    identifiers::{EventId, UserId},
-    url::Url,
-};
+use matrix_sdk::identifiers::{EventId, UserId};
 use std::path::PathBuf;
+use url::Url;
 
 /* MessageContent contains all data needed to display one row
  * therefore it should contain only one Message body with one format

@@ -3,26 +3,26 @@ use crate::model::{
     member::Member,
     room::{Room, RoomMembership, RoomTag},
 };
-use fractal_api::api::r0::filter::Filter as EventFilter;
-use fractal_api::api::r0::filter::FilterDefinition;
-use fractal_api::api::r0::filter::LazyLoadOptions;
-use fractal_api::api::r0::filter::RoomEventFilter;
-use fractal_api::api::r0::filter::RoomFilter;
-use fractal_api::api::r0::sync::sync_events::Filter;
-use fractal_api::api::r0::sync::sync_events::UnreadNotificationsCount;
-use fractal_api::assign;
-use fractal_api::events::room::member::MemberEventContent;
-use fractal_api::events::AnyEphemeralRoomEventContent;
-use fractal_api::events::AnySyncMessageEvent;
-use fractal_api::events::AnySyncRoomEvent;
-use fractal_api::events::AnySyncStateEvent;
-use fractal_api::events::StateEvent;
-use fractal_api::SyncSettings;
+use matrix_sdk::api::r0::filter::Filter as EventFilter;
+use matrix_sdk::api::r0::filter::FilterDefinition;
+use matrix_sdk::api::r0::filter::LazyLoadOptions;
+use matrix_sdk::api::r0::filter::RoomEventFilter;
+use matrix_sdk::api::r0::filter::RoomFilter;
+use matrix_sdk::api::r0::sync::sync_events::Filter;
+use matrix_sdk::api::r0::sync::sync_events::UnreadNotificationsCount;
+use matrix_sdk::assign;
+use matrix_sdk::events::room::member::MemberEventContent;
+use matrix_sdk::events::AnyEphemeralRoomEventContent;
+use matrix_sdk::events::AnySyncMessageEvent;
+use matrix_sdk::events::AnySyncRoomEvent;
+use matrix_sdk::events::AnySyncStateEvent;
+use matrix_sdk::events::StateEvent;
+use matrix_sdk::SyncSettings;
 
-use fractal_api::identifiers::{EventId, RoomId, UserId};
-use fractal_api::Client as MatrixClient;
-use fractal_api::Error as MatrixError;
 use log::{error, warn};
+use matrix_sdk::identifiers::{EventId, RoomId, UserId};
+use matrix_sdk::Client as MatrixClient;
+use matrix_sdk::Error as MatrixError;
 use std::{collections::HashMap, time::Duration};
 
 use super::{get_ruma_client_error, remove_matrix_access_token_if_present, HandleError};

@@ -1,12 +1,12 @@
 use either::Either;
-use fractal_api::api::r0::membership::joined_members::RoomMember;
-use fractal_api::api::r0::user_directory::search_users::User;
-use fractal_api::identifiers::UserId;
-use fractal_api::url::{ParseError as UrlError, Url};
+use matrix_sdk::api::r0::membership::joined_members::RoomMember;
+use matrix_sdk::api::r0::user_directory::search_users::User;
+use matrix_sdk::identifiers::UserId;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::convert::TryFrom;
 use std::path::PathBuf;
+use url::{ParseError as UrlError, Url};
 
 // TODO: Make this non-(de)serializable
 #[derive(Debug, Clone, Serialize, Deserialize)]

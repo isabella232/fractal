@@ -14,8 +14,8 @@ use crate::widgets;
 use crate::widgets::AvatarExt;
 
 use crate::cache::{download_to_cache, remove_from_cache};
-use fractal_api::api::r0::contact::get_contacts::ThirdPartyIdentifier;
-use fractal_api::thirdparty::Medium;
+use matrix_sdk::api::r0::contact::get_contacts::ThirdPartyIdentifier;
+use matrix_sdk::thirdparty::Medium;
 
 use super::LoginData;
 

@@ -2,6 +2,7 @@
 #[macro_use]
 extern crate glib;
 
+mod api;
 mod backend;
 mod client;
 mod config;

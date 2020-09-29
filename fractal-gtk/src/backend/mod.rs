@@ -1,25 +1,25 @@
-use fractal_api::identifiers::{EventId, RoomId, ServerName};
-use fractal_api::url::Url;
-use fractal_api::{
+use lazy_static::lazy_static;
+use log::error;
+use matrix_sdk::identifiers::{EventId, RoomId, ServerName};
+use matrix_sdk::{
     api::{error::ErrorKind as RumaErrorKind, Error as RumaClientError},
     Client as MatrixClient, Error as MatrixError, FromHttpResponseError as RumaResponseError,
     ServerError,
 };
-use lazy_static::lazy_static;
-use log::error;
 use regex::Regex;
 use std::convert::TryFrom;
 use std::fmt::Debug;
 use std::io::Error as IoError;
 use std::path::PathBuf;
+use url::Url;
 
 use crate::client::ClientBlocking;
 use crate::util::cache_dir_path;
-use fractal_api::api::r0::context::get_context::Request as GetContextRequest;
-use fractal_api::api::r0::media::get_content::Request as GetContentRequest;
-use fractal_api::api::r0::media::get_content_thumbnail::Method;
-use fractal_api::api::r0::media::get_content_thumbnail::Request as GetContentThumbnailRequest;
-use fractal_api::assign;
+use matrix_sdk::api::r0::context::get_context::Request as GetContextRequest;
+use matrix_sdk::api::r0::media::get_content::Request as GetContentRequest;
+use matrix_sdk::api::r0::media::get_content_thumbnail::Method;
+use matrix_sdk::api::r0::media::get_content_thumbnail::Request as GetContentThumbnailRequest;
+use matrix_sdk::assign;
 
 pub mod directory;
 pub mod media;

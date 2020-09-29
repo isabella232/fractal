@@ -1,16 +1,16 @@
 use crate::util::i18n::i18n;
 use itertools::Itertools;
 
+use crate::api::r0::AccessToken;
 use crate::appop::UserInfoCache;
 use chrono::prelude::*;
 use either::Either;
-use fractal_api::r0::AccessToken;
-use fractal_api::url::Url;
-use fractal_api::Client as MatrixClient;
 use glib::clone;
 use gtk::{prelude::*, ButtonExt, ContainerExt, LabelExt, Overlay, WidgetExt};
+use matrix_sdk::Client as MatrixClient;
 use std::cmp::max;
 use std::rc::Rc;
+use url::Url;
 
 use crate::util::markup_text;
 

@@ -1,21 +1,21 @@
 use crate::backend::{room, HandleError};
 use crate::model::fileinfo::ExtraContent;
 use comrak::{markdown_to_html, ComrakOptions};
-use fractal_api::identifiers::{EventId, RoomId};
-use fractal_api::url::Url;
-use fractal_api::Client as MatrixClient;
 use gdk_pixbuf::Pixbuf;
 use gio::prelude::FileExt;
 use glib::source::Continue;
 use gtk::prelude::*;
 use lazy_static::lazy_static;
 use log::error;
+use matrix_sdk::identifiers::{EventId, RoomId};
+use matrix_sdk::Client as MatrixClient;
 use rand::Rng;
 use serde_json::json;
 use serde_json::Value as JsonValue;
 use std::env::temp_dir;
 use std::fs;
 use std::path::{Path, PathBuf};
+use url::Url;
 
 use crate::app::RUNTIME;
 use crate::appop::room::Force;

@@ -1,5 +1,5 @@
 use crate::appop::AppOp;
-use fractal_api::identifiers::RoomId;
+use matrix_sdk::identifiers::RoomId;
 
 impl AppOp {
     pub fn clear_room_notifications(&mut self, room_id: RoomId) {

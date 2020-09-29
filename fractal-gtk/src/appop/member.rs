@@ -1,15 +1,15 @@
 use crate::backend::{user, HandleError};
 use either::Either;
-use fractal_api::{
+use glib::clone;
+use gtk::prelude::*;
+use matrix_sdk::{
     events::{
         room::member::{MemberEventContent, MembershipState},
         StateEvent,
     },
     identifiers::{RoomId, UserId},
-    url::Url,
 };
-use glib::clone;
-use gtk::prelude::*;
+use url::Url;
 
 use std::collections::HashMap;
 use std::convert::TryFrom;

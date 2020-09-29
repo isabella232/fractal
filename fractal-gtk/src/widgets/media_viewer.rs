@@ -1,6 +1,6 @@
+use crate::api::r0::AccessToken;
 use crate::app::RUNTIME;
 use crate::backend::media;
-use fractal_api::r0::AccessToken;
 use glib::clone;
 
 use fragile::Fragile;
@@ -10,15 +10,15 @@ use std::rc::Rc;
 
 use crate::util::i18n::i18n;
 use either::Either;
-use fractal_api::identifiers::UserId;
-use fractal_api::url::Url;
-use fractal_api::Client as MatrixClient;
 use gdk::*;
 use glib::signal;
 use glib::source::Continue;
 use gtk::prelude::*;
 use gtk::Overlay;
 use libhandy::HeaderBarExt;
+use matrix_sdk::identifiers::UserId;
+use matrix_sdk::Client as MatrixClient;
+use url::Url;
 
 use crate::model::{message::Message, room::Room};
 

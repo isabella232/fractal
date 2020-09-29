@@ -40,8 +40,8 @@ use std::ops::Deref;
 use std::path::PathBuf;
 use std::rc::Rc;
 
-use fractal_api::url::Url;
-use fractal_api::Client as MatrixClient;
+use matrix_sdk::Client as MatrixClient;
+use url::Url;
 
 use crate::app::{App, RUNTIME};
 use crate::util::i18n::i18n;

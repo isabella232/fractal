@@ -1,6 +1,6 @@
-use fractal_api::identifiers::EventId;
 use gdk::prelude::*;
 use gtk::prelude::*;
+use matrix_sdk::identifiers::EventId;
 
 use crate::uitypes::RowType;
 

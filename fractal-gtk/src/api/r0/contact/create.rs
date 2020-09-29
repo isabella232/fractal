@@ -1,5 +1,5 @@
-use crate::r0::AccessToken;
-use crate::r0::ThreePIDCredentials;
+use crate::api::r0::AccessToken;
+use crate::api::r0::ThreePIDCredentials;
 use reqwest::blocking::Client;
 use reqwest::blocking::Request;
 use reqwest::Error;

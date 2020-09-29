@@ -9,8 +9,8 @@ use crate::widgets;
 
 use super::RoomSearchPagination;
 use crate::model::room::Room;
-use fractal_api::directory::RoomNetwork;
-use fractal_api::thirdparty::ProtocolInstance;
+use matrix_sdk::directory::RoomNetwork;
+use matrix_sdk::thirdparty::ProtocolInstance;
 
 impl AppOp {
     pub fn init_protocols(&self) {

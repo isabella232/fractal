@@ -1,6 +1,6 @@
 use chrono::prelude::*;
 use chrono::DateTime;
-use fractal_api::{
+use matrix_sdk::{
     events::{
         room::message::{MessageEventContent, RedactedMessageEventContent, Relation},
         sticker::{RedactedStickerEventContent, StickerEventContent},
@@ -8,7 +8,6 @@ use fractal_api::{
         AnySyncMessageEvent, AnySyncRoomEvent, EventContent, MessageEvent, RedactedMessageEvent,
     },
     identifiers::{EventId, RoomId, UserId},
-    url::Url,
 };
 use serde::{Deserialize, Serialize};
 use serde_json::Value as JsonValue;
@@ -16,6 +15,7 @@ use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::convert::TryFrom;
 use std::path::PathBuf;
+use url::Url;
 
 //FIXME make properties private
 #[derive(Debug, Clone, Serialize, Deserialize)]

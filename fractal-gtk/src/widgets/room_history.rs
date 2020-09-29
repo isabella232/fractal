@@ -13,12 +13,10 @@ use crate::uitypes::MessageContent;
 use crate::uitypes::RowType;
 use crate::util::i18n::i18n;
 
+use crate::api::r0::AccessToken;
 use crate::globals;
 use crate::widgets;
 use crate::widgets::{PlayerExt, VideoPlayerWidget};
-use fractal_api::identifiers::RoomId;
-use fractal_api::r0::AccessToken;
-use fractal_api::Client as MatrixClient;
 use gio::ActionMapExt;
 use gio::SimpleActionGroup;
 use glib::clone;
@@ -27,6 +25,8 @@ use glib::source::Continue;
 use glib::SignalHandlerId;
 use glib::Source;
 use gtk::prelude::*;
+use matrix_sdk::identifiers::RoomId;
+use matrix_sdk::Client as MatrixClient;
 
 struct List {
     /* With the exception of temporary widgets, only modify the fields list and listbox

@@ -1,5 +1,5 @@
-use fractal_api::identifiers::UserId;
 use glib::clone;
+use matrix_sdk::identifiers::UserId;
 use std::cell::RefCell;
 use std::collections::hash_map::HashMap;
 use std::rc::Rc;

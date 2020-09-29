@@ -13,8 +13,8 @@ use crate::backend::HandleError;
 
 use crate::widgets;
 use crate::widgets::AvatarExt;
-use fractal_api::identifiers::{RoomAliasId, RoomIdOrAliasId};
 use gtk::WidgetExt;
+use matrix_sdk::identifiers::{RoomAliasId, RoomIdOrAliasId};
 
 const AVATAR_SIZE: i32 = 60;
 const JOIN_BUTTON_WIDTH: i32 = 84;

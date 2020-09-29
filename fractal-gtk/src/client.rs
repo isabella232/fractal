@@ -2,13 +2,11 @@ use crate::error::Error;
 use crate::globals;
 use async_trait::async_trait;
 
-use fractal_api::reqwest;
-use fractal_api::url::Url;
-use fractal_api::HttpSend;
-use fractal_api::{
-    Client as MatrixClient, ClientConfig as MatrixClientConfig, Error as MatrixSdkError,
-};
 use gio::prelude::*;
+use matrix_sdk::{
+    Client as MatrixClient, ClientConfig as MatrixClientConfig, Error as MatrixSdkError, HttpSend,
+};
+use url::Url;
 
 use std::convert::TryInto;
 use std::sync::{Arc, Mutex};
@@ -51,8 +49,8 @@ impl ProxySettings {
 
     pub fn apply_to_blocking_client_builder(
         &self,
-        mut builder: fractal_api::reqwest::blocking::ClientBuilder,
-    ) -> fractal_api::reqwest::blocking::ClientBuilder {
+        mut builder: reqwest::blocking::ClientBuilder,
+    ) -> reqwest::blocking::ClientBuilder {
         // Reqwest only supports one proxy for each type
         if let Some(http_proxy) = self
             .http_proxy
@@ -76,8 +74,8 @@ impl ProxySettings {
 
     pub fn apply_to_client_builder(
         &self,
-        mut builder: fractal_api::reqwest::ClientBuilder,
-    ) -> fractal_api::reqwest::ClientBuilder {
+        mut builder: matrix_sdk::reqwest::ClientBuilder,
+    ) -> matrix_sdk::reqwest::ClientBuilder {
         // Reqwest only supports one proxy for each type
         if let Some(http_proxy) = self
             .http_proxy
@@ -108,7 +106,7 @@ thread_local! {
 
 #[derive(Debug)]
 struct ClientInner {
-    client: fractal_api::reqwest::Client,
+    client: matrix_sdk::reqwest::Client,
     proxy_settings: ProxySettings,
 }
 
@@ -121,20 +119,20 @@ impl Client {
     pub fn new() -> Self {
         Self {
             inner: Mutex::new(ClientInner {
-                client: Self::build(fractal_api::reqwest::Client::builder()),
+                client: Self::build(matrix_sdk::reqwest::Client::builder()),
                 proxy_settings: Default::default(),
             }),
         }
     }
 
-    pub fn get_client(&self) -> fractal_api::reqwest::Client {
+    pub fn get_client(&self) -> matrix_sdk::reqwest::Client {
         // Lock first so we don't overwrite proxy settings with outdated information
         let mut inner = self.inner.lock().unwrap();
 
         let new_proxy_settings = ProxySettings::current().unwrap_or_default();
 
         if inner.proxy_settings != new_proxy_settings {
-            let mut builder = fractal_api::reqwest::Client::builder();
+            let mut builder = matrix_sdk::reqwest::Client::builder();
             builder = new_proxy_settings.apply_to_client_builder(builder);
             let client = Self::build(builder);
 
@@ -145,7 +143,7 @@ impl Client {
         inner.client.clone()
     }
 
-    fn build(builder: fractal_api::reqwest::ClientBuilder) -> fractal_api::reqwest::Client {
+    fn build(builder: matrix_sdk::reqwest::ClientBuilder) -> matrix_sdk::reqwest::Client {
         builder
             .gzip(true)
             .timeout(globals::TIMEOUT)
@@ -159,7 +157,7 @@ impl HttpSend for Client {
     async fn send_request(
         &self,
         req: http::Request<Vec<u8>>,
-    ) -> fractal_api::Result<http::Response<Vec<u8>>> {
+    ) -> matrix_sdk::Result<http::Response<Vec<u8>>> {
         self.get_client().send_request(req).await
     }
 }
@@ -175,7 +173,7 @@ where
 
 #[derive(Debug)]
 struct ClientInnerBlocking {
-    client: fractal_api::reqwest::blocking::Client,
+    client: reqwest::blocking::Client,
     proxy_settings: ProxySettings,
 }
 
@@ -188,20 +186,20 @@ impl ClientBlocking {
     pub fn new() -> Self {
         Self {
             inner: Mutex::new(ClientInnerBlocking {
-                client: Self::build(fractal_api::reqwest::blocking::Client::builder()),
+                client: Self::build(reqwest::blocking::Client::builder()),
                 proxy_settings: Default::default(),
             }),
         }
     }
 
-    pub fn get_client(&self) -> fractal_api::reqwest::blocking::Client {
+    pub fn get_client(&self) -> reqwest::blocking::Client {
         // Lock first so we don't overwrite proxy settings with outdated information
         let mut inner = self.inner.lock().unwrap();
 
         let new_proxy_settings = ProxySettings::current().unwrap_or_default();
 
         if inner.proxy_settings != new_proxy_settings {
-            let mut builder = fractal_api::reqwest::blocking::Client::builder();
+            let mut builder = reqwest::blocking::Client::builder();
             builder = new_proxy_settings.apply_to_blocking_client_builder(builder);
             let client = Self::build(builder);
 
@@ -212,9 +210,7 @@ impl ClientBlocking {
         inner.client.clone()
     }
 
-    fn build(
-        builder: fractal_api::reqwest::blocking::ClientBuilder,
-    ) -> fractal_api::reqwest::blocking::Client {
+    fn build(builder: reqwest::blocking::ClientBuilder) -> reqwest::blocking::Client {
         builder
             .gzip(true)
             .timeout(globals::TIMEOUT)

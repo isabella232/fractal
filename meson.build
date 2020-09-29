@@ -73,10 +73,8 @@ cargo_manifests = files(
   'Cargo.toml',
   'Cargo.lock',
   'fractal-gtk/Cargo.toml',
-  'fractal-matrix-api/Cargo.toml'
 )
 
-subdir('fractal-matrix-api/src')
 subdir('fractal-gtk/src')
 
 meson.add_dist_script(

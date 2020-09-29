@@ -826,7 +826,6 @@ dependencies = [
  "directories",
  "dirs",
  "either 1.5.99",
- "fractal-matrix-api",
  "fragile",
  "gdk",
  "gdk-pixbuf",
@@ -846,27 +845,18 @@ dependencies = [
  "libhandy",
  "log",
  "loggerv",
+ "matrix-sdk",
  "md5",
  "mdl",
  "pango",
  "rand 0.7.3",
  "regex",
+ "reqwest",
  "secret-service",
  "serde",
  "serde_json",
  "sourceview4",
  "tokio",
-]
-
-[[package]]
-name = "fractal-matrix-api"
-version = "4.4.0"
-dependencies = [
- "gio",
- "matrix-sdk",
- "reqwest",
- "serde",
- "serde_json",
  "url",
 ]
 

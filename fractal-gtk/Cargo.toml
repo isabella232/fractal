@@ -50,10 +50,6 @@ features = ["png"]
 version = "0.4.10"
 features = ["serde"]
 
-[dependencies.fractal_api]
-path = "../fractal-matrix-api"
-package = "fractal-matrix-api"
-
 [dependencies.libhandy]
 version = "0.7.1"
 
@@ -82,3 +78,16 @@ features = ["serde_untagged"]
 [dependencies.tokio]
 version = "0.2.22"
 features = ["rt-threaded", "time"]
+
+[dependencies.reqwest]
+version = "0.10.3"
+features = ["blocking", "json", "gzip", "socks"]
+
+[dependencies.url]
+version = "2.1.1"
+features = ["serde"]
+
+[dependencies.matrix-sdk]
+git = "https://github.com/matrix-org/matrix-rust-sdk.git"
+rev = "0422bae92485b033d4f9b56f2331909653655609"
+features = ["unstable-synapse-quirks", "socks"]

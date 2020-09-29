@@ -1,16 +1,16 @@
 use log::error;
 use serde_json::json;
 
-use fractal_api::{
+use matrix_sdk::{
     api::error::ErrorKind as RumaErrorKind,
     identifiers::{EventId, RoomId, RoomIdOrAliasId, UserId},
-    url::{ParseError as UrlError, Url},
     Client as MatrixClient, Error as MatrixError, FromHttpResponseError as RumaResponseError,
     ServerError,
 };
 use serde::Serialize;
 use std::io::Error as IoError;
 use std::path::Path;
+use url::{ParseError as UrlError, Url};
 
 use std::convert::{TryFrom, TryInto};
 use std::time::Duration;
@@ -26,45 +26,45 @@ use crate::model::{
     message::Message,
     room::{Room, RoomMembership, RoomTag},
 };
-use fractal_api::api::r0::config::get_global_account_data::Request as GetGlobalAccountDataRequest;
-use fractal_api::api::r0::config::set_global_account_data::Request as SetGlobalAccountDataRequest;
-use fractal_api::api::r0::config::set_room_account_data::Request as SetRoomAccountDataRequest;
-use fractal_api::api::r0::filter::RoomEventFilter;
-use fractal_api::api::r0::media::create_content::Request as CreateContentRequest;
-use fractal_api::api::r0::media::create_content::Response as CreateContentResponse;
-use fractal_api::api::r0::membership::joined_members::Request as JoinedMembersRequest;
-use fractal_api::api::r0::message::get_message_events::Request as GetMessagesEventsRequest;
-use fractal_api::api::r0::push::delete_pushrule::Request as DeleteRoomRulesRequest;
-use fractal_api::api::r0::push::get_pushrule::Request as GetRoomRulesRequest;
-use fractal_api::api::r0::push::set_pushrule::Request as SetRoomRulesRequest;
-use fractal_api::api::r0::push::RuleKind;
-use fractal_api::api::r0::redact::redact_event::Request as RedactEventRequest;
-use fractal_api::api::r0::room::create_room::Request as CreateRoomRequest;
-use fractal_api::api::r0::room::create_room::RoomPreset;
-use fractal_api::api::r0::room::Visibility;
-use fractal_api::api::r0::state::get_state_events_for_key::Request as GetStateEventForKeyRequest;
-use fractal_api::api::r0::state::send_state_event_for_key::Request as SendStateEventForKeyRequest;
-use fractal_api::api::r0::tag::create_tag::Request as CreateTagRequest;
-use fractal_api::api::r0::tag::delete_tag::Request as DeleteTagRequest;
-use fractal_api::api::r0::typing::create_typing_event::Typing;
-use fractal_api::assign;
-use fractal_api::events::room::avatar::AvatarEventContent;
-use fractal_api::events::room::history_visibility::HistoryVisibility;
-use fractal_api::events::room::history_visibility::HistoryVisibilityEventContent;
-use fractal_api::events::room::message::MessageEventContent;
-use fractal_api::events::room::name::NameEventContent;
-use fractal_api::events::room::topic::TopicEventContent;
-use fractal_api::events::tag::TagInfo;
-use fractal_api::events::AnyBasicEventContent;
-use fractal_api::events::AnyInitialStateEvent;
-use fractal_api::events::AnyMessageEventContent;
-use fractal_api::events::AnyStateEventContent;
-use fractal_api::events::EventContent;
-use fractal_api::events::EventType;
-use fractal_api::events::InitialStateEvent;
-use fractal_api::events::InvalidInput as NameRoomEventInvalidInput;
-use fractal_api::push::Action;
-use fractal_api::push::Tweak;
+use matrix_sdk::api::r0::config::get_global_account_data::Request as GetGlobalAccountDataRequest;
+use matrix_sdk::api::r0::config::set_global_account_data::Request as SetGlobalAccountDataRequest;
+use matrix_sdk::api::r0::config::set_room_account_data::Request as SetRoomAccountDataRequest;
+use matrix_sdk::api::r0::filter::RoomEventFilter;
+use matrix_sdk::api::r0::media::create_content::Request as CreateContentRequest;
+use matrix_sdk::api::r0::media::create_content::Response as CreateContentResponse;
+use matrix_sdk::api::r0::membership::joined_members::Request as JoinedMembersRequest;
+use matrix_sdk::api::r0::message::get_message_events::Request as GetMessagesEventsRequest;
+use matrix_sdk::api::r0::push::delete_pushrule::Request as DeleteRoomRulesRequest;
+use matrix_sdk::api::r0::push::get_pushrule::Request as GetRoomRulesRequest;
+use matrix_sdk::api::r0::push::set_pushrule::Request as SetRoomRulesRequest;
+use matrix_sdk::api::r0::push::RuleKind;
+use matrix_sdk::api::r0::redact::redact_event::Request as RedactEventRequest;
+use matrix_sdk::api::r0::room::create_room::Request as CreateRoomRequest;
+use matrix_sdk::api::r0::room::create_room::RoomPreset;
+use matrix_sdk::api::r0::room::Visibility;
+use matrix_sdk::api::r0::state::get_state_events_for_key::Request as GetStateEventForKeyRequest;
+use matrix_sdk::api::r0::state::send_state_event_for_key::Request as SendStateEventForKeyRequest;
+use matrix_sdk::api::r0::tag::create_tag::Request as CreateTagRequest;
+use matrix_sdk::api::r0::tag::delete_tag::Request as DeleteTagRequest;
+use matrix_sdk::api::r0::typing::create_typing_event::Typing;
+use matrix_sdk::assign;
+use matrix_sdk::events::room::avatar::AvatarEventContent;
+use matrix_sdk::events::room::history_visibility::HistoryVisibility;
+use matrix_sdk::events::room::history_visibility::HistoryVisibilityEventContent;
+use matrix_sdk::events::room::message::MessageEventContent;
+use matrix_sdk::events::room::name::NameEventContent;
+use matrix_sdk::events::room::topic::TopicEventContent;
+use matrix_sdk::events::tag::TagInfo;
+use matrix_sdk::events::AnyBasicEventContent;
+use matrix_sdk::events::AnyInitialStateEvent;
+use matrix_sdk::events::AnyMessageEventContent;
+use matrix_sdk::events::AnyStateEventContent;
+use matrix_sdk::events::EventContent;
+use matrix_sdk::events::EventType;
+use matrix_sdk::events::InitialStateEvent;
+use matrix_sdk::events::InvalidInput as NameRoomEventInvalidInput;
+use matrix_sdk::push::Action;
+use matrix_sdk::push::Tweak;
 
 use serde_json::value::to_raw_value;
 use serde_json::Error as ParseJsonError;

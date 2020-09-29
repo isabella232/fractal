@@ -5,20 +5,20 @@ use anyhow::anyhow;
 use chrono::DateTime;
 use chrono::Utc;
 use either::Either;
-use fractal_api::api::r0::sync::sync_events::Response as SyncResponse;
-use fractal_api::directory::PublicRoomsChunk;
-use fractal_api::events::{
+use log::{debug, info, warn};
+use matrix_sdk::api::r0::sync::sync_events::Response as SyncResponse;
+use matrix_sdk::directory::PublicRoomsChunk;
+use matrix_sdk::events::{
     room::member::{MemberEventContent, MembershipState},
     AnyBasicEvent, AnyStrippedStateEvent, AnySyncEphemeralRoomEvent, AnySyncStateEvent,
     SyncStateEvent,
 };
-use fractal_api::identifiers::{EventId, RoomAliasId, RoomId, UserId};
-use fractal_api::url::{ParseError as UrlError, Url};
-use fractal_api::Raw;
-use log::{debug, info, warn};
+use matrix_sdk::identifiers::{EventId, RoomAliasId, RoomId, UserId};
+use matrix_sdk::Raw;
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, HashMap, HashSet};
 use std::convert::{TryFrom, TryInto};
+use url::{ParseError as UrlError, Url};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum RoomMembership {

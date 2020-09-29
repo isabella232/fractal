@@ -1,5 +1,5 @@
 use super::Identifier;
-use crate::r0::AccessToken;
+use crate::api::r0::AccessToken;
 use matrix_sdk::identifiers::DeviceId;
 use matrix_sdk::identifiers::UserId;
 use reqwest::blocking::Client;
@@ -25,6 +25,7 @@ pub struct Body {
 pub enum Auth {
     #[serde(rename = "m.login.password")]
     Password { password: String },
+    #[allow(dead_code)]
     #[serde(rename = "m.login.token")]
     Token { token: String },
 }

@@ -2,7 +2,7 @@ pub mod deactivate;
 pub mod login;
 pub mod logout;
 
-use crate::r0::{Medium, ThreePIDCredentials};
+use crate::api::r0::{Medium, ThreePIDCredentials};
 use serde::Serialize;
 
 #[derive(Clone, Debug, Serialize)]
@@ -12,6 +12,7 @@ pub enum UserIdentifier {
     User { user: String },
     #[serde(rename = "m.id.thirdparty")]
     ThirdParty { medium: Medium, address: String },
+    #[allow(dead_code)]
     #[serde(rename = "m.id.phone")]
     Phone { country: String, phone: String },
 }
@@ -59,6 +60,7 @@ impl Identifier {
     }
 }
 
+#[allow(dead_code)]
 #[derive(Clone, Debug, Serialize)]
 #[serde(tag = "type")]
 pub enum AuthenticationData {

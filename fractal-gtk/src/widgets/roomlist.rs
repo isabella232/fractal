@@ -1,11 +1,11 @@
 use crate::util::i18n::i18n;
-use fractal_api::identifiers::RoomId;
 use glib::clone;
+use matrix_sdk::identifiers::RoomId;
 
-use fractal_api::url::Url;
 use gtk::prelude::*;
 use log::info;
 use std::collections::HashMap;
+use url::Url;
 
 use crate::globals;
 use crate::model::room::{Room, RoomTag};

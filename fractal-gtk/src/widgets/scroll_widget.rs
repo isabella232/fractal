@@ -1,12 +1,12 @@
 use std::cell::Cell;
 use std::rc::Rc;
 
-use fractal_api::identifiers::RoomId;
 use gio::Action;
 use gio::ActionExt;
 use glib::clone;
 use glib::source::Continue;
 use gtk::prelude::*;
+use matrix_sdk::identifiers::RoomId;
 
 use libhandy::prelude::*;
 

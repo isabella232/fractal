@@ -1,10 +1,10 @@
 use crate::backend::room;
-use fractal_api::identifiers::RoomId;
-use fractal_api::Client as MatrixClient;
 use gio::prelude::*;
 use gio::SimpleAction;
 use gio::SimpleActionGroup;
 use glib::clone;
+use matrix_sdk::identifiers::RoomId;
+use matrix_sdk::Client as MatrixClient;
 use std::convert::TryFrom;
 
 use crate::app::{App, RUNTIME};

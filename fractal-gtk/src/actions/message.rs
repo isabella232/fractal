@@ -1,8 +1,8 @@
 use crate::backend::{dw_media, media, room, ContentType};
-use fractal_api::identifiers::RoomId;
-use fractal_api::Client as MatrixClient;
 use glib::clone;
 use log::error;
+use matrix_sdk::identifiers::RoomId;
+use matrix_sdk::Client as MatrixClient;
 use std::cell::RefCell;
 use std::fs;
 use std::process::Command;

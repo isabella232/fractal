@@ -1,5 +1,5 @@
-use fractal_api::url::Url;
 use gtk::prelude::*;
+use url::Url;
 
 use crate::model::room::Room;
 

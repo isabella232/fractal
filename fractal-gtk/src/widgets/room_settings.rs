@@ -1,15 +1,15 @@
+use crate::api::r0::AccessToken;
 use crate::backend::{room, HandleError};
-use fractal_api::identifiers::UserId;
-use fractal_api::r0::AccessToken;
-use fractal_api::Client as MatrixClient;
 use glib::clone;
+use matrix_sdk::identifiers::UserId;
+use matrix_sdk::Client as MatrixClient;
 use std::cell::RefCell;
 use std::rc::Rc;
 
 use crate::util::i18n::ni18n_f;
-use fractal_api::url::Url;
 use gio::prelude::*;
 use gtk::prelude::*;
+use url::Url;
 
 use crate::actions;
 use crate::actions::{ButtonState, StateExt};

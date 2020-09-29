@@ -2,13 +2,13 @@ use crate::app::RUNTIME;
 use crate::appop::UserInfoCache;
 use crate::backend::user;
 use crate::util::cache_dir_path;
-use fractal_api::Client as MatrixClient;
 use gtk::LabelExt;
+use matrix_sdk::Client as MatrixClient;
 use serde::{Deserialize, Serialize};
 
 use crate::model::room::{Room, RoomList};
 use anyhow::Error;
-use fractal_api::identifiers::{DeviceId, UserId};
+use matrix_sdk::identifiers::{DeviceId, UserId};
 use std::collections::HashMap;
 use std::hash::Hash;
 use std::time::{Duration, Instant};

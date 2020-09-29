@@ -1,8 +1,8 @@
 use directories::ProjectDirs;
-use fractal_api::url::Url;
 use lazy_static::lazy_static;
 use regex::Regex;
 use std::{path::PathBuf, time::Duration};
+use url::Url;
 
 pub const TIMEOUT: Duration = Duration::from_secs(80);
 pub const PAGE_LIMIT: u32 = 40;

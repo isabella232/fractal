@@ -5,14 +5,14 @@ use std::rc::Rc;
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
-use fractal_api::identifiers::{DeviceId, RoomId, UserId};
-use fractal_api::r0::AccessToken;
+use crate::api::r0::AccessToken;
+use matrix_sdk::identifiers::{DeviceId, RoomId, UserId};
 
-use fractal_api::Client as MatrixClient;
 use gtk::prelude::*;
+use matrix_sdk::Client as MatrixClient;
 
 use crate::cache::CacheMap;
-use fractal_api::url::Url;
+use url::Url;
 
 use crate::util::i18n;
 

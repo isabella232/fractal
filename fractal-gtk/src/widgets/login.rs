@@ -1,9 +1,9 @@
-use fractal_api::url::Url;
 use gio::prelude::*;
 use glib::clone;
 use gtk::prelude::*;
 use libhandy::prelude::*;
 use log::info;
+use url::Url;
 
 use crate::actions;
 use crate::actions::global::AppState;

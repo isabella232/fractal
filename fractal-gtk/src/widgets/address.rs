@@ -1,13 +1,13 @@
+use crate::api::r0::AccessToken;
+use crate::api::r0::Medium;
 use crate::backend::user;
-use fractal_api::r0::AccessToken;
-use fractal_api::r0::Medium;
-use fractal_api::url::Url;
-use fractal_api::Client as MatrixClient;
 use glib::signal;
 use gtk::prelude::*;
+use matrix_sdk::Client as MatrixClient;
 use rand::distributions::Alphanumeric;
 use rand::{thread_rng, Rng};
 use std::thread;
+use url::Url;
 
 use crate::app::{App, RUNTIME};
 use crate::appop::AppOp;

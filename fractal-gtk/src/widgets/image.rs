@@ -2,8 +2,6 @@ use crate::app::RUNTIME;
 use crate::backend::media;
 use crate::util::get_border_radius;
 use either::Either;
-use fractal_api::url::Url;
-use fractal_api::Client as MatrixClient;
 use gdk::prelude::GdkContextExt;
 use gdk_pixbuf::Pixbuf;
 use gdk_pixbuf::PixbufAnimation;
@@ -13,8 +11,10 @@ use glib::source::Continue;
 use gtk::prelude::*;
 use gtk::DrawingArea;
 use log::error;
+use matrix_sdk::Client as MatrixClient;
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
+use url::Url;
 
 #[derive(Clone, Debug)]
 pub struct Image {

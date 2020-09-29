@@ -1,11 +1,11 @@
 #[derive(Debug)]
 pub enum Error {
     GlibError(glib::Error),
-    ReqwestError(fractal_api::reqwest::Error),
+    ReqwestError(matrix_sdk::reqwest::Error),
 }
 
-impl From<fractal_api::reqwest::Error> for Error {
-    fn from(err: fractal_api::reqwest::Error) -> Error {
+impl From<matrix_sdk::reqwest::Error> for Error {
+    fn from(err: matrix_sdk::reqwest::Error) -> Error {
         Error::ReqwestError(err)
     }
 }

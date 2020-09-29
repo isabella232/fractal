@@ -1,8 +1,8 @@
 use crate::util::i18n::{i18n, i18n_k};
 
 use crate::backend::room;
-use fractal_api::identifiers::{RoomId, UserId};
 use gtk::prelude::*;
+use matrix_sdk::identifiers::{RoomId, UserId};
 
 use crate::app::{App, RUNTIME};
 use crate::appop::member::SearchType;

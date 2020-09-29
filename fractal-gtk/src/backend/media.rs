@@ -1,15 +1,15 @@
 use super::MediaError;
 use crate::globals;
-use fractal_api::identifiers::{EventId, RoomId};
-use fractal_api::url::Url;
-use fractal_api::{Client as MatrixClient, Error as MatrixError};
+use matrix_sdk::identifiers::{EventId, RoomId};
+use matrix_sdk::{Client as MatrixClient, Error as MatrixError};
 use std::convert::TryInto;
 use std::path::PathBuf;
+use url::Url;
 
 use crate::model::message::Message;
-use fractal_api::api::r0::filter::{RoomEventFilter, UrlFilter};
-use fractal_api::api::r0::message::get_message_events::Request as GetMessagesEventsRequest;
-use fractal_api::assign;
+use matrix_sdk::api::r0::filter::{RoomEventFilter, UrlFilter};
+use matrix_sdk::api::r0::message::get_message_events::Request as GetMessagesEventsRequest;
+use matrix_sdk::assign;
 
 use super::{dw_media, get_prev_batch_from, ContentType};
 

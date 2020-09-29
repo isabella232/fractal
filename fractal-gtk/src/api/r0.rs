@@ -73,15 +73,9 @@ impl<T: AsRef<str>> Serialize for HostAndPort<T> {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct AccessToken(String);
 
-impl AccessToken {
-    pub fn into_string(self) -> String {
-        self.0
-    }
-}
-
 impl Display for AccessToken {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-        write!(f, "{}", self.0)
+        self.0.fmt(f)
     }
 }
 

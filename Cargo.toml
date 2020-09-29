@@ -1,6 +1,5 @@
 [workspace]
 members = [
-    "fractal-matrix-api",
     "fractal-gtk",
 ]
 

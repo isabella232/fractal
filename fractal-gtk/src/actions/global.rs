@@ -9,11 +9,11 @@ use crate::model::message::Message;
 use crate::util::i18n::i18n;
 use crate::widgets::FileDialog::open;
 use crate::App;
-use fractal_api::identifiers::{EventId, RoomId};
 use gio::prelude::*;
 use gio::SimpleAction;
 use gtk::prelude::*;
 use libhandy::prelude::*;
+use matrix_sdk::identifiers::{EventId, RoomId};
 
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub enum AppState {

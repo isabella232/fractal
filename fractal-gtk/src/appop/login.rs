@@ -1,11 +1,11 @@
 use log::error;
 
+use crate::api::r0::AccessToken;
 use crate::app::RUNTIME;
 use crate::backend::register;
-use fractal_api::identifiers::{DeviceId, UserId};
-use fractal_api::r0::AccessToken;
-use fractal_api::url::Url;
-use fractal_api::Session;
+use matrix_sdk::identifiers::{DeviceId, UserId};
+use matrix_sdk::Session;
+use url::Url;
 
 use crate::app::App;
 use crate::appop::AppOp;

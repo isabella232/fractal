@@ -11,7 +11,7 @@ use std::sync::{Arc, Mutex, MutexGuard};
 
 use crate::model::{message::Message, room::Room};
 use crate::util::cache_dir_path;
-use fractal_api::identifiers::{DeviceId, UserId};
+use matrix_sdk::identifiers::{DeviceId, UserId};
 
 // Models
 

@@ -1,8 +1,8 @@
-use fractal_api::identifiers::{Error as IdentifierError, ServerName};
-use fractal_api::url::ParseError as UrlError;
-use fractal_api::Client as MatrixClient;
-use fractal_api::Error as MatrixError;
+use matrix_sdk::identifiers::{Error as IdentifierError, ServerName};
+use matrix_sdk::Client as MatrixClient;
+use matrix_sdk::Error as MatrixError;
 use std::convert::{TryFrom, TryInto};
+use url::ParseError as UrlError;
 
 use crate::globals;
 
@@ -10,12 +10,12 @@ use crate::backend::MediaError;
 use crate::util::cache_dir_path;
 
 use crate::model::room::Room;
-use fractal_api::api::r0::directory::get_public_rooms_filtered::Request as PublicRoomsFilteredRequest;
-use fractal_api::api::r0::thirdparty::get_protocols::Request as GetProtocolsRequest;
-use fractal_api::assign;
-use fractal_api::directory::Filter as PublicRoomsFilter;
-use fractal_api::directory::RoomNetwork;
-use fractal_api::thirdparty::ProtocolInstance;
+use matrix_sdk::api::r0::directory::get_public_rooms_filtered::Request as PublicRoomsFilteredRequest;
+use matrix_sdk::api::r0::thirdparty::get_protocols::Request as GetProtocolsRequest;
+use matrix_sdk::assign;
+use matrix_sdk::directory::Filter as PublicRoomsFilter;
+use matrix_sdk::directory::RoomNetwork;
+use matrix_sdk::thirdparty::ProtocolInstance;
 
 use super::{dw_media, ContentType, HandleError};
 use crate::app::App;
