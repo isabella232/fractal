@@ -268,6 +268,7 @@ impl MessageBox {
         let uid = msg.sender.clone();
         let alias = msg.sender_name.clone();
         let avatar = widgets::Avatar::avatar_new(Some(globals::MSG_ICON_SIZE));
+        avatar.set_valign(gtk::Align::Start);
 
         let data = avatar.circle(
             uid.to_string(),

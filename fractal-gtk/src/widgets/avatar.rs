@@ -1,12 +1,12 @@
+use std::boxed::Box;
 use std::cell::RefCell;
 use std::path::Path;
 use std::rc::Rc;
 
 use crate::util::cache_dir_path;
-use gdk::prelude::GdkContextExt;
 use gdk_pixbuf::Pixbuf;
 use gtk::prelude::*;
-pub use gtk::DrawingArea;
+use libhandy::AvatarExt as HdyAvatarExt;
 
 pub enum AvatarBadgeColor {
     Gold,
@@ -18,33 +18,27 @@ pub type Avatar = gtk::Overlay;
 
 pub struct AvatarData {
     id: String,
-    username: Option<String>,
-    size: i32,
-    cache: Option<Pixbuf>,
-    pub widget: gtk::DrawingArea,
-    fallback: cairo::ImageSurface,
+    pub widget: libhandy::Avatar,
 }
 
 impl AvatarData {
-    pub fn redraw_fallback(&mut self, username: Option<String>) {
-        self.username = username.clone();
-        /* This function should never fail */
-        self.fallback = letter_avatar::generate::new(self.id.clone(), username, self.size as f64)
-            .expect("this function should never fail");
-        self.widget.queue_draw();
-    }
-
-    pub fn redraw_pixbuf(&mut self) {
-        let path = cache_dir_path(None, self.id.as_str()).unwrap_or_default();
-        self.cache = load_pixbuf(&path, self.size);
-        self.widget.queue_draw();
+    pub fn redraw(&mut self, username: Option<String>) {
+        let id = self.id.clone();
+        if let Some(n) = username {
+            self.widget.set_text(Some(&n));
+        }
+        // Ensure that we reload the avatar
+        self.widget.set_image_load_func(Some(Box::new(move |sz| {
+            let path = cache_dir_path(None, &id).unwrap_or_default();
+            load_pixbuf(&path, sz)
+        })));
     }
 }
 
 pub trait AvatarExt {
     fn avatar_new(size: Option<i32>) -> gtk::Overlay;
     fn clean(&self);
-    fn create_da(&self, size: Option<i32>) -> DrawingArea;
+    fn create_avatar(&self, size: Option<i32>) -> libhandy::Avatar;
     fn circle(
         &self,
         id: String,
@@ -62,20 +56,19 @@ impl AvatarExt for gtk::Overlay {
         }
     }
 
-    fn create_da(&self, size: Option<i32>) -> DrawingArea {
-        let da = DrawingArea::new();
-
+    fn create_avatar(&self, size: Option<i32>) -> libhandy::Avatar {
         let s = size.unwrap_or(40);
-        da.set_size_request(s, s);
-        self.add(&da);
+        let avatar = libhandy::Avatar::new(s, None, true);
+        avatar.set_show_initials(true);
+        self.add(&avatar);
         self.show_all();
 
-        da
+        avatar
     }
 
     fn avatar_new(size: Option<i32>) -> gtk::Overlay {
         let b = gtk::Overlay::new();
-        b.create_da(size);
+        b.create_avatar(size);
         b.show_all();
         b.get_style_context().add_class("avatar");
 
@@ -96,21 +89,19 @@ impl AvatarExt for gtk::Overlay {
         badge_size: Option<i32>,
     ) -> Rc<RefCell<AvatarData>> {
         self.clean();
-        let da = self.create_da(Some(size));
-        let path = cache_dir_path(None, id.as_str()).unwrap_or_default();
-        let user_avatar = load_pixbuf(&path, size);
-        let uname = username.clone();
+        let avatar = self.create_avatar(Some(size));
         /* remove IRC postfix from the username */
         let username = if let Some(u) = username {
-            Some(u.trim_end_matches(" (IRC)").to_owned())
+            u.trim_end_matches(" (IRC)")
+                .trim_start_matches("#")
+                .to_owned()
         } else {
-            None
+            id.clone()
         };
-        /* This function should never fail */
-        let fallback = letter_avatar::generate::new(id.clone(), username, size as f64)
-            .expect("this function should never fail");
+
+        avatar.set_text(Some(&username));
+
         // Power level badge setup
-        let has_badge = badge_color.is_some();
         let badge_size = badge_size.unwrap_or(size / 3);
         if let Some(color) = badge_color {
             let badge = gtk::Box::new(gtk::Orientation::Vertical, 0);
@@ -127,64 +118,15 @@ impl AvatarExt for gtk::Overlay {
         }
 
         let data = AvatarData {
-            id,
-            username: uname,
-            size,
-            cache: user_avatar,
-            fallback,
-            widget: da.clone(),
+            id: id.clone(),
+            widget: avatar.clone(),
         };
         let avatar_cache: Rc<RefCell<AvatarData>> = Rc::new(RefCell::new(data));
 
-        let user_cache = avatar_cache.clone();
-        da.connect_draw(move |da, g| {
-            use std::f64::consts::PI;
-            let width = size as f64;
-            let height = size as f64;
-
-            g.set_antialias(cairo::Antialias::Best);
-
-            {
-                g.set_fill_rule(cairo::FillRule::EvenOdd);
-                g.arc(
-                    width / 2.0,
-                    height / 2.0,
-                    width.min(height) / 2.0,
-                    0.0,
-                    2.0 * PI,
-                );
-                if has_badge {
-                    g.clip_preserve();
-                    g.new_sub_path();
-                    let badge_radius = badge_size as f64 / 2.0;
-                    g.arc(
-                        width - badge_radius,
-                        badge_radius,
-                        badge_radius * 1.4,
-                        0.0,
-                        2.0 * PI,
-                    );
-                }
-                g.clip();
-
-                let data = user_cache.borrow();
-                if let Some(ref pb) = data.cache {
-                    let context = da.get_style_context();
-                    gtk::render_background(&context, g, 0.0, 0.0, width, height);
-
-                    let hpos: f64 = (width - (pb.get_height()) as f64) / 2.0;
-                    g.set_source_pixbuf(&pb, 0.0, hpos);
-                } else {
-                    /* use fallback */
-                    g.set_source_surface(&data.fallback, 0f64, 0f64);
-                }
-            }
-
-            g.rectangle(0.0, 0.0, width, height);
-            g.fill();
-
-            Inhibit(false)
-        });
+        avatar.set_image_load_func(Some(Box::new(move |sz| {
+            let path = cache_dir_path(None, &id).unwrap_or_default();
+            load_pixbuf(&path, sz)
+        })));
 
         avatar_cache
     }

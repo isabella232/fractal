@@ -178,7 +178,7 @@ pub fn download_to_cache(
         Err(TryRecvError::Empty) => Continue(true),
         Err(TryRecvError::Disconnected) => Continue(false),
         Ok(_resp) => {
-            data.borrow_mut().redraw_pixbuf();
+            data.borrow_mut().redraw(None);
             Continue(false)
         }
     });
@@ -204,7 +204,7 @@ pub fn download_to_cache_username(
             label.set_text(&username);
             if let Some(ref rc_data) = avatar {
                 let mut data = rc_data.borrow_mut();
-                data.redraw_fallback(Some(username));
+                data.redraw(Some(username));
             }
 
             Continue(false)
@@ -235,7 +235,7 @@ pub fn download_to_cache_username_emote(
             label.set_markup(&format!("<b>{}</b> {}", &username, text));
             if let Some(ref rc_data) = avatar {
                 let mut data = rc_data.borrow_mut();
-                data.redraw_fallback(Some(username));
+                data.redraw(Some(username));
             }
 
             Continue(false)
