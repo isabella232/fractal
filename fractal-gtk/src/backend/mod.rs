@@ -13,7 +13,7 @@ use std::io::Error as IoError;
 use std::path::PathBuf;
 use url::Url;
 
-use crate::client::ClientBlocking;
+use crate::client::Client;
 use crate::util::cache_dir_path;
 use matrix_sdk::api::r0::context::get_context::Request as GetContextRequest;
 use matrix_sdk::api::r0::media::get_content::Request as GetContentRequest;
@@ -29,7 +29,7 @@ pub mod sync;
 pub mod user;
 
 lazy_static! {
-    pub static ref HTTP_CLIENT: ClientBlocking = ClientBlocking::new();
+    pub static ref HTTP_CLIENT: Client = Client::new();
 }
 
 pub enum ContentType {

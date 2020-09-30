@@ -14,8 +14,6 @@ use crate::backend::HandleError;
 use crate::cache;
 use crate::client::get_matrix_client;
 
-use std::thread;
-
 use crate::passwd::PasswordStorage;
 
 use crate::actions::AppState;
@@ -90,29 +88,30 @@ impl AppOp {
             error!("Can't store the password using libsecret");
         });
 
-        thread::spawn(
-            move || match register::login(username, password, server.clone()) {
+        RUNTIME.spawn(async move {
+            match register::login(username, password, server.clone()).await {
                 Ok((uid, tk, dev)) => {
                     APPOP!(bk_login, (uid, tk, dev, server, identity));
                 }
                 Err(err) => {
                     err.handle_error();
                 }
-            },
-        );
+            }
+        });
     }
 
     // TODO: Remove function
     pub fn disconnect(&self) {}
 
     pub fn logout(&mut self) {
-        let login_data = unwrap_or_unit_return!(self.login_data.clone());
+        let (homeserver, access_token) =
+            unwrap_or_unit_return!(self.login_data.as_ref().map(|ld| (
+                ld.session_client.homeserver().clone(),
+                ld.access_token.clone()
+            )));
         let _ = self.delete_pass("fractal");
-        thread::spawn(move || {
-            match register::logout(
-                login_data.session_client.homeserver().clone(),
-                login_data.access_token,
-            ) {
+        RUNTIME.spawn(async move {
+            match register::logout(homeserver, access_token).await {
                 Ok(_) => {
                     APPOP!(bk_logout);
                 }

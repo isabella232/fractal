@@ -231,7 +231,7 @@ impl From<ReqwestError> for AddedToFavError {
 
 impl HandleError for AddedToFavError {}
 
-pub fn add_threepid(
+pub async fn add_threepid(
     base: Url,
     access_token: AccessToken,
     identity: Url,
@@ -251,7 +251,7 @@ pub fn add_threepid(
     };
 
     let request = create_contact(base, &params, &body)?;
-    HTTP_CLIENT.get_client().execute(request)?;
+    HTTP_CLIENT.get_client().execute(request).await?;
 
     Ok(())
 }
@@ -267,7 +267,7 @@ impl From<ReqwestError> for SubmitPhoneTokenError {
 
 impl HandleError for SubmitPhoneTokenError {}
 
-pub fn submit_phone_token(
+pub async fn submit_phone_token(
     base: Url,
     client_secret: String,
     sid: String,
@@ -280,7 +280,12 @@ pub fn submit_phone_token(
     };
 
     let request = submit_phone_token_req(base, &body)?;
-    let response: SubmitPhoneTokenResponse = HTTP_CLIENT.get_client().execute(request)?.json()?;
+    let response: SubmitPhoneTokenResponse = HTTP_CLIENT
+        .get_client()
+        .execute(request)
+        .await?
+        .json()
+        .await?;
 
     Ok((Some(sid).filter(|_| response.success), client_secret))
 }
@@ -296,7 +301,7 @@ impl From<ReqwestError> for DeleteThreePIDError {
 
 impl HandleError for DeleteThreePIDError {}
 
-pub fn delete_three_pid(
+pub async fn delete_three_pid(
     base: Url,
     access_token: AccessToken,
     medium: Medium,
@@ -306,7 +311,7 @@ pub fn delete_three_pid(
     let body = DeleteThreePIDBody { address, medium };
 
     let request = delete_contact(base, &params, &body)?;
-    HTTP_CLIENT.get_client().execute(request)?;
+    HTTP_CLIENT.get_client().execute(request).await?;
 
     Ok(())
 }
@@ -385,7 +390,7 @@ impl HandleError for AccountDestructionError {
     }
 }
 
-pub fn account_destruction(
+pub async fn account_destruction(
     base: Url,
     access_token: AccessToken,
     user: String,
@@ -401,7 +406,7 @@ pub fn account_destruction(
     };
 
     let request = deactivate(base, &params, &body)?;
-    HTTP_CLIENT.get_client().execute(request)?;
+    HTTP_CLIENT.get_client().execute(request).await?;
 
     Ok(())
 }

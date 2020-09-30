@@ -42,7 +42,7 @@ impl HandleError for LoginError {
     }
 }
 
-pub fn login(
+pub async fn login(
     user: String,
     password: String,
     server: Url,
@@ -67,7 +67,12 @@ pub fn login(
     };
 
     let request = login_req(server, &body)?;
-    let response: LoginResponse = HTTP_CLIENT.get_client().execute(request)?.json()?;
+    let response: LoginResponse = HTTP_CLIENT
+        .get_client()
+        .execute(request)
+        .await?
+        .json()
+        .await?;
 
     if let (Some(tk), Some(uid)) = (response.access_token, response.user_id) {
         Ok((uid, tk, response.device_id))
@@ -87,11 +92,11 @@ impl From<ReqwestError> for LogoutError {
 
 impl HandleError for LogoutError {}
 
-pub fn logout(server: Url, access_token: AccessToken) -> Result<(), LogoutError> {
+pub async fn logout(server: Url, access_token: AccessToken) -> Result<(), LogoutError> {
     let params = LogoutParameters { access_token };
 
     let request = logout_req(server, &params)?;
-    HTTP_CLIENT.get_client().execute(request)?;
+    HTTP_CLIENT.get_client().execute(request).await?;
 
     Ok(())
 }
@@ -114,12 +119,14 @@ impl From<UrlError> for GetWellKnownError {
     }
 }
 
-pub fn get_well_known(domain: Url) -> Result<DomainInfoResponse, GetWellKnownError> {
+pub async fn get_well_known(domain: Url) -> Result<DomainInfoResponse, GetWellKnownError> {
     let request = domain_info(domain)?;
 
     HTTP_CLIENT
         .get_client()
-        .execute(request)?
+        .execute(request)
+        .await?
         .json()
+        .await
         .map_err(Into::into)
 }

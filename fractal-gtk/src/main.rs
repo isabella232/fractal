@@ -1,4 +1,4 @@
-#![deny(dead_code, unused_imports, unused_variables)]
+#![deny(dead_code, unused_imports, unused_must_use, unused_variables)]
 #[macro_use]
 extern crate glib;
 

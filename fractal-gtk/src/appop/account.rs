@@ -2,7 +2,6 @@ use crate::backend::user;
 use gtk::prelude::*;
 use log::info;
 use std::path::PathBuf;
-use std::thread;
 
 use crate::app::{App, RUNTIME};
 use crate::appop::AppOp;
@@ -48,14 +47,17 @@ impl AppOp {
         let login_data = unwrap_or_unit_return!(self.login_data.clone());
         if let Some(sid) = sid {
             if let Some(secret) = secret {
-                thread::spawn(move || {
-                    match user::add_threepid(
+                RUNTIME.spawn(async move {
+                    let query = user::add_threepid(
                         login_data.session_client.homeserver().clone(),
                         login_data.access_token,
                         login_data.identity_url,
                         secret,
                         sid,
-                    ) {
+                    )
+                    .await;
+
+                    match query {
                         Ok(_) => {
                             APPOP!(added_three_pid);
                         }
@@ -119,8 +121,8 @@ impl AppOp {
                 let server_url = login_data.session_client.homeserver().clone();
                 let secret = secret.clone();
                 let sid = sid.clone();
-                thread::spawn(move || {
-                    match user::submit_phone_token(server_url, secret, sid, token) {
+                RUNTIME.spawn(async move {
+                    match user::submit_phone_token(server_url, secret, sid, token).await {
                         Ok((sid, secret)) => {
                             let secret = Some(secret);
                             APPOP!(valid_phone_token, (sid, secret));
@@ -161,14 +163,17 @@ impl AppOp {
                 let login_data = login_data.clone();
                 let secret = secret.clone();
                 let sid = sid.clone();
-                thread::spawn(move || {
-                    match user::add_threepid(
+                RUNTIME.spawn(async move {
+                    let query = user::add_threepid(
                         login_data.session_client.homeserver().clone(),
                         login_data.access_token,
                         login_data.identity_url,
                         secret,
                         sid,
-                    ) {
+                    )
+                    .await;
+
+                    match query {
                         Ok(_) => {
                             APPOP!(added_three_pid);
                         }
@@ -788,13 +793,16 @@ impl AppOp {
             if let gtk::ResponseType::Ok = r {
                 let password = password.clone();
                 let login_data = login_data.clone();
-                thread::spawn(move || {
-                    match user::account_destruction(
+                RUNTIME.spawn(async move {
+                    let query = user::account_destruction(
                         login_data.session_client.homeserver().clone(),
                         login_data.access_token.clone(),
                         login_data.uid.localpart().into(),
                         password,
-                    ) {
+                    )
+                    .await;
+
+                    match query {
                         Ok(_) => {
                             APPOP!(account_destruction_logoff);
                         }

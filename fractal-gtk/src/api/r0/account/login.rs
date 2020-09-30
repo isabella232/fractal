@@ -2,9 +2,9 @@ use super::Identifier;
 use crate::api::r0::AccessToken;
 use matrix_sdk::identifiers::DeviceId;
 use matrix_sdk::identifiers::UserId;
-use reqwest::blocking::Client;
-use reqwest::blocking::Request;
+use reqwest::Client;
 use reqwest::Error;
+use reqwest::Request;
 use serde::{Deserialize, Serialize};
 use url::Url;
 

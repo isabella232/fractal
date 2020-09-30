@@ -6,7 +6,6 @@ use gtk::prelude::*;
 use matrix_sdk::Client as MatrixClient;
 use rand::distributions::Alphanumeric;
 use rand::{thread_rng, Rng};
-use std::thread;
 use url::Url;
 
 use crate::app::{App, RUNTIME};
@@ -182,12 +181,12 @@ impl<'a> Address<'a> {
             match action {
                 Some(AddressAction::Delete) => {
                     if let Some(address) = address.clone() {
-                        delete_address(
+                        RUNTIME.handle().block_on(delete_address(
                             medium,
                             address,
                             session_client.homeserver().clone(),
                             access_token.clone(),
-                        );
+                        ));
                     }
                 }
                 Some(AddressAction::Add) => {
@@ -200,17 +199,20 @@ impl<'a> Address<'a> {
     }
 }
 
-fn delete_address(medium: Medium, address: String, server_url: Url, access_token: AccessToken) {
-    thread::spawn(move || {
-        match user::delete_three_pid(server_url, access_token, medium, address) {
-            Ok(_) => {
-                APPOP!(get_three_pid);
-            }
-            Err(err) => {
-                err.handle_error();
-            }
+async fn delete_address(
+    medium: Medium,
+    address: String,
+    server_url: Url,
+    access_token: AccessToken,
+) {
+    match user::delete_three_pid(server_url, access_token, medium, address).await {
+        Ok(_) => {
+            APPOP!(get_three_pid);
         }
-    });
+        Err(err) => {
+            err.handle_error();
+        }
+    }
 }
 
 fn add_address(session_client: MatrixClient, medium: Medium, address: String) {

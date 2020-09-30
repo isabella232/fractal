@@ -1,6 +1,6 @@
-use reqwest::blocking::Client;
-use reqwest::blocking::Request;
+use reqwest::Client;
 use reqwest::Error;
+use reqwest::Request;
 use serde::Deserialize;
 use url::Url;
 

@@ -47,31 +47,6 @@ impl ProxySettings {
         ))
     }
 
-    pub fn apply_to_blocking_client_builder(
-        &self,
-        mut builder: reqwest::blocking::ClientBuilder,
-    ) -> reqwest::blocking::ClientBuilder {
-        // Reqwest only supports one proxy for each type
-        if let Some(http_proxy) = self
-            .http_proxy
-            .get(0)
-            .map(reqwest::Proxy::http)
-            .and_then(Result::ok)
-        {
-            builder = builder.proxy(http_proxy);
-        }
-        if let Some(https_proxy) = self
-            .https_proxy
-            .get(0)
-            .map(reqwest::Proxy::https)
-            .and_then(Result::ok)
-        {
-            builder = builder.proxy(https_proxy);
-        }
-
-        builder
-    }
-
     pub fn apply_to_client_builder(
         &self,
         mut builder: matrix_sdk::reqwest::ClientBuilder,
@@ -145,7 +120,6 @@ impl Client {
 
     fn build(builder: matrix_sdk::reqwest::ClientBuilder) -> matrix_sdk::reqwest::Client {
         builder
-            .gzip(true)
             .timeout(globals::TIMEOUT)
             .build()
             .expect("Couldn't create a http client")
@@ -169,52 +143,4 @@ where
     let client = Arc::from(Client::new());
     let config = MatrixClientConfig::new().client(client);
     MatrixClient::new_with_config(homeserver_url, config)
-}
-
-#[derive(Debug)]
-struct ClientInnerBlocking {
-    client: reqwest::blocking::Client,
-    proxy_settings: ProxySettings,
-}
-
-#[derive(Debug)]
-pub struct ClientBlocking {
-    inner: Mutex<ClientInnerBlocking>,
-}
-
-impl ClientBlocking {
-    pub fn new() -> Self {
-        Self {
-            inner: Mutex::new(ClientInnerBlocking {
-                client: Self::build(reqwest::blocking::Client::builder()),
-                proxy_settings: Default::default(),
-            }),
-        }
-    }
-
-    pub fn get_client(&self) -> reqwest::blocking::Client {
-        // Lock first so we don't overwrite proxy settings with outdated information
-        let mut inner = self.inner.lock().unwrap();
-
-        let new_proxy_settings = ProxySettings::current().unwrap_or_default();
-
-        if inner.proxy_settings != new_proxy_settings {
-            let mut builder = reqwest::blocking::Client::builder();
-            builder = new_proxy_settings.apply_to_blocking_client_builder(builder);
-            let client = Self::build(builder);
-
-            inner.client = client;
-            inner.proxy_settings = new_proxy_settings;
-        }
-
-        inner.client.clone()
-    }
-
-    fn build(builder: reqwest::blocking::ClientBuilder) -> reqwest::blocking::Client {
-        builder
-            .gzip(true)
-            .timeout(globals::TIMEOUT)
-            .build()
-            .expect("Couldn't create a http client")
-    }
 }
