@@ -428,7 +428,6 @@ dependencies = [
  "libc",
  "num-integer",
  "num-traits",
- "serde",
  "time 0.1.44",
  "winapi 0.3.9",
 ]
@@ -709,14 +708,6 @@ checksum = "77c90badedccf4105eca100756a0b1289e191f6fcbdadd3cee1d2f614f97da8f"
 
 [[package]]
 name = "either"
-version = "1.5.99"
-source = "git+https://github.com/danigm/either.git?rev=60c99bc0723491e2dfd42bbe9b485c5f9323e96b#60c99bc0723491e2dfd42bbe9b485c5f9323e96b"
-dependencies = [
- "serde",
-]
-
-[[package]]
-name = "either"
 version = "1.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e78d4f1cc4ae33bbfc157ed5d5a5ef3bc29227303d595861deb238fcec4e9457"
@@ -785,7 +776,7 @@ dependencies = [
  "comrak",
  "directories",
  "dirs",
- "either 1.5.99",
+ "either",
  "fragile",
  "gdk",
  "gdk-pixbuf",
@@ -1698,7 +1689,7 @@ version = "0.8.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f56a2d0bc861f9165be4eb3442afd3c236d8a98afd426f65d92324ae1091a484"
 dependencies = [
- "either 1.6.1",
+ "either",
 ]
 
 [[package]]
@@ -1707,7 +1698,7 @@ version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "284f18f85651fe11e8a991b2adb42cb078325c996ed026d994719efcfca1d54b"
 dependencies = [
- "either 1.6.1",
+ "either",
 ]
 
 [[package]]
@@ -3663,7 +3654,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d611fd5d241872372d52a0a3d309c52d0b95a6a67671a6c8f7ab2c4a37fb2539"
 dependencies = [
  "bytes 0.4.12",
- "either 1.6.1",
+ "either",
  "futures",
  "thiserror",
  "tokio",

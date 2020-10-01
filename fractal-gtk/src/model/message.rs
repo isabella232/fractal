@@ -9,7 +9,6 @@ use matrix_sdk::{
     },
     identifiers::{EventId, RoomId, UserId},
 };
-use serde::{Deserialize, Serialize};
 use serde_json::Value as JsonValue;
 use std::cmp::Ordering;
 use std::collections::HashMap;
@@ -18,7 +17,7 @@ use std::path::PathBuf;
 use url::Url;
 
 //FIXME make properties private
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub struct Message {
     pub sender: UserId,
     pub mtype: String,

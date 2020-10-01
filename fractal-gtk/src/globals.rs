@@ -9,7 +9,6 @@ pub const PAGE_LIMIT: u32 = 40;
 pub const ROOM_DIRECTORY_LIMIT: u32 = 20;
 pub const DEVICE_NAME: &str = "Fractal";
 
-pub const CACHE_SIZE: usize = 40;
 pub const MSG_ICON_SIZE: i32 = 40;
 pub const USERLIST_ICON_SIZE: i32 = 30;
 pub const PILL_ICON_SIZE: i32 = 18;

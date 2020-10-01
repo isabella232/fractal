@@ -175,8 +175,6 @@ impl AppOp {
 
         // FIXME: Username and uid should not be duplicated in cache.
         let device_id = if let Ok(data) = cache::load() {
-            let r: Vec<Room> = data.rooms.values().cloned().collect();
-            self.set_rooms(r, true);
             self.since = data.since.filter(|s| !s.is_empty());
             Some(data.device_id)
         } else {

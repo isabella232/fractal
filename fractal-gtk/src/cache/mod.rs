@@ -4,16 +4,12 @@ use crate::backend::user;
 use crate::util::cache_dir_path;
 use gtk::LabelExt;
 use matrix_sdk::Client as MatrixClient;
-use serde::{Deserialize, Serialize};
 
-use crate::model::room::{Room, RoomList};
 use anyhow::Error;
 use matrix_sdk::identifiers::{DeviceId, UserId};
 use std::collections::HashMap;
 use std::hash::Hash;
 use std::time::{Duration, Instant};
-
-use crate::globals;
 
 use crate::widgets::AvatarData;
 use std::cell::RefCell;
@@ -66,74 +62,40 @@ impl<K: Clone + Eq + Hash, V: Clone> CacheMap<K, V> {
     }
 }
 
-// TODO: remove this struct
-#[derive(Serialize, Deserialize)]
 pub struct CacheData {
     pub since: Option<String>,
-    pub rooms: RoomList,
     pub username: String,
     pub uid: UserId,
     pub device_id: Box<DeviceId>,
 }
 
 pub fn store(
-    rooms: &RoomList,
     since: Option<String>,
     username: String,
     uid: UserId,
     device_id: Box<DeviceId>,
 ) -> Result<(), Error> {
-    // don't store all messages in the cache
-    let mut cacherooms: Vec<Room> = vec![];
-    for r in rooms.values() {
-        let mut r = r.clone();
-        let skip = match r.messages.len() {
-            n if n > globals::CACHE_SIZE => n - globals::CACHE_SIZE,
-            _ => 0,
-        };
-        r.messages = r.messages.iter().skip(skip).cloned().collect();
-        // setting prev_batch to none because we're removing some messages so the
-        // prev_batch isn't valid now, it's not pointing to the stored last msg
-        r.prev_batch = None;
-        cacherooms.push(r);
-    }
-
     let st = AppState {
         since,
         username,
         uid,
         device_id,
     };
-    get().save_st(st)?;
 
-    // This is slow because we iterate over all room msgs
-    // in the future we shouldn't do that, we should remove the
-    // Vec<Msg> from the room and treat messages as first level
-    // cache objects with something like cache.get_msgs(room),
-    // cache.get_msg(room_id, msg_id) and cache.save_msg(msg)
-    get().save_rooms(cacherooms)?;
+    get().save_st(st)?;
 
     Ok(())
 }
 
 pub fn load() -> Result<CacheData, Error> {
     let st = get().get_st()?;
-    let rooms = get().get_rooms()?;
-    let mut cacherooms: RoomList = HashMap::new();
 
-    for r in rooms {
-        cacherooms.insert(r.id.clone(), r);
-    }
-
-    let data = CacheData {
+    Ok(CacheData {
         since: st.since,
         username: st.username,
         uid: st.uid,
         device_id: st.device_id,
-        rooms: cacherooms,
-    };
-
-    Ok(data)
+    })
 }
 
 pub fn remove_from_cache(user_info_cache: UserInfoCache, user_id: &UserId) {

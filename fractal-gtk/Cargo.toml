@@ -9,9 +9,11 @@ edition = "2018"
 anyhow = "1.0.32"
 async-trait = "0.1.40"
 clap = "2.33.0"
+chrono = "0.4.10"
 comrak = "0.7.0"
 directories = "2.0.2"
 dirs = "2.0.2"
+either = "1.6.1"
 fragile = "1.0.0"
 gdk = "0.13.0"
 gdk-pixbuf = "0.9.0"
@@ -46,10 +48,6 @@ package = "gstreamer-player"
 version = "0.9.1"
 features = ["png"]
 
-[dependencies.chrono]
-version = "0.4.10"
-features = ["serde"]
-
 [dependencies.libhandy]
 version = "0.7.1"
 
@@ -69,11 +67,6 @@ features = ["derive"]
 [dependencies.gio]
 version = "0.9.0"
 features = ["v2_56"]
-
-[dependencies.either]
-git = "https://github.com/danigm/either.git"
-rev = "60c99bc0723491e2dfd42bbe9b485c5f9323e96b"
-features = ["serde_untagged"]
 
 [dependencies.tokio]
 version = "0.2.22"

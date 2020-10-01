@@ -20,7 +20,7 @@ use std::collections::{BTreeMap, HashMap, HashSet};
 use std::convert::{TryFrom, TryInto};
 use url::{ParseError as UrlError, Url};
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum RoomMembership {
     // If the user hasn't yet joined a room, e.g. in the room directory
     None,
@@ -72,13 +72,15 @@ impl Default for RoomMembership {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Reason {
     None,
     Kicked(String, UserId),
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+// This needs to opt-out of the lint to keep consistency
+#[allow(dead_code)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum RoomTag {
     None,
     Favourite,
@@ -108,7 +110,7 @@ struct CustomDirectEvent {
     _type: DirectType,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub struct Room {
     pub id: RoomId,
     pub avatar: Option<Url>,
