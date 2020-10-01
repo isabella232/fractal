@@ -811,7 +811,6 @@ dependencies = [
  "pango",
  "rand 0.7.3",
  "regex",
- "reqwest",
  "secret-service",
  "serde",
  "serde_json",

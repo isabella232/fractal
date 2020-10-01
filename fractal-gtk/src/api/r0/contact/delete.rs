@@ -1,8 +1,8 @@
 use crate::api::r0::AccessToken;
 use crate::api::r0::Medium;
-use reqwest::Client;
-use reqwest::Error;
-use reqwest::Request;
+use matrix_sdk::reqwest::Client;
+use matrix_sdk::reqwest::Error;
+use matrix_sdk::reqwest::Request;
 use serde::Serialize;
 use url::Url;
 

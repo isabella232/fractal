@@ -4,7 +4,8 @@ use async_trait::async_trait;
 
 use gio::prelude::*;
 use matrix_sdk::{
-    Client as MatrixClient, ClientConfig as MatrixClientConfig, Error as MatrixSdkError, HttpSend,
+    reqwest, Client as MatrixClient, ClientConfig as MatrixClientConfig, Error as MatrixSdkError,
+    HttpSend,
 };
 use url::Url;
 
