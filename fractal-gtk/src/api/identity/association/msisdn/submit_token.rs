@@ -21,5 +21,7 @@ pub fn request(base: Url, body: &Body) -> Result<Request, Error> {
         .join("_matrix/identity/api/v1/validate/msisdn/submitToken")
         .expect("Malformed URL in msisdn submit_token");
 
-    Client::new().post(url).json(body).build()
+    let data = serde_json::to_vec(body).unwrap();
+
+    Client::new().post(url).body(data).build()
 }

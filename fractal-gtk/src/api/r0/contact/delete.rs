@@ -22,5 +22,7 @@ pub fn request(base: Url, params: &Parameters, body: &Body) -> Result<Request, E
         .join("_matrix/client/r0/account/3pid/delete")
         .expect("Malformed URL in contact delete");
 
-    Client::new().post(url).query(params).json(body).build()
+    let data = serde_json::to_vec(body).unwrap();
+
+    Client::new().post(url).query(params).body(data).build()
 }

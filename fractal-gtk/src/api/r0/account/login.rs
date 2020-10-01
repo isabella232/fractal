@@ -42,5 +42,7 @@ pub fn request(base: Url, body: &Body) -> Result<Request, Error> {
         .join("_matrix/client/r0/login")
         .expect("Malformed URL in login");
 
-    Client::new().post(url).json(body).build()
+    let data = serde_json::to_vec(body).unwrap();
+
+    Client::new().post(url).body(data).build()
 }

@@ -32,6 +32,12 @@ impl From<ReqwestError> for LoginError {
     }
 }
 
+impl From<serde_json::Error> for LoginError {
+    fn from(_: serde_json::Error) -> Self {
+        Self
+    }
+}
+
 impl HandleError for LoginError {
     fn handle_error(&self) {
         let error = i18n("Can’t login, try again");
@@ -67,12 +73,14 @@ pub async fn login(
     };
 
     let request = login_req(server, &body)?;
-    let response: LoginResponse = HTTP_CLIENT
+    let response_raw = HTTP_CLIENT
         .get_client()
         .execute(request)
         .await?
-        .json()
+        .bytes()
         .await?;
+
+    let response: LoginResponse = serde_json::from_slice(&response_raw)?;
 
     if let (Some(tk), Some(uid)) = (response.access_token, response.user_id) {
         Ok((uid, tk, response.device_id))
@@ -104,12 +112,19 @@ pub async fn logout(server: Url, access_token: AccessToken) -> Result<(), Logout
 #[derive(Debug)]
 pub enum GetWellKnownError {
     Reqwest(ReqwestError),
+    Json(serde_json::Error),
     ParseUrl(UrlError),
 }
 
 impl From<ReqwestError> for GetWellKnownError {
     fn from(err: ReqwestError) -> Self {
         Self::Reqwest(err)
+    }
+}
+
+impl From<serde_json::Error> for GetWellKnownError {
+    fn from(err: serde_json::Error) -> Self {
+        Self::Json(err)
     }
 }
 
@@ -122,11 +137,12 @@ impl From<UrlError> for GetWellKnownError {
 pub async fn get_well_known(domain: Url) -> Result<DomainInfoResponse, GetWellKnownError> {
     let request = domain_info(domain)?;
 
-    HTTP_CLIENT
+    let response_raw = HTTP_CLIENT
         .get_client()
         .execute(request)
         .await?
-        .json()
-        .await
-        .map_err(Into::into)
+        .bytes()
+        .await?;
+
+    serde_json::from_slice(&response_raw).map_err(Into::into)
 }

@@ -257,11 +257,20 @@ pub async fn add_threepid(
 }
 
 #[derive(Debug)]
-pub struct SubmitPhoneTokenError(ReqwestError);
+pub enum SubmitPhoneTokenError {
+    Reqwest(ReqwestError),
+    Json(serde_json::Error),
+}
 
 impl From<ReqwestError> for SubmitPhoneTokenError {
     fn from(err: ReqwestError) -> Self {
-        Self(err)
+        Self::Reqwest(err)
+    }
+}
+
+impl From<serde_json::Error> for SubmitPhoneTokenError {
+    fn from(err: serde_json::Error) -> Self {
+        Self::Json(err)
     }
 }
 
@@ -280,12 +289,14 @@ pub async fn submit_phone_token(
     };
 
     let request = submit_phone_token_req(base, &body)?;
-    let response: SubmitPhoneTokenResponse = HTTP_CLIENT
+    let response_raw = HTTP_CLIENT
         .get_client()
         .execute(request)
         .await?
-        .json()
+        .bytes()
         .await?;
+
+    let response: SubmitPhoneTokenResponse = serde_json::from_slice(&response_raw)?;
 
     Ok((Some(sid).filter(|_| response.success), client_secret))
 }
