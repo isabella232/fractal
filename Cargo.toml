@@ -5,6 +5,7 @@ members = [
 ]
 
 [profile.release]
+lto = "thin"
 panic = "abort"
 debug = true
 
