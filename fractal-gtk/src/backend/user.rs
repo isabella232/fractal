@@ -1,5 +1,5 @@
 use matrix_sdk::api::error::ErrorKind as RumaErrorKind;
-use matrix_sdk::identifiers::UserId;
+use matrix_sdk::identifiers::{ServerName, UserId};
 use matrix_sdk::reqwest::Error as ReqwestError;
 use matrix_sdk::{Client as MatrixClient, Error as MatrixError};
 use std::collections::BTreeMap;
@@ -218,14 +218,11 @@ pub async fn get_phone_token(
 }
 
 #[derive(Debug)]
-pub enum AddedToFavError {
-    IdentityServerUrl(UrlError),
-    Reqwest(ReqwestError),
-}
+pub struct AddedToFavError(ReqwestError);
 
 impl From<ReqwestError> for AddedToFavError {
     fn from(err: ReqwestError) -> Self {
-        Self::Reqwest(err)
+        Self(err)
     }
 }
 
@@ -234,16 +231,14 @@ impl HandleError for AddedToFavError {}
 pub async fn add_threepid(
     base: Url,
     access_token: AccessToken,
-    identity: Url,
+    id_server: Box<ServerName>,
     client_secret: String,
     sid: String,
 ) -> Result<(), AddedToFavError> {
     let params = AddThreePIDParameters { access_token };
     let body = AddThreePIDBody {
         three_pid_creds: ThreePIDCredentials {
-            id_server: identity
-                .try_into()
-                .map_err(AddedToFavError::IdentityServerUrl)?,
+            id_server,
             sid,
             client_secret,
         },

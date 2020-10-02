@@ -2,12 +2,9 @@ pub mod account;
 pub mod contact;
 pub mod server;
 
-use serde::{Deserialize, Serialize, Serializer};
-use std::convert::TryFrom;
+use matrix_sdk::identifiers::ServerName;
+use serde::{Deserialize, Serialize};
 use std::fmt::{self, Display, Formatter};
-use url::Host;
-use url::ParseError;
-use url::Url;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
@@ -19,55 +16,8 @@ pub enum Medium {
 #[derive(Clone, Debug, Serialize)]
 pub struct ThreePIDCredentials {
     pub client_secret: String,
-    pub id_server: HostAndPort<String>,
+    pub id_server: Box<ServerName>,
     pub sid: String,
-}
-
-#[derive(Clone, Debug)]
-pub struct HostAndPort<T> {
-    pub host: Host<T>,
-    pub port: Option<u16>,
-}
-
-impl TryFrom<&Url> for HostAndPort<String> {
-    type Error = ParseError;
-
-    fn try_from(url: &Url) -> Result<Self, Self::Error> {
-        Ok(Self {
-            host: url
-                .host()
-                .ok_or(ParseError::SetHostOnCannotBeABaseUrl)?
-                .to_owned(),
-            port: url.port(),
-        })
-    }
-}
-
-impl TryFrom<Url> for HostAndPort<String> {
-    type Error = ParseError;
-
-    fn try_from(url: Url) -> Result<Self, Self::Error> {
-        Self::try_from(&url)
-    }
-}
-
-impl<T: AsRef<str>> Display for HostAndPort<T> {
-    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-        if let Some(port) = self.port {
-            write!(f, "{}:{}", self.host, port)
-        } else {
-            write!(f, "{}", self.host)
-        }
-    }
-}
-
-impl<T: AsRef<str>> Serialize for HostAndPort<T> {
-    fn serialize<S>(&self, ser: S) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        ser.serialize_str(&self.to_string())
-    }
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]

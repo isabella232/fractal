@@ -1,6 +1,8 @@
 use directories::ProjectDirs;
 use lazy_static::lazy_static;
+use matrix_sdk::identifiers::ServerName;
 use regex::Regex;
+use std::convert::TryInto;
 use std::{path::PathBuf, time::Duration};
 use url::Url;
 
@@ -22,8 +24,9 @@ pub const MAX_STICKER_SIZE: (i32, i32) = (200, 130);
 lazy_static! {
     pub static ref DEFAULT_HOMESERVER: Url =
         Url::parse("https://matrix.org").expect("Malformed DEFAULT_HOMESERVER value");
-    pub static ref DEFAULT_IDENTITYSERVER: Url =
-        Url::parse("https://vector.im").expect("Malformed DEFAULT_IDENTITYSERVER value");
+    pub static ref DEFAULT_IDENTITYSERVER: Box<ServerName> = "vector.im"
+        .try_into()
+        .expect("Malformed DEFAULT_IDENTITYSERVER value");
     pub static ref EMAIL_RE: Regex = Regex::new(
         r"^([0-9a-zA-Z]([-\.\w]*[0-9a-zA-Z])+@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$"
     )

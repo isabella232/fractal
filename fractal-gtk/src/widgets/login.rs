@@ -16,6 +16,7 @@ use crate::widgets::ErrorDialog;
 
 use crate::backend::register::get_well_known;
 
+use std::convert::TryInto;
 use std::sync::{Arc, Mutex};
 
 #[derive(Debug, Clone)]
@@ -108,6 +109,10 @@ impl LoginWidget {
                             .identity_server
                             .as_ref()
                             .map(|ids| Url::parse(&ids.base_url))
+                            .transpose()?
+                            .as_ref()
+                            .and_then(Url::host_str)
+                            .map(TryInto::try_into)
                             .transpose()?
                             .unwrap_or(globals::DEFAULT_IDENTITYSERVER.clone());
                         info!("Got well-known response from {}: {:#?}", &txt, response);

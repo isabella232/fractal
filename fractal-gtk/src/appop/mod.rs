@@ -6,13 +6,12 @@ use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
 use crate::api::r0::AccessToken;
-use matrix_sdk::identifiers::{DeviceId, RoomId, UserId};
+use matrix_sdk::identifiers::{DeviceId, RoomId, ServerName, UserId};
 
 use gtk::prelude::*;
 use matrix_sdk::Client as MatrixClient;
 
 use crate::cache::CacheMap;
-use url::Url;
 
 use crate::util::i18n;
 
@@ -80,7 +79,7 @@ pub struct LoginData {
     pub device_id: Box<DeviceId>,
     pub username: Option<String>,
     pub avatar: Option<PathBuf>,
-    pub identity_url: Url,
+    pub identity_url: Box<ServerName>,
 }
 
 pub struct AppOp {

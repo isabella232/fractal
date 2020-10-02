@@ -1,4 +1,4 @@
-use matrix_sdk::identifiers::{DeviceId, UserId};
+use matrix_sdk::identifiers::{DeviceId, Error as IdError, UserId};
 use matrix_sdk::reqwest::Error as ReqwestError;
 use url::{ParseError as UrlError, Url};
 
@@ -113,6 +113,7 @@ pub async fn logout(server: Url, access_token: AccessToken) -> Result<(), Logout
 pub enum GetWellKnownError {
     Reqwest(ReqwestError),
     Json(serde_json::Error),
+    IdParseError(IdError),
     ParseUrl(UrlError),
 }
 
@@ -125,6 +126,12 @@ impl From<ReqwestError> for GetWellKnownError {
 impl From<serde_json::Error> for GetWellKnownError {
     fn from(err: serde_json::Error) -> Self {
         Self::Json(err)
+    }
+}
+
+impl From<IdError> for GetWellKnownError {
+    fn from(err: IdError) -> Self {
+        Self::IdParseError(err)
     }
 }
 

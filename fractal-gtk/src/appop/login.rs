@@ -3,7 +3,7 @@ use log::error;
 use crate::api::r0::AccessToken;
 use crate::app::RUNTIME;
 use crate::backend::register;
-use matrix_sdk::identifiers::{DeviceId, UserId};
+use matrix_sdk::identifiers::{DeviceId, ServerName, UserId};
 use matrix_sdk::Session;
 use url::Url;
 
@@ -27,7 +27,7 @@ impl AppOp {
         access_token: AccessToken,
         device_id: Box<DeviceId>,
         server_url: Url,
-        identity_url: Url,
+        identity_url: Box<ServerName>,
     ) {
         if self.store_token(uid.clone(), access_token.clone()).is_err() {
             error!("Can't store the token using libsecret");
@@ -76,7 +76,13 @@ impl AppOp {
         self.login_data = None;
     }
 
-    pub fn connect(&mut self, username: String, password: String, server: Url, identity: Url) {
+    pub fn connect(
+        &mut self,
+        username: String,
+        password: String,
+        server: Url,
+        identity: Box<ServerName>,
+    ) {
         self.store_pass(
             username.clone(),
             password.clone(),

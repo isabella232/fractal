@@ -1,5 +1,5 @@
 use crate::api::r0::AccessToken;
-use matrix_sdk::identifiers::{Error as IdError, UserId};
+use matrix_sdk::identifiers::{Error as IdError, ServerName, UserId};
 use url::ParseError;
 use url::Url;
 
@@ -38,12 +38,12 @@ pub trait PasswordStorage {
         username: String,
         password: String,
         server: Url,
-        identity: Url,
+        identity: Box<ServerName>,
     ) -> Result<(), Error> {
         ss_storage::store_pass(username, password, server, identity)
     }
 
-    fn get_pass(&self) -> Result<(String, String, Url, Url), Error> {
+    fn get_pass(&self) -> Result<(String, String, Url, Box<ServerName>), Error> {
         ss_storage::get_pass()
     }
 
@@ -59,8 +59,8 @@ pub trait PasswordStorage {
 mod ss_storage {
     use super::Error;
     use crate::api::r0::AccessToken;
-    use matrix_sdk::identifiers::UserId;
-    use std::convert::TryFrom;
+    use matrix_sdk::identifiers::{ServerName, UserId};
+    use std::convert::{TryFrom, TryInto};
     use url::Url;
 
     use secret_service::{Collection, EncryptionType, SecretService, SsError};
@@ -139,7 +139,7 @@ mod ss_storage {
         username: String,
         password: String,
         server: Url,
-        identity: Url,
+        identity: Box<ServerName>,
     ) -> Result<(), Error> {
         let ss = SecretService::new(EncryptionType::Dh)?;
         let collection = get_default_collection_unlocked(&ss)?;
@@ -207,7 +207,7 @@ mod ss_storage {
         Ok(())
     }
 
-    pub fn get_pass() -> Result<(String, String, Url, Url), Error> {
+    pub fn get_pass() -> Result<(String, String, Url, Box<ServerName>), Error> {
         migrate_old_passwd()?;
 
         let ss = SecretService::new(EncryptionType::Dh)?;
@@ -243,7 +243,15 @@ mod ss_storage {
 
         /* Fallback to the vector identity server when there is none */
         let identity = match attr {
-            Some(a) => Url::parse(&a.1)?,
+            Some(ref a) => Url::parse(a.1.as_str())
+                .map_err(Error::from)
+                .and_then(|u| {
+                    u.host_str()
+                        .unwrap_or_default()
+                        .try_into()
+                        .map_err(Error::from)
+                })
+                .or_else(|_| a.1.as_str().try_into().map_err(Error::from))?,
             None => globals::DEFAULT_IDENTITYSERVER.clone(),
         };
 
