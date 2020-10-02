@@ -315,6 +315,10 @@ stack.titlebar:not(headerbar) > box > separator {
   animation: spin 1s linear infinite;
 }
 
+.image-widget {
+  border-radius: 6px;
+}
+
 .spinner-background {
   background: alpha(@theme_fg_color, 0.8);
   margin: 25px;

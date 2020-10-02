@@ -6,6 +6,7 @@ use anyhow::Error as AnyhowError;
 use gdk::prelude::*;
 use gdk_pixbuf::Pixbuf;
 use gio::{Settings, SettingsExt, SettingsSchemaSource};
+use gtk::StyleContextExt;
 use html2pango::{html_escape, markup_links};
 use log::error;
 use std::fs::create_dir_all;
@@ -62,6 +63,13 @@ pub fn set_markdown_schema(md: bool) {
             error!("Can't save markdown active state: {:?}", err);
         }
     }
+}
+
+pub fn get_border_radius(ctx: &gtk::StyleContext) -> i32 {
+    let state = ctx.get_state();
+    gtk::StyleContextExt::get_property(ctx, "border-radius", state)
+        .get_some()
+        .unwrap_or(0)
 }
 
 macro_rules! unwrap_or_unit_return {
