@@ -87,13 +87,18 @@
 }
 
 frame.room-directory > border {
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
+  border-top-left-radius: 9px;
+  border-top-right-radius: 9px;
 }
 
 .room-directory {
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
+  border-top-left-radius: 9px;
+  border-top-right-radius: 9px;
+}
+
+.room-directory row:first-child {
+  -gtk-outline-top-left-radius: 9px;
+  -gtk-outline-top-right-radius: 9px;
 }
 
 .room-directory row {
@@ -158,6 +163,11 @@ row:not(:selected) .member-uid {
   background-color: @theme_base_color;
 }
 
+.messages-history > row {
+  border-radius: 9px;
+  -gtk-outline-radius: 9px;
+}
+
 .messages-history > row:not(.msg-mention) {
   padding: 6px 9px;
 }
@@ -183,13 +193,12 @@ row.msg-mention {
   padding: 6px;
   padding-right: 9px;
   padding-left: 6px;
-  border-radius: 3px;
 }
 
 row.msg-tmp {
   color: alpha(@theme_fg_color, 0.4);
   background-color: alpha(@theme_bg_color, 0.8);
-  border-radius: 3px;
+  border-radius: 9px;
 }
 
 row.msg-emote {
@@ -257,7 +266,7 @@ row .timestamp {
 }
 
 .autocomplete row {
-  border-radius: 3px;
+  border-radius: 6px;
   padding: 6px;
 }
 
@@ -273,7 +282,7 @@ row .timestamp {
 
 .message-input {
   background-color: @theme_base_color;
-  border-radius: 3px;
+  border-radius: 5px;
   border: 1px solid @borders;
   padding: 6px;
 }
