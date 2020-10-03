@@ -148,6 +148,7 @@
                         </child>
                         <style>
                           <class name="osd"/>
+                          <class name="round-button"/>
                         </style>
                       </object>
                     </child>
@@ -194,6 +195,7 @@
                         </child>
                         <style>
                           <class name="osd"/>
+                          <class name="round-button"/>
                         </style>
                       </object>
                     </child>
