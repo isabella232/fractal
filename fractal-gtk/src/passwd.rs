@@ -60,14 +60,13 @@ mod ss_storage {
     use fractal_api::url::Url;
     use std::convert::TryFrom;
 
-    use secret_service::EncryptionType;
-    use secret_service::SecretService;
+    use secret_service::{Collection, EncryptionType, SecretService, SsError};
 
     use crate::globals;
 
     pub fn delete_pass(key: &str) -> Result<(), Error> {
         let ss = SecretService::new(EncryptionType::Dh)?;
-        let collection = ss.get_default_collection()?;
+        let collection = get_default_collection_unlocked(&ss)?;
 
         // deleting previous items
         let allpass = collection.get_all_items()?;
@@ -84,14 +83,13 @@ mod ss_storage {
 
     pub fn store_token(uid: UserId, token: AccessToken) -> Result<(), Error> {
         let ss = SecretService::new(EncryptionType::Dh)?;
-        let collection = ss.get_default_collection()?;
+        let collection = get_default_collection_unlocked(&ss)?;
         let key = "fractal-token";
 
         // deleting previous items
         delete_pass(key)?;
 
         // create new item
-        collection.unlock()?;
         collection.create_item(
             key,                             // label
             vec![("uid", &uid.to_string())], // properties
@@ -105,7 +103,7 @@ mod ss_storage {
 
     pub fn get_token() -> Result<(Option<AccessToken>, UserId), Error> {
         let ss = SecretService::new(EncryptionType::Dh)?;
-        let collection = ss.get_default_collection()?;
+        let collection = get_default_collection_unlocked(&ss)?;
         let allpass = collection.get_all_items()?;
         let key = "fractal-token";
 
@@ -141,14 +139,13 @@ mod ss_storage {
         identity: Url,
     ) -> Result<(), Error> {
         let ss = SecretService::new(EncryptionType::Dh)?;
-        let collection = ss.get_default_collection()?;
+        let collection = get_default_collection_unlocked(&ss)?;
         let key = "fractal";
 
         // deleting previous items
         delete_pass(key)?;
 
         // create new item
-        collection.unlock()?;
         collection.create_item(
             key, // label
             vec![
@@ -166,7 +163,7 @@ mod ss_storage {
 
     pub fn migrate_old_passwd() -> Result<(), Error> {
         let ss = SecretService::new(EncryptionType::Dh)?;
-        let collection = ss.get_default_collection()?;
+        let collection = get_default_collection_unlocked(&ss)?;
         let allpass = collection.get_all_items()?;
 
         // old name password
@@ -211,7 +208,7 @@ mod ss_storage {
         migrate_old_passwd()?;
 
         let ss = SecretService::new(EncryptionType::Dh)?;
-        let collection = ss.get_default_collection()?;
+        let collection = get_default_collection_unlocked(&ss)?;
         let allpass = collection.get_all_items()?;
         let key = "fractal";
 
@@ -255,5 +252,19 @@ mod ss_storage {
         );
 
         Ok(tup)
+    }
+
+    fn get_default_collection_unlocked(
+        secret_service: &SecretService,
+    ) -> Result<Collection, secret_service::SsError> {
+        let collection = match secret_service.get_default_collection() {
+            Ok(col) => col,
+            Err(SsError::NoResult) => secret_service.create_collection("default", "default")?,
+            Err(x) => return Err(x),
+        };
+
+        collection.unlock()?;
+
+        Ok(collection)
     }
 }
