@@ -107,6 +107,7 @@ app_sources = files(
   'widgets/address.rs',
   'widgets/autocomplete.rs',
   'widgets/avatar.rs',
+  'widgets/clip_container.rs',
   'widgets/divider.rs',
   'widgets/error_dialog.rs',
   'widgets/file_dialog.rs',

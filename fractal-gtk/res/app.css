@@ -424,3 +424,7 @@ box.folded-history
   padding-left: 6px;
   padding-right: 6px;
 }
+
+#clip-container {
+  border-radius: 6px;
+}

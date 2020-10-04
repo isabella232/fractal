@@ -24,6 +24,7 @@ use crate::uitypes::RowType;
 use crate::widgets;
 use crate::widgets::message_menu::MessageMenu;
 use crate::widgets::AvatarExt;
+use crate::widgets::ClipContainer;
 use crate::widgets::{AudioPlayerWidget, PlayerExt, VideoPlayerWidget};
 
 /* A message row in the room history */
@@ -561,7 +562,10 @@ impl MessageBox {
             let menu = MessageMenu::new(evid, &RowType::Video, &redactable, None, None);
             menu_button.set_popover(Some(&menu.get_popover()));
 
-            bx.pack_start(&overlay, true, true, 0);
+            let clip_container = ClipContainer::new();
+            clip_container.add(&overlay);
+
+            bx.pack_start(&clip_container, true, true, 0);
             self.connect_media_viewer(msg);
             self.video_player = Some(player);
         }

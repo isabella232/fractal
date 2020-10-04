@@ -1,6 +1,7 @@
 mod address;
 mod autocomplete;
 pub mod avatar;
+mod clip_container;
 mod divider;
 pub mod error_dialog;
 pub mod file_dialog;
@@ -29,6 +30,7 @@ pub use self::avatar::Avatar;
 pub use self::avatar::AvatarBadgeColor;
 pub use self::avatar::AvatarData;
 pub use self::avatar::AvatarExt;
+pub use self::clip_container::ClipContainer;
 pub use self::divider::NewMessageDivider;
 pub use self::error_dialog as ErrorDialog;
 pub use self::file_dialog as FileDialog;
