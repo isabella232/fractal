@@ -77,7 +77,8 @@ sudo ninja -C _build install
 ### macOS
 
 ```sh
-brew install gtk+3 dbus bash adwaita-icon-theme
+brew install gtk+3 dbus bash adwaita-icon-theme libhandy gtksourceview4 \
+    gspell gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-editing-services
 # empirically needs 3.22.19 or later of gtk3+
 # ...and run configure as:
 /usr/local/bin/bash -c "meson . _build --prefix=/usr/local"
