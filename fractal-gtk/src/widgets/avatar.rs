@@ -133,16 +133,12 @@ impl AvatarExt for gtk::Overlay {
 }
 
 fn load_pixbuf(path: &Path, size: i32) -> Option<Pixbuf> {
-    if let Ok(pixbuf) = Pixbuf::from_file(&path) {
-        // FIXME: We end up loading the file twice but we need to load the file first to find out its dimensions to be
-        // able to decide wether to scale by width or height and gdk doesn't provide simple API to scale a loaded
-        // pixbuf while preserving aspect ratio.
-        if pixbuf.get_width() > pixbuf.get_height() {
-            Pixbuf::from_file_at_scale(&path, -1, size, true).ok()
-        } else {
-            Pixbuf::from_file_at_scale(&path, size, -1, true).ok()
-        }
+    let (_, width, height) = Pixbuf::get_file_info(&path)?;
+    let pb = if width > height {
+        Pixbuf::from_file_at_scale(&path, -1, size, true).ok()?
     } else {
-        None
-    }
+        Pixbuf::from_file_at_scale(&path, size, -1, true).ok()?
+    };
+
+    Some(pb)
 }
