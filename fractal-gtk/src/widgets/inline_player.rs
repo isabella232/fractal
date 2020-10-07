@@ -365,7 +365,7 @@ impl VideoPlayerWidget {
             });
 
         /* Sometimes, set_size_request() doesn't get captured visually. The following timeout takes care of that. */
-        gtk::timeout_add_seconds(
+        glib::timeout_add_seconds_local(
             1,
             clone!(
             @weak player_widget as player
@@ -407,7 +407,7 @@ impl VideoPlayerWidget {
                     When approaching the minimum fast, the last connect_size_allocate signal gets emitted before
                     reaching the minimum size. So without timeout, the values used to adjust the the video size
                     are bigger than they should be. */
-                    gtk::timeout_add(
+                    glib::timeout_add_local(
                         50,
                         clone!(
                         @strong bx,

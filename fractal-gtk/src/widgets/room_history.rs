@@ -320,7 +320,7 @@ impl RoomHistory {
         self.add_new_messages_in_batch(thread_pool, user_info_cache, bottom);
 
         let rows = &self.rows;
-        let id = timeout_add(
+        let id = glib::timeout_add_local(
             250,
             clone!(
             @weak rows
@@ -348,7 +348,7 @@ impl RoomHistory {
         scrollbar.connect_value_changed(clone!(@weak rows => move |sb| {
             if !sb.get_state_flags().contains(gtk::StateFlags::BACKDROP) {
                 /* Fractal is focused */
-                let new_id = timeout_add(250, clone!(
+                let new_id = glib::timeout_add_local(250, clone!(
                     @weak rows
                     => @default-return Continue(false), move || {
                         rows.borrow_mut().update_videos();
@@ -449,7 +449,7 @@ impl RoomHistory {
             let source_id = self.source_id.clone();
             let server_url = self.server_url.clone();
             let access_token = self.access_token.clone();
-            *self.source_id.borrow_mut() = Some(gtk::idle_add(move || {
+            *self.source_id.borrow_mut() = Some(glib::idle_add_local(move || {
                 let mut data = queue.borrow_mut();
                 let mut edits = edit_buffer.borrow_mut();
                 if let Some(mut item) = data.pop_front() {

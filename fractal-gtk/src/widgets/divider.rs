@@ -44,7 +44,7 @@ impl NewMessageDivider {
          * destroy the NewMessageDivider after it's added to the History with a couple of
          * seconds delay */
         row.connect_parent_set(clone!(@weak revealer => move |_, _| {
-            gtk::timeout_add(5000, clone!(
+            glib::timeout_add_local(5000, clone!(
                 @weak revealer as r
                 => @default-return Continue(false), move || {
                     /* when the user closes the room the divider gets destroyed and this timeout

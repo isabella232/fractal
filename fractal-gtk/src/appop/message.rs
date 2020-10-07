@@ -197,7 +197,7 @@ impl AppOp {
     }
 
     pub fn retry_send(&mut self) {
-        gtk::timeout_add(5000, move || {
+        glib::timeout_add_local(5000, move || {
             /* This will be removed once tmp messages are refactored */
             APPOP!(force_dequeue_message);
             Continue(false)

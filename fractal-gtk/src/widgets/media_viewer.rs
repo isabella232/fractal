@@ -65,7 +65,7 @@ impl VideoWidget {
         self.inner_box.set_halign(gtk::Align::Fill);
 
         let bx = self.outer_box.clone();
-        gtk::timeout_add(50, move || {
+        glib::timeout_add_local(50, move || {
             bx.set_margin_top(0);
             bx.set_margin_bottom(0);
             Continue(false)
@@ -403,7 +403,7 @@ impl Data {
         control_revealer.add(&full_control_box);
         control_revealer.set_reveal_child(true);
         let source_id: Rc<RefCell<Option<glib::source::SourceId>>> = Rc::new(RefCell::new(None));
-        let first_sid = gtk::timeout_add_seconds(
+        let first_sid = glib::timeout_add_seconds_local(
             1,
             clone!(@strong source_id, @strong control_revealer => move || {
                 control_revealer.set_reveal_child(false);
@@ -426,7 +426,7 @@ impl Data {
             if let Some(sid) = source_id.borrow_mut().take() {
                 glib::source::source_remove(sid);
             }
-            let new_sid = gtk::timeout_add_seconds(
+            let new_sid = glib::timeout_add_seconds_local(
                 1,
                 clone!(
                     @strong source_id,
@@ -467,7 +467,7 @@ impl Data {
                     if player.is_playing() {
                         control_revealer.set_reveal_child(true);
                     } else {
-                        let new_sid = gtk::timeout_add_seconds(
+                        let new_sid = glib::timeout_add_seconds_local(
                             1,
                             clone!(
                                 @strong source_id,
@@ -505,13 +505,13 @@ impl Data {
                     let id = click_timeout_id.borrow_mut().take().unwrap();
                     glib::source::source_remove(id);
                 } else {
-                    let sid = gtk::timeout_add(
+                    let sid = glib::timeout_add_local(
                         250,
                         clone!(@strong player, @strong click_timeout_id => move || {
                             if player.is_playing() {
                                 revealer.set_reveal_child(true);
                             } else {
-                                let new_sid = gtk::timeout_add_seconds(
+                                let new_sid = glib::timeout_add_seconds_local(
                                     1,
                                     clone!(
                                         @strong source_id,
@@ -836,7 +836,7 @@ impl MediaViewer {
                     .expect("Cant find next_media_revealer in ui file.");
                 next_media_revealer.set_reveal_child(true);
 
-                let sid = gtk::timeout_add(
+                let sid = glib::timeout_add_local(
                     1000,
                     clone!(
                     @strong ui,

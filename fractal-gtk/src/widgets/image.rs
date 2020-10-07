@@ -361,7 +361,7 @@ pub fn load_animation(
     let anim = res.unwrap();
     let iter = anim.get_iter(glib::get_current_time());
 
-    gtk::timeout_add(iter.get_delay_time() as u32, move || {
+    glib::timeout_add_local(iter.get_delay_time() as u32, move || {
         iter.advance(glib::get_current_time());
 
         if widget.is_drawable() {

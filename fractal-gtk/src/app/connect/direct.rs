@@ -62,7 +62,7 @@ impl App {
                 }
             }
 
-            let sid = gtk::timeout_add(500, clone!(
+            let sid = glib::timeout_add_local(500, clone!(
                 @strong op,
                 @strong entry,
                 @strong source_id
@@ -108,7 +108,7 @@ impl App {
 
         if let Some(buffer) = to_chat_entry.get_buffer() {
             buffer.connect_delete_range(clone!(@strong op => move |_, _, _| {
-                gtk::idle_add(clone!(@strong op => move || {
+                glib::idle_add_local(clone!(@strong op => move || {
                     op.lock().unwrap().detect_removed_invite();
                     Continue(false)
                 }));
