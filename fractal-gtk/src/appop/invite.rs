@@ -14,7 +14,7 @@ use crate::globals;
 
 use crate::widgets;
 
-use crate::types::Member;
+use crate::model::member::Member;
 
 impl AppOp {
     pub fn add_to_invite(&mut self, u: Member) {

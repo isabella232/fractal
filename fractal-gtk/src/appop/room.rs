@@ -21,7 +21,10 @@ use crate::actions::AppState;
 use crate::cache;
 use crate::widgets;
 
-use crate::types::{Member, Reason, Room, RoomMembership, RoomTag};
+use crate::model::{
+    member::Member,
+    room::{Reason, Room, RoomMembership, RoomTag},
+};
 
 use crate::util::markup_text;
 

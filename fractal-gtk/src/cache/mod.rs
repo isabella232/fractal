@@ -10,8 +10,7 @@ use gtk::LabelExt;
 use serde::{Deserialize, Serialize};
 use std::thread;
 
-use crate::types::Room;
-use crate::types::RoomList;
+use crate::model::room::{Room, RoomList};
 use anyhow::Error;
 use fractal_api::identifiers::{DeviceId, UserId};
 use std::collections::HashMap;

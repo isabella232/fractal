@@ -121,7 +121,6 @@ app_sources = files(
   'globals.rs',
   'main.rs',
   'passwd.rs',
-  'types.rs',
   'uibuilder.rs',
   'uitypes.rs'
 )

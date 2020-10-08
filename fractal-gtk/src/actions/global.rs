@@ -5,7 +5,7 @@ use std::rc::Rc;
 use std::sync::{Arc, Mutex};
 
 use crate::appop::AppOp;
-use crate::types::Message;
+use crate::model::message::Message;
 use crate::util::i18n::i18n;
 use crate::widgets::FileDialog::open;
 use crate::App;

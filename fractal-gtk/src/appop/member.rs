@@ -16,8 +16,7 @@ use crate::appop::AppOp;
 use crate::widgets;
 use crate::App;
 
-use crate::types::Event;
-use crate::types::Member;
+use crate::model::{event::Event, member::Member};
 
 #[derive(Debug, Clone)]
 pub enum SearchType {

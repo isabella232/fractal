@@ -9,7 +9,7 @@ use crate::appop::AppOp;
 use crate::widgets;
 
 use super::RoomSearchPagination;
-use crate::types::Room;
+use crate::model::room::Room;
 use fractal_api::r0::thirdparty::get_supported_protocols::ProtocolInstance;
 
 impl AppOp {

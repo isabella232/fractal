@@ -4,7 +4,7 @@ use crate::backend::room;
 use gtk::prelude::*;
 use std::thread;
 
-use crate::types::Room;
+use crate::model::room::Room;
 
 use crate::util::markup_text;
 

@@ -9,7 +9,7 @@ use crate::appop::AppState;
 
 use crate::widgets;
 
-use crate::types::Message;
+use crate::model::message::Message;
 
 impl AppOp {
     /* FIXME: take msg by reference and maybe create an action for this */

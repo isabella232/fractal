@@ -17,7 +17,7 @@ use std::path::PathBuf;
 use std::sync::mpsc::Sender;
 use std::thread;
 
-use crate::types::Member;
+use crate::model::member::Member;
 use fractal_api::identity::r0::association::msisdn::submit_token::request as submit_phone_token_req;
 use fractal_api::identity::r0::association::msisdn::submit_token::Body as SubmitPhoneTokenBody;
 use fractal_api::identity::r0::association::msisdn::submit_token::Response as SubmitPhoneTokenResponse;

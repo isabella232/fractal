@@ -1,4 +1,4 @@
-use crate::types::Message;
+use crate::model::message::Message;
 use crate::widgets;
 use chrono::prelude::DateTime;
 use chrono::prelude::Local;

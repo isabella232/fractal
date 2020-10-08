@@ -1,5 +1,5 @@
 use crate::backend::{room, HandleError};
-use crate::types::ExtraContent;
+use crate::model::fileinfo::ExtraContent;
 use comrak::{markdown_to_html, ComrakOptions};
 use fractal_api::identifiers::{EventId, RoomId};
 use fractal_api::r0::AccessToken;
@@ -27,7 +27,7 @@ use crate::uitypes::MessageContent;
 use crate::uitypes::RowType;
 use crate::widgets;
 
-use crate::types::Message;
+use crate::model::message::Message;
 
 pub struct TmpMsg {
     pub msg: Message,

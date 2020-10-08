@@ -19,8 +19,7 @@ use gtk::prelude::*;
 use gtk::Overlay;
 use libhandy::HeaderBarExt;
 
-use crate::types::Message;
-use crate::types::Room;
+use crate::model::{message::Message, room::Room};
 
 use crate::uitypes::RowType;
 use crate::widgets::image;

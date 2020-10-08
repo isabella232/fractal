@@ -8,7 +8,7 @@ use log::info;
 use std::collections::HashMap;
 
 use crate::globals;
-use crate::types::{Room, RoomTag};
+use crate::model::room::{Room, RoomTag};
 use crate::widgets::roomrow::RoomRow;
 use std::convert::TryFrom;
 use std::sync::atomic::{AtomicBool, Ordering};

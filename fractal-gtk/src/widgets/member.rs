@@ -1,6 +1,6 @@
 use gtk::prelude::*;
 
-use crate::types::Member;
+use crate::model::member::Member;
 
 use crate::appop::AppOp;
 

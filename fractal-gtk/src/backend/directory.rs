@@ -7,7 +7,7 @@ use crate::globals;
 use crate::backend::HTTP_CLIENT;
 use crate::util::cache_dir_path;
 
-use crate::types::Room;
+use crate::model::room::Room;
 use fractal_api::r0::directory::post_public_rooms::request as post_public_rooms;
 use fractal_api::r0::directory::post_public_rooms::Body as PublicRoomsBody;
 use fractal_api::r0::directory::post_public_rooms::Filter as PublicRoomsFilter;

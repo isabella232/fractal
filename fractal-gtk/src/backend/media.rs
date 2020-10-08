@@ -10,7 +10,7 @@ use crate::backend::HTTP_CLIENT;
 use crate::util::ResultExpectLog;
 use fractal_api::r0::AccessToken;
 
-use crate::types::Message;
+use crate::model::message::Message;
 use fractal_api::r0::filter::RoomEventFilter;
 use fractal_api::r0::message::get_message_events::request as get_messages_events_req;
 use fractal_api::r0::message::get_message_events::Direction as GetMessagesEventsDirection;

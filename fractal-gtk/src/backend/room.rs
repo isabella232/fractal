@@ -20,9 +20,11 @@ use crate::backend::HTTP_CLIENT;
 use crate::util::cache_dir_path;
 
 use crate::error::StandardErrorResponse;
-use crate::types::Member;
-use crate::types::Message;
-use crate::types::{Room, RoomMembership, RoomTag};
+use crate::model::{
+    member::Member,
+    message::Message,
+    room::{Room, RoomMembership, RoomTag},
+};
 use fractal_api::r0::config::get_global_account_data::request as get_global_account_data;
 use fractal_api::r0::config::get_global_account_data::Parameters as GetGlobalAccountDataParameters;
 use fractal_api::r0::config::set_global_account_data::request as set_global_account_data;

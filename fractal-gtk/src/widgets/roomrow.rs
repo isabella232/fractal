@@ -1,7 +1,7 @@
 use fractal_api::url::Url;
 use gtk::prelude::*;
 
-use crate::types::Room;
+use crate::model::room::Room;
 
 use crate::widgets;
 use crate::widgets::AvatarExt;

@@ -1,12 +1,12 @@
 use crate::client::ProxySettings;
 use crate::error::{Error, StandardErrorResponse};
 use crate::globals;
-use crate::types::Event;
-use crate::types::Member;
-use crate::types::Message;
-use crate::types::Room;
-use crate::types::RoomMembership;
-use crate::types::RoomTag;
+use crate::model::{
+    event::Event,
+    member::Member,
+    message::Message,
+    room::{Room, RoomMembership, RoomTag},
+};
 use fractal_api::r0::filter::EventFilter;
 use fractal_api::r0::filter::Filter;
 use fractal_api::r0::filter::RoomEventFilter;

@@ -9,8 +9,7 @@ use std::cell::RefCell;
 use std::fs::remove_dir_all;
 use std::sync::{Arc, Mutex, MutexGuard};
 
-use crate::types::Message;
-use crate::types::Room;
+use crate::model::{message::Message, room::Room};
 use crate::util::cache_dir_path;
 use fractal_api::identifiers::{DeviceId, UserId};
 

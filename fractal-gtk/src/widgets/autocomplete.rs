@@ -8,7 +8,7 @@ use std::sync::{Arc, Mutex};
 use gtk::prelude::*;
 use gtk::TextTag;
 
-use crate::types::Member;
+use crate::model::member::Member;
 
 use crate::appop::AppOp;
 use crate::widgets;

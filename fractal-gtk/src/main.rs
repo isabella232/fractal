@@ -21,7 +21,6 @@ mod widgets;
 
 mod appop;
 
-mod types;
 use std::error::Error;
 
 use crate::app::App;

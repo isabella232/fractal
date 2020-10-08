@@ -16,10 +16,10 @@ use fractal_api::url::Url;
 
 use crate::util::i18n;
 
-use crate::types::Member;
-use crate::types::Room;
-use crate::types::RoomList;
-
+use crate::model::{
+    member::Member,
+    room::{Room, RoomList},
+};
 use crate::passwd::PasswordStorage;
 
 use crate::actions::AppState;

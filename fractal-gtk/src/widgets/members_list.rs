@@ -7,7 +7,7 @@ use std::rc::Rc;
 use glib::signal;
 use gtk::prelude::*;
 
-use crate::types::Member;
+use crate::model::member::Member;
 use crate::util::i18n::i18n;
 use crate::widgets;
 use crate::widgets::avatar::{AvatarBadgeColor, AvatarExt};
