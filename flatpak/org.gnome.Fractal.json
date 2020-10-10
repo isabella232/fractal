@@ -1,7 +1,7 @@
 {
     "app-id" : "org.gnome.FractalDevel",
     "runtime" : "org.gnome.Platform",
-    "runtime-version" : "3.38",
+    "runtime-version" : "master",
     "sdk" : "org.gnome.Sdk",
     "sdk-extensions" : [
         "org.freedesktop.Sdk.Extension.rust-stable"
@@ -36,7 +36,7 @@
     "add-extensions": {
         "org.freedesktop.Platform.ffmpeg-full": {
             "directory": "lib/ffmpeg",
-            "version": "19.08",
+            "version": "20.08",
             "add-ld-path": "."
         }
     },
@@ -80,9 +80,8 @@
              ],
             "sources" : [
                 {
-                    "type" : "archive",
-                    "url" : "https://download.gnome.org/sources/gspell/1.8/gspell-1.8.2.tar.xz",
-                    "sha256" : "bb9195c3a95bacf556d0203e9691f7489e0d3bc5ae1e5a440c89b2f2435d3ed6"
+                    "type" : "git",
+                    "url" : "https://gitlab.gnome.org/GNOME/gspell.git"
                 }
             ]
         },
