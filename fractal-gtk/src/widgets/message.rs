@@ -10,10 +10,12 @@ use crate::widgets::message_menu::MessageMenu;
 use crate::widgets::AvatarExt;
 use crate::widgets::ClipContainer;
 use crate::widgets::{AudioPlayerWidget, PlayerExt, VideoPlayerWidget};
+use anyhow::Context;
 use chrono::prelude::*;
 use either::Either;
 use glib::clone;
 use gtk::{prelude::*, ButtonExt, ContainerExt, LabelExt, Overlay, WidgetExt};
+use html2pango::block::{HtmlBlock, markup_html};
 use itertools::Itertools;
 use matrix_sdk::Client as MatrixClient;
 use std::cmp::max;
@@ -517,6 +519,83 @@ fn build_room_msg(
     (body, type_extras)
 }
 
+fn build_room_msg_body_html(_container: &MessageBoxContainer, msg: &Message) -> anyhow::Result<gtk::Box> {
+    let raw = msg.msg.formatted_body.clone().unwrap_or_default();
+
+    let blocks =
+        markup_html(&raw).with_context(|| format!("Could not render message: {}", &raw))?;
+    let bx = gtk::Box::new(gtk::Orientation::Vertical, 6);
+    for b in blocks {
+        let widget = render_html_block(&b);
+        bx.add(&widget);
+    }
+    Ok(bx)
+}
+
+fn render_html_block(block: &HtmlBlock) -> gtk::Widget {
+    match block {
+        HtmlBlock::Heading(n, s) => {
+            let w = gtk::Label::new(None);
+            set_label_styles(&w);
+            w.set_markup(&s);
+            w.get_style_context().add_class(&format!("h{}", n));
+            w.upcast::<gtk::Widget>()
+        }
+        HtmlBlock::UList(elements) => {
+            let w = gtk::Label::new(None);
+            set_label_styles(&w);
+
+            let text = elements
+                .iter()
+                .map(|li| format!(" • {}", li))
+                .collect::<Vec<String>>()
+                .join("\n");
+            w.set_markup(&text);
+
+            w.upcast::<gtk::Widget>()
+        }
+        HtmlBlock::OList(elements) => {
+            let w = gtk::Label::new(None);
+            set_label_styles(&w);
+
+            let text = elements
+                .iter()
+                .enumerate()
+                .map(|(i, li)| format!(" {}. {}", i + 1, li))
+                .collect::<Vec<String>>()
+                .join("\n");
+
+            w.set_markup(&text);
+
+            w.upcast::<gtk::Widget>()
+        }
+        HtmlBlock::Code(s) => {
+            let buffer = sourceview4::Buffer::new::<gtk::TextTagTable>(None);
+            buffer.set_text(&s);
+            let view = sourceview4::View::with_buffer(&buffer);
+            view.set_editable(false);
+            view.set_wrap_mode(gtk::WrapMode::WordChar);
+            view.get_style_context().add_class("codeview");
+            view.upcast::<gtk::Widget>()
+        }
+        HtmlBlock::Quote(blocks) => {
+            let bx = gtk::Box::new(gtk::Orientation::Vertical, 6);
+            bx.get_style_context().add_class("quote");
+            for b in blocks.iter() {
+                let w = render_html_block(&b);
+                bx.add(&w);
+            }
+            bx.upcast::<gtk::Widget>()
+        }
+        HtmlBlock::Text(s) => {
+            let w = gtk::Label::new(None);
+            set_label_styles(&w);
+            w.set_markup(&s);
+            w.upcast::<gtk::Widget>()
+        }
+    }
+}
+
 fn build_room_msg_sticker(session_client: MatrixClient, msg: &Message) -> BodyAndType {
     let bx = gtk::Box::new(gtk::Orientation::Horizontal, 0);
     if let Some(url) = msg.msg.url.clone() {
@@ -751,6 +830,16 @@ fn build_room_msg_file(msg: &Message) -> BodyAndType {
 }
 
 fn build_room_msg_body(container: &MessageBoxContainer, msg: &Message) -> BodyAndType {
+    let bx = match msg.msg.format.as_deref() {
+        Some("org.matrix.custom.html") =>
+            build_room_msg_body_html(container, &msg)
+            .unwrap_or_else(|_err| build_room_msg_body_text(container, &msg)),
+        _ => build_room_msg_body_text(container, &msg),
+    };
+    (bx, MessageBodyType::Text)
+}
+
+fn build_room_msg_body_text(container: &MessageBoxContainer, msg: &Message) -> gtk::Box {
     let bx = gtk::Box::new(gtk::Orientation::Vertical, 6);
 
     let msgs_by_kind_of_line = msg.msg.body.lines().group_by(|&line| kind_of_line(line));
@@ -811,7 +900,7 @@ fn build_room_msg_body(container: &MessageBoxContainer, msg: &Message) -> BodyAn
         bx.add(&part);
     }
 
-    (bx, MessageBodyType::Text)
+    bx
 }
 
 #[derive(Clone, Debug)]
