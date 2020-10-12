@@ -70,7 +70,7 @@ impl App {
             .get_object::<gtk::Button>("account_settings_delete_btn")
             .expect("Can't find account_settings_delete_btn in ui file.");
 
-        let window = self.main_window.upcast_ref::<gtk::Window>();
+        let window = self.ui.main_window.upcast_ref::<gtk::Window>();
         let actions = AccountSettings::new(&window, app::get_op().clone());
         let container = self
             .ui

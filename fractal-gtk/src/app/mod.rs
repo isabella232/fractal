@@ -50,8 +50,6 @@ macro_rules! APPOP {
 // Our application struct for containing all the state we have to carry around.
 // TODO: subclass gtk::Application once possible
 pub struct App {
-    main_window: libhandy::ApplicationWindow,
-    /* Add widget directly here in place of uibuilder::UI*/
     ui: uibuilder::UI,
 }
 
@@ -92,29 +90,26 @@ impl App {
             glib::Continue(true)
         });
 
-        let window: libhandy::ApplicationWindow = ui
-            .builder
-            .get_object("main_window")
-            .expect("Couldn't find main_window in ui file.");
-        window.set_application(Some(gtk_app));
+        ui.main_window.set_application(Some(gtk_app));
 
-        window.set_title("Fractal");
+        ui.main_window.set_title("Fractal");
 
         let settings: gio::Settings = gio::Settings::new("org.gnome.Fractal");
         let window_state = WindowState::load_from_gsettings(&settings);
-        window.set_default_size(window_state.width, window_state.height);
+        ui.main_window
+            .set_default_size(window_state.width, window_state.height);
         if window_state.is_maximized {
-            window.maximize();
+            ui.main_window.maximize();
         } else if window_state.x > 0 && window_state.y > 0 {
-            window.move_(window_state.x, window_state.y);
+            ui.main_window.move_(window_state.x, window_state.y);
         }
-        window.show_all();
+        ui.main_window.show_all();
 
         if gtk_app
             .get_application_id()
             .map_or(false, |s| s.ends_with("Devel"))
         {
-            window.get_style_context().add_class("devel");
+            ui.main_window.get_style_context().add_class("devel");
         }
 
         let leaflet = ui
@@ -170,10 +165,7 @@ impl App {
 
         actions::Global::new(gtk_app, get_app_tx().clone(), get_op());
 
-        let app = AppRef::new(Self {
-            main_window: window,
-            ui,
-        });
+        let app = AppRef::new(Self { ui });
 
         app.connect_gtk();
 
@@ -191,12 +183,13 @@ impl App {
             app.on_activate();
         }));
 
-        app.main_window
+        app.ui
+            .main_window
             .connect_property_has_toplevel_focus_notify(clone!(@weak app => move |_| {
                 get_op().lock().unwrap().mark_active_room_messages();
             }));
 
-        app.main_window.connect_delete_event(move |window, _| {
+        app.ui.main_window.connect_delete_event(move |window, _| {
             let settings: gio::Settings = gio::Settings::new("org.gnome.Fractal");
             let w = window.upcast_ref();
             let window_state = WindowState::from_window(w);
@@ -220,8 +213,8 @@ impl App {
     }
 
     fn on_activate(&self) {
-        self.main_window.show();
-        self.main_window.present()
+        self.ui.main_window.show();
+        self.ui.main_window.present()
     }
 
     fn on_shutdown(self: AppRef) {
