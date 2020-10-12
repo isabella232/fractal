@@ -2,7 +2,7 @@ use gtk::prelude::*;
 
 use crate::widgets;
 
-use crate::app::App;
+use crate::app::{self, App};
 
 impl App {
     pub fn connect_autocomplete(&self) {
@@ -21,8 +21,8 @@ impl App {
             .builder
             .get_object("main_window")
             .expect("Can't find main_window in ui file.");
+        let op = app::get_op().clone();
 
-        let op = self.op.clone();
         widgets::Autocomplete::new(op, window, self.ui.sventry.view.clone(), popover, listbox)
             .connect();
     }

@@ -5,7 +5,7 @@ use crate::util::i18n::i18n;
 use gtk::prelude::*;
 use libhandy::prelude::*;
 
-use crate::app::App;
+use crate::app::{self, App};
 use crate::appop::RoomSearchPagination;
 
 impl App {
@@ -103,16 +103,14 @@ impl App {
             .get_object::<gtk::ScrolledWindow>("directory_scroll")
             .expect("Can't find directory_scroll in ui file.");
 
-        let mut op = self.op.clone();
         scroll.connect_edge_reached(move |_, dir| {
             if dir == gtk::PositionType::Bottom {
-                op.lock().unwrap().load_more_rooms();
+                app::get_op().lock().unwrap().load_more_rooms();
             }
         });
 
-        op = self.op.clone();
         q.connect_activate(move |_| {
-            let mut op = op.lock().unwrap();
+            let mut op = app::get_op().lock().unwrap();
             op.directory_pagination = RoomSearchPagination::Initial;
             op.search_rooms();
         });

@@ -4,7 +4,7 @@ use sourceview4::prelude::*;
 
 use crate::util;
 
-use crate::app::App;
+use crate::app::{self, App};
 
 impl App {
     pub fn connect_markdown(&self) {
@@ -36,9 +36,8 @@ impl App {
         md_popover_btn.set_popover(Some(&popover));
 
         let md_active = util::get_markdown_schema();
-        let op = self.op.clone();
         if md_active {
-            op.lock().unwrap().md_enabled = true;
+            app::get_op().lock().unwrap().md_enabled = true;
             markdown_switch.set_active(true);
             md_img.set_from_icon_name(Some("format-indent-more-symbolic"), gtk::IconSize::Menu);
             txt.get_style_context().remove_class("dim-label");
@@ -52,7 +51,7 @@ impl App {
 
         markdown_switch.connect_property_active_notify(
             clone!(@strong markdown_switch => move |_| {
-                op.lock().unwrap().md_enabled = markdown_switch.get_active();
+                app::get_op().lock().unwrap().md_enabled = markdown_switch.get_active();
 
                 if markdown_switch.get_active() {
                     md_img.set_from_icon_name(

@@ -1,7 +1,7 @@
 use glib::clone;
 use gtk::prelude::*;
 
-use crate::app::App;
+use crate::app::{self, App};
 
 impl App {
     pub fn connect_leave_room_dialog(&self) {
@@ -29,10 +29,9 @@ impl App {
             glib::signal::Inhibit(true)
         }));
 
-        let op = self.op.clone();
         confirm.connect_clicked(clone!(@strong dialog => move |_| {
             dialog.hide();
-            op.lock().unwrap().really_leave_active_room();
+            app::get_op().lock().unwrap().really_leave_active_room();
         }));
     }
 }

@@ -1,7 +1,7 @@
 use glib::clone;
 use gtk::prelude::*;
 
-use crate::app::App;
+use crate::app::{self, App};
 
 impl App {
     pub fn connect_join_room_dialog(&self) {
@@ -36,17 +36,15 @@ impl App {
             glib::signal::Inhibit(true)
         }));
 
-        let op = self.op.clone();
         confirm.connect_clicked(clone!(@strong entry, @strong dialog => move |_| {
             dialog.hide();
-            op.lock().unwrap().join_to_room();
+            app::get_op().lock().unwrap().join_to_room();
             entry.set_text("");
         }));
 
-        let op = self.op.clone();
         entry.connect_activate(clone!(@strong dialog => move |entry| {
             dialog.hide();
-            op.lock().unwrap().join_to_room();
+            app::get_op().lock().unwrap().join_to_room();
             entry.set_text("");
         }));
         entry.connect_changed(clone!(@strong confirm => move |entry| {

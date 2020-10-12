@@ -2,13 +2,12 @@ use gio::ActionMapExt;
 use glib::clone;
 use gtk::prelude::*;
 
-use crate::app::App;
+use crate::app::{self, App};
 
 use crate::actions::{AccountSettings, StateExt};
 
 impl App {
     pub fn connect_account_settings(&self) {
-        let op = &self.op;
         let builder = &self.ui.builder;
         let cancel_password = self
             .ui
@@ -72,7 +71,7 @@ impl App {
             .expect("Can't find account_settings_delete_btn in ui file.");
 
         let window = self.main_window.upcast_ref::<gtk::Window>();
-        let actions = AccountSettings::new(&window, op.clone());
+        let actions = AccountSettings::new(&window, app::get_op().clone());
         let container = self
             .ui
             .builder
@@ -103,29 +102,34 @@ impl App {
         }
 
         let button = name_btn.clone();
-        name_entry.connect_property_text_notify(clone!(@strong op => move |w| {
+        name_entry.connect_property_text_notify(move |w| {
             let username = w.get_text();
-            if !username.is_empty() && op.try_lock()
-                .ok()
-                .and_then(|guard| guard.login_data.clone())
-                .and_then(|login_data| login_data.username)
-                .filter(|u| *u != username)
-                .is_some()
+            if !username.is_empty()
+                && app::get_op()
+                    .try_lock()
+                    .ok()
+                    .and_then(|guard| guard.login_data.clone())
+                    .and_then(|login_data| login_data.username)
+                    .filter(|u| *u != username)
+                    .is_some()
             {
                 button.show();
                 return;
             }
             button.hide();
-        }));
+        });
 
         let button = name_btn.clone();
         name_entry.connect_activate(move |_w| {
             let _ = button.emit("clicked", &[]);
         });
 
-        name_btn.connect_clicked(clone!(@strong op => move |_w| {
-            op.lock().unwrap().update_username_account_settings();
-        }));
+        name_btn.connect_clicked(move |_w| {
+            app::get_op()
+                .lock()
+                .unwrap()
+                .update_username_account_settings();
+        });
 
         /*
         fn update_password_strength(builder: &gtk::Builder) {
@@ -181,24 +185,25 @@ impl App {
         }
 
         /* Passsword dialog */
-        password_btn.connect_clicked(clone!(@strong op => move |_| {
-            op.lock().unwrap().show_password_dialog();
-        }));
+        password_btn.connect_clicked(move |_| {
+            app::get_op().lock().unwrap().show_password_dialog();
+        });
 
-        password_dialog.connect_delete_event(clone!(@strong op => move |_, _| {
-            op.lock().unwrap().close_password_dialog();
+        password_dialog.connect_delete_event(move |_, _| {
+            app::get_op().lock().unwrap().close_password_dialog();
             glib::signal::Inhibit(true)
-        }));
+        });
 
         /* Headerbar */
-        cancel_password.connect_clicked(clone!(@strong op => move |_| {
-            op.lock().unwrap().close_password_dialog();
-        }));
+        cancel_password.connect_clicked(move |_| {
+            app::get_op().lock().unwrap().close_password_dialog();
+        });
 
-        confirm_password.connect_clicked(clone!(@strong op => move |_| {
-            op.lock().unwrap().set_new_password();
-            op.lock().unwrap().close_password_dialog();
-        }));
+        confirm_password.connect_clicked(move |_| {
+            let mut op = app::get_op().lock().unwrap();
+            op.set_new_password();
+            op.close_password_dialog();
+        });
 
         /* Body */
         verify_password.connect_property_text_notify(clone!(@strong builder => move |_| {
@@ -221,8 +226,8 @@ impl App {
             }),
         );
 
-        destruction_btn.connect_clicked(clone!(@strong op => move |_| {
-            op.lock().unwrap().account_destruction();
-        }));
+        destruction_btn.connect_clicked(move |_| {
+            app::get_op().lock().unwrap().account_destruction();
+        });
     }
 }

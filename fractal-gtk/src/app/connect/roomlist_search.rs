@@ -1,12 +1,10 @@
 use glib::clone;
 use gtk::prelude::*;
 
-use crate::app::App;
+use crate::app::{self, App};
 
 impl App {
     pub fn connect_roomlist_search(&self) {
-        let op = &self.op;
-
         let search_btn = self
             .ui
             .builder
@@ -33,11 +31,12 @@ impl App {
             }),
         );
 
-        search_entry.connect_search_changed(clone!(@strong op => move |entry| {
-            op.lock().unwrap().filter_rooms(
-                Some(entry.get_text().to_string())
-            );
-        }));
+        search_entry.connect_search_changed(move |entry| {
+            app::get_op()
+                .lock()
+                .unwrap()
+                .filter_rooms(Some(entry.get_text().to_string()));
+        });
 
         // hidding left and right boxes to align with top buttons
         let boxes = search_bar.get_children()[0]

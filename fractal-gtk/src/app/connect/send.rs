@@ -4,7 +4,7 @@ use gtk::prelude::*;
 use sourceview4::BufferExt;
 
 use crate::actions::activate_action;
-use crate::app::App;
+use crate::app::{self, App};
 
 const MAX_INPUT_HEIGHT: i32 = 100;
 
@@ -43,17 +43,15 @@ impl App {
             _ => Inhibit(false),
         });
 
-        let mut op = self.op.clone();
         msg_entry.connect_key_release_event(move |_, ev| {
             if ev.get_keyval().to_unicode().is_some() {
-                op.lock().unwrap().send_typing();
+                app::get_op().lock().unwrap().send_typing();
             }
             Inhibit(false)
         });
 
-        op = self.op.clone();
         msg_entry.connect_paste_clipboard(move |_| {
-            attach::paste(op.clone());
+            attach::paste(app::get_op().clone());
         });
 
         msg_entry.connect_focus_in_event(clone!(@strong msg_entry_box => move |_, _| {

@@ -24,7 +24,9 @@ mod windowstate;
 use windowstate::WindowState;
 
 type GlobalAppOp = Arc<Mutex<AppOp>>;
+type UpdateApp = Box<dyn FnOnce(&mut AppOp)>;
 
+static mut APP_TX: Option<glib::Sender<UpdateApp>> = None;
 static mut OP: Option<GlobalAppOp> = None;
 
 lazy_static! {
@@ -34,11 +36,10 @@ lazy_static! {
 #[macro_export]
 macro_rules! APPOP {
     ($fn: ident, ($($x:ident),*) ) => {{
-        let ctx = glib::MainContext::default();
-        ctx.invoke(move || {
-            $( let $x = $x.clone(); )*
-            crate::app::get_op().lock().unwrap().$fn($($x),*);
-        });
+        $( let $x = $x.clone(); )*
+        let _ = crate::app::get_app_tx().send(Box::new(move |op| {
+            crate::appop::AppOp::$fn(op, $($x),*);
+        }));
     }};
     ($fn: ident) => {{
         APPOP!($fn, ( ) );
@@ -51,9 +52,6 @@ pub struct App {
     main_window: libhandy::ApplicationWindow,
     /* Add widget directly here in place of uibuilder::UI*/
     ui: uibuilder::UI,
-
-    // TODO: Remove op needed in connect, but since it is global we could remove it form here
-    op: GlobalAppOp,
 }
 
 pub type AppRef = Rc<App>;
@@ -77,11 +75,20 @@ impl App {
             gtk::STYLE_PROVIDER_PRIORITY_APPLICATION,
         );
 
+        let (app_tx, app_rx) = glib::MainContext::channel(Default::default());
         let ui = uibuilder::UI::new();
 
         unsafe {
             OP = Some(Arc::new(Mutex::new(AppOp::new(ui.clone()))));
+            APP_TX = Some(app_tx);
         }
+
+        let op = get_op();
+        app_rx.attach(None, move |update_op: UpdateApp| {
+            update_op(&mut op.lock().unwrap());
+
+            glib::Continue(true)
+        });
 
         let window: libhandy::ApplicationWindow = ui
             .builder
@@ -164,7 +171,6 @@ impl App {
         let app = AppRef::new(Self {
             main_window: window,
             ui,
-            op: get_op().clone(),
         });
 
         app.connect_gtk();
@@ -185,7 +191,7 @@ impl App {
 
         app.main_window
             .connect_property_has_toplevel_focus_notify(clone!(@weak app => move |_| {
-                app.op.lock().unwrap().mark_active_room_messages();
+                get_op().lock().unwrap().mark_active_room_messages();
             }));
 
         app.main_window.connect_delete_event(move |window, _| {
@@ -198,7 +204,7 @@ impl App {
             Inhibit(false)
         });
 
-        app.op.lock().unwrap().init();
+        get_op().lock().unwrap().init();
 
         // When the application is shut down we drop our app struct
         let app_container = RefCell::new(Some(app));
@@ -217,10 +223,18 @@ impl App {
     }
 
     fn on_shutdown(self: AppRef) {
-        self.op.lock().unwrap().quit();
+        get_op().lock().unwrap().quit();
     }
 }
 
 pub fn get_op() -> &'static GlobalAppOp {
     unsafe { OP.as_ref().expect("Fatal: AppOp has not been initialized") }
+}
+
+pub fn get_app_tx() -> &'static glib::Sender<UpdateApp> {
+    unsafe {
+        APP_TX
+            .as_ref()
+            .expect("Fatal: AppRuntime has not been initialized")
+    }
 }

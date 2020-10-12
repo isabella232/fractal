@@ -1,4 +1,4 @@
-use crate::app::{App, RUNTIME};
+use crate::app::{self, App, RUNTIME};
 use crate::backend::{room, HandleError};
 use glib::object::Cast;
 use gtk::prelude::*;
@@ -14,7 +14,6 @@ impl App {
             .and_then(|gtk_buffer| TextBuffer::get_from_gtk_text_buffer(&gtk_buffer))
             .and_then(|gs_buffer| gs_buffer.get_spell_checker())
         {
-            let op = self.op.clone();
             let _signal_handler = checker.connect_property_language_notify(move |checker| {
                 if let Some(lang_code) = checker
                     .get_language()
@@ -24,7 +23,7 @@ impl App {
                     /*If the checker is modified by fn set_language in fractal-gtk/src/appop/room.rs
                     due to the user switching rooms, the op mutex is locked already.
                     If the checker is modified by gtk due to the user switching the language, the op mutex is unlocked. */
-                    if let Ok(op) = op.try_lock() {
+                    if let Ok(op) = app::get_op().try_lock() {
                         if let (Some(active_room), Some(login_data)) = (op.active_room.clone(), op.login_data.as_ref()) {
                             let session_client = login_data.session_client.clone();
                             let uid = login_data.uid.clone();
