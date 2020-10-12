@@ -290,18 +290,14 @@ pub fn new(app: &gtk::Application, op: &Arc<Mutex<AppOp>>) {
             back.borrow_mut().pop();
             if let Some(state) = back.borrow().last() {
                 debug!("Go back to state {:?}", state);
-                if let Some(op) = app::get_op() {
-                    let mut op = op.lock().unwrap();
-                    op.set_state(*state);
-                }
+                let mut op = app::get_op().lock().unwrap();
+                op.set_state(*state);
             } else {
                 // Fallback when there is no back history
                 debug!("There is no state to go back to. Go back to state NoRoom");
-                if let Some(op) = app::get_op() {
-                    let mut op = op.lock().unwrap();
-                    if op.login_data.is_some() {
-                        op.set_state(AppState::NoRoom);
-                    }
+                let mut op = app::get_op().lock().unwrap();
+                if op.login_data.is_some() {
+                    op.set_state(AppState::NoRoom);
                 }
             }
         }
@@ -383,31 +379,27 @@ pub fn get_event_id(data: Option<&glib::Variant>) -> Option<EventId> {
 
 /* TODO: get message from storage once implemented */
 pub fn get_message_by_id(id: &EventId) -> Option<Message> {
-    let op = app::get_op()?;
-    let op = op.lock().unwrap();
+    let op = app::get_op().lock().unwrap();
     let room_id = op.active_room.as_ref()?;
     op.get_message_by_id(room_id, id)
 }
 
 fn open_viewer(data: Option<&glib::Variant>) -> Option<()> {
     let msg = get_event_id(data).as_ref().and_then(get_message_by_id)?;
-    let op = app::get_op()?;
-    let mut op = op.lock().unwrap();
+    let mut op = app::get_op().lock().unwrap();
     op.create_media_viewer(msg);
     None
 }
 
 pub fn activate_action(action_group_name: &str, action_name: &str) {
-    if let Some(op) = app::get_op() {
-        let main_window = op
-            .lock()
-            .unwrap()
-            .ui
-            .builder
-            .get_object::<gtk::Window>("main_window")
-            .expect("Can't find main_window in ui file.");
-        if let Some(action_group) = main_window.get_action_group(action_group_name) {
-            action_group.activate_action(action_name, None);
-        }
+    let main_window = app::get_op()
+        .lock()
+        .unwrap()
+        .ui
+        .builder
+        .get_object::<gtk::Window>("main_window")
+        .expect("Can't find main_window in ui file.");
+    if let Some(action_group) = main_window.get_action_group(action_group_name) {
+        action_group.activate_action(action_name, None);
     }
 }

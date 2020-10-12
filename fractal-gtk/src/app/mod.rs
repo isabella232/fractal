@@ -6,7 +6,7 @@ use lazy_static::lazy_static;
 use libhandy::prelude::*;
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::sync::{Arc, Mutex, Weak};
+use std::sync::{Arc, Mutex};
 use tokio::runtime::Runtime as TokioRuntime;
 
 use log::error;
@@ -23,7 +23,9 @@ mod windowstate;
 
 use windowstate::WindowState;
 
-static mut OP: Option<Weak<Mutex<AppOp>>> = None;
+type GlobalAppOp = Arc<Mutex<AppOp>>;
+
+static mut OP: Option<GlobalAppOp> = None;
 
 lazy_static! {
     pub static ref RUNTIME: TokioRuntime = TokioRuntime::new().unwrap();
@@ -35,9 +37,7 @@ macro_rules! APPOP {
         let ctx = glib::MainContext::default();
         ctx.invoke(move || {
             $( let $x = $x.clone(); )*
-            if let Some(op) = crate::app::get_op() {
-                op.lock().unwrap().$fn($($x),*);
-            }
+            crate::app::get_op().lock().unwrap().$fn($($x),*);
         });
     }};
     ($fn: ident) => {{
@@ -53,7 +53,7 @@ pub struct App {
     ui: uibuilder::UI,
 
     // TODO: Remove op needed in connect, but since it is global we could remove it form here
-    op: Arc<Mutex<AppOp>>,
+    op: GlobalAppOp,
 }
 
 pub type AppRef = Rc<App>;
@@ -78,6 +78,11 @@ impl App {
         );
 
         let ui = uibuilder::UI::new();
+
+        unsafe {
+            OP = Some(Arc::new(Mutex::new(AppOp::new(ui.clone()))));
+        }
+
         let window: libhandy::ApplicationWindow = ui
             .builder
             .get_object("main_window")
@@ -143,29 +148,23 @@ impl App {
             .expect("Can't find account_settings_box in ui file.");
         view_stack.add_named(&child, "account-settings");
 
-        let op = Arc::new(Mutex::new(AppOp::new(ui.clone())));
-
         let main_stack = ui
             .builder
             .get_object::<gtk::Stack>("main_content_stack")
             .expect("Can't find main_content_stack in ui file.");
 
         // Add login view to the main stack
-        let login = widgets::LoginWidget::new(&op);
+        let login = widgets::LoginWidget::new(get_op());
         main_stack.add_named(&login.container, "login");
 
         gtk_app.set_accels_for_action("login.back", &["Escape"]);
 
-        unsafe {
-            OP = Some(Arc::downgrade(&op));
-        }
-
-        actions::Global::new(gtk_app, &op);
+        actions::Global::new(gtk_app, get_op());
 
         let app = AppRef::new(Self {
             main_window: window,
             ui,
-            op,
+            op: get_op().clone(),
         });
 
         app.connect_gtk();
@@ -174,7 +173,7 @@ impl App {
     }
 
     pub fn on_startup(gtk_app: &gtk::Application) {
-        // Create application
+        // Create application.
         let app = App::new(gtk_app);
 
         // Initialize libhandy
@@ -222,6 +221,6 @@ impl App {
     }
 }
 
-pub fn get_op() -> Option<Arc<Mutex<AppOp>>> {
-    unsafe { OP.as_ref().and_then(|x| x.upgrade()) }
+pub fn get_op() -> &'static GlobalAppOp {
+    unsafe { OP.as_ref().expect("Fatal: AppOp has not been initialized") }
 }

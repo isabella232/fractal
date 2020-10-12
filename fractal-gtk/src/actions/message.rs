@@ -229,8 +229,7 @@ fn get_message(id: Option<&glib::Variant>) -> Option<Message> {
 }
 
 fn request_more_messages(session_client: MatrixClient, id: Option<RoomId>) -> Option<()> {
-    let op = app::get_op()?;
-    let op = op.lock().unwrap();
+    let op = app::get_op().lock().unwrap();
     let id = id?;
     let r = op.rooms.get(&id)?;
     if let Some(prev_batch) = r.prev_batch.clone() {
