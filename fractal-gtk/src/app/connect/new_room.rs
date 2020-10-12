@@ -51,7 +51,7 @@ impl App {
         confirm.connect_clicked(
             clone!(@strong entry, @strong dialog, @strong private => move |_| {
                 dialog.hide();
-                app::get_op().lock().unwrap().create_new_room();
+                let _ = app::get_app_tx().send(Box::new(|op| op.create_new_room()));
                 entry.set_text("");
                 private.set_active(true);
             }),
@@ -59,7 +59,7 @@ impl App {
 
         entry.connect_activate(clone!(@strong dialog => move |entry| {
             dialog.hide();
-            app::get_op().lock().unwrap().create_new_room();
+            let _ = app::get_app_tx().send(Box::new(|op| op.create_new_room()));
             entry.set_text("");
             private.set_active(true);
         }));

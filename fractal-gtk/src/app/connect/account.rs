@@ -125,10 +125,7 @@ impl App {
         });
 
         name_btn.connect_clicked(move |_w| {
-            app::get_op()
-                .lock()
-                .unwrap()
-                .update_username_account_settings();
+            let _ = app::get_app_tx().send(Box::new(|op| op.update_username_account_settings()));
         });
 
         /*
@@ -186,23 +183,24 @@ impl App {
 
         /* Passsword dialog */
         password_btn.connect_clicked(move |_| {
-            app::get_op().lock().unwrap().show_password_dialog();
+            let _ = app::get_app_tx().send(Box::new(|op| op.show_password_dialog()));
         });
 
         password_dialog.connect_delete_event(move |_, _| {
-            app::get_op().lock().unwrap().close_password_dialog();
+            let _ = app::get_app_tx().send(Box::new(|op| op.close_password_dialog()));
             glib::signal::Inhibit(true)
         });
 
         /* Headerbar */
         cancel_password.connect_clicked(move |_| {
-            app::get_op().lock().unwrap().close_password_dialog();
+            let _ = app::get_app_tx().send(Box::new(|op| op.close_password_dialog()));
         });
 
         confirm_password.connect_clicked(move |_| {
-            let mut op = app::get_op().lock().unwrap();
-            op.set_new_password();
-            op.close_password_dialog();
+            let _ = app::get_app_tx().send(Box::new(|op| {
+                op.set_new_password();
+                op.close_password_dialog();
+            }));
         });
 
         /* Body */
@@ -227,7 +225,7 @@ impl App {
         );
 
         destruction_btn.connect_clicked(move |_| {
-            app::get_op().lock().unwrap().account_destruction();
+            let _ = app::get_app_tx().send(Box::new(|op| op.account_destruction()));
         });
     }
 }

@@ -7,7 +7,6 @@ use std::io::Error as IoError;
 use url::{ParseError as UrlError, Url};
 
 use super::MediaError;
-use crate::actions::global::activate_action;
 use crate::appop::UserInfoCache;
 use crate::backend::HTTP_CLIENT;
 use crate::util::cache_dir_path;
@@ -113,10 +112,6 @@ impl HandleError for GetThreePIDError {
     fn handle_error(&self) {
         let error = i18n("Sorry, account settings can’t be loaded.");
         APPOP!(show_load_settings_error_dialog, (error));
-        let ctx = glib::MainContext::default();
-        ctx.invoke(move || {
-            activate_action("app", "back");
-        })
     }
 }
 

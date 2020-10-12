@@ -105,14 +105,15 @@ impl App {
 
         scroll.connect_edge_reached(move |_, dir| {
             if dir == gtk::PositionType::Bottom {
-                app::get_op().lock().unwrap().load_more_rooms();
+                let _ = app::get_app_tx().send(Box::new(|op| op.load_more_rooms()));
             }
         });
 
         q.connect_activate(move |_| {
-            let mut op = app::get_op().lock().unwrap();
-            op.directory_pagination = RoomSearchPagination::Initial;
-            op.search_rooms();
+            let _ = app::get_app_tx().send(Box::new(|op| {
+                op.directory_pagination = RoomSearchPagination::Initial;
+                op.search_rooms();
+            }));
         });
 
         default_matrix_server_radio.connect_toggled(clone!(

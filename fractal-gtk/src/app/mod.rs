@@ -24,9 +24,10 @@ mod windowstate;
 use windowstate::WindowState;
 
 type GlobalAppOp = Arc<Mutex<AppOp>>;
-type UpdateApp = Box<dyn FnOnce(&mut AppOp)>;
+pub type UpdateApp = Box<dyn FnOnce(&mut AppOp)>;
 
 static mut APP_TX: Option<glib::Sender<UpdateApp>> = None;
+// TODO: Deprecated. It should be removed
 static mut OP: Option<GlobalAppOp> = None;
 
 lazy_static! {
@@ -77,9 +78,10 @@ impl App {
 
         let (app_tx, app_rx) = glib::MainContext::channel(Default::default());
         let ui = uibuilder::UI::new();
+        let op = AppOp::new(ui.clone(), app_tx.clone());
 
         unsafe {
-            OP = Some(Arc::new(Mutex::new(AppOp::new(ui.clone()))));
+            OP = Some(Arc::new(Mutex::new(op)));
             APP_TX = Some(app_tx);
         }
 
@@ -166,7 +168,7 @@ impl App {
 
         gtk_app.set_accels_for_action("login.back", &["Escape"]);
 
-        actions::Global::new(gtk_app, get_op());
+        actions::Global::new(gtk_app, get_app_tx().clone(), get_op());
 
         let app = AppRef::new(Self {
             main_window: window,
@@ -227,7 +229,8 @@ impl App {
     }
 }
 
-pub fn get_op() -> &'static GlobalAppOp {
+// TODO: Deprecated. It should be removed
+pub(self) fn get_op() -> &'static GlobalAppOp {
     unsafe { OP.as_ref().expect("Fatal: AppOp has not been initialized") }
 }
 

@@ -25,17 +25,17 @@ impl App {
             .expect("Can't find invite_reject in ui file.");
 
         reject.connect_clicked(clone!(@strong dialog => move |_| {
-            app::get_op().lock().unwrap().accept_inv(false);
+            let _ = app::get_app_tx().send(Box::new(|op| op.accept_inv(false)));
             dialog.hide();
         }));
         dialog.connect_delete_event(clone!(@strong dialog => move |_, _| {
-            app::get_op().lock().unwrap().accept_inv(false);
+            let _ = app::get_app_tx().send(Box::new(|op| op.accept_inv(false)));
             dialog.hide();
             glib::signal::Inhibit(true)
         }));
 
         accept.connect_clicked(clone!(@strong dialog => move |_| {
-            app::get_op().lock().unwrap().accept_inv(true);
+            let _ = app::get_app_tx().send(Box::new(|op| op.accept_inv(true)));
             dialog.hide();
         }));
     }
@@ -99,7 +99,7 @@ impl App {
                     let end = buffer.get_end_iter();
 
                     if let Some(text) = buffer.get_text(&start, &end, false).map(|gstr| gstr.to_string()) {
-                        app::get_op().lock().unwrap().search_invite_user(text);
+                        let _ = app::get_app_tx().send(Box::new(|op| op.search_invite_user(text)));
                     }
                 }
 
@@ -114,7 +114,7 @@ impl App {
         invite_entry.connect_focus_in_event(clone!(@strong invite_entry_box => move |_, _| {
             invite_entry_box.get_style_context().add_class("message-input-focused");
 
-            app::get_op().lock().unwrap().remove_invite_user_dialog_placeholder();
+            let _ = app::get_app_tx().send(Box::new(|op| op.remove_invite_user_dialog_placeholder()));
 
             Inhibit(false)
         }));
@@ -122,7 +122,7 @@ impl App {
         invite_entry.connect_focus_out_event(clone!(@strong invite_entry_box => move |_, _| {
             invite_entry_box.get_style_context().remove_class("message-input-focused");
 
-            app::get_op().lock().unwrap().set_invite_user_dialog_placeholder();
+            let _ = app::get_app_tx().send(Box::new(|op| op.set_invite_user_dialog_placeholder()));
 
             Inhibit(false)
         }));
@@ -130,22 +130,22 @@ impl App {
         if let Some(buffer) = invite_entry.get_buffer() {
             buffer.connect_delete_range(move |_, _, _| {
                 glib::idle_add_local(move || {
-                    app::get_op().lock().unwrap().detect_removed_invite();
+                    let _ = app::get_app_tx().send(Box::new(|op| op.detect_removed_invite()));
                     Continue(false)
                 });
             });
         }
 
         dialog.connect_delete_event(move |_, _| {
-            app::get_op().lock().unwrap().close_invite_dialog();
+            let _ = app::get_app_tx().send(Box::new(|op| op.close_invite_dialog()));
             glib::signal::Inhibit(true)
         });
         cancel.connect_clicked(move |_| {
-            app::get_op().lock().unwrap().close_invite_dialog();
+            let _ = app::get_app_tx().send(Box::new(|op| op.close_invite_dialog()));
         });
         invite.set_sensitive(false);
         invite.connect_clicked(move |_| {
-            app::get_op().lock().unwrap().invite();
+            let _ = app::get_app_tx().send(Box::new(|op| op.invite()));
         });
     }
 }

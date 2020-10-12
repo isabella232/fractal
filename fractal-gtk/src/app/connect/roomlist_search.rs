@@ -32,10 +32,8 @@ impl App {
         );
 
         search_entry.connect_search_changed(move |entry| {
-            app::get_op()
-                .lock()
-                .unwrap()
-                .filter_rooms(Some(entry.get_text().to_string()));
+            let search_text = Some(entry.get_text().to_string());
+            let _ = app::get_app_tx().send(Box::new(|op| op.filter_rooms(search_text)));
         });
 
         // hidding left and right boxes to align with top buttons

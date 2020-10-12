@@ -3,6 +3,7 @@ use gtk::prelude::*;
 use log::info;
 use std::path::PathBuf;
 
+use crate::actions::global::activate_action;
 use crate::app::RUNTIME;
 use crate::appop::AppOp;
 use crate::appop::AppState;
@@ -200,6 +201,7 @@ impl AppOp {
         let dialog = self.create_error_dialog(error);
         dialog.connect_response(move |w, _| w.close());
         dialog.show_all();
+        activate_action(&self.app_tx, "app", "back");
     }
 
     pub fn create_error_dialog(&self, error: String) -> gtk::MessageDialog {

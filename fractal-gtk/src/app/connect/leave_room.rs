@@ -31,7 +31,7 @@ impl App {
 
         confirm.connect_clicked(clone!(@strong dialog => move |_| {
             dialog.hide();
-            app::get_op().lock().unwrap().really_leave_active_room();
+            let _ = app::get_app_tx().send(Box::new(|op| op.really_leave_active_room()));
         }));
     }
 }

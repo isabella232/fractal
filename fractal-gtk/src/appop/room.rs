@@ -298,11 +298,7 @@ impl AppOp {
         }
 
         let back_history = self.room_back_history.clone();
-        let actions = actions::Message::new(
-            login_data.session_client.clone(),
-            self.ui.clone(),
-            back_history,
-        );
+        let actions = actions::Message::new(self.app_tx.clone(), self.ui.clone(), back_history);
         let history = widgets::RoomHistory::new(actions, active_room.clone(), &self.ui);
         self.history = if let Some(mut history) = history {
             history.create(

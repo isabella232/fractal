@@ -38,13 +38,13 @@ impl App {
 
         confirm.connect_clicked(clone!(@strong entry, @strong dialog => move |_| {
             dialog.hide();
-            app::get_op().lock().unwrap().join_to_room();
+            let _ = app::get_app_tx().send(Box::new(|op| op.join_to_room()));
             entry.set_text("");
         }));
 
         entry.connect_activate(clone!(@strong dialog => move |entry| {
             dialog.hide();
-            app::get_op().lock().unwrap().join_to_room();
+            let _ = app::get_app_tx().send(Box::new(|op| op.join_to_room()));
             entry.set_text("");
         }));
         entry.connect_changed(clone!(@strong confirm => move |entry| {

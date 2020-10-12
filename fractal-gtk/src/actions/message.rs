@@ -2,14 +2,14 @@ use crate::backend::{dw_media, media, room, ContentType};
 use glib::clone;
 use log::error;
 use matrix_sdk::identifiers::RoomId;
-use matrix_sdk::Client as MatrixClient;
 use std::cell::RefCell;
 use std::fs;
 use std::process::Command;
 use std::rc::Rc;
 
 use crate::actions::AppState;
-use crate::app::{self, RUNTIME};
+use crate::app::{UpdateApp, RUNTIME};
+use crate::appop::AppOp;
 use crate::backend::HandleError;
 use crate::model::message::Message;
 use crate::uibuilder::UI;
@@ -28,7 +28,7 @@ use crate::widgets::SourceDialog;
 
 /* This creates all actions the room history can perform */
 pub fn new(
-    session_client: MatrixClient,
+    app_tx: glib::Sender<UpdateApp>,
     ui: UI,
     back_history: Rc<RefCell<Vec<AppState>>>,
 ) -> gio::SimpleActionGroup {
@@ -59,15 +59,18 @@ pub fn new(
         .builder
         .get_object("main_window")
         .expect("Can't find main_window in ui file.");
-    show_source.connect_activate(clone!(@weak parent => move |_, data| {
+    show_source.connect_activate(clone!(@weak parent, @strong app_tx => move |_, data| {
         let viewer = SourceDialog::new();
         viewer.set_parent_window(&parent);
-        if let Some(m) = get_message(data) {
-            let error = i18n("This message has no source.");
-            let source = m.source.as_ref().unwrap_or(&error);
+        let data = data.cloned();
+        let _ = app_tx.send(Box::new(move |op| {
+            if let Some(m) = get_message(op, data.as_ref()) {
+                let error = i18n("This message has no source.");
+                let source = m.source.as_ref().unwrap_or(&error);
 
-            viewer.show(source);
-        }
+                viewer.show(source);
+            }
+        }));
     }));
 
     let window = ui
@@ -77,7 +80,8 @@ pub fn new(
     reply.connect_activate(clone!(
     @weak back_history,
     @weak window,
-    @weak ui.sventry.view as msg_entry
+    @weak ui.sventry.view as msg_entry,
+    @strong app_tx
     => move |_, data| {
         let state = back_history.borrow().last().cloned();
         if let Some(AppState::MediaViewer) = state {
@@ -89,24 +93,30 @@ pub fn new(
         }
         if let Some(buffer) = msg_entry.get_buffer() {
             let mut start = buffer.get_start_iter();
-            if let Some(m) = get_message(data) {
-                let quote = m
-                    .body
-                    .lines()
-                    .map(|l| "> ".to_owned() + l)
-                    .collect::<Vec<String>>()
-                    .join("\n")
-                    + "\n"
-                    + "\n";
-                buffer.insert(&mut start, &quote);
-                msg_entry.grab_focus();
-            }
+            let data = data.cloned();
+            let _ = app_tx.send(Box::new(move |op| {
+                if let Some(m) = get_message(op, data.as_ref()) {
+                    let quote = m
+                        .body
+                        .lines()
+                        .map(|l| "> ".to_owned() + l)
+                        .collect::<Vec<String>>()
+                        .join("\n")
+                        + "\n"
+                        + "\n";
+                    buffer.insert(&mut start, &quote);
+                    msg_entry.grab_focus();
+                }
+            }));
         }
     }));
 
-    open_with.connect_activate(clone!(@strong session_client => move |_, data| {
-        if let Some(url) = get_message(data).and_then(|m| m.url) {
-            let session_client = session_client.clone();
+    open_with.connect_activate(clone!(@strong app_tx => move |_, data| {
+        let data = data.cloned();
+        let _ = app_tx.send(Box::new(move |op| {
+            let url = unwrap_or_unit_return!(get_message(op, data.as_ref()).and_then(|m| m.url));
+            let session_client =
+                unwrap_or_unit_return!(op.login_data.as_ref().map(|ld| ld.session_client.clone()));
             RUNTIME.spawn(async move {
                 match dw_media(session_client, &url, ContentType::Download, None).await {
                     Ok(fname) => {
@@ -115,52 +125,57 @@ pub fn new(
                             .spawn()
                             .expect("failed to execute process");
                     }
-                    Err(err) => {
-                        err.handle_error()
-                    }
+                    Err(err) => err.handle_error(),
                 }
             });
-        }
+        }));
     }));
 
-    save_as.connect_activate(clone!(
-    @strong session_client,
-    @weak parent as window
-    => move |_, data| {
-        if let Some((Some(url), name)) = get_message(data).map(|m| (m.url, m.body)) {
-            let session_client = session_client.clone();
-            let response = RUNTIME.spawn(async move {
-                media::get_media(session_client, &url).await
-            });
+    save_as.connect_activate(
+        clone!(@weak parent as window, @strong app_tx => move |_, data| {
+            let data = data.cloned();
+            let _ = app_tx.send(Box::new(move |op| {
+                let (url, name) = unwrap_or_unit_return!(
+                    get_message(op, data.as_ref()).and_then(|m| Some((m.url?, m.body)))
+                );
+                let session_client = unwrap_or_unit_return!(
+                    op.login_data.as_ref().map(|ld| ld.session_client.clone())
+                );
+                let response = RUNTIME.spawn(async move {
+                    media::get_media(session_client, &url).await
+                });
 
-            glib::MainContext::default().spawn_local(async move {
-                match response.await {
-                    Err(_) => {
-                        let msg = i18n("Could not download the file");
-                        ErrorDialog::new(false, &msg);
-                    },
-                    Ok(Ok(fname)) => {
-                        if let Some(path) = save(&window.upcast_ref(), &name, &[]) {
-                            // TODO use glib to copy file
-                            if fs::copy(fname, path).is_err() {
-                                ErrorDialog::new(false, &i18n("Couldn’t save file"));
+                glib::MainContext::default().spawn_local(async move {
+                    match response.await {
+                        Err(_) => {
+                            let msg = i18n("Could not download the file");
+                            ErrorDialog::new(false, &msg);
+                        },
+                        Ok(Ok(fname)) => {
+                            if let Some(path) = save(&window.upcast_ref(), &name, &[]) {
+                                // TODO use glib to copy file
+                                if fs::copy(fname, path).is_err() {
+                                    ErrorDialog::new(false, &i18n("Couldn’t save file"));
+                                }
                             }
                         }
+                        Ok(Err(err)) => {
+                            error!("Media path could not be found due to error: {:?}", err);
+                        }
                     }
-                    Ok(Err(err)) => {
-                        error!("Media path could not be found due to error: {:?}", err);
-                    }
-                }
-            });
-        }
-    }));
+                });
+            }));
+        }),
+    );
 
-    copy_image.connect_activate(clone!(@strong session_client => move |_, data| {
-        if let Some(url) = get_message(data).and_then(|m| m.url) {
-            let session_client = session_client.clone();
-            let response = RUNTIME.spawn(async move {
-                media::get_media(session_client, &url).await
-            });
+    copy_image.connect_activate(clone!(@strong app_tx => move |_, data| {
+        let data = data.cloned();
+        let _ = app_tx.send(Box::new(move |op| {
+            let url = unwrap_or_unit_return!(get_message(op, data.as_ref()).and_then(|m| m.url));
+            let session_client =
+                unwrap_or_unit_return!(op.login_data.as_ref().map(|ld| ld.session_client.clone()));
+            let response =
+                RUNTIME.spawn(async move { media::get_media(session_client, &url).await });
 
             glib::MainContext::default().spawn_local(async move {
                 match response.await {
@@ -180,22 +195,25 @@ pub fn new(
                     }
                 }
             });
-        }
+        }));
     }));
 
-    copy_text.connect_activate(move |_, data| {
-        if let Some(m) = get_message(data) {
-            let atom = gdk::Atom::intern("CLIPBOARD");
-            let clipboard = gtk::Clipboard::get(&atom);
+    copy_text.connect_activate(clone!(@strong app_tx => move |_, data| {
+        let data = data.cloned();
+        let _ = app_tx.send(Box::new(move |op| {
+            if let Some(m) = get_message(op, data.as_ref()) {
+                let atom = gdk::Atom::intern("CLIPBOARD");
+                let clipboard = gtk::Clipboard::get(&atom);
 
-            clipboard.set_text(&m.body);
-        }
-    });
+                clipboard.set_text(&m.body);
+            }
+        }));
+    }));
 
     delete.connect_activate(clone!(
-    @strong session_client,
     @weak back_history,
-    @weak window
+    @weak window,
+    @strong app_tx
     => move |_, data| {
         let state = back_history.borrow().last().cloned();
         if let Some(AppState::MediaViewer) = state {
@@ -205,32 +223,41 @@ pub fn new(
                 error!("The action group app is not attached to the main window.");
             }
         }
-        if let Some(msg) = get_message(data) {
-            let session_client = session_client.clone();
+        let data = data.cloned();
+        let _ = app_tx.send(Box::new(move |op| {
+            let msg = unwrap_or_unit_return!(get_message(op, data.as_ref()));
+            let session_client = unwrap_or_unit_return!(
+                op.login_data.as_ref().map(|ld| ld.session_client.clone())
+            );
             RUNTIME.spawn(async move {
                 let query = room::redact_msg(session_client, msg).await;
                 if let Err(err) = query {
                     err.handle_error();
                 }
             });
-        }
+        }));
     }));
 
     load_more_messages.connect_activate(move |_, data| {
-        let id = get_room_id(data);
-        request_more_messages(session_client.clone(), id);
+        let data = data.cloned();
+        let _ = app_tx.send(Box::new(move |op| {
+            let id = get_room_id(data.as_ref());
+            request_more_messages(op, id);
+        }));
     });
 
     actions
 }
 
-fn get_message(id: Option<&glib::Variant>) -> Option<Message> {
-    get_event_id(id).as_ref().and_then(get_message_by_id)
+fn get_message(op: &AppOp, id: Option<&glib::Variant>) -> Option<Message> {
+    get_event_id(id)
+        .as_ref()
+        .and_then(|evid| get_message_by_id(op, evid))
 }
 
-fn request_more_messages(session_client: MatrixClient, id: Option<RoomId>) -> Option<()> {
-    let op = app::get_op().lock().unwrap();
+fn request_more_messages(op: &AppOp, id: Option<RoomId>) -> Option<()> {
     let id = id?;
+    let session_client = op.login_data.as_ref()?.session_client.clone();
     let r = op.rooms.get(&id)?;
     if let Some(prev_batch) = r.prev_batch.clone() {
         RUNTIME.spawn(async move {

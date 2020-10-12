@@ -4,7 +4,7 @@ use std::convert::TryInto;
 use std::rc::Rc;
 use std::sync::{Arc, Mutex};
 
-use crate::app;
+use crate::app::UpdateApp;
 use crate::appop::AppOp;
 use crate::model::message::Message;
 use crate::util::i18n::i18n;
@@ -65,7 +65,7 @@ impl From<AppState> for glib::Variant {
 
 /* This creates globale actions which are connected to the application */
 /* TODO: Remove op */
-pub fn new(app: &gtk::Application, op: &Arc<Mutex<AppOp>>) {
+pub fn new(app: &gtk::Application, app_tx: glib::Sender<UpdateApp>, op: &Arc<Mutex<AppOp>>) {
     let settings = SimpleAction::new("settings", None);
     let chat = SimpleAction::new("start_chat", None);
     let newr = SimpleAction::new("new_room", None);
@@ -267,7 +267,7 @@ pub fn new(app: &gtk::Application, op: &Arc<Mutex<AppOp>>) {
     media_viewer.connect_activate(clone!(
     @weak back_history as back
     => move |_, data| {
-        open_viewer(data);
+        open_viewer(&app_tx, data.cloned());
         back.borrow_mut().push(AppState::MediaViewer);
     }));
 
@@ -280,7 +280,7 @@ pub fn new(app: &gtk::Application, op: &Arc<Mutex<AppOp>>) {
 
     let mv = op.lock().unwrap().media_viewer.clone();
     let back_weak = Rc::downgrade(&back_history);
-    back.connect_activate(clone!(@weak mv => move |_, _| {
+    back.connect_activate(clone!(@weak mv, @strong op => move |_, _| {
         if let Some(mut mv) = mv.borrow_mut().take() {
             mv.disconnect_signal_id();
         }
@@ -288,14 +288,13 @@ pub fn new(app: &gtk::Application, op: &Arc<Mutex<AppOp>>) {
         // Remove the current state from the store
         if let Some(back) = back_weak.upgrade() {
             back.borrow_mut().pop();
+            let mut op = op.lock().unwrap();
             if let Some(state) = back.borrow().last() {
                 debug!("Go back to state {:?}", state);
-                let mut op = app::get_op().lock().unwrap();
                 op.set_state(*state);
             } else {
                 // Fallback when there is no back history
                 debug!("There is no state to go back to. Go back to state NoRoom");
-                let mut op = app::get_op().lock().unwrap();
                 if op.login_data.is_some() {
                     op.set_state(AppState::NoRoom);
                 }
@@ -378,28 +377,35 @@ pub fn get_event_id(data: Option<&glib::Variant>) -> Option<EventId> {
 }
 
 /* TODO: get message from storage once implemented */
-pub fn get_message_by_id(id: &EventId) -> Option<Message> {
-    let op = app::get_op().lock().unwrap();
+pub(super) fn get_message_by_id(op: &AppOp, id: &EventId) -> Option<Message> {
     let room_id = op.active_room.as_ref()?;
     op.get_message_by_id(room_id, id)
 }
 
-fn open_viewer(data: Option<&glib::Variant>) -> Option<()> {
-    let msg = get_event_id(data).as_ref().and_then(get_message_by_id)?;
-    let mut op = app::get_op().lock().unwrap();
-    op.create_media_viewer(msg);
-    None
+fn open_viewer(app_tx: &glib::Sender<UpdateApp>, data: Option<glib::Variant>) {
+    let _ = app_tx.send(Box::new(move |op| {
+        if let Some(msg) = get_event_id(data.as_ref())
+            .as_ref()
+            .and_then(|evid| get_message_by_id(op, evid))
+        {
+            op.create_media_viewer(msg);
+        }
+    }));
 }
 
-pub fn activate_action(action_group_name: &str, action_name: &str) {
-    let main_window = app::get_op()
-        .lock()
-        .unwrap()
-        .ui
-        .builder
-        .get_object::<gtk::Window>("main_window")
-        .expect("Can't find main_window in ui file.");
-    if let Some(action_group) = main_window.get_action_group(action_group_name) {
-        action_group.activate_action(action_name, None);
-    }
+pub fn activate_action(
+    app_tx: &glib::Sender<UpdateApp>,
+    action_group_name: &'static str,
+    action_name: &'static str,
+) {
+    let _ = app_tx.send(Box::new(move |op| {
+        let main_window = op
+            .ui
+            .builder
+            .get_object::<gtk::Window>("main_window")
+            .expect("Can't find main_window in ui file.");
+        if let Some(action_group) = main_window.get_action_group(action_group_name) {
+            action_group.activate_action(action_name, None);
+        }
+    }));
 }

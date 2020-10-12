@@ -37,7 +37,9 @@ impl App {
 
         let md_active = util::get_markdown_schema();
         if md_active {
-            app::get_op().lock().unwrap().md_enabled = true;
+            let _ = app::get_app_tx().send(Box::new(|op| {
+                op.md_enabled = true;
+            }));
             markdown_switch.set_active(true);
             md_img.set_from_icon_name(Some("format-indent-more-symbolic"), gtk::IconSize::Menu);
             txt.get_style_context().remove_class("dim-label");
@@ -51,7 +53,10 @@ impl App {
 
         markdown_switch.connect_property_active_notify(
             clone!(@strong markdown_switch => move |_| {
-                app::get_op().lock().unwrap().md_enabled = markdown_switch.get_active();
+                let md_active = markdown_switch.get_active();
+                let _ = app::get_app_tx().send(Box::new(move |op| {
+                    op.md_enabled = md_active;
+                }));
 
                 if markdown_switch.get_active() {
                     md_img.set_from_icon_name(

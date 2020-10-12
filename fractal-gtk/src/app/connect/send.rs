@@ -37,7 +37,7 @@ impl App {
                 if !key.get_state().contains(gdk::ModifierType::SHIFT_MASK)
                     && !autocomplete_popover.is_visible() =>
             {
-                activate_action("app", "send-message");
+                activate_action(app::get_app_tx(), "app", "send-message");
                 Inhibit(true)
             }
             _ => Inhibit(false),
@@ -45,7 +45,7 @@ impl App {
 
         msg_entry.connect_key_release_event(move |_, ev| {
             if ev.get_keyval().to_unicode().is_some() {
-                app::get_op().lock().unwrap().send_typing();
+                let _ = app::get_app_tx().send(Box::new(|op| op.send_typing()));
             }
             Inhibit(false)
         });
