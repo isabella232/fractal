@@ -73,7 +73,6 @@ use super::{
     dw_media, get_prev_batch_from, get_ruma_error_kind, remove_matrix_access_token_if_present,
     ContentType, HandleError,
 };
-use crate::app::App;
 use crate::util::i18n::i18n;
 use crate::APPOP;
 

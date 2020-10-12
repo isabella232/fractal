@@ -7,7 +7,7 @@ use matrix_sdk::identifiers::RoomId;
 use matrix_sdk::Client as MatrixClient;
 use std::convert::TryFrom;
 
-use crate::app::{App, RUNTIME};
+use crate::app::RUNTIME;
 use crate::backend::HandleError;
 use crate::util::i18n::i18n;
 

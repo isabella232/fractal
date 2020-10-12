@@ -10,7 +10,7 @@ use url::Url;
 
 use gtk::prelude::*;
 
-use crate::app::{App, RUNTIME};
+use crate::app::RUNTIME;
 use crate::appop::AppOp;
 use crate::backend::HandleError;
 

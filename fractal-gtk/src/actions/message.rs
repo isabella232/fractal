@@ -9,12 +9,11 @@ use std::process::Command;
 use std::rc::Rc;
 
 use crate::actions::AppState;
-use crate::app::RUNTIME;
+use crate::app::{self, RUNTIME};
 use crate::backend::HandleError;
 use crate::model::message::Message;
 use crate::uibuilder::UI;
 use crate::util::i18n::i18n;
-use crate::App;
 use gio::ActionGroupExt;
 use gio::ActionMapExt;
 use gio::SimpleAction;
@@ -230,7 +229,7 @@ fn get_message(id: Option<&glib::Variant>) -> Option<Message> {
 }
 
 fn request_more_messages(session_client: MatrixClient, id: Option<RoomId>) -> Option<()> {
-    let op = App::get_op()?;
+    let op = app::get_op()?;
     let op = op.lock().unwrap();
     let id = id?;
     let r = op.rooms.get(&id)?;

@@ -3,7 +3,7 @@ use gtk::prelude::*;
 use log::info;
 use std::path::PathBuf;
 
-use crate::app::{App, RUNTIME};
+use crate::app::RUNTIME;
 use crate::appop::AppOp;
 use crate::appop::AppState;
 use crate::backend::HandleError;

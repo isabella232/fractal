@@ -19,7 +19,6 @@ use matrix_sdk::SyncSettings;
 use std::{collections::HashMap, time::Duration};
 
 use super::{get_ruma_client_error, remove_matrix_access_token_if_present, HandleError};
-use crate::app::App;
 use crate::APPOP;
 
 pub enum RoomElement {

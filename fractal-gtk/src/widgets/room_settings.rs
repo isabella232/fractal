@@ -11,7 +11,7 @@ use gtk::prelude::*;
 
 use crate::actions;
 use crate::actions::{ButtonState, StateExt};
-use crate::app::{App, RUNTIME};
+use crate::app::RUNTIME;
 use crate::model::{member::Member, room::Room};
 use crate::util::markup_text;
 use crate::widgets;

@@ -6,7 +6,7 @@ use gio::SimpleActionGroup;
 use glib::clone;
 use std::sync::{Arc, Mutex};
 
-use crate::app::{App, RUNTIME};
+use crate::app::RUNTIME;
 use crate::appop::AppOp;
 
 use crate::widgets::FileDialog::open;

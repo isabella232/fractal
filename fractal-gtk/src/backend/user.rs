@@ -51,7 +51,6 @@ use matrix_sdk::assign;
 use super::{dw_media, ContentType};
 
 use super::{get_ruma_error_kind, remove_matrix_access_token_if_present, HandleError};
-use crate::app::App;
 use crate::util::i18n::i18n;
 use crate::APPOP;
 use serde_json::json;

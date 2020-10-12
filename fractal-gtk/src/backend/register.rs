@@ -19,7 +19,6 @@ use crate::backend::HTTP_CLIENT;
 use crate::globals;
 
 use super::HandleError;
-use crate::app::App;
 use crate::util::i18n::i18n;
 use crate::APPOP;
 

@@ -1,7 +1,7 @@
 use crate::backend::room;
 use gtk::prelude::*;
 
-use crate::app::{App, RUNTIME};
+use crate::app::RUNTIME;
 use crate::appop::AppOp;
 use crate::appop::SearchType;
 use crate::backend::HandleError;

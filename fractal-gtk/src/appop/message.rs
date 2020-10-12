@@ -20,7 +20,6 @@ use url::Url;
 use crate::app::RUNTIME;
 use crate::appop::room::Force;
 use crate::appop::AppOp;
-use crate::App;
 
 use crate::uitypes::MessageContent;
 use crate::uitypes::RowType;

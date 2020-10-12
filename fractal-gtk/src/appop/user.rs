@@ -4,7 +4,7 @@ use crate::backend::{user, HandleError};
 
 use std::path::PathBuf;
 
-use crate::app::{App, RUNTIME};
+use crate::app::RUNTIME;
 use crate::appop::AppOp;
 
 use crate::cache::download_to_cache;

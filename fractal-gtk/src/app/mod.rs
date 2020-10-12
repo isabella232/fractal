@@ -35,7 +35,7 @@ macro_rules! APPOP {
         let ctx = glib::MainContext::default();
         ctx.invoke(move || {
             $( let $x = $x.clone(); )*
-            if let Some(op) = App::get_op() {
+            if let Some(op) = crate::app::get_op() {
                 op.lock().unwrap().$fn($($x),*);
             }
         });
@@ -220,10 +220,8 @@ impl App {
     fn on_shutdown(self: AppRef) {
         self.op.lock().unwrap().quit();
     }
+}
 
-    // Legazy function to get AppOp
-    // This shouldn't be used in new code
-    pub fn get_op() -> Option<Arc<Mutex<AppOp>>> {
-        unsafe { OP.as_ref().and_then(|x| x.upgrade()) }
-    }
+pub fn get_op() -> Option<Arc<Mutex<AppOp>>> {
+    unsafe { OP.as_ref().and_then(|x| x.upgrade()) }
 }

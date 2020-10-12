@@ -7,7 +7,6 @@ use matrix_sdk::identifiers::{DeviceId, ServerName, UserId};
 use matrix_sdk::Session;
 use url::Url;
 
-use crate::app::App;
 use crate::appop::AppOp;
 
 use crate::backend::HandleError;

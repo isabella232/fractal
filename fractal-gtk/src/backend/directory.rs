@@ -18,7 +18,6 @@ use matrix_sdk::directory::RoomNetwork;
 use matrix_sdk::thirdparty::ProtocolInstance;
 
 use super::{dw_media, ContentType, HandleError};
-use crate::app::App;
 use crate::util::i18n::i18n;
 use crate::APPOP;
 

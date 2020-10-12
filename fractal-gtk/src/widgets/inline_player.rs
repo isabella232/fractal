@@ -43,7 +43,7 @@ use std::rc::Rc;
 use matrix_sdk::Client as MatrixClient;
 use url::Url;
 
-use crate::app::{App, RUNTIME};
+use crate::app::RUNTIME;
 use crate::util::i18n::i18n;
 
 pub trait PlayerExt {

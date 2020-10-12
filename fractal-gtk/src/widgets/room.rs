@@ -7,7 +7,7 @@ use crate::model::room::Room;
 
 use crate::util::markup_text;
 
-use crate::app::{App, RUNTIME};
+use crate::app::RUNTIME;
 use crate::appop::AppOp;
 use crate::backend::HandleError;
 

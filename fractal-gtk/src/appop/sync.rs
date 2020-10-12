@@ -1,4 +1,4 @@
-use crate::app::{App, RUNTIME};
+use crate::app::RUNTIME;
 use crate::appop::AppOp;
 use crate::backend::{
     sync::{self, RoomElement, SyncRet, SyncUpdates},

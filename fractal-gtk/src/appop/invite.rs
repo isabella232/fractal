@@ -4,7 +4,7 @@ use crate::backend::room;
 use gtk::prelude::*;
 use matrix_sdk::identifiers::{RoomId, UserId};
 
-use crate::app::{App, RUNTIME};
+use crate::app::RUNTIME;
 use crate::appop::member::SearchType;
 use crate::appop::AppOp;
 use crate::backend::HandleError;

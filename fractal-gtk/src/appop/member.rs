@@ -18,7 +18,6 @@ use crate::actions::AppState;
 use crate::app::RUNTIME;
 use crate::appop::AppOp;
 use crate::widgets;
-use crate::App;
 
 use crate::model::member::Member;
 

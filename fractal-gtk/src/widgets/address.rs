@@ -8,7 +8,7 @@ use rand::distributions::Alphanumeric;
 use rand::{thread_rng, Rng};
 use url::Url;
 
-use crate::app::{App, RUNTIME};
+use crate::app::RUNTIME;
 use crate::appop::AppOp;
 use crate::backend::HandleError;
 
