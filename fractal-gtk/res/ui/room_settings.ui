@@ -979,18 +979,10 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkFrame" id="room_settings_members_list">
+                                  <object class="GtkBox" id="room_settings_members_list">
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
-                                    <style>
-                                      <class name="room-settings-frame"/>
-                                    </style>
                                   </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">1</property>
-                                  </packing>
                                 </child>
                               </object>
                             </child>

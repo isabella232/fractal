@@ -47,6 +47,7 @@ impl MembersList {
             self.members.clone(),
             self.admins.clone(),
         );
+        self.container.get_style_context().add_class("content");
         self.error.get_style_context().add_class("no_member_search");
         self.error.set_text(&i18n("No matching members found"));
         b.pack_start(&self.error, true, true, 0);

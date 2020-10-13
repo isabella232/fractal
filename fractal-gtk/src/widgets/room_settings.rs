@@ -655,7 +655,7 @@ impl RoomSettings {
             .expect("Can't find room_settings_members_search in ui file.");
         let b = self
             .builder
-            .get_object::<gtk::Frame>("room_settings_members_list")
+            .get_object::<gtk::Box>("room_settings_members_list")
             .expect("Can't find room_settings_members_list in ui file.");
         let label = self
             .builder
