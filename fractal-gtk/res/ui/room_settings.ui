@@ -242,65 +242,54 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkFrame">
+                          <object class="GtkListBox">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="margin_bottom">24</property>
                             <child>
-                              <object class="GtkListBox">
+                              <object class="GtkListBoxRow">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="activatable">False</property>
+                                <property name="selectable">False</property>
                                 <child>
-                                  <object class="GtkListBoxRow">
+                                  <object class="GtkBox">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="activatable">False</property>
-                                    <property name="selectable">False</property>
+                                    <property name="orientation">horizontal</property>
+                                    <property name="margin">20</property>
                                     <child>
-                                      <object class="GtkBox">
+                                      <object class="GtkLabel">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
-                                        <property name="orientation">horizontal</property>
-                                        <property name="margin">20</property>
-                                        <child>
-                                          <object class="GtkLabel">
-                                            <property name="visible">True</property>
-                                            <property name="can_focus">False</property>
-                                            <property name="label" translatable="yes">Notifications</property>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">True</property>
-                                            <property name="position">0</property>
-                                          </packing>
-                                        </child>
-                                        <child>
-                                          <object class="GtkSwitch" id="room_settings_notification_switch">
-                                            <property name="visible">True</property>
-                                            <property name="can_focus">False</property>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">True</property>
-                                            <property name="position">0</property>
-                                            <property name="pack_type">end</property>
-                                          </packing>
-                                        </child>
+                                        <property name="label" translatable="yes">Notifications</property>
                                       </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkSwitch" id="room_settings_notification_switch">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">0</property>
+                                        <property name="pack_type">end</property>
+                                      </packing>
                                     </child>
                                   </object>
                                 </child>
                               </object>
                             </child>
                             <style>
-                              <class name="room-settings-frame"/>
+                              <class name="content"/>
                             </style>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">6</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkFrame" id="room_settings_notification_sounds">

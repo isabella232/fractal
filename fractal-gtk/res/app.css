@@ -129,14 +129,6 @@ frame.room-directory > border {
   color: @theme_selected_bg_color;
 }
 
-.room-settings-frame > border {
-  border-radius: 9px;
-}
-
-.room-settings-frame > list {
-  border-radius: 9px;
-}
-
 row:not(:selected) .member-uid {
   color: @insensitive_fg_color;
 }
