@@ -18,7 +18,6 @@ use crate::config;
 use crate::uibuilder;
 use crate::widgets;
 
-mod connect;
 mod windowstate;
 
 use windowstate::WindowState;
@@ -167,7 +166,7 @@ impl App {
 
         let app = AppRef::new(Self { ui });
 
-        app.connect_gtk();
+        let _ = get_app_tx().send(Box::new(|op| op.connect_gtk()));
 
         app
     }
@@ -223,7 +222,7 @@ impl App {
 }
 
 // TODO: Deprecated. It should be removed
-pub(self) fn get_op() -> &'static GlobalAppOp {
+pub fn get_op() -> &'static GlobalAppOp {
     unsafe { OP.as_ref().expect("Fatal: AppOp has not been initialized") }
 }
 

@@ -4,17 +4,15 @@ use gio::prelude::*;
 use gio::SimpleAction;
 use gio::SimpleActionGroup;
 use glib::clone;
-use std::sync::{Arc, Mutex};
 
-use crate::app::RUNTIME;
-use crate::appop::AppOp;
+use crate::app::{UpdateApp, RUNTIME};
 
 use crate::widgets::FileDialog::open;
 
 use crate::actions::ButtonState;
 
 // This creates all actions a user can perform in the account settings
-pub fn new(window: &gtk::Window, op: Arc<Mutex<AppOp>>) -> gio::SimpleActionGroup {
+pub fn new(window: &gtk::Window, app_tx: glib::Sender<UpdateApp>) -> gio::SimpleActionGroup {
     let actions = SimpleActionGroup::new();
     // TODO create two stats loading interaction and connect it to the avatar box
     let change_avatar =
@@ -23,26 +21,28 @@ pub fn new(window: &gtk::Window, op: Arc<Mutex<AppOp>>) -> gio::SimpleActionGrou
     actions.add_action(&change_avatar);
 
     change_avatar.connect_activate(clone!(@weak window => move |a, _| {
-        let (session_client, uid) = unwrap_or_unit_return!(
-            op.lock().unwrap().login_data.as_ref().map(|ld| (ld.session_client.clone(), ld.uid.clone()))
-        );
+        let _ = app_tx.send(Box::new(clone!(@weak a => move |op| {
+            let (session_client, uid) = unwrap_or_unit_return!(
+                op.login_data.as_ref().map(|ld| (ld.session_client.clone(), ld.uid.clone()))
+            );
 
-        let filter = gtk::FileFilter::new();
-        filter.add_mime_type("image/*");
-        filter.set_name(Some(i18n("Images").as_str()));
-        if let Some(path) = open(&window, i18n("Select a new avatar").as_str(), &[filter]) {
-            a.change_state(&ButtonState::Insensitive.into());
-            RUNTIME.spawn(async move {
-                match user::set_user_avatar(session_client, &uid, path).await {
-                    Ok(path) => {
-                        APPOP!(show_new_avatar, (path));
+            let filter = gtk::FileFilter::new();
+            filter.add_mime_type("image/*");
+            filter.set_name(Some(i18n("Images").as_str()));
+            if let Some(path) = open(&window, i18n("Select a new avatar").as_str(), &[filter]) {
+                a.change_state(&ButtonState::Insensitive.into());
+                RUNTIME.spawn(async move {
+                    match user::set_user_avatar(session_client, &uid, path).await {
+                        Ok(path) => {
+                            APPOP!(show_new_avatar, (path));
+                        }
+                        Err(err) => {
+                            err.handle_error();
+                        }
                     }
-                    Err(err) => {
-                        err.handle_error();
-                    }
-                }
-            });
-        }
+                });
+            }
+        })));
     }));
 
     actions

@@ -10,6 +10,7 @@ use gtk::TextTag;
 
 use crate::model::member::Member;
 
+use crate::app;
 use crate::appop::AppOp;
 use crate::widgets;
 
@@ -27,7 +28,6 @@ pub struct Autocomplete {
 
 impl Autocomplete {
     pub fn new(
-        op: Arc<Mutex<AppOp>>,
         window: gtk::Window,
         msg_entry: sourceview4::View,
         popover: gtk::Popover,
@@ -42,7 +42,7 @@ impl Autocomplete {
             popover_position: None,
             popover_search: None,
             popover_closing: false,
-            op,
+            op: app::get_op().clone(),
         }
     }
 
