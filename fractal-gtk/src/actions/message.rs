@@ -8,7 +8,7 @@ use std::process::Command;
 use std::rc::Rc;
 
 use crate::actions::AppState;
-use crate::app::{UpdateApp, RUNTIME};
+use crate::app::{AppRuntime, RUNTIME};
 use crate::appop::AppOp;
 use crate::backend::HandleError;
 use crate::model::message::Message;
@@ -28,7 +28,7 @@ use crate::widgets::SourceDialog;
 
 /* This creates all actions the room history can perform */
 pub fn new(
-    app_tx: glib::Sender<UpdateApp>,
+    app_runtime: AppRuntime,
     ui: UI,
     back_history: Rc<RefCell<Vec<AppState>>>,
 ) -> gio::SimpleActionGroup {
@@ -59,18 +59,18 @@ pub fn new(
         .builder
         .get_object("main_window")
         .expect("Can't find main_window in ui file.");
-    show_source.connect_activate(clone!(@weak parent, @strong app_tx => move |_, data| {
+    show_source.connect_activate(clone!(@weak parent, @strong app_runtime => move |_, data| {
         let viewer = SourceDialog::new();
         viewer.set_parent_window(&parent);
         let data = data.cloned();
-        let _ = app_tx.send(Box::new(move |op| {
-            if let Some(m) = get_message(op, data.as_ref()) {
+        app_runtime.update_state_with(move |state| {
+            if let Some(m) = get_message(state, data.as_ref()) {
                 let error = i18n("This message has no source.");
                 let source = m.source.as_ref().unwrap_or(&error);
 
                 viewer.show(source);
             }
-        }));
+        });
     }));
 
     let window = ui
@@ -81,7 +81,7 @@ pub fn new(
     @weak back_history,
     @weak window,
     @weak ui.sventry.view as msg_entry,
-    @strong app_tx
+    @strong app_runtime
     => move |_, data| {
         let state = back_history.borrow().last().cloned();
         if let Some(AppState::MediaViewer) = state {
@@ -94,8 +94,8 @@ pub fn new(
         if let Some(buffer) = msg_entry.get_buffer() {
             let mut start = buffer.get_start_iter();
             let data = data.cloned();
-            let _ = app_tx.send(Box::new(move |op| {
-                if let Some(m) = get_message(op, data.as_ref()) {
+            app_runtime.update_state_with(move |state| {
+                if let Some(m) = get_message(state, data.as_ref()) {
                     let quote = m
                         .body
                         .lines()
@@ -107,16 +107,16 @@ pub fn new(
                     buffer.insert(&mut start, &quote);
                     msg_entry.grab_focus();
                 }
-            }));
+            });
         }
     }));
 
-    open_with.connect_activate(clone!(@strong app_tx => move |_, data| {
+    open_with.connect_activate(clone!(@strong app_runtime => move |_, data| {
         let data = data.cloned();
-        let _ = app_tx.send(Box::new(move |op| {
-            let url = unwrap_or_unit_return!(get_message(op, data.as_ref()).and_then(|m| m.url));
+        app_runtime.update_state_with(move |state| {
+            let url = unwrap_or_unit_return!(get_message(state, data.as_ref()).and_then(|m| m.url));
             let session_client =
-                unwrap_or_unit_return!(op.login_data.as_ref().map(|ld| ld.session_client.clone()));
+                unwrap_or_unit_return!(state.login_data.as_ref().map(|ld| ld.session_client.clone()));
             RUNTIME.spawn(async move {
                 match dw_media(session_client, &url, ContentType::Download, None).await {
                     Ok(fname) => {
@@ -128,18 +128,18 @@ pub fn new(
                     Err(err) => err.handle_error(),
                 }
             });
-        }));
+        });
     }));
 
     save_as.connect_activate(
-        clone!(@weak parent as window, @strong app_tx => move |_, data| {
+        clone!(@weak parent as window, @strong app_runtime => move |_, data| {
             let data = data.cloned();
-            let _ = app_tx.send(Box::new(move |op| {
+            app_runtime.update_state_with(move |state| {
                 let (url, name) = unwrap_or_unit_return!(
-                    get_message(op, data.as_ref()).and_then(|m| Some((m.url?, m.body)))
+                    get_message(state, data.as_ref()).and_then(|m| Some((m.url?, m.body)))
                 );
                 let session_client = unwrap_or_unit_return!(
-                    op.login_data.as_ref().map(|ld| ld.session_client.clone())
+                    state.login_data.as_ref().map(|ld| ld.session_client.clone())
                 );
                 let response = RUNTIME.spawn(async move {
                     media::get_media(session_client, &url).await
@@ -164,16 +164,16 @@ pub fn new(
                         }
                     }
                 });
-            }));
+            });
         }),
     );
 
-    copy_image.connect_activate(clone!(@strong app_tx => move |_, data| {
+    copy_image.connect_activate(clone!(@strong app_runtime => move |_, data| {
         let data = data.cloned();
-        let _ = app_tx.send(Box::new(move |op| {
-            let url = unwrap_or_unit_return!(get_message(op, data.as_ref()).and_then(|m| m.url));
+        app_runtime.update_state_with(move |state| {
+            let url = unwrap_or_unit_return!(get_message(state, data.as_ref()).and_then(|m| m.url));
             let session_client =
-                unwrap_or_unit_return!(op.login_data.as_ref().map(|ld| ld.session_client.clone()));
+                unwrap_or_unit_return!(state.login_data.as_ref().map(|ld| ld.session_client.clone()));
             let response =
                 RUNTIME.spawn(async move { media::get_media(session_client, &url).await });
 
@@ -195,25 +195,25 @@ pub fn new(
                     }
                 }
             });
-        }));
+        });
     }));
 
-    copy_text.connect_activate(clone!(@strong app_tx => move |_, data| {
+    copy_text.connect_activate(clone!(@strong app_runtime => move |_, data| {
         let data = data.cloned();
-        let _ = app_tx.send(Box::new(move |op| {
-            if let Some(m) = get_message(op, data.as_ref()) {
+        app_runtime.update_state_with(move |state| {
+            if let Some(m) = get_message(state, data.as_ref()) {
                 let atom = gdk::Atom::intern("CLIPBOARD");
                 let clipboard = gtk::Clipboard::get(&atom);
 
                 clipboard.set_text(&m.body);
             }
-        }));
+        });
     }));
 
     delete.connect_activate(clone!(
     @weak back_history,
     @weak window,
-    @strong app_tx
+    @strong app_runtime
     => move |_, data| {
         let state = back_history.borrow().last().cloned();
         if let Some(AppState::MediaViewer) = state {
@@ -224,10 +224,10 @@ pub fn new(
             }
         }
         let data = data.cloned();
-        let _ = app_tx.send(Box::new(move |op| {
-            let msg = unwrap_or_unit_return!(get_message(op, data.as_ref()));
+        app_runtime.update_state_with(move |state| {
+            let msg = unwrap_or_unit_return!(get_message(state, data.as_ref()));
             let session_client = unwrap_or_unit_return!(
-                op.login_data.as_ref().map(|ld| ld.session_client.clone())
+                state.login_data.as_ref().map(|ld| ld.session_client.clone())
             );
             RUNTIME.spawn(async move {
                 let query = room::redact_msg(session_client, msg).await;
@@ -235,15 +235,15 @@ pub fn new(
                     err.handle_error();
                 }
             });
-        }));
+        });
     }));
 
     load_more_messages.connect_activate(move |_, data| {
         let data = data.cloned();
-        let _ = app_tx.send(Box::new(move |op| {
+        app_runtime.update_state_with(move |state| {
             let id = get_room_id(data.as_ref());
-            request_more_messages(op, id);
-        }));
+            request_more_messages(state, id);
+        });
     });
 
     actions

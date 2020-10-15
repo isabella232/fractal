@@ -4,7 +4,7 @@ use std::convert::TryInto;
 use std::rc::Rc;
 use std::sync::{Arc, Mutex};
 
-use crate::app::UpdateApp;
+use crate::app::AppRuntime;
 use crate::appop::AppOp;
 use crate::model::message::Message;
 use crate::util::i18n::i18n;
@@ -65,7 +65,7 @@ impl From<AppState> for glib::Variant {
 
 /* This creates globale actions which are connected to the application */
 /* TODO: Remove op */
-pub fn new(app: &gtk::Application, app_tx: glib::Sender<UpdateApp>, op: &Arc<Mutex<AppOp>>) {
+pub fn new(app: &gtk::Application, app_runtime: AppRuntime, op: &Arc<Mutex<AppOp>>) {
     let settings = SimpleAction::new("settings", None);
     let chat = SimpleAction::new("start_chat", None);
     let newr = SimpleAction::new("new_room", None);
@@ -267,7 +267,7 @@ pub fn new(app: &gtk::Application, app_tx: glib::Sender<UpdateApp>, op: &Arc<Mut
     media_viewer.connect_activate(clone!(
     @weak back_history as back
     => move |_, data| {
-        open_viewer(&app_tx, data.cloned());
+        open_viewer(&app_runtime, data.cloned());
         back.borrow_mut().push(AppState::MediaViewer);
     }));
 
@@ -382,24 +382,24 @@ pub(super) fn get_message_by_id(op: &AppOp, id: &EventId) -> Option<Message> {
     op.get_message_by_id(room_id, id)
 }
 
-fn open_viewer(app_tx: &glib::Sender<UpdateApp>, data: Option<glib::Variant>) {
-    let _ = app_tx.send(Box::new(move |op| {
+fn open_viewer(app_runtime: &AppRuntime, data: Option<glib::Variant>) {
+    app_runtime.update_state_with(move |state| {
         if let Some(msg) = get_event_id(data.as_ref())
             .as_ref()
-            .and_then(|evid| get_message_by_id(op, evid))
+            .and_then(|evid| get_message_by_id(state, evid))
         {
-            op.create_media_viewer(msg);
+            state.create_media_viewer(msg);
         }
-    }));
+    });
 }
 
 pub fn activate_action(
-    app_tx: &glib::Sender<UpdateApp>,
+    app_runtime: &AppRuntime,
     action_group_name: &'static str,
     action_name: &'static str,
 ) {
-    let _ = app_tx.send(Box::new(move |op| {
-        let main_window = op
+    app_runtime.update_state_with(move |state| {
+        let main_window = state
             .ui
             .builder
             .get_object::<gtk::Window>("main_window")
@@ -407,5 +407,5 @@ pub fn activate_action(
         if let Some(action_group) = main_window.get_action_group(action_group_name) {
             action_group.activate_action(action_name, None);
         }
-    }));
+    });
 }

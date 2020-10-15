@@ -22,12 +22,11 @@ mod windowstate;
 
 use windowstate::WindowState;
 
-type GlobalAppOp = Arc<Mutex<AppOp>>;
-pub type UpdateApp = Box<dyn FnOnce(&mut AppOp)>;
+type GlobalState = Arc<Mutex<AppOp>>;
 
-static mut APP_TX: Option<glib::Sender<UpdateApp>> = None;
+static mut APP_RUNTIME: Option<AppRuntime> = None;
 // TODO: Deprecated. It should be removed
-static mut OP: Option<GlobalAppOp> = None;
+static mut OP: Option<GlobalState> = None;
 
 lazy_static! {
     pub static ref RUNTIME: TokioRuntime = TokioRuntime::new().unwrap();
@@ -37,13 +36,40 @@ lazy_static! {
 macro_rules! APPOP {
     ($fn: ident, ($($x:ident),*) ) => {{
         $( let $x = $x.clone(); )*
-        let _ = crate::app::get_app_tx().send(Box::new(move |op| {
-            crate::appop::AppOp::$fn(op, $($x),*);
-        }));
+        crate::app::get_app_runtime().update_state_with(move |op| {
+            op.$fn($($x),*);
+        });
     }};
     ($fn: ident) => {{
         APPOP!($fn, ( ) );
     }}
+}
+
+#[derive(Clone)]
+pub struct AppRuntime(glib::Sender<Box<dyn FnOnce(&mut AppOp)>>);
+
+impl AppRuntime {
+    fn init(ui: uibuilder::UI) {
+        let (app_tx, app_rx) = glib::MainContext::channel(Default::default());
+        let app_runtime = Self(app_tx);
+        let state = AppOp::new(ui, app_runtime.clone());
+
+        unsafe {
+            OP = Some(Arc::new(Mutex::new(state)));
+            APP_RUNTIME = Some(app_runtime);
+        }
+
+        let state = get_op();
+        app_rx.attach(None, move |update_state| {
+            update_state(&mut state.lock().unwrap());
+
+            glib::Continue(true)
+        });
+    }
+
+    pub fn update_state_with(&self, update_fn: impl FnOnce(&mut AppOp) + 'static) {
+        let _ = self.0.send(Box::new(update_fn));
+    }
 }
 
 // Our application struct for containing all the state we have to carry around.
@@ -73,21 +99,8 @@ impl App {
             gtk::STYLE_PROVIDER_PRIORITY_APPLICATION,
         );
 
-        let (app_tx, app_rx) = glib::MainContext::channel(Default::default());
         let ui = uibuilder::UI::new();
-        let op = AppOp::new(ui.clone(), app_tx.clone());
-
-        unsafe {
-            OP = Some(Arc::new(Mutex::new(op)));
-            APP_TX = Some(app_tx);
-        }
-
-        let op = get_op();
-        app_rx.attach(None, move |update_op: UpdateApp| {
-            update_op(&mut op.lock().unwrap());
-
-            glib::Continue(true)
-        });
+        AppRuntime::init(ui.clone());
 
         ui.main_window.set_application(Some(gtk_app));
 
@@ -162,11 +175,11 @@ impl App {
 
         gtk_app.set_accels_for_action("login.back", &["Escape"]);
 
-        actions::Global::new(gtk_app, get_app_tx().clone(), get_op());
+        actions::Global::new(gtk_app, get_app_runtime().clone(), get_op());
 
         let app = AppRef::new(Self { ui });
 
-        let _ = get_app_tx().send(Box::new(|op| op.connect_gtk()));
+        get_app_runtime().update_state_with(|state| state.connect_gtk());
 
         app
     }
@@ -222,13 +235,13 @@ impl App {
 }
 
 // TODO: Deprecated. It should be removed
-pub fn get_op() -> &'static GlobalAppOp {
+pub fn get_op() -> &'static GlobalState {
     unsafe { OP.as_ref().expect("Fatal: AppOp has not been initialized") }
 }
 
-pub fn get_app_tx() -> &'static glib::Sender<UpdateApp> {
+pub fn get_app_runtime() -> &'static AppRuntime {
     unsafe {
-        APP_TX
+        APP_RUNTIME
             .as_ref()
             .expect("Fatal: AppRuntime has not been initialized")
     }

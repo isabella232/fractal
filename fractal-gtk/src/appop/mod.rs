@@ -22,7 +22,7 @@ use crate::model::{
 use crate::passwd::PasswordStorage;
 
 use crate::actions::AppState;
-use crate::app::UpdateApp;
+use crate::app::AppRuntime;
 use crate::cache;
 use crate::uibuilder;
 use crate::widgets;
@@ -85,7 +85,7 @@ pub struct LoginData {
 }
 
 pub struct AppOp {
-    pub app_tx: glib::Sender<UpdateApp>,
+    pub app_runtime: AppRuntime,
     pub ui: uibuilder::UI,
 
     pub syncing: bool, // TODO: Replace with a Mutex
@@ -126,7 +126,7 @@ pub struct AppOp {
 impl PasswordStorage for AppOp {}
 
 impl AppOp {
-    pub fn new(ui: uibuilder::UI, app_tx: glib::Sender<UpdateApp>) -> AppOp {
+    pub fn new(ui: uibuilder::UI, app_runtime: AppRuntime) -> AppOp {
         let leaflet = ui
             .builder
             .get_object::<libhandy::Leaflet>("chat_page")
@@ -137,7 +137,7 @@ impl AppOp {
             .expect("Couldn't find main_deck in ui file");
 
         AppOp {
-            app_tx,
+            app_runtime,
             ui,
             active_room: None,
             join_to_room: None,

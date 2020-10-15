@@ -7,7 +7,7 @@ use crate::util;
 use crate::appop::AppOp;
 
 pub fn connect(appop: &AppOp) {
-    let app_tx = appop.app_tx.clone();
+    let app_runtime = appop.app_runtime.clone();
     let md_popover_btn = &appop.ui.sventry.markdown;
     let md_img = appop.ui.sventry.markdown_img.clone();
     let buffer = appop.ui.sventry.buffer.clone();
@@ -37,9 +37,9 @@ pub fn connect(appop: &AppOp) {
 
     let md_active = util::get_markdown_schema();
     if md_active {
-        let _ = app_tx.send(Box::new(|op| {
-            op.md_enabled = true;
-        }));
+        app_runtime.update_state_with(|state| {
+            state.md_enabled = true;
+        });
         markdown_switch.set_active(true);
         md_img.set_from_icon_name(Some("format-indent-more-symbolic"), gtk::IconSize::Menu);
         txt.get_style_context().remove_class("dim-label");
@@ -53,9 +53,9 @@ pub fn connect(appop: &AppOp) {
 
     markdown_switch.connect_property_active_notify(clone!(@strong markdown_switch => move |_| {
         let md_active = markdown_switch.get_active();
-        let _ = app_tx.send(Box::new(move |op| {
-            op.md_enabled = md_active;
-        }));
+        app_runtime.update_state_with(move |state| {
+            state.md_enabled = md_active;
+        });
 
         if markdown_switch.get_active() {
             md_img.set_from_icon_name(

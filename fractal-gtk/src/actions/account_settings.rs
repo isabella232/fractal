@@ -5,14 +5,14 @@ use gio::SimpleAction;
 use gio::SimpleActionGroup;
 use glib::clone;
 
-use crate::app::{UpdateApp, RUNTIME};
+use crate::app::{AppRuntime, RUNTIME};
 
 use crate::widgets::FileDialog::open;
 
 use crate::actions::ButtonState;
 
 // This creates all actions a user can perform in the account settings
-pub fn new(window: &gtk::Window, app_tx: glib::Sender<UpdateApp>) -> gio::SimpleActionGroup {
+pub fn new(window: &gtk::Window, app_runtime: AppRuntime) -> gio::SimpleActionGroup {
     let actions = SimpleActionGroup::new();
     // TODO create two stats loading interaction and connect it to the avatar box
     let change_avatar =
@@ -21,9 +21,9 @@ pub fn new(window: &gtk::Window, app_tx: glib::Sender<UpdateApp>) -> gio::Simple
     actions.add_action(&change_avatar);
 
     change_avatar.connect_activate(clone!(@weak window => move |a, _| {
-        let _ = app_tx.send(Box::new(clone!(@weak a => move |op| {
+        app_runtime.update_state_with(clone!(@weak a => move |state| {
             let (session_client, uid) = unwrap_or_unit_return!(
-                op.login_data.as_ref().map(|ld| (ld.session_client.clone(), ld.uid.clone()))
+                state.login_data.as_ref().map(|ld| (ld.session_client.clone(), ld.uid.clone()))
             );
 
             let filter = gtk::FileFilter::new();
@@ -42,7 +42,7 @@ pub fn new(window: &gtk::Window, app_tx: glib::Sender<UpdateApp>) -> gio::Simple
                     }
                 });
             }
-        })));
+        }));
     }));
 
     actions

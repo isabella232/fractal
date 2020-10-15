@@ -4,7 +4,7 @@ use gtk::prelude::*;
 use crate::appop::AppOp;
 
 pub fn connect(appop: &AppOp) {
-    let app_tx = appop.app_tx.clone();
+    let app_runtime = appop.app_runtime.clone();
     let search_btn = appop
         .ui
         .builder
@@ -33,7 +33,7 @@ pub fn connect(appop: &AppOp) {
 
     search_entry.connect_search_changed(move |entry| {
         let search_text = Some(entry.get_text().to_string());
-        let _ = app_tx.send(Box::new(|op| op.filter_rooms(search_text)));
+        app_runtime.update_state_with(|state| state.filter_rooms(search_text));
     });
 
     // hidding left and right boxes to align with top buttons

@@ -8,7 +8,7 @@ use crate::appop::AppOp;
 const MAX_INPUT_HEIGHT: i32 = 100;
 
 pub fn connect(appop: &AppOp) {
-    let app_tx = appop.app_tx.clone();
+    let app_runtime = appop.app_runtime.clone();
     appop.ui.sventry.container.set_redraw_on_allocate(true);
     let msg_entry = appop.ui.sventry.view.clone();
     let buffer = &appop.ui.sventry.buffer;
@@ -32,27 +32,27 @@ pub fn connect(appop: &AppOp) {
         .expect("Can't find autocomplete_popover in ui file.");
 
     msg_entry.connect_key_press_event(
-        clone!(@strong app_tx => move |_, key| match key.get_keyval() {
+        clone!(@strong app_runtime => move |_, key| match key.get_keyval() {
             gdk::keys::constants::Return | gdk::keys::constants::KP_Enter
                 if !key.get_state().contains(gdk::ModifierType::SHIFT_MASK)
                     && !autocomplete_popover.is_visible() =>
             {
-                activate_action(&app_tx, "app", "send-message");
+                activate_action(&app_runtime, "app", "send-message");
                 Inhibit(true)
             }
             _ => Inhibit(false),
         }),
     );
 
-    msg_entry.connect_key_release_event(clone!(@strong app_tx => move |_, ev| {
+    msg_entry.connect_key_release_event(clone!(@strong app_runtime => move |_, ev| {
         if ev.get_keyval().to_unicode().is_some() {
-            let _ = app_tx.send(Box::new(|op| op.send_typing()));
+            app_runtime.update_state_with(|state| state.send_typing());
         }
         Inhibit(false)
     }));
 
     msg_entry.connect_paste_clipboard(move |_| {
-        let _ = app_tx.send(Box::new(|op| op.paste()));
+        app_runtime.update_state_with(|state| state.paste());
     });
 
     msg_entry.connect_focus_in_event(clone!(@strong msg_entry_box => move |_, _| {

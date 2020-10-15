@@ -4,7 +4,7 @@ use gtk::prelude::*;
 use crate::appop::AppOp;
 
 pub fn connect(appop: &AppOp) {
-    let app_tx = appop.app_tx.clone();
+    let app_runtime = appop.app_runtime.clone();
     let dialog = appop
         .ui
         .builder
@@ -37,16 +37,16 @@ pub fn connect(appop: &AppOp) {
     }));
 
     confirm.connect_clicked(
-        clone!(@strong entry, @strong dialog, @strong app_tx => move |_| {
+        clone!(@strong entry, @strong dialog, @strong app_runtime => move |_| {
             dialog.hide();
-            let _ = app_tx.send(Box::new(|op| op.join_to_room()));
+            app_runtime.update_state_with(|state| state.join_to_room());
             entry.set_text("");
         }),
     );
 
     entry.connect_activate(clone!(@strong dialog => move |entry| {
         dialog.hide();
-        let _ = app_tx.send(Box::new(|op| op.join_to_room()));
+        app_runtime.update_state_with(|state| state.join_to_room());
         entry.set_text("");
     }));
     entry.connect_changed(clone!(@strong confirm => move |entry| {

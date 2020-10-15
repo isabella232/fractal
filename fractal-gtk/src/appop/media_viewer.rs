@@ -34,7 +34,8 @@ impl AppOp {
             *self.media_viewer.borrow_mut() = Some(panel);
 
             let back_history = self.room_back_history.clone();
-            let actions = actions::Message::new(self.app_tx.clone(), self.ui.clone(), back_history);
+            let actions =
+                actions::Message::new(self.app_runtime.clone(), self.ui.clone(), back_history);
             header.insert_action_group("message", Some(&actions));
             body.insert_action_group("message", Some(&actions));
 

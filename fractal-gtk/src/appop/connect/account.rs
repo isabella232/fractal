@@ -7,7 +7,7 @@ use crate::appop::AppOp;
 use crate::actions::{AccountSettings, StateExt};
 
 pub fn connect(appop: &AppOp) {
-    let app_tx = appop.app_tx.clone();
+    let app_runtime = appop.app_runtime.clone();
     let builder = &appop.ui.builder;
     let cancel_password = appop
         .ui
@@ -71,7 +71,7 @@ pub fn connect(appop: &AppOp) {
         .expect("Can't find account_settings_delete_btn in ui file.");
 
     let window = appop.ui.main_window.upcast_ref::<gtk::Window>();
-    let actions = AccountSettings::new(&window, app_tx.clone());
+    let actions = AccountSettings::new(&window, app_runtime.clone());
     let container = appop
         .ui
         .builder
@@ -102,11 +102,11 @@ pub fn connect(appop: &AppOp) {
     }
 
     name_entry.connect_property_text_notify(
-        clone!(@strong app_tx, @strong name_btn as button => move |w| {
-            let _ = app_tx.send(Box::new(clone!(@strong w, @strong button => move |op| {
+        clone!(@strong app_runtime, @strong name_btn as button => move |w| {
+            app_runtime.update_state_with(clone!(@strong w, @strong button => move |state| {
                 let username = w.get_text();
                 if !username.is_empty()
-                    && op
+                    && state
                         .login_data
                         .as_ref()
                         .and_then(|login_data| login_data.username.as_ref())
@@ -117,7 +117,7 @@ pub fn connect(appop: &AppOp) {
                     return;
                 }
                 button.hide();
-            })));
+            }));
         }),
     );
 
@@ -126,8 +126,8 @@ pub fn connect(appop: &AppOp) {
         let _ = button.emit("clicked", &[]);
     });
 
-    name_btn.connect_clicked(clone!(@strong app_tx => move |_w| {
-        let _ = app_tx.send(Box::new(|op| op.update_username_account_settings()));
+    name_btn.connect_clicked(clone!(@strong app_runtime => move |_w| {
+        app_runtime.update_state_with(|state| state.update_username_account_settings());
     }));
 
     /*
@@ -184,25 +184,25 @@ pub fn connect(appop: &AppOp) {
     }
 
     /* Passsword dialog */
-    password_btn.connect_clicked(clone!(@strong app_tx => move |_| {
-        let _ = app_tx.send(Box::new(|op| op.show_password_dialog()));
+    password_btn.connect_clicked(clone!(@strong app_runtime => move |_| {
+        app_runtime.update_state_with(|state| state.show_password_dialog());
     }));
 
-    password_dialog.connect_delete_event(clone!(@strong app_tx => move |_, _| {
-        let _ = app_tx.send(Box::new(|op| op.close_password_dialog()));
+    password_dialog.connect_delete_event(clone!(@strong app_runtime => move |_, _| {
+        app_runtime.update_state_with(|state| state.close_password_dialog());
         glib::signal::Inhibit(true)
     }));
 
     /* Headerbar */
-    cancel_password.connect_clicked(clone!(@strong app_tx => move |_| {
-        let _ = app_tx.send(Box::new(|op| op.close_password_dialog()));
+    cancel_password.connect_clicked(clone!(@strong app_runtime => move |_| {
+        app_runtime.update_state_with(|state| state.close_password_dialog());
     }));
 
-    confirm_password.connect_clicked(clone!(@strong app_tx => move |_| {
-        let _ = app_tx.send(Box::new(|op| {
-            op.set_new_password();
-            op.close_password_dialog();
-        }));
+    confirm_password.connect_clicked(clone!(@strong app_runtime => move |_| {
+        app_runtime.update_state_with(|state| {
+            state.set_new_password();
+            state.close_password_dialog();
+        });
     }));
 
     /* Body */
@@ -225,6 +225,6 @@ pub fn connect(appop: &AppOp) {
     }));
 
     destruction_btn.connect_clicked(move |_| {
-        let _ = app_tx.send(Box::new(|op| op.account_destruction()));
+        app_runtime.update_state_with(|state| state.account_destruction());
     });
 }

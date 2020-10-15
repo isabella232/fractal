@@ -201,7 +201,7 @@ impl AppOp {
         let dialog = self.create_error_dialog(error);
         dialog.connect_response(move |w, _| w.close());
         dialog.show_all();
-        activate_action(&self.app_tx, "app", "back");
+        activate_action(&self.app_runtime, "app", "back");
     }
 
     pub fn create_error_dialog(&self, error: String) -> gtk::MessageDialog {

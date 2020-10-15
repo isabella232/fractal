@@ -7,7 +7,7 @@ use std::sync::{Arc, Mutex};
 use crate::appop::AppOp;
 
 pub fn connect_dialog(appop: &AppOp) {
-    let app_tx = appop.app_tx.clone();
+    let app_runtime = appop.app_runtime.clone();
     let dialog = appop
         .ui
         .builder
@@ -24,24 +24,24 @@ pub fn connect_dialog(appop: &AppOp) {
         .get_object::<gtk::Button>("invite_reject")
         .expect("Can't find invite_reject in ui file.");
 
-    reject.connect_clicked(clone!(@strong dialog, @strong app_tx => move |_| {
-        let _ = app_tx.send(Box::new(|op| op.accept_inv(false)));
+    reject.connect_clicked(clone!(@strong dialog, @strong app_runtime => move |_| {
+        app_runtime.update_state_with(|state| state.accept_inv(false));
         dialog.hide();
     }));
-    dialog.connect_delete_event(clone!(@strong dialog, @strong app_tx => move |_, _| {
-        let _ = app_tx.send(Box::new(|op| op.accept_inv(false)));
+    dialog.connect_delete_event(clone!(@strong dialog, @strong app_runtime => move |_, _| {
+        app_runtime.update_state_with(|state| state.accept_inv(false));
         dialog.hide();
         glib::signal::Inhibit(true)
     }));
 
     accept.connect_clicked(clone!(@strong dialog => move |_| {
-        let _ = app_tx.send(Box::new(|op| op.accept_inv(true)));
+        app_runtime.update_state_with(|state| state.accept_inv(true));
         dialog.hide();
     }));
 }
 
 pub fn connect_user(appop: &AppOp) {
-    let app_tx = appop.app_tx.clone();
+    let app_runtime = appop.app_runtime.clone();
     let cancel = appop
         .ui
         .builder
@@ -86,73 +86,73 @@ pub fn connect_user(appop: &AppOp) {
     // this is used to cancel the timeout and not search for every key input. We'll wait 500ms
     // without key release event to launch the search
     let source_id: Arc<Mutex<Option<glib::source::SourceId>>> = Arc::new(Mutex::new(None));
-    invite_entry.connect_key_release_event(clone!(@strong app_tx => move |entry, _| {
-            {
-                let mut id = source_id.lock().unwrap();
-                if let Some(sid) = id.take() {
-                    glib::source::source_remove(sid);
-                }
+    invite_entry.connect_key_release_event(clone!(@strong app_runtime => move |entry, _| {
+        {
+            let mut id = source_id.lock().unwrap();
+            if let Some(sid) = id.take() {
+                glib::source::source_remove(sid);
             }
+        }
 
-            let sid = glib::timeout_add_local(
-                500,
-                clone!(@strong entry, @strong source_id, @strong app_tx => move || {
-                    if let Some(buffer) = entry.get_buffer() {
-                        let start = buffer.get_start_iter();
-                        let end = buffer.get_end_iter();
+        let sid = glib::timeout_add_local(
+            500,
+            clone!(@strong entry, @strong source_id, @strong app_runtime => move || {
+                if let Some(buffer) = entry.get_buffer() {
+                    let start = buffer.get_start_iter();
+                    let end = buffer.get_end_iter();
 
-                        if let Some(text) = buffer.get_text(&start, &end, false).map(|gstr| gstr.to_string()) {
-                            let _ = app_tx.send(Box::new(|op| op.search_invite_user(text)));
-                        }
+                    if let Some(text) = buffer.get_text(&start, &end, false).map(|gstr| gstr.to_string()) {
+                        app_runtime.update_state_with(|state| state.search_invite_user(text));
                     }
+                }
 
-                    *(source_id.lock().unwrap()) = None;
-                    Continue(false)
-                }),
-            );
+                *(source_id.lock().unwrap()) = None;
+                Continue(false)
+            }),
+        );
 
-            *(source_id.lock().unwrap()) = Some(sid);
-            glib::signal::Inhibit(false)
-        }));
+        *(source_id.lock().unwrap()) = Some(sid);
+        glib::signal::Inhibit(false)
+    }));
 
     invite_entry.connect_focus_in_event(
-        clone!(@strong invite_entry_box, @strong app_tx => move |_, _| {
+        clone!(@strong invite_entry_box, @strong app_runtime => move |_, _| {
             invite_entry_box.get_style_context().add_class("message-input-focused");
 
-            let _ = app_tx.send(Box::new(|op| op.remove_invite_user_dialog_placeholder()));
+            app_runtime.update_state_with(|state| state.remove_invite_user_dialog_placeholder());
 
             Inhibit(false)
         }),
     );
 
     invite_entry.connect_focus_out_event(
-        clone!(@strong invite_entry_box, @strong app_tx => move |_, _| {
+        clone!(@strong invite_entry_box, @strong app_runtime => move |_, _| {
             invite_entry_box.get_style_context().remove_class("message-input-focused");
 
-            let _ = app_tx.send(Box::new(|op| op.set_invite_user_dialog_placeholder()));
+            app_runtime.update_state_with(|state| state.set_invite_user_dialog_placeholder());
 
             Inhibit(false)
         }),
     );
 
     if let Some(buffer) = invite_entry.get_buffer() {
-        buffer.connect_delete_range(clone!(@strong app_tx => move |_, _, _| {
-            glib::idle_add_local(clone!(@strong app_tx => move || {
-                let _ = app_tx.send(Box::new(|op| op.detect_removed_invite()));
+        buffer.connect_delete_range(clone!(@strong app_runtime => move |_, _, _| {
+            glib::idle_add_local(clone!(@strong app_runtime => move || {
+                app_runtime.update_state_with(|state| state.detect_removed_invite());
                 Continue(false)
             }));
         }));
     }
 
-    dialog.connect_delete_event(clone!(@strong app_tx => move |_, _| {
-        let _ = app_tx.send(Box::new(|op| op.close_invite_dialog()));
+    dialog.connect_delete_event(clone!(@strong app_runtime => move |_, _| {
+        app_runtime.update_state_with(|state| state.close_invite_dialog());
         glib::signal::Inhibit(true)
     }));
-    cancel.connect_clicked(clone!(@strong app_tx => move |_| {
-        let _ = app_tx.send(Box::new(|op| op.close_invite_dialog()));
+    cancel.connect_clicked(clone!(@strong app_runtime => move |_| {
+        app_runtime.update_state_with(|state| state.close_invite_dialog());
     }));
     invite.set_sensitive(false);
     invite.connect_clicked(move |_| {
-        let _ = app_tx.send(Box::new(|op| op.invite()));
+        app_runtime.update_state_with(|state| state.invite());
     });
 }

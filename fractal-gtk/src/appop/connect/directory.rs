@@ -8,7 +8,7 @@ use libhandy::prelude::*;
 use crate::appop::{AppOp, RoomSearchPagination};
 
 pub fn connect(appop: &AppOp) {
-    let app_tx = appop.app_tx.clone();
+    let app_runtime = appop.app_runtime.clone();
     let q = appop
         .ui
         .builder
@@ -104,17 +104,17 @@ pub fn connect(appop: &AppOp) {
         .get_object::<gtk::ScrolledWindow>("directory_scroll")
         .expect("Can't find directory_scroll in ui file.");
 
-    scroll.connect_edge_reached(clone!(@strong app_tx => move |_, dir| {
+    scroll.connect_edge_reached(clone!(@strong app_runtime => move |_, dir| {
         if dir == gtk::PositionType::Bottom {
-            let _ = app_tx.send(Box::new(|op| op.load_more_rooms()));
+            app_runtime.update_state_with(|state| state.load_more_rooms());
         }
     }));
 
     q.connect_activate(move |_| {
-        let _ = app_tx.send(Box::new(|op| {
-            op.directory_pagination = RoomSearchPagination::Initial;
-            op.search_rooms();
-        }));
+        app_runtime.update_state_with(|state| {
+            state.directory_pagination = RoomSearchPagination::Initial;
+            state.search_rooms();
+        });
     });
 
     default_matrix_server_radio.connect_toggled(clone!(
