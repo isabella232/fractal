@@ -4,22 +4,19 @@ use gtk::prelude::*;
 use glib::source::Continue;
 use std::sync::{Arc, Mutex};
 
-use crate::appop::AppOp;
+use crate::app::AppRuntime;
+use crate::uibuilder::UI;
 
-pub fn connect_dialog(appop: &AppOp) {
-    let app_runtime = appop.app_runtime.clone();
-    let dialog = appop
-        .ui
+pub fn connect_dialog(ui: &UI, app_runtime: AppRuntime) {
+    let dialog = ui
         .builder
         .get_object::<gtk::MessageDialog>("invite_dialog")
         .expect("Can't find invite_dialog in ui file.");
-    let accept = appop
-        .ui
+    let accept = ui
         .builder
         .get_object::<gtk::Button>("invite_accept")
         .expect("Can't find invite_accept in ui file.");
-    let reject = appop
-        .ui
+    let reject = ui
         .builder
         .get_object::<gtk::Button>("invite_reject")
         .expect("Can't find invite_reject in ui file.");
@@ -40,30 +37,24 @@ pub fn connect_dialog(appop: &AppOp) {
     }));
 }
 
-pub fn connect_user(appop: &AppOp) {
-    let app_runtime = appop.app_runtime.clone();
-    let cancel = appop
-        .ui
+pub fn connect_user(ui: &UI, app_runtime: AppRuntime) {
+    let cancel = ui
         .builder
         .get_object::<gtk::Button>("cancel_invite")
         .expect("Can't find cancel_invite in ui file.");
-    let invite = appop
-        .ui
+    let invite = ui
         .builder
         .get_object::<gtk::Button>("invite_button")
         .expect("Can't find invite_button in ui file.");
-    let invite_entry_box = appop
-        .ui
+    let invite_entry_box = ui
         .builder
         .get_object::<gtk::Box>("invite_entry_box")
         .expect("Can't find invite_entry_box in ui file.");
-    let invite_entry = appop
-        .ui
+    let invite_entry = ui
         .builder
         .get_object::<gtk::TextView>("invite_entry")
         .expect("Can't find invite_entry in ui file.");
-    let dialog = appop
-        .ui
+    let dialog = ui
         .builder
         .get_object::<gtk::Dialog>("invite_user_dialog")
         .expect("Can't find invite_user_dialog in ui file.");

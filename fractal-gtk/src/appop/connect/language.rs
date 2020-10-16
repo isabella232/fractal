@@ -1,15 +1,14 @@
-use crate::app::RUNTIME;
-use crate::appop::AppOp;
+use crate::app::{AppRuntime, RUNTIME};
 use crate::backend::{room, HandleError};
+use crate::uibuilder::UI;
 use glib::object::Cast;
 use gtk::prelude::*;
 
 // The TextBufferExt alias is necessary to avoid conflict with gtk's TextBufferExt
 use gspell::{CheckerExt, TextBuffer, TextBufferExt as GspellTextBufferExt};
 
-pub fn connect(appop: &AppOp) {
-    let app_runtime = appop.app_runtime.clone();
-    let textview = appop.ui.sventry.view.upcast_ref::<gtk::TextView>();
+pub fn connect(ui: &UI, app_runtime: AppRuntime) {
+    let textview = ui.sventry.view.upcast_ref::<gtk::TextView>();
     if let Some(checker) = textview
         .get_buffer()
         .and_then(|gtk_buffer| TextBuffer::get_from_gtk_text_buffer(&gtk_buffer))

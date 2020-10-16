@@ -3,21 +3,21 @@ use gtk::prelude::*;
 use sourceview4::BufferExt;
 
 use crate::actions::activate_action;
-use crate::appop::AppOp;
+use crate::app::AppRuntime;
+use crate::uibuilder::UI;
 
 const MAX_INPUT_HEIGHT: i32 = 100;
 
-pub fn connect(appop: &AppOp) {
-    let app_runtime = appop.app_runtime.clone();
-    appop.ui.sventry.container.set_redraw_on_allocate(true);
-    let msg_entry = appop.ui.sventry.view.clone();
-    let buffer = &appop.ui.sventry.buffer;
+pub fn connect(ui: &UI, app_runtime: AppRuntime) {
+    ui.sventry.container.set_redraw_on_allocate(true);
+    let msg_entry = ui.sventry.view.clone();
+    let buffer = &ui.sventry.buffer;
     buffer.set_highlight_matching_brackets(false);
 
-    let msg_entry_box = appop.ui.sventry.entry_box.clone();
+    let msg_entry_box = ui.sventry.entry_box.clone();
     msg_entry_box.set_redraw_on_allocate(true);
 
-    if let Some(adjustment) = appop.ui.sventry.scroll.get_vadjustment() {
+    if let Some(adjustment) = ui.sventry.scroll.get_vadjustment() {
         adjustment.connect_value_changed(clone!(@strong msg_entry => move |adj| {
             if msg_entry.get_allocated_height() < MAX_INPUT_HEIGHT {
                 adj.set_value(0.0);
@@ -25,8 +25,7 @@ pub fn connect(appop: &AppOp) {
         }));
     }
 
-    let autocomplete_popover = appop
-        .ui
+    let autocomplete_popover = ui
         .builder
         .get_object::<gtk::Popover>("autocomplete_popover")
         .expect("Can't find autocomplete_popover in ui file.");

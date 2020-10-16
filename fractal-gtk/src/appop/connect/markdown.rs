@@ -4,28 +4,25 @@ use sourceview4::prelude::*;
 
 use crate::util;
 
-use crate::appop::AppOp;
+use crate::app::AppRuntime;
+use crate::uibuilder::UI;
 
-pub fn connect(appop: &AppOp) {
-    let app_runtime = appop.app_runtime.clone();
-    let md_popover_btn = &appop.ui.sventry.markdown;
-    let md_img = appop.ui.sventry.markdown_img.clone();
-    let buffer = appop.ui.sventry.buffer.clone();
+pub fn connect(ui: &UI, app_runtime: AppRuntime) {
+    let md_popover_btn = &ui.sventry.markdown;
+    let md_img = ui.sventry.markdown_img.clone();
+    let buffer = ui.sventry.buffer.clone();
 
-    let popover: gtk::Popover = appop
-        .ui
+    let popover: gtk::Popover = ui
         .builder
         .get_object("markdown_popover")
         .expect("Couldn't find markdown_popover in ui file.");
 
-    let markdown_switch: gtk::Switch = appop
-        .ui
+    let markdown_switch: gtk::Switch = ui
         .builder
         .get_object("markdown_switch")
         .expect("Couldn't find markdown_switch in ui file.");
 
-    let txt: gtk::Grid = appop
-        .ui
+    let txt: gtk::Grid = ui
         .builder
         .get_object("tutorial_text_box")
         .expect("Couldn't find tutorial_text_box in ui file.");

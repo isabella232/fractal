@@ -1,19 +1,16 @@
+use crate::uibuilder::UI;
 use glib::clone;
 use gtk::prelude::*;
 use libhandy::HeaderBarExt;
 
-use crate::appop::AppOp;
-
-pub fn connect(appop: &AppOp) {
+pub fn connect(ui: &UI) {
     if let Some(set) = gtk::Settings::get_default() {
-        let left_header: libhandy::HeaderBar = appop
-            .ui
+        let left_header: libhandy::HeaderBar = ui
             .builder
             .get_object("left-header")
             .expect("Can't find left-header in ui file.");
 
-        let right_header: libhandy::HeaderBar = appop
-            .ui
+        let right_header: libhandy::HeaderBar = ui
             .builder
             .get_object("room_header_bar")
             .expect("Can't find room_header_bar in ui file.");

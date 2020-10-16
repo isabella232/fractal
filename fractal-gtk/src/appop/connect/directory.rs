@@ -5,18 +5,17 @@ use crate::util::i18n::i18n;
 use gtk::prelude::*;
 use libhandy::prelude::*;
 
-use crate::appop::{AppOp, RoomSearchPagination};
+use crate::app::AppRuntime;
+use crate::appop::RoomSearchPagination;
+use crate::uibuilder::UI;
 
-pub fn connect(appop: &AppOp) {
-    let app_runtime = appop.app_runtime.clone();
-    let q = appop
-        .ui
+pub fn connect(ui: &UI, app_runtime: AppRuntime) {
+    let q = ui
         .builder
         .get_object::<gtk::Entry>("directory_search_entry")
         .expect("Can't find directory_search_entry in ui file.");
 
-    let directory_stack = appop
-        .ui
+    let directory_stack = ui
         .builder
         .get_object::<gtk::Stack>("directory_stack")
         .expect("Can't find directory_stack in ui file.");
@@ -41,65 +40,52 @@ pub fn connect(appop: &AppOp) {
     clamp.show();
     directory_stack.add_named(&clamp, "directory_clamp");
 
-    appop
-        .ui
-        .builder
+    ui.builder
         .expose_object::<gtk::ListBox>("directory_room_list", &listbox);
-    appop
-        .ui
-        .builder
+    ui.builder
         .expose_object::<libhandy::Clamp>("directory_clamp", &clamp);
 
-    let directory_choice_label = appop
-        .ui
+    let directory_choice_label = ui
         .builder
         .get_object::<gtk::Label>("directory_choice_label")
         .expect("Can't find directory_choice_label in ui file.");
 
-    let default_matrix_server_radio = appop
-        .ui
+    let default_matrix_server_radio = ui
         .builder
         .get_object::<gtk::RadioButton>("default_matrix_server_radio")
         .expect("Can't find default_matrix_server_radio in ui file.");
 
-    let other_protocol_radio = appop
-        .ui
+    let other_protocol_radio = ui
         .builder
         .get_object::<gtk::RadioButton>("other_protocol_radio")
         .expect("Can't find other_protocol_radio in ui file.");
 
-    let protocol_combo = appop
-        .ui
+    let protocol_combo = ui
         .builder
         .get_object::<gtk::ComboBox>("protocol_combo")
         .expect("Can't find protocol_combo in ui file.");
 
-    let protocol_model = appop
-        .ui
+    let protocol_model = ui
         .builder
         .get_object::<gtk::ListStore>("protocol_model")
         .expect("Can't find protocol_model in ui file.");
 
-    let other_homeserver_radio = appop
-        .ui
+    let other_homeserver_radio = ui
         .builder
         .get_object::<gtk::RadioButton>("other_homeserver_radio")
         .expect("Can't find other_homeserver_radio in ui file.");
 
-    let other_homeserver_url_entry = appop
-        .ui
+    let other_homeserver_url_entry = ui
         .builder
         .get_object::<gtk::Entry>("other_homeserver_url_entry")
         .expect("Can't find other_homeserver_url_entry in ui file.");
 
-    let other_homeserver_url = appop
-        .ui
+    let other_homeserver_url = ui
         .builder
         .get_object::<gtk::EntryBuffer>("other_homeserver_url")
         .expect("Can't find other_homeserver_url in ui file.");
 
-    let scroll = appop
-        .ui
+    let scroll = ui
         .builder
         .get_object::<gtk::ScrolledWindow>("directory_scroll")
         .expect("Can't find directory_scroll in ui file.");

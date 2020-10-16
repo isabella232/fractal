@@ -1,27 +1,23 @@
 use glib::clone;
 use gtk::prelude::*;
 
-use crate::appop::AppOp;
+use crate::app::AppRuntime;
+use crate::uibuilder::UI;
 
-pub fn connect(appop: &AppOp) {
-    let app_runtime = appop.app_runtime.clone();
-    let dialog = appop
-        .ui
+pub fn connect(ui: &UI, app_runtime: AppRuntime) {
+    let dialog = ui
         .builder
         .get_object::<gtk::Dialog>("join_room_dialog")
         .expect("Can't find join_room_dialog in ui file.");
-    let cancel = appop
-        .ui
+    let cancel = ui
         .builder
         .get_object::<gtk::Button>("cancel_join_room")
         .expect("Can't find cancel_join_room in ui file.");
-    let confirm = appop
-        .ui
+    let confirm = ui
         .builder
         .get_object::<gtk::Button>("join_room_button")
         .expect("Can't find join_room_button in ui file.");
-    let entry = appop
-        .ui
+    let entry = ui
         .builder
         .get_object::<gtk::Entry>("join_room_name")
         .expect("Can't find join_room_name in ui file.");

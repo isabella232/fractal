@@ -1,19 +1,16 @@
+use crate::uibuilder::UI;
 use gio::prelude::*;
 use gtk::prelude::*;
 use libhandy::prelude::*;
 
-use crate::appop::AppOp;
-
 // Set up HdyDeck and HdyLeaflet so that swipes trigger the
 // same behaviour as the back button.
-pub fn connect(appop: &AppOp) {
-    let deck: libhandy::Deck = appop
-        .ui
+pub fn connect(ui: &UI) {
+    let deck: libhandy::Deck = ui
         .builder
         .get_object("main_deck")
         .expect("Can't find main_deck in UI file");
-    let leaflet: libhandy::Leaflet = appop
-        .ui
+    let leaflet: libhandy::Leaflet = ui
         .builder
         .get_object("chat_page")
         .expect("Can't find chat_page in UI file");

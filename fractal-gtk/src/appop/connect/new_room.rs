@@ -1,32 +1,27 @@
 use glib::clone;
 use gtk::prelude::*;
 
-use crate::appop::AppOp;
+use crate::app::AppRuntime;
+use crate::uibuilder::UI;
 
-pub fn connect(appop: &AppOp) {
-    let app_runtime = appop.app_runtime.clone();
-    let dialog = appop
-        .ui
+pub fn connect(ui: &UI, app_runtime: AppRuntime) {
+    let dialog = ui
         .builder
         .get_object::<gtk::Dialog>("new_room_dialog")
         .expect("Can't find new_room_dialog in ui file.");
-    let cancel = appop
-        .ui
+    let cancel = ui
         .builder
         .get_object::<gtk::Button>("cancel_new_room")
         .expect("Can't find cancel_new_room in ui file.");
-    let confirm = appop
-        .ui
+    let confirm = ui
         .builder
         .get_object::<gtk::Button>("new_room_button")
         .expect("Can't find new_room_button in ui file.");
-    let entry = appop
-        .ui
+    let entry = ui
         .builder
         .get_object::<gtk::Entry>("new_room_name")
         .expect("Can't find new_room_name in ui file.");
-    let private = appop
-        .ui
+    let private = ui
         .builder
         .get_object::<gtk::ToggleButton>("private_visibility_button")
         .expect("Can't find private_visibility_button in ui file.");
@@ -64,6 +59,6 @@ pub fn connect(appop: &AppOp) {
         private.set_active(true);
     }));
     entry.connect_changed(clone!(@strong confirm => move |entry| {
-            confirm.set_sensitive(entry.get_buffer().get_length() > 0);
+        confirm.set_sensitive(entry.get_buffer().get_length() > 0);
     }));
 }

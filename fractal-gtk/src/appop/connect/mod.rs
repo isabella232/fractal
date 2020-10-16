@@ -17,20 +17,23 @@ use crate::appop::AppOp;
 
 impl AppOp {
     pub fn connect_gtk(&self) {
-        headerbar::connect(self);
-        send::connect(self);
-        markdown::connect(self);
-        autocomplete::connect(self);
-        language::connect(self);
-        directory::connect(self);
-        leave_room::connect(self);
-        new_room::connect(self);
-        join_room::connect(self);
-        account::connect(self);
-        invite::connect_dialog(self);
-        invite::connect_user(self);
-        direct::connect(self);
-        roomlist_search::connect(self);
-        swipeable_widgets::connect(self);
+        let ui = &self.ui;
+        let app_runtime = self.app_runtime.clone();
+
+        headerbar::connect(ui);
+        send::connect(ui, app_runtime.clone());
+        markdown::connect(ui, app_runtime.clone());
+        autocomplete::connect(ui);
+        language::connect(ui, app_runtime.clone());
+        directory::connect(ui, app_runtime.clone());
+        leave_room::connect(ui, app_runtime.clone());
+        new_room::connect(ui, app_runtime.clone());
+        join_room::connect(ui, app_runtime.clone());
+        account::connect(ui, app_runtime.clone());
+        invite::connect_dialog(ui, app_runtime.clone());
+        invite::connect_user(ui, app_runtime.clone());
+        direct::connect(ui, app_runtime.clone());
+        roomlist_search::connect(ui, app_runtime);
+        swipeable_widgets::connect(ui);
     }
 }

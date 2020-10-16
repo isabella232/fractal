@@ -1,22 +1,19 @@
 use glib::clone;
 use gtk::prelude::*;
 
-use crate::appop::AppOp;
+use crate::app::AppRuntime;
+use crate::uibuilder::UI;
 
-pub fn connect(appop: &AppOp) {
-    let app_runtime = appop.app_runtime.clone();
-    let search_btn = appop
-        .ui
+pub fn connect(ui: &UI, app_runtime: AppRuntime) {
+    let search_btn = ui
         .builder
         .get_object::<gtk::ToggleButton>("room_search_button")
         .expect("Can't find room_search_button in ui file.");
-    let search_bar = appop
-        .ui
+    let search_bar = ui
         .builder
         .get_object::<gtk::SearchBar>("room_list_searchbar")
         .expect("Can't find room_list_searchbar in ui file.");
-    let search_entry = appop
-        .ui
+    let search_entry = ui
         .builder
         .get_object::<gtk::SearchEntry>("room_list_search")
         .expect("Can't find room_list_search in ui file.");

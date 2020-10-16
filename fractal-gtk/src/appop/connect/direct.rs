@@ -4,32 +4,27 @@ use gtk::prelude::*;
 use glib::source::Continue;
 use std::sync::{Arc, Mutex};
 
-use crate::appop::AppOp;
+use crate::app::AppRuntime;
+use crate::uibuilder::UI;
 
-pub fn connect(appop: &AppOp) {
-    let app_runtime = appop.app_runtime.clone();
-    let cancel = appop
-        .ui
+pub fn connect(ui: &UI, app_runtime: AppRuntime) {
+    let cancel = ui
         .builder
         .get_object::<gtk::Button>("cancel_direct_chat")
         .expect("Can't find cancel_direct_chat in ui file.");
-    let invite = appop
-        .ui
+    let invite = ui
         .builder
         .get_object::<gtk::Button>("direct_chat_button")
         .expect("Can't find direct_chat_button in ui file.");
-    let to_chat_entry_box = appop
-        .ui
+    let to_chat_entry_box = ui
         .builder
         .get_object::<gtk::Box>("to_chat_entry_box")
         .expect("Can't find to_chat_entry_box in ui file.");
-    let to_chat_entry = appop
-        .ui
+    let to_chat_entry = ui
         .builder
         .get_object::<gtk::TextView>("to_chat_entry")
         .expect("Can't find to_chat_entry in ui file.");
-    let dialog = appop
-        .ui
+    let dialog = ui
         .builder
         .get_object::<gtk::Dialog>("direct_chat_dialog")
         .expect("Can't find direct_chat_dialog in ui file.");

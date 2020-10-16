@@ -1,80 +1,53 @@
+use crate::app::AppRuntime;
+use crate::uibuilder::UI;
 use gio::ActionMapExt;
 use glib::clone;
 use gtk::prelude::*;
 
-use crate::appop::AppOp;
-
 use crate::actions::{AccountSettings, StateExt};
 
-pub fn connect(appop: &AppOp) {
-    let app_runtime = appop.app_runtime.clone();
-    let builder = &appop.ui.builder;
-    let cancel_password = appop
-        .ui
-        .builder
+pub fn connect(ui: &UI, app_runtime: AppRuntime) {
+    let builder = &ui.builder;
+    let cancel_password = builder
         .get_object::<gtk::Button>("password-dialog-cancel")
         .expect("Can't find password-dialog-cancel in ui file.");
-    let confirm_password = appop
-        .ui
-        .builder
+    let confirm_password = builder
         .get_object::<gtk::Button>("password-dialog-apply")
         .expect("Can't find password-dialog-apply in ui file.");
-    let password_dialog = appop
-        .ui
-        .builder
+    let password_dialog = builder
         .get_object::<gtk::Dialog>("password_dialog")
         .expect("Can't find password_dialog in ui file.");
-    let avatar_btn = appop
-        .ui
-        .builder
+    let avatar_btn = builder
         .get_object::<gtk::Button>("account_settings_avatar_button")
         .expect("Can't find account_settings_avatar_button in ui file.");
-    let name_entry = appop
-        .ui
-        .builder
+    let name_entry = builder
         .get_object::<gtk::Entry>("account_settings_name")
         .expect("Can't find account_settings_name in ui file.");
-    let name_btn = appop
-        .ui
-        .builder
+    let name_btn = builder
         .get_object::<gtk::Button>("account_settings_name_button")
         .expect("Can't find account_settings_name_button in ui file.");
-    let password_btn = appop
-        .ui
-        .builder
+    let password_btn = builder
         .get_object::<gtk::Button>("account_settings_password")
         .expect("Can't find account_settings_password in ui file.");
-    let old_password = appop
-        .ui
-        .builder
+    let old_password = builder
         .get_object::<gtk::Entry>("password-dialog-old-entry")
         .expect("Can't find password-dialog-old-entry in ui file.");
-    let new_password = appop
-        .ui
-        .builder
+    let new_password = builder
         .get_object::<gtk::Entry>("password-dialog-entry")
         .expect("Can't find password-dialog-entry in ui file.");
-    let verify_password = appop
-        .ui
-        .builder
+    let verify_password = builder
         .get_object::<gtk::Entry>("password-dialog-verify-entry")
         .expect("Can't find password-dialog-verify-entry in ui file.");
-    let destruction_entry = appop
-        .ui
-        .builder
+    let destruction_entry = builder
         .get_object::<gtk::Entry>("account_settings_delete_password_confirm")
         .expect("Can't find account_settings_delete_password_confirm in ui file.");
-    let destruction_btn = appop
-        .ui
-        .builder
+    let destruction_btn = builder
         .get_object::<gtk::Button>("account_settings_delete_btn")
         .expect("Can't find account_settings_delete_btn in ui file.");
 
-    let window = appop.ui.main_window.upcast_ref::<gtk::Window>();
+    let window = ui.main_window.upcast_ref::<gtk::Window>();
     let actions = AccountSettings::new(&window, app_runtime.clone());
-    let container = appop
-        .ui
-        .builder
+    let container = builder
         .get_object::<gtk::Box>("account_settings_box")
         .expect("Can't find account_settings_box in ui file.");
     container.insert_action_group("user-settings", Some(&actions));
@@ -83,9 +56,7 @@ pub fn connect(appop: &AppOp) {
     if let Some(action) = actions.lookup_action("change-avatar") {
         action.bind_button_state(&avatar_btn);
         avatar_btn.set_action_name(Some("user-settings.change-avatar"));
-        let avatar_spinner = appop
-            .ui
-            .builder
+        let avatar_spinner = builder
             .get_object::<gtk::Spinner>("account_settings_avatar_spinner")
             .expect("Can't find account_settings_avatar_spinner in ui file.");
         avatar_btn.connect_property_sensitive_notify(
