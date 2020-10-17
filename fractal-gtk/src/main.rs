@@ -24,7 +24,6 @@ mod appop;
 
 use std::error::Error;
 
-use crate::app::App;
 use gio::prelude::*;
 use gio::ApplicationExt;
 
@@ -71,7 +70,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     application.set_resource_base_path(Some("/org/gnome/Fractal"));
 
     application.connect_startup(|application| {
-        App::on_startup(application);
+        app::on_startup(application);
     });
 
     application.run(&[]);

@@ -4,8 +4,6 @@ use glib::clone;
 use gtk::prelude::*;
 use lazy_static::lazy_static;
 use libhandy::prelude::*;
-use std::cell::RefCell;
-use std::rc::Rc;
 use tokio::runtime::Runtime as TokioRuntime;
 
 use log::error;
@@ -67,171 +65,156 @@ impl AppRuntime {
     }
 }
 
-// Our application struct for containing all the state we have to carry around.
-// TODO: subclass gtk::Application once possible
-pub struct App {
-    app_runtime: AppRuntime,
-    ui: uibuilder::UI,
-}
+fn new(gtk_app: gtk::Application) -> (AppRuntime, uibuilder::UI) {
+    // Set up the textdomain for gettext
+    setlocale(LocaleCategory::LcAll, "");
+    bindtextdomain("fractal", config::LOCALEDIR);
+    textdomain("fractal");
 
-pub type AppRef = Rc<App>;
+    glib::set_application_name("fractal");
+    glib::set_prgname(Some("fractal"));
 
-impl App {
-    pub fn new(gtk_app: gtk::Application) -> AppRef {
-        // Set up the textdomain for gettext
-        setlocale(LocaleCategory::LcAll, "");
-        bindtextdomain("fractal", config::LOCALEDIR);
-        textdomain("fractal");
+    // Add style provider
+    let provider = gtk::CssProvider::new();
+    provider.load_from_resource("/org/gnome/Fractal/app.css");
+    gtk::StyleContext::add_provider_for_screen(
+        &gdk::Screen::get_default().expect("Error initializing gtk css provider."),
+        &provider,
+        gtk::STYLE_PROVIDER_PRIORITY_APPLICATION,
+    );
 
-        glib::set_application_name("fractal");
-        glib::set_prgname(Some("fractal"));
+    let ui = uibuilder::UI::new(gtk_app.clone());
+    let app_runtime = AppRuntime::init(ui.clone());
 
-        // Add style provider
-        let provider = gtk::CssProvider::new();
-        provider.load_from_resource("/org/gnome/Fractal/app.css");
-        gtk::StyleContext::add_provider_for_screen(
-            &gdk::Screen::get_default().expect("Error initializing gtk css provider."),
-            &provider,
-            gtk::STYLE_PROVIDER_PRIORITY_APPLICATION,
-        );
+    let settings: gio::Settings = gio::Settings::new("org.gnome.Fractal");
+    let window_state = WindowState::load_from_gsettings(&settings);
+    ui.main_window
+        .set_default_size(window_state.width, window_state.height);
+    if window_state.is_maximized {
+        ui.main_window.maximize();
+    } else if window_state.x > 0 && window_state.y > 0 {
+        ui.main_window.move_(window_state.x, window_state.y);
+    }
+    ui.main_window.show_all();
 
-        let ui = uibuilder::UI::new(gtk_app.clone());
-        let app_runtime = AppRuntime::init(ui.clone());
+    if gtk_app
+        .get_application_id()
+        .map_or(false, |s| s.ends_with("Devel"))
+    {
+        ui.main_window.get_style_context().add_class("devel");
+    }
 
-        let settings: gio::Settings = gio::Settings::new("org.gnome.Fractal");
-        let window_state = WindowState::load_from_gsettings(&settings);
-        ui.main_window
-            .set_default_size(window_state.width, window_state.height);
-        if window_state.is_maximized {
-            ui.main_window.maximize();
-        } else if window_state.x > 0 && window_state.y > 0 {
-            ui.main_window.move_(window_state.x, window_state.y);
-        }
-        ui.main_window.show_all();
+    let leaflet = ui
+        .builder
+        .get_object::<libhandy::Leaflet>("chat_page")
+        .expect("Can't find chat_page in ui file.");
+    let container = ui
+        .builder
+        .get_object::<gtk::Box>("history_container")
+        .expect("Can't find history_container in ui file.");
+    let popover = ui
+        .builder
+        .get_object::<gtk::Popover>("autocomplete_popover")
+        .expect("Can't find autocomplete_popover in ui file.");
 
-        if gtk_app
-            .get_application_id()
-            .map_or(false, |s| s.ends_with("Devel"))
-        {
-            ui.main_window.get_style_context().add_class("devel");
-        }
+    if leaflet.get_folded() {
+        container.get_style_context().add_class("folded-history");
+        popover.get_style_context().add_class("narrow");
+    }
 
-        let leaflet = ui
-            .builder
-            .get_object::<libhandy::Leaflet>("chat_page")
-            .expect("Can't find chat_page in ui file.");
-        let container = ui
-            .builder
-            .get_object::<gtk::Box>("history_container")
-            .expect("Can't find history_container in ui file.");
-        let popover = ui
-            .builder
-            .get_object::<gtk::Popover>("autocomplete_popover")
-            .expect("Can't find autocomplete_popover in ui file.");
-
+    leaflet.connect_property_folded_notify(clone!(@weak container => move |leaflet| {
         if leaflet.get_folded() {
             container.get_style_context().add_class("folded-history");
             popover.get_style_context().add_class("narrow");
+        } else {
+            container.get_style_context().remove_class("folded-history");
+            popover.get_style_context().remove_class("narrow");
         }
+    }));
 
-        leaflet.connect_property_folded_notify(clone!(@weak container => move |leaflet| {
-            if leaflet.get_folded() {
-                container.get_style_context().add_class("folded-history");
-                popover.get_style_context().add_class("narrow");
-            } else {
-                container.get_style_context().remove_class("folded-history");
-                popover.get_style_context().remove_class("narrow");
-            }
-        }));
+    let view_stack = ui
+        .builder
+        .get_object::<gtk::Stack>("subview_stack")
+        .expect("Can't find subview_stack in ui file.");
 
-        let view_stack = ui
-            .builder
-            .get_object::<gtk::Stack>("subview_stack")
-            .expect("Can't find subview_stack in ui file.");
+    /* Add account settings view to the view stack */
+    let child = ui
+        .builder
+        .get_object::<gtk::Box>("account_settings_box")
+        .expect("Can't find account_settings_box in ui file.");
+    view_stack.add_named(&child, "account-settings");
 
-        /* Add account settings view to the view stack */
-        let child = ui
-            .builder
-            .get_object::<gtk::Box>("account_settings_box")
-            .expect("Can't find account_settings_box in ui file.");
-        view_stack.add_named(&child, "account-settings");
+    let main_stack = ui
+        .builder
+        .get_object::<gtk::Stack>("main_content_stack")
+        .expect("Can't find main_content_stack in ui file.");
 
-        let main_stack = ui
-            .builder
-            .get_object::<gtk::Stack>("main_content_stack")
-            .expect("Can't find main_content_stack in ui file.");
+    // Add login view to the main stack
+    let login = widgets::LoginWidget::new(app_runtime.clone());
+    main_stack.add_named(&login.container, "login");
 
-        // Add login view to the main stack
-        let login = widgets::LoginWidget::new(app_runtime.clone());
-        main_stack.add_named(&login.container, "login");
+    app_runtime.update_state_with(|state| {
+        state
+            .ui
+            .gtk_app
+            .set_accels_for_action("login.back", &["Escape"]);
+        actions::Global::new(state);
+        state.connect_gtk();
+    });
 
+    (app_runtime, ui)
+}
+
+pub fn on_startup(gtk_app: &gtk::Application) {
+    // Create application.
+    let (app_runtime, ui) = new(gtk_app.clone());
+
+    // Initialize libhandy
+    libhandy::init();
+
+    gtk_app.connect_activate(clone!(@strong app_runtime => move |_| {
         app_runtime.update_state_with(|state| {
-            state
-                .ui
-                .gtk_app
-                .set_accels_for_action("login.back", &["Escape"]);
-            actions::Global::new(state);
-            state.connect_gtk();
+            on_activate(&state.ui);
         });
+    }));
 
-        AppRef::new(Self { app_runtime, ui })
-    }
+    ui.main_window.connect_property_has_toplevel_focus_notify(
+        clone!(@strong app_runtime => move |_| {
+            app_runtime.update_state_with(|state| {
+                state.mark_active_room_messages();
+            });
+        }),
+    );
 
-    pub fn on_startup(gtk_app: &gtk::Application) {
-        // Create application.
-        let app = App::new(gtk_app.clone());
-        let app_runtime = app.app_runtime.clone();
+    ui.main_window.connect_delete_event(move |window, _| {
+        let settings: gio::Settings = gio::Settings::new("org.gnome.Fractal");
+        let w = window.upcast_ref();
+        let window_state = WindowState::from_window(w);
+        if let Err(err) = window_state.save_in_gsettings(&settings) {
+            error!("Can't save the window settings: {:?}", err);
+        }
+        Inhibit(false)
+    });
 
-        // Initialize libhandy
-        libhandy::init();
+    app_runtime.update_state_with(|state| {
+        state.init();
+    });
 
-        gtk_app.connect_activate(clone!(@weak app => move |_| {
-            app.on_activate();
-        }));
-
-        app.ui
-            .main_window
-            .connect_property_has_toplevel_focus_notify(clone!(@strong app_runtime => move |_| {
-                app_runtime.update_state_with(|state| {
-                    state.mark_active_room_messages();
-                });
-            }));
-
-        app.ui.main_window.connect_delete_event(move |window, _| {
-            let settings: gio::Settings = gio::Settings::new("org.gnome.Fractal");
-            let w = window.upcast_ref();
-            let window_state = WindowState::from_window(w);
-            if let Err(err) = window_state.save_in_gsettings(&settings) {
-                error!("Can't save the window settings: {:?}", err);
-            }
-            Inhibit(false)
-        });
-
+    // When the application is shut down we drop our app struct
+    gtk_app.connect_shutdown(move |_| {
         app_runtime.update_state_with(|state| {
-            state.init();
+            on_shutdown(state);
         });
+    });
+}
 
-        // When the application is shut down we drop our app struct
-        let app_container = RefCell::new(Some(app));
-        gtk_app.connect_shutdown(move |_| {
-            let app = app_container
-                .borrow_mut()
-                .take()
-                .expect("Shutdown called multiple times");
-            app.on_shutdown();
-        });
-    }
+fn on_activate(ui: &uibuilder::UI) {
+    ui.main_window.show();
+    ui.main_window.present();
+}
 
-    fn on_activate(&self) {
-        self.ui.main_window.show();
-        self.ui.main_window.present()
-    }
-
-    fn on_shutdown(self: AppRef) {
-        self.app_runtime.update_state_with(|state| {
-            state.quit();
-        });
-    }
+fn on_shutdown(appop: &AppOp) {
+    appop.quit();
 }
 
 pub fn get_app_runtime() -> &'static AppRuntime {
