@@ -8,8 +8,7 @@ use url::Url;
 use crate::actions;
 use crate::actions::global::AppState;
 use crate::actions::login::LoginState;
-use crate::app::RUNTIME;
-use crate::appop::AppOp;
+use crate::app::{AppRuntime, RUNTIME};
 use crate::globals;
 use crate::util::i18n::i18n;
 use crate::widgets::ErrorDialog;
@@ -17,7 +16,6 @@ use crate::widgets::ErrorDialog;
 use crate::backend::register::get_well_known;
 
 use std::convert::TryInto;
-use std::sync::{Arc, Mutex};
 
 #[derive(Debug, Clone)]
 pub struct LoginWidget {
@@ -31,7 +29,7 @@ pub struct LoginWidget {
 }
 
 impl LoginWidget {
-    pub fn new(op: &Arc<Mutex<AppOp>>) -> Self {
+    pub fn new(app_runtime: AppRuntime) -> Self {
         let widget = Self::default();
 
         let server_entry = &widget.server_entry;
@@ -58,8 +56,6 @@ impl LoginWidget {
                     _ => (),
                 }
             }));
-
-        let op = op.clone();
 
         let login = widget
             .actions
@@ -126,11 +122,11 @@ impl LoginWidget {
                     .unwrap_or((homeserver_url, globals::DEFAULT_IDENTITYSERVER.clone()));
 
                 err_label.hide();
-                op.lock().unwrap().set_state(AppState::Loading);
-                op.lock().unwrap().since = None;
-                op.lock()
-                    .unwrap()
-                    .connect(username, password, homeserver_url, idserver);
+                app_runtime.update_state_with(|state| {
+                    state.set_state(AppState::Loading);
+                    state.since = None;
+                    state.connect(username, password, homeserver_url, idserver);
+                });
             } else {
                 err_label.show();
             }

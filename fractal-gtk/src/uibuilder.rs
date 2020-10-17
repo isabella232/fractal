@@ -5,13 +5,14 @@ use gtk::{self, prelude::*};
 #[derive(Clone, Debug)]
 pub struct UI {
     pub builder: gtk::Builder,
+    pub gtk_app: gtk::Application,
     pub main_window: libhandy::ApplicationWindow,
     pub sventry: SVEntry,
     pub sventry_box: Box<gtk::Stack>,
 }
 
 impl UI {
-    pub fn new() -> UI {
+    pub fn new(gtk_app: gtk::Application) -> UI {
         // The order here is important because some ui file depends on others
 
         let builder = gtk::Builder::new();
@@ -86,12 +87,15 @@ impl UI {
             .add_from_resource("/org/gnome/Fractal/ui/account_settings.ui")
             .expect("Can't load ui file: account_settings.ui");
 
-        let main_window = builder
+        let main_window: libhandy::ApplicationWindow = builder
             .get_object("main_window")
             .expect("Couldn't find main_window in ui file.");
+        main_window.set_application(Some(&gtk_app));
+        main_window.set_title("Fractal");
 
         UI {
             builder,
+            gtk_app,
             main_window,
             sventry,
             sventry_box,

@@ -6,7 +6,6 @@ use lazy_static::lazy_static;
 use libhandy::prelude::*;
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::sync::{Arc, Mutex};
 use tokio::runtime::Runtime as TokioRuntime;
 
 use log::error;
@@ -22,11 +21,7 @@ mod windowstate;
 
 use windowstate::WindowState;
 
-type GlobalState = Arc<Mutex<AppOp>>;
-
 static mut APP_RUNTIME: Option<AppRuntime> = None;
-// TODO: Deprecated. It should be removed
-static mut OP: Option<GlobalState> = None;
 
 lazy_static! {
     pub static ref RUNTIME: TokioRuntime = TokioRuntime::new().unwrap();
@@ -49,22 +44,22 @@ macro_rules! APPOP {
 pub struct AppRuntime(glib::Sender<Box<dyn FnOnce(&mut AppOp)>>);
 
 impl AppRuntime {
-    fn init(ui: uibuilder::UI) {
+    fn init(ui: uibuilder::UI) -> Self {
         let (app_tx, app_rx) = glib::MainContext::channel(Default::default());
         let app_runtime = Self(app_tx);
-        let state = AppOp::new(ui, app_runtime.clone());
+        let mut state = AppOp::new(ui, app_runtime.clone());
 
         unsafe {
-            OP = Some(Arc::new(Mutex::new(state)));
-            APP_RUNTIME = Some(app_runtime);
+            APP_RUNTIME = Some(app_runtime.clone());
         }
 
-        let state = get_op();
         app_rx.attach(None, move |update_state| {
-            update_state(&mut state.lock().unwrap());
+            update_state(&mut state);
 
             glib::Continue(true)
         });
+
+        app_runtime
     }
 
     pub fn update_state_with(&self, update_fn: impl FnOnce(&mut AppOp) + 'static) {
@@ -75,13 +70,14 @@ impl AppRuntime {
 // Our application struct for containing all the state we have to carry around.
 // TODO: subclass gtk::Application once possible
 pub struct App {
+    app_runtime: AppRuntime,
     ui: uibuilder::UI,
 }
 
 pub type AppRef = Rc<App>;
 
 impl App {
-    pub fn new(gtk_app: &gtk::Application) -> AppRef {
+    pub fn new(gtk_app: gtk::Application) -> AppRef {
         // Set up the textdomain for gettext
         setlocale(LocaleCategory::LcAll, "");
         bindtextdomain("fractal", config::LOCALEDIR);
@@ -99,12 +95,8 @@ impl App {
             gtk::STYLE_PROVIDER_PRIORITY_APPLICATION,
         );
 
-        let ui = uibuilder::UI::new();
-        AppRuntime::init(ui.clone());
-
-        ui.main_window.set_application(Some(gtk_app));
-
-        ui.main_window.set_title("Fractal");
+        let ui = uibuilder::UI::new(gtk_app.clone());
+        let app_runtime = AppRuntime::init(ui.clone());
 
         let settings: gio::Settings = gio::Settings::new("org.gnome.Fractal");
         let window_state = WindowState::load_from_gsettings(&settings);
@@ -170,23 +162,25 @@ impl App {
             .expect("Can't find main_content_stack in ui file.");
 
         // Add login view to the main stack
-        let login = widgets::LoginWidget::new(get_op());
+        let login = widgets::LoginWidget::new(app_runtime.clone());
         main_stack.add_named(&login.container, "login");
 
-        gtk_app.set_accels_for_action("login.back", &["Escape"]);
+        app_runtime.update_state_with(|state| {
+            state
+                .ui
+                .gtk_app
+                .set_accels_for_action("login.back", &["Escape"]);
+            actions::Global::new(state);
+            state.connect_gtk();
+        });
 
-        actions::Global::new(gtk_app, get_app_runtime().clone(), get_op());
-
-        let app = AppRef::new(Self { ui });
-
-        get_app_runtime().update_state_with(|state| state.connect_gtk());
-
-        app
+        AppRef::new(Self { app_runtime, ui })
     }
 
     pub fn on_startup(gtk_app: &gtk::Application) {
         // Create application.
-        let app = App::new(gtk_app);
+        let app = App::new(gtk_app.clone());
+        let app_runtime = app.app_runtime.clone();
 
         // Initialize libhandy
         libhandy::init();
@@ -197,8 +191,10 @@ impl App {
 
         app.ui
             .main_window
-            .connect_property_has_toplevel_focus_notify(clone!(@weak app => move |_| {
-                get_op().lock().unwrap().mark_active_room_messages();
+            .connect_property_has_toplevel_focus_notify(clone!(@strong app_runtime => move |_| {
+                app_runtime.update_state_with(|state| {
+                    state.mark_active_room_messages();
+                });
             }));
 
         app.ui.main_window.connect_delete_event(move |window, _| {
@@ -211,7 +207,9 @@ impl App {
             Inhibit(false)
         });
 
-        get_op().lock().unwrap().init();
+        app_runtime.update_state_with(|state| {
+            state.init();
+        });
 
         // When the application is shut down we drop our app struct
         let app_container = RefCell::new(Some(app));
@@ -230,13 +228,10 @@ impl App {
     }
 
     fn on_shutdown(self: AppRef) {
-        get_op().lock().unwrap().quit();
+        self.app_runtime.update_state_with(|state| {
+            state.quit();
+        });
     }
-}
-
-// TODO: Deprecated. It should be removed
-pub fn get_op() -> &'static GlobalState {
-    unsafe { OP.as_ref().expect("Fatal: AppOp has not been initialized") }
 }
 
 pub fn get_app_runtime() -> &'static AppRuntime {

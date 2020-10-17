@@ -2,9 +2,10 @@ use gtk::prelude::*;
 
 use crate::widgets;
 
+use crate::app::AppRuntime;
 use crate::uibuilder::UI;
 
-pub fn connect(ui: &UI) {
+pub fn connect(ui: &UI, app_runtime: AppRuntime) {
     let popover = ui
         .builder
         .get_object::<gtk::Popover>("autocomplete_popover")
@@ -18,5 +19,12 @@ pub fn connect(ui: &UI) {
         .get_object("main_window")
         .expect("Can't find main_window in ui file.");
 
-    widgets::Autocomplete::new(window, ui.sventry.view.clone(), popover, listbox).connect();
+    widgets::Autocomplete::new(
+        app_runtime,
+        window,
+        ui.sventry.view.clone(),
+        popover,
+        listbox,
+    )
+    .connect();
 }

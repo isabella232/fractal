@@ -3,18 +3,18 @@ use log::info;
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
-use std::sync::{Arc, Mutex};
 
 use gtk::prelude::*;
 use gtk::TextTag;
 
 use crate::model::member::Member;
 
-use crate::app;
+use crate::app::AppRuntime;
 use crate::appop::AppOp;
 use crate::widgets;
 
 pub struct Autocomplete {
+    app_runtime: AppRuntime,
     entry: sourceview4::View,
     listbox: gtk::ListBox,
     popover: gtk::Popover,
@@ -23,18 +23,19 @@ pub struct Autocomplete {
     popover_position: Option<i32>,
     popover_search: Option<String>,
     popover_closing: bool,
-    op: Arc<Mutex<AppOp>>,
 }
 
 impl Autocomplete {
     pub fn new(
+        app_runtime: AppRuntime,
         window: gtk::Window,
-        msg_entry: sourceview4::View,
+        entry: sourceview4::View,
         popover: gtk::Popover,
         listbox: gtk::ListBox,
     ) -> Autocomplete {
         Autocomplete {
-            entry: msg_entry,
+            app_runtime,
+            entry,
             listbox,
             popover,
             window,
@@ -42,11 +43,11 @@ impl Autocomplete {
             popover_position: None,
             popover_search: None,
             popover_closing: false,
-            op: app::get_op().clone(),
         }
     }
 
     pub fn connect(self) {
+        let app_runtime = self.app_runtime.clone();
         let this: Rc<RefCell<Autocomplete>> = Rc::new(RefCell::new(self));
 
         let context = this.borrow().entry.get_style_context();
@@ -275,42 +276,41 @@ impl Autocomplete {
                         }
 
                         if own.borrow().popover_position.is_some() {
-                            let list = {
-                                own.borrow()
-                                    .autocomplete(text, buffer.get_property_cursor_position())
-                            };
-                            let widget_list = { own.borrow_mut().autocomplete_show_popover(list) };
-                            for (alias, widget) in widget_list.iter() {
-                                widget.connect_key_press_event(clone!(
-                                @strong own,
-                                @strong alias
-                                => move |_, ev| {
-                                    own.borrow_mut().autocomplete_insert(alias.clone());
-                                    let ev = {
-                                        let ev: &gdk::Event = ev;
+                            app_runtime.update_state_with(clone!(@strong own => move |state| {
+                                let list = own
+                                    .borrow()
+                                    .autocomplete(text, buffer.get_property_cursor_position(), state);
+                                let widget_list = own
+                                    .borrow_mut()
+                                    .autocomplete_show_popover(list, state);
+                                for (alias, widget) in widget_list.iter() {
+                                    widget.connect_key_press_event(clone!(
+                                    @strong own,
+                                    @strong alias
+                                    => move |_, ev| {
+                                        own.borrow_mut().autocomplete_insert(alias.clone());
+                                        let ev = ev
+                                            .downcast_ref::<gdk::EventKey>()
+                                            .unwrap();
+                                        // Submit on enter
+                                        if ev.get_keyval() == gdk::keys::constants::Return
+                                            || ev.get_keyval() == gdk::keys::constants::Tab
+                                        {
+                                            own.borrow_mut().autocomplete_enter();
+                                        }
+                                        Inhibit(true)
+                                    }));
 
-                                        ev.clone()
-                                            .downcast::<gdk::EventKey>()
-                                            .unwrap()
-                                    };
-                                    /* Submit on enter */
-                                    if ev.get_keyval() == gdk::keys::constants::Return
-                                        || ev.get_keyval() == gdk::keys::constants::Tab
-                                    {
+                                    widget.connect_button_press_event(clone!(
+                                    @strong own,
+                                    @strong alias
+                                    => move |_, _| {
+                                        own.borrow_mut().autocomplete_insert(alias.clone());
                                         own.borrow_mut().autocomplete_enter();
-                                    }
-                                    Inhibit(true)
-                                }));
-
-                                widget.connect_button_press_event(clone!(
-                                @strong own,
-                                @strong alias
-                                => move |_, _| {
-                                    own.borrow_mut().autocomplete_insert(alias.clone());
-                                    own.borrow_mut().autocomplete_enter();
-                                    Inhibit(true)
-                                }));
-                            }
+                                        Inhibit(true)
+                                    }));
+                                };
+                            }));
                         }
                     }
                 }
@@ -423,33 +423,31 @@ impl Autocomplete {
     pub fn autocomplete_show_popover(
         &mut self,
         list: Vec<Member>,
+        op: &AppOp,
     ) -> HashMap<String, gtk::EventBox> {
         for ch in self.listbox.get_children().iter() {
             self.listbox.remove(ch);
         }
 
-        let mut widget_list: HashMap<String, gtk::EventBox> = HashMap::new();
-
-        if !list.is_empty() {
-            for m in list.iter() {
-                let alias = &m
+        let widget_list: HashMap<String, gtk::EventBox> = list
+            .iter()
+            .map(|member| {
+                let alias = member
                     .alias
                     .clone()
                     .unwrap_or_default()
                     .trim_end_matches(" (IRC)")
                     .to_owned();
-                let widget;
-                {
-                    let guard = self.op.lock().unwrap();
-                    let mb = widgets::MemberBox::new(&m, &guard);
-                    widget = mb.widget(true);
-                }
+                let widget = widgets::MemberBox::new(&member, op).widget(true);
 
-                let w = widget.clone();
-                let a = alias.clone();
-                widget_list.insert(a, w);
-                self.listbox.add(&widget);
-            }
+                (alias, widget)
+            })
+            .collect();
+
+        if !widget_list.is_empty() {
+            widget_list
+                .values()
+                .for_each(|widget| self.listbox.add(widget));
 
             self.popover.set_relative_to(Some(&self.entry));
             self.popover
@@ -472,10 +470,9 @@ impl Autocomplete {
         widget_list
     }
 
-    pub fn autocomplete(&self, text: Option<String>, pos: i32) -> Vec<Member> {
+    pub fn autocomplete(&self, text: Option<String>, pos: i32, op: &AppOp) -> Vec<Member> {
         let mut list: Vec<Member> = vec![];
-        let guard = self.op.lock().unwrap();
-        let rooms = &guard.rooms;
+        let rooms = &op.rooms;
         match text {
             None => {}
             Some(txt) => {
@@ -495,7 +492,7 @@ impl Autocomplete {
                         };
 
                         /* Search for the 5 most recent active users */
-                        if let Some(aroom) = guard.active_room.clone() {
+                        if let Some(aroom) = op.active_room.clone() {
                             if let Some(r) = rooms.get(&aroom) {
                                 let mut count = 0;
                                 for (_, m) in r.members.iter() {

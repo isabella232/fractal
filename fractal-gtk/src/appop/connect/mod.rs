@@ -23,7 +23,7 @@ impl AppOp {
         headerbar::connect(ui);
         send::connect(ui, app_runtime.clone());
         markdown::connect(ui, app_runtime.clone());
-        autocomplete::connect(ui);
+        autocomplete::connect(ui, app_runtime.clone());
         language::connect(ui, app_runtime.clone());
         directory::connect(ui, app_runtime.clone());
         leave_room::connect(ui, app_runtime.clone());

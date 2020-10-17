@@ -1,8 +1,6 @@
 use glib::clone;
 use log::{debug, info};
 use std::convert::TryInto;
-use std::rc::Rc;
-use std::sync::{Arc, Mutex};
 
 use crate::app::AppRuntime;
 use crate::appop::AppOp;
@@ -63,9 +61,11 @@ impl From<AppState> for glib::Variant {
     }
 }
 
-/* This creates globale actions which are connected to the application */
-/* TODO: Remove op */
-pub fn new(app: &gtk::Application, app_runtime: AppRuntime, op: &Arc<Mutex<AppOp>>) {
+// This creates global actions which are connected to the application
+pub fn new(appop: &AppOp) {
+    let app = &appop.ui.gtk_app;
+    let app_runtime = appop.app_runtime.clone();
+
     let settings = SimpleAction::new("settings", None);
     let chat = SimpleAction::new("start_chat", None);
     let newr = SimpleAction::new("new_room", None);
@@ -142,164 +142,177 @@ pub fn new(app: &gtk::Application, app_runtime: AppRuntime, op: &Arc<Mutex<AppOp
         app.quit();
     }));
 
-    about.connect_activate(clone!(@strong op => move |_, _| op.lock().unwrap().about_dialog() ));
-    main_menu.connect_activate(clone!(@strong op => move |_, _| op.lock().unwrap().main_menu() ));
+    about.connect_activate(clone!(@strong app_runtime => move |_, _| {
+        app_runtime.update_state_with(|state| state.about_dialog());
+    }));
+    main_menu.connect_activate(clone!(@strong app_runtime => move |_, _| {
+        app_runtime.update_state_with(|state| state.main_menu());
+    }));
 
     settings.connect_activate(move |_, _| {
         info!("SETTINGS");
     });
     settings.set_enabled(false);
 
-    logout.connect_activate(clone!(@strong op => move |_, _| op.lock().unwrap().logout() ));
-    inv.connect_activate(
-        clone!(@strong op => move |_, _| op.lock().unwrap().show_invite_user_dialog() ),
-    );
-    chat.connect_activate(
-        clone!(@strong op => move |_, _| op.lock().unwrap().show_direct_chat_dialog() ),
-    );
-    leave.connect_activate(
-        clone!(@strong op => move |_, _| op.lock().unwrap().leave_active_room() ),
-    );
-    newr.connect_activate(clone!(@strong op => move |_, _| op.lock().unwrap().new_room_dialog() ));
-    joinr.connect_activate(
-        clone!(@strong op => move |_, _| op.lock().unwrap().join_to_room_dialog() ),
-    );
-
-    previous_room.connect_activate(clone!(@strong op => move |_, _| {
-        let mut op = op.lock().unwrap();
-        if let Some(id) = op.roomlist.prev_id() {
-            op.set_active_room_by_id(id);
-        } else if let Some(last_room) = op.roomlist.last_id() {
-            op.set_active_room_by_id(last_room);
-        }
+    logout.connect_activate(clone!(@strong app_runtime => move |_, _| {
+        app_runtime.update_state_with(|state| state.logout());
     }));
-    next_room.connect_activate(clone!(@strong op => move |_, _| {
-        let mut op = op.lock().unwrap();
-        if let Some(id) = op.roomlist.next_id() {
-            op.set_active_room_by_id(id);
-        } else if let Some(first_room) = op.roomlist.first_id() {
-            op.set_active_room_by_id(first_room);
-        }
+    inv.connect_activate(clone!(@strong app_runtime => move |_, _| {
+        app_runtime.update_state_with(|state| state.show_invite_user_dialog());
     }));
-    prev_unread_room.connect_activate(clone!(@strong op => move |_, _| {
-        let mut op = op.lock().unwrap();
-        if let Some(id) = op.roomlist.prev_unread_id() {
-            op.set_active_room_by_id(id);
-        }
+    chat.connect_activate(clone!(@strong app_runtime => move |_, _| {
+        app_runtime.update_state_with(|state| state.show_direct_chat_dialog());
     }));
-    next_unread_room.connect_activate(clone!(@strong op => move |_, _| {
-        let mut op = op.lock().unwrap();
-        if let Some(id) = op.roomlist.next_unread_id() {
-            op.set_active_room_by_id(id);
-        }
+    leave.connect_activate(clone!(@strong app_runtime => move |_, _| {
+        app_runtime.update_state_with(|state| state.leave_active_room());
     }));
-    first_room.connect_activate(clone!(@strong op => move |_, _| {
-        let mut op = op.lock().unwrap();
-        if let Some(id) = op.roomlist.first_id() {
-            op.set_active_room_by_id(id);
-        }
+    newr.connect_activate(clone!(@strong app_runtime => move |_, _| {
+        app_runtime.update_state_with(|state| state.new_room_dialog());
     }));
-    last_room.connect_activate(clone!(@strong op => move |_, _| {
-        let mut op = op.lock().unwrap();
-        if let Some(id) = op.roomlist.last_id() {
-            op.set_active_room_by_id(id);
-        }
-    }));
-    older_messages.connect_activate(clone!(@strong op => move |_, _| {
-        if let Some(ref mut hist) = op.lock().unwrap().history {
-            hist.page_up();
-        }
-    }));
-    newer_messages.connect_activate(clone!(@strong op => move |_, _| {
-        if let Some(ref mut hist) = op.lock().unwrap().history {
-            hist.page_down();
-        }
+    joinr.connect_activate(clone!(@strong app_runtime => move |_, _| {
+        app_runtime.update_state_with(|state| state.join_to_room_dialog());
     }));
 
-    let back_history = op.lock().unwrap().room_back_history.clone();
-
-    account.connect_activate(clone!(
-    @strong op,
-    @weak back_history as back
-    => move |_, _| {
-        op.lock().unwrap().show_account_settings_dialog();
-        back.borrow_mut().push(AppState::AccountSettings);
+    previous_room.connect_activate(clone!(@strong app_runtime => move |_, _| {
+        app_runtime.update_state_with(|state| {
+            if let Some(id) = state.roomlist.prev_id() {
+                state.set_active_room_by_id(id);
+            } else if let Some(last_room) = state.roomlist.last_id() {
+                state.set_active_room_by_id(last_room);
+            }
+        });
+    }));
+    next_room.connect_activate(clone!(@strong app_runtime => move |_, _| {
+        app_runtime.update_state_with(|state| {
+            if let Some(id) = state.roomlist.next_id() {
+                state.set_active_room_by_id(id);
+            } else if let Some(first_room) = state.roomlist.first_id() {
+                state.set_active_room_by_id(first_room);
+            }
+        });
+    }));
+    prev_unread_room.connect_activate(clone!(@strong app_runtime => move |_, _| {
+        app_runtime.update_state_with(|state| {
+            if let Some(id) = state.roomlist.prev_unread_id() {
+                state.set_active_room_by_id(id);
+            }
+        });
+    }));
+    next_unread_room.connect_activate(clone!(@strong app_runtime => move |_, _| {
+        app_runtime.update_state_with(|state| {
+            if let Some(id) = state.roomlist.next_unread_id() {
+                state.set_active_room_by_id(id);
+            }
+        });
+    }));
+    first_room.connect_activate(clone!(@strong app_runtime => move |_, _| {
+        app_runtime.update_state_with(|state| {
+            if let Some(id) = state.roomlist.first_id() {
+                state.set_active_room_by_id(id);
+            }
+        });
+    }));
+    last_room.connect_activate(clone!(@strong app_runtime => move |_, _| {
+        app_runtime.update_state_with(|state| {
+            if let Some(id) = state.roomlist.last_id() {
+                state.set_active_room_by_id(id);
+            }
+        });
+    }));
+    older_messages.connect_activate(clone!(@strong app_runtime => move |_, _| {
+        app_runtime.update_state_with(|state| {
+            if let Some(ref mut hist) = state.history {
+                hist.page_up();
+            }
+        });
+    }));
+    newer_messages.connect_activate(clone!(@strong app_runtime => move |_, _| {
+        app_runtime.update_state_with(|state| {
+            if let Some(ref mut hist) = state.history {
+                hist.page_down();
+            }
+        });
     }));
 
-    directory.connect_activate(clone!(
-    @strong op,
-    @weak back_history as back
-    => move |_, _| {
-        op.lock().unwrap().set_state(AppState::Directory);
-        back.borrow_mut().push(AppState::Directory);
+    account.connect_activate(clone!(@strong app_runtime => move |_, _| {
+        app_runtime.update_state_with(|state| {
+            state.show_account_settings_dialog();
+            state.room_back_history.borrow_mut().push(AppState::AccountSettings);
+        });
+    }));
+
+    directory.connect_activate(clone!(@strong app_runtime => move |_, _| {
+        app_runtime.update_state_with(|state| {
+            state.set_state(AppState::Directory);
+            state.room_back_history.borrow_mut().push(AppState::Directory);
+        });
     }));
 
     /* TODO: We could pass a message to this to highlight it in the room history, might be
      * handy when opening the room from a notification */
-    open_room.connect_activate(clone!(
-    @strong op,
-    @weak back_history as back
-    => move |_, data| {
-        if let Some(id) = get_room_id(data) {
-            op.lock().unwrap().set_active_room_by_id(id);
-           /* This does nothing if fractal is already in focus */
-            op.lock().unwrap().activate();
-        }
-        // Push a new state only if the current state is not already Room
-        let push = if let Some(last) = back.borrow().last() {
-            last != &AppState::Room
-        } else {
-            true
-        };
-        if push {
-            back.borrow_mut().push(AppState::Room);
-        }
+    open_room.connect_activate(clone!(@strong app_runtime => move |_, data| {
+        let data = data.cloned();
+        app_runtime.update_state_with(move |state| {
+            if let Some(id) = get_room_id(data.as_ref()) {
+                state.set_active_room_by_id(id);
+                // This does nothing if fractal is already in focus
+                state.activate();
+            }
+            // Push a new state only if the current state is not already Room
+            let push = if let Some(last) = state.room_back_history.borrow().last() {
+                last != &AppState::Room
+            } else {
+                true
+            };
+            if push {
+                state.room_back_history.borrow_mut().push(AppState::Room);
+            }
+        });
     }));
 
-    room_settings.connect_activate(clone!(
-    @strong op,
-    @weak back_history as back
-    => move |_, _| {
-        op.lock().unwrap().create_room_settings();
-        back.borrow_mut().push(AppState::RoomSettings);
+    room_settings.connect_activate(clone!(@strong app_runtime => move |_, _| {
+        app_runtime.update_state_with(|state| {
+            state.create_room_settings();
+            state.room_back_history.borrow_mut().push(AppState::RoomSettings);
+        });
     }));
 
-    media_viewer.connect_activate(clone!(
-    @weak back_history as back
-    => move |_, data| {
+    media_viewer.connect_activate(clone!(@strong app_runtime => move |_, data| {
         open_viewer(&app_runtime, data.cloned());
-        back.borrow_mut().push(AppState::MediaViewer);
+        app_runtime.update_state_with(|state| {
+            state.room_back_history.borrow_mut().push(AppState::MediaViewer);
+        });
     }));
 
-    deck_back.connect_activate(clone!(@strong op => move |_, _| {
-        let deck = op.lock().unwrap().deck.clone();
-        if deck.get_can_swipe_back() {
-            deck.navigate(libhandy::NavigationDirection::Back);
-        }
+    deck_back.connect_activate(clone!(@strong app_runtime => move |_, _| {
+        app_runtime.update_state_with(|state| {
+            let deck = state.deck.clone();
+            if deck.get_can_swipe_back() {
+                deck.navigate(libhandy::NavigationDirection::Back);
+            }
+        });
     }));
 
-    let mv = op.lock().unwrap().media_viewer.clone();
-    let back_weak = Rc::downgrade(&back_history);
-    back.connect_activate(clone!(@weak mv, @strong op => move |_, _| {
-        if let Some(mut mv) = mv.borrow_mut().take() {
-            mv.disconnect_signal_id();
-        }
+    back.connect_activate(clone!(@strong app_runtime => move |_, _| {
+        app_runtime.update_state_with(|state| {
+            if let Some(mut mv) = state.media_viewer.borrow_mut().take() {
+                mv.disconnect_signal_id();
+            }
 
-        // Remove the current state from the store
-        if let Some(back) = back_weak.upgrade() {
-            back.borrow_mut().pop();
-            let mut op = op.lock().unwrap();
-            if let Some(state) = back.borrow().last() {
-                debug!("Go back to state {:?}", state);
-                op.set_state(*state);
+            // Remove the current state from the store
+            state.room_back_history.borrow_mut().pop();
+            let app_state = state.room_back_history.borrow().last().cloned();
+            if let Some(app_state) = app_state {
+                debug!("Go back to state {:?}", app_state);
+                state.set_state(app_state);
             } else {
                 // Fallback when there is no back history
                 debug!("There is no state to go back to. Go back to state NoRoom");
-                if op.login_data.is_some() {
-                    op.set_state(AppState::NoRoom);
+                if state.login_data.is_some() {
+                    state.set_state(AppState::NoRoom);
                 }
             }
-        }
+        });
     }));
 
     send_file.connect_activate(clone!(@weak app => move |_, _| {
@@ -310,22 +323,24 @@ pub fn new(app: &gtk::Application, app_runtime: AppRuntime, op: &Arc<Mutex<AppOp
         }
     }));
 
-    send_message.connect_activate(clone!(@strong op => move |_, _| {
-        let msg_entry = op.lock().unwrap().ui.sventry.view.clone();
-        if let Some(buffer) = msg_entry.get_buffer() {
-            let start = buffer.get_start_iter();
-            let end = buffer.get_end_iter();
+    send_message.connect_activate(move |_, _| {
+        app_runtime.update_state_with(|state| {
+            let msg_entry = state.ui.sventry.view.clone();
+            if let Some(buffer) = msg_entry.get_buffer() {
+                let start = buffer.get_start_iter();
+                let end = buffer.get_end_iter();
 
-            if let Some(text) = buffer.get_text(&start, &end, false) {
-                op.lock().unwrap().send_message(text.to_string());
+                if let Some(text) = buffer.get_text(&start, &end, false) {
+                    state.send_message(text.to_string());
+                }
+
+                buffer.set_text("");
             }
-
-            buffer.set_text("");
-        }
-    }));
+        });
+    });
 
     send_message.set_enabled(false);
-    let buffer = op.lock().unwrap().ui.sventry.buffer.clone();
+    let buffer = appop.ui.sventry.buffer.clone();
     buffer.connect_changed(move |buffer| {
         if 0 < buffer.get_char_count() {
             send_message.set_enabled(true);
