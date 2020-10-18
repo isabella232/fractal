@@ -31,6 +31,10 @@ cargo = find_program('cargo', required: true)
 gresource = find_program('glib-compile-resources', required: true)
 gschemas = find_program('glib-compile-schemas', required: true)
 
+rust_version = meson.get_compiler('rust').version()
+min_req_rust_version = '1.46.0'
+assert(rust_version >= min_req_rust_version, 'Minimum rust version ' + min_req_rust_version)
+
 if get_option('profile') == 'development'
   profile = 'Devel'
   name_suffix = ' (Development)'
