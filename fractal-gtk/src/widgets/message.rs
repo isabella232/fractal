@@ -18,6 +18,7 @@ use gtk::{prelude::*, ButtonExt, ContainerExt, LabelExt, Overlay, WidgetExt};
 use html2pango::block::{HtmlBlock, markup_html};
 use itertools::Itertools;
 use matrix_sdk::Client as MatrixClient;
+use sourceview4::BufferExt;
 use std::cmp::max;
 use std::rc::Rc;
 
@@ -571,6 +572,7 @@ fn render_html_block(block: &HtmlBlock) -> gtk::Widget {
         }
         HtmlBlock::Code(s) => {
             let buffer = sourceview4::Buffer::new::<gtk::TextTagTable>(None);
+            buffer.set_highlight_matching_brackets(false);
             buffer.set_text(&s);
             let view = sourceview4::View::with_buffer(&buffer);
             view.set_editable(false);
