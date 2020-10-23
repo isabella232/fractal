@@ -422,7 +422,7 @@ impl HandleError for JoinRoomError {
             "{}",
             remove_matrix_access_token_if_present(&err_str).unwrap_or(err_str)
         );
-        let error = i18n("Can’t join the room, try again.").to_string();
+        let error = i18n("Can’t join the room, try again.");
         let state = AppState::NoRoom;
         APPOP!(show_error_with_info, (error, info));
         APPOP!(set_state, (state));
@@ -434,7 +434,7 @@ pub fn join_room(
     access_token: AccessToken,
     room_id: RoomIdOrAliasId,
 ) -> Result<RoomId, JoinRoomError> {
-    let room_id_or_alias_id = room_id.clone().into();
+    let room_id_or_alias_id = room_id.into();
 
     let params = JoinRoomParameters {
         access_token,

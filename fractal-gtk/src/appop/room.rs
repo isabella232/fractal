@@ -393,7 +393,7 @@ impl AppOp {
             room::RoomType::Public
         };
 
-        let name = n.clone();
+        let name = n;
         thread::spawn(move || {
             match room::new_room(
                 login_data.server_url,

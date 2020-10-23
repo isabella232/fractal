@@ -16,7 +16,7 @@ impl AppOp {
         let login_data = unwrap_or_unit_return!(self.login_data.clone());
         let user = self.invite_list[0].clone();
 
-        let member = user.0.clone();
+        let member = user.0;
         thread::spawn(move || {
             match room::direct_chat(
                 login_data.server_url,
