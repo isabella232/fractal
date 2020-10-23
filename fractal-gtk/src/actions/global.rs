@@ -169,20 +169,16 @@ pub fn new(app: &gtk::Application, op: &Arc<Mutex<AppOp>>) {
         let mut op = op.lock().unwrap();
         if let Some(id) = op.roomlist.prev_id() {
             op.set_active_room_by_id(id);
-        } else {
-            if let Some(last_room) = op.roomlist.last_id() {
-                op.set_active_room_by_id(last_room);
-            }
+        } else if let Some(last_room) = op.roomlist.last_id() {
+            op.set_active_room_by_id(last_room);
         }
     }));
     next_room.connect_activate(clone!(@strong op => move |_, _| {
         let mut op = op.lock().unwrap();
         if let Some(id) = op.roomlist.next_id() {
             op.set_active_room_by_id(id);
-        } else {
-            if let Some(first_room) = op.roomlist.first_id() {
-                op.set_active_room_by_id(first_room);
-            }
+        } else if let Some(first_room) = op.roomlist.first_id() {
+            op.set_active_room_by_id(first_room);
         }
     }));
     prev_unread_room.connect_activate(clone!(@strong op => move |_, _| {
