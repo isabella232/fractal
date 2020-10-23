@@ -93,7 +93,7 @@ impl AvatarExt for gtk::Overlay {
         /* remove IRC postfix from the username */
         let username = if let Some(u) = username {
             u.trim_end_matches(" (IRC)")
-                .trim_start_matches("#")
+                .trim_start_matches('#')
                 .to_owned()
         } else {
             id.clone()
