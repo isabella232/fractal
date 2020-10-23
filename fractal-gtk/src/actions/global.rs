@@ -292,7 +292,7 @@ pub fn new(app: &gtk::Application, op: &Arc<Mutex<AppOp>>) {
                 debug!("Go back to state {:?}", state);
                 if let Some(op) = App::get_op() {
                     let mut op = op.lock().unwrap();
-                    op.set_state(state.clone());
+                    op.set_state(*state);
                 }
             } else {
                 // Fallback when there is no back history
