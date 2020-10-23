@@ -88,7 +88,7 @@ pub fn new(
     }));
 
     back.connect_activate(clone!(@weak deck => move |_, _| {
-        if let Some(_) = deck.get_adjacent_child(libhandy::NavigationDirection::Back) {
+        if deck.get_adjacent_child(libhandy::NavigationDirection::Back).is_some() {
             deck.navigate(libhandy::NavigationDirection::Back);
         }
     }));
