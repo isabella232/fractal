@@ -107,7 +107,7 @@ impl LoginWidget {
                            .as_ref()
                            .map(|ids| Url::parse(&ids.base_url))
                            .transpose()?
-                           .unwrap_or(globals::DEFAULT_IDENTITYSERVER.clone());
+                           .unwrap_or_else(|| globals::DEFAULT_IDENTITYSERVER.clone());
                        info!("Got well-known response from {}: {:#?}", &txt, response);
 
                        Ok((hs_url, ids))
