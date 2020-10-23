@@ -434,7 +434,7 @@ pub fn join_room(
     access_token: AccessToken,
     room_id: RoomIdOrAliasId,
 ) -> Result<RoomId, JoinRoomError> {
-    let room_id_or_alias_id = room_id.into();
+    let room_id_or_alias_id = room_id;
 
     let params = JoinRoomParameters {
         access_token,
