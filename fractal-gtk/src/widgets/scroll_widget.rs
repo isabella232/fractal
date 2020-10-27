@@ -16,11 +16,18 @@ enum Position {
     Bottom,
 }
 
+/// Holds all message widgets and keeps track of the scrolling position.
+///
+/// Additional duties include handling of the revealer button and displaying
+/// typing notifications.
 pub struct ScrollWidget {
+    /// The old scroll maximum
     upper: Rc<Cell<f64>>,
+    /// Position of incoming change relative to the view's bottom. Cleared after use.
     balance: Rc<Cell<Option<Position>>>,
+    /// Whether to stay at the bottom of the message history.
     autoscroll: Rc<Cell<bool>>,
-    /* whether a request for more messages has been send or not */
+    /// Whether a request for more messages has been send or not.
     request_sent: Rc<Cell<bool>>,
     widgets: Widgets,
 }

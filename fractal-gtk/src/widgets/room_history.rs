@@ -62,12 +62,14 @@ impl List {
         self.list.insert(self.list.len() - index, element);
     }
 
+    /// Adds the element to the top of the history.
     pub fn add_top(&mut self, element: Element) {
         self.add_item(0, element);
         /* TODO: update the previous message:
          * we need to update the previous row because it could be that we have to remove the header */
     }
 
+    /// Adds the element to the bottom of the history.
     pub fn add_bottom(&mut self, element: Element) {
         if let Some(index) = self.new_divider_index {
             self.new_divider_index = Some(index + 1);
@@ -75,11 +77,19 @@ impl List {
         self.add_item(self.list.len(), element);
     }
 
+    /// Removes the element at the given position from the history.
+    ///
+    /// ### Panics
+    /// Panics if `index >= len`.
     fn remove_item(&mut self, index: usize) {
         self.list.remove(index);
         self.view.remove(self.list.len() - index - 1);
     }
 
+    /// Replaces the element at the given position in the history.
+    ///
+    /// ### Panics
+    /// Panics if `index >= len`.
     fn replace_item(&mut self, index: usize, element: Element) {
         self.view.remove(self.list.len() - index - 1);
         self.view
