@@ -53,22 +53,32 @@ impl List {
         }
     }
 
+    /// Adds the element at the given position to the history.
+    ///
+    /// An index of 0 points to the uppermost element.
+    ///
+    /// ### Panics
+    /// Panics if `index > len`.
+    pub fn add_item(&mut self, index: usize, element: Element) {
+        /* Spinner is at position 0, so increment index by 1 */
+        self.listbox
+            .insert(element.get_listbox_row(), (index + 1) as i32);
+        self.list.insert(self.list.len() - index, element);
+    }
+
     pub fn add_top(&mut self, element: Element) {
         self.view.set_balance_top();
-        /* insert position is 1 because at position 0 is the spinner */
-        self.listbox.insert(element.get_listbox_row(), 1);
-        self.list.push_back(element);
+        self.add_item(0, element);
         self.view.set_kinetic_scrolling(true);
         /* TODO: update the previous message:
          * we need to update the previous row because it could be that we have to remove the header */
     }
 
     pub fn add_bottom(&mut self, element: Element) {
-        self.listbox.insert(element.get_listbox_row(), -1);
         if let Some(index) = self.new_divider_index {
             self.new_divider_index = Some(index + 1);
         }
-        self.list.push_front(element);
+        self.add_item(self.list.len(), element);
     }
 
     fn remove_item(&mut self, index: usize, row: &gtk::ListBoxRow) {
