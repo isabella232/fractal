@@ -10,8 +10,6 @@ use gtk::prelude::*;
 
 use libhandy::prelude::*;
 
-// This really requires to opt-out of the lint
-#[allow(dead_code)]
 #[derive(Debug, Clone, PartialEq)]
 enum Position {
     Top,
@@ -217,14 +215,29 @@ impl ScrollWidget {
         None
     }
 
-    pub fn set_balance_top(&self) {
-        /* FIXME: Workaround: https://gitlab.gnome.org/GNOME/gtk/merge_requests/395 */
-        self.widgets.view.set_kinetic_scrolling(false);
-        self.balance.set(Some(Position::Top));
+    /// Inserts an element to the list and adjusts the scoll position.
+    ///
+    /// ### Panics
+    /// Panics if `index > number of elements`.
+    pub fn insert(&self, index: usize, row: &gtk::ListBoxRow) {
+        // Spinner is at position 0, so increment index by 1.
+        self.set_balance(index + 1); // might panic
+        self.widgets.listbox.insert(row, (index + 1) as i32);
+        self.widgets.view.set_kinetic_scrolling(true);
     }
 
-    pub fn set_kinetic_scrolling(&self, enabled: bool) {
-        self.widgets.view.set_kinetic_scrolling(enabled);
+    /// Removes an element from the list and adjusts the scoll position.
+    ///
+    /// ### Panics
+    /// Panics if `index >= number of elements`.
+    pub fn remove(&self, index: usize) {
+        // Spinner is at position 0, so increment index by 1.
+        self.set_balance(index + 1); // might panic
+        match self.widgets.listbox.get_row_at_index((index + 1) as i32) {
+            Some(row) => self.widgets.listbox.remove(&row),
+            None => panic!("Could not remove element due to invalid index"),
+        }
+        self.widgets.view.set_kinetic_scrolling(true);
     }
 
     pub fn get_listbox(&self) -> gtk::ListBox {
@@ -249,6 +262,57 @@ impl ScrollWidget {
         } else {
             self.widgets.typing_label.set_visible(true);
             self.widgets.typing_label.set_markup(typing_str);
+        }
+    }
+
+    /// Sets the balance for a change happening at the given index.
+    ///
+    /// ### Panics
+    /// Panics if `index > number of listbox children`.
+    fn set_balance(&self, index: usize) {
+        /* FIXME: Workaround: https://gitlab.gnome.org/GNOME/gtk/merge_requests/395 */
+        self.widgets.view.set_kinetic_scrolling(false);
+
+        // Calculate relative positions
+        let change_pos = self.get_relative_index_pos(index); // might panic
+        let scroll_pos = self.get_relative_scroll_pos();
+
+        if change_pos < scroll_pos {
+            // Insertion happens in or above the view, so it needs adjustment.
+            self.balance.set(Some(Position::Top));
+        } else {
+            self.balance.set(Some(Position::Bottom));
+        }
+    }
+
+    /// Returns the relative position of a given index for the listbox.
+    ///
+    /// - `index == 0` will return 0.0
+    /// - `index == number of listbox children` will return 1.0
+    ///
+    /// ### Panics
+    /// Panics if `index > number of listbox children`.
+    fn get_relative_index_pos(&self, index: usize) -> f64 {
+        if index == self.widgets.listbox.get_children().len() {
+            return 1.0;
+        }
+
+        let row_at_index = self
+            .widgets
+            .listbox
+            .get_row_at_index(index as i32)
+            .expect("Index out of bounds");
+        let y = row_at_index.get_allocation().y as f64;
+        let listbox_height = self.widgets.listbox.get_allocated_height() as f64;
+
+        y / listbox_height
+    }
+
+    /// Returns the relative position of the view's bottom.
+    fn get_relative_scroll_pos(&self) -> f64 {
+        match self.widgets.view.get_vadjustment() {
+            Some(adj) => (adj.get_value() + adj.get_page_size()) / adj.get_upper(),
+            None => 1.0,
         }
     }
 }

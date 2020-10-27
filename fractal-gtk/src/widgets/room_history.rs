@@ -60,16 +60,12 @@ impl List {
     /// ### Panics
     /// Panics if `index > len`.
     pub fn add_item(&mut self, index: usize, element: Element) {
-        /* Spinner is at position 0, so increment index by 1 */
-        self.listbox
-            .insert(element.get_listbox_row(), (index + 1) as i32);
+        self.view.insert(index, element.get_listbox_row());
         self.list.insert(self.list.len() - index, element);
     }
 
     pub fn add_top(&mut self, element: Element) {
-        self.view.set_balance_top();
         self.add_item(0, element);
-        self.view.set_kinetic_scrolling(true);
         /* TODO: update the previous message:
          * we need to update the previous row because it could be that we have to remove the header */
     }
@@ -81,16 +77,15 @@ impl List {
         self.add_item(self.list.len(), element);
     }
 
-    fn remove_item(&mut self, index: usize, row: &gtk::ListBoxRow) {
+    fn remove_item(&mut self, index: usize) {
         self.list.remove(index);
-        self.listbox.remove(row);
+        self.view.remove(self.list.len() - index - 1);
     }
 
-    fn replace_item(&mut self, index: usize, row: &gtk::ListBoxRow, element: Element) {
-        /* Spinner is at position 0, so increment index by 1 */
-        self.listbox
-            .insert(element.get_listbox_row(), (self.list.len() - index) as i32);
-        self.listbox.remove(row);
+    fn replace_item(&mut self, index: usize, element: Element) {
+        self.view.remove(self.list.len() - index - 1);
+        self.view
+            .insert(self.list.len() - index - 1, element.get_listbox_row());
         self.list[index] = element;
     }
 
@@ -636,7 +631,7 @@ impl RoomHistory {
             self.access_token.clone(),
             &self.rows,
         ));
-        rows.replace_item(i, msg_widget.get_listbox_row(), Element::Message(item));
+        rows.replace_item(i, Element::Message(item));
         None
     }
 
@@ -661,7 +656,7 @@ impl RoomHistory {
         let msg_widget = msg.widget.clone()?;
         let msg_sender = msg.sender.clone();
         msg.msg.redacted = true;
-        rows.remove_item(i, msg_widget.get_listbox_row());
+        rows.remove_item(i);
 
         // If the redacted message was a header message let's set
         // the header on the next non-redacted message instead.
