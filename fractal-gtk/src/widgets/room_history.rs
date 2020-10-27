@@ -36,18 +36,16 @@ struct List {
     list: VecDeque<Element>,
     new_divider_index: Option<usize>,
     playing_videos: Vec<(Rc<VideoPlayerWidget>, SignalHandlerId)>,
-    listbox: gtk::ListBox,
     video_scroll_debounce: Option<source::SourceId>,
     view: widgets::ScrollWidget,
 }
 
 impl List {
-    pub fn new(view: widgets::ScrollWidget, listbox: gtk::ListBox) -> List {
+    pub fn new(view: widgets::ScrollWidget) -> List {
         List {
             list: VecDeque::new(),
             new_divider_index: None,
             playing_videos: Vec::new(),
-            listbox,
             video_scroll_debounce: None,
             view,
         }
@@ -291,7 +289,7 @@ impl RoomHistory {
         listbox.insert_action_group("message", Some(&actions));
         let login_data = op.login_data.clone()?;
         let mut rh = RoomHistory {
-            rows: Rc::new(RefCell::new(List::new(scroll, listbox))),
+            rows: Rc::new(RefCell::new(List::new(scroll))),
             access_token: login_data.access_token,
             server_url: login_data.server_url,
             source_id: Rc::new(RefCell::new(None)),
@@ -541,7 +539,7 @@ impl RoomHistory {
     /* This is a temporary function to make the listbox accessible from outside the history, it is
      * currently needed for temp messages (which should also be moved to the room history) */
     pub fn get_listbox(&self) -> gtk::ListBox {
-        self.rows.borrow().listbox.clone()
+        self.rows.borrow().view.get_listbox()
     }
 
     /* This adds new incomming messages at then end of the list */
