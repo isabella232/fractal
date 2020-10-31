@@ -61,11 +61,6 @@
                             <property name="halign">start</property>
                             <property name="label"></property>
                           </object>
-
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkLabel" id="user_info_uid">
@@ -77,11 +72,6 @@
                               <class name="member-uid"/>
                             </style>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="pack_type">end</property>
-                          </packing>
                         </child>
                       </object>
                     </child>
@@ -93,11 +83,6 @@
               </object>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkModelButton" id="account_settings_menu">
@@ -108,11 +93,6 @@
             <property name="action_name">app.open-account-settings</property>
             <property name="text" translatable="yes">Account Settings</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkModelButton" id="logout_menu">
@@ -122,11 +102,6 @@
             <property name="action_name">app.logout</property>
             <property name="text" translatable="yes">Log Out</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSeparator">
@@ -135,11 +110,6 @@
             <property name="margin_top">3</property>
             <property name="margin_bottom">3</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">4</property>
-          </packing>
         </child>
         <child>
           <object class="GtkModelButton" id="keyboard-shortcuts">
@@ -149,11 +119,6 @@
             <property name="action_name">win.show-help-overlay</property>
             <property name="text" translatable="yes">Keyboard _Shortcuts</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">4</property>
-          </packing>
         </child>
         <child>
           <object class="GtkModelButton" id="about-fractal">
@@ -163,11 +128,6 @@
             <property name="action_name">app.about</property>
             <property name="text" translatable="yes">_About Fractal</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">5</property>
-          </packing>
         </child>
       </object>
       <packing>
