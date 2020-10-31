@@ -5,8 +5,8 @@
   <object class="GtkImage" id="file_chooser_preview">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="margin_left">12</property>
-    <property name="margin_right">12</property>
+    <property name="margin_start">12</property>
+    <property name="margin_end">12</property>
     <property name="pixel_size">100</property>
     <property name="icon_name">camera-photo-symbolic</property>
     <property name="icon_size">6</property>
