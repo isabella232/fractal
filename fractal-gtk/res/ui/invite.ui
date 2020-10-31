@@ -23,11 +23,10 @@
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
         <child internal-child="action_area">
-          <object class="GtkButtonBox">
+          <object class="GtkBox">
             <property name="can_focus">False</property>
             <property name="hexpand">True</property>
             <property name="homogeneous">True</property>
-            <property name="layout_style">expand</property>
             <child>
               <object class="GtkButton" id="invite_reject">
                 <property name="label" translatable="yes">Reject</property>
@@ -35,11 +34,6 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
               </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkButton" id="invite_accept">
@@ -48,23 +42,10 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
               </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
       </object>
-    </child>
-    <child>
-      <placeholder/>
     </child>
     <style>
       <class name="leave-room"/>
