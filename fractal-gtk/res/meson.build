@@ -54,5 +54,7 @@ fractal_resources = gnome.compile_resources(
   'resources',
   'resources.xml',
   gresource_bundle: true,
-  source_dir: meson.current_build_dir()
+  source_dir: meson.current_build_dir(),
+  install: true,
+  install_dir: fractal_pkgdatadir
 )

@@ -12,7 +12,6 @@ mod util;
 mod cache;
 mod model;
 mod passwd;
-mod static_resources;
 mod uibuilder;
 mod uitypes;
 #[macro_use]
@@ -59,7 +58,9 @@ fn main() -> Result<(), Box<dyn Error>> {
             .expect("Failed to initialize logger");
     }
 
-    static_resources::init().expect("GResource initialization failed.");
+    let res = gio::Resource::load(config::PKGDATADIR.to_owned() + "/resources.gresource")
+        .expect("Could not load gresource file");
+    gio::resources_register(&res);
 
     // Initialize GStreamer. This checks, among other things, what plugins are available
     gst::init()?;

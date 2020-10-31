@@ -21,3 +21,4 @@ pub static LOCALEDIR: &str = @LOCALEDIR@;
 pub static APP_ID: &str = @APP_ID@;
 pub static NAME_SUFFIX: &str = @NAME_SUFFIX@;
 pub static VERSION: &str = @VERSION@;
+pub static PKGDATADIR: &str = @PKGDATADIR@;

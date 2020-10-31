@@ -55,6 +55,7 @@ fractal_bindir = join_paths(fractal_prefix, get_option('bindir'))
 fractal_localedir = join_paths(fractal_prefix, get_option('localedir'))
 
 datadir = get_option('datadir')
+fractal_pkgdatadir = join_paths(fractal_prefix, datadir, meson.project_name())
 
 i18n = import('i18n')
 gnome = import('gnome')
