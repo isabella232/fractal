@@ -59,7 +59,6 @@
                               </object>
                               <packing>
                                 <property name="pack_type">end</property>
-                                <property name="position">0</property>
                               </packing>
                             </child>
                             <child>
@@ -86,7 +85,6 @@
                               </object>
                               <packing>
                                 <property name="pack_type">end</property>
-                                <property name="position">1</property>
                               </packing>
                             </child>
                             <child>
@@ -141,17 +139,13 @@
                                   </object>
                                 </child>
                               </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">0</property>
-                              </packing>
                             </child>
                             <child>
                               <object class="GtkScrolledWindow" id="roomlist_scroll">
                                 <property name="width_request">200</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <property name="vexpand">True</property>
                                 <property name="hscrollbar_policy">never</property>
                                 <child>
                                   <object class="GtkViewport">
@@ -176,11 +170,6 @@
                                   </object>
                                 </child>
                               </object>
-                              <packing>
-                                <property name="expand">True</property>
-                                <property name="fill">True</property>
-                                <property name="position">1</property>
-                              </packing>
                             </child>
                           </object>
                         </child>
@@ -268,11 +257,6 @@
                                           <class name="title"/>
                                         </style>
                                       </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">0</property>
-                                      </packing>
                                     </child>
                                     <child>
                                       <object class="GtkLabel" id="room_topic">
@@ -284,11 +268,6 @@
                                           <class name="subtitle"/>
                                         </style>
                                       </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">1</property>
-                                      </packing>
                                     </child>
                                   </object>
                                 </child>
@@ -317,7 +296,6 @@
                               </object>
                               <packing>
                                 <property name="pack_type">end</property>
-                                <property name="position">1</property>
                               </packing>
                             </child>
                           </object>
@@ -344,11 +322,6 @@
                                             <property name="can_focus">False</property>
                                             <property name="orientation">vertical</property>
                                           </object>
-                                          <packing>
-                                            <property name="expand">True</property>
-                                            <property name="fill">True</property>
-                                            <property name="position">1</property>
-                                          </packing>
                                         </child>
                                         <child>
                                           <object class="GtkBox" id="room_parent">
@@ -359,11 +332,6 @@
                                           </object>
                                         </child>
                                       </object>
-                                      <packing>
-                                        <property name="expand">True</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">0</property>
-                                      </packing>
                                     </child>
                                   </object>
                                   <packing>
@@ -380,7 +348,6 @@
                                   <packing>
                                     <property name="name">loading</property>
                                     <property name="title">loading</property>
-                                    <property name="position">1</property>
                                   </packing>
                                 </child>
                                 <child>
@@ -429,7 +396,6 @@
                                   <packing>
                                     <property name="name">noroom</property>
                                     <property name="title" translatable="yes">No room</property>
-                                    <property name="position">2</property>
                                   </packing>
                                 </child>
                               </object>
@@ -465,23 +431,12 @@
                                                 <property name="active">True</property>
                                                 <property name="can_focus">False</property>
                                               </object>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">True</property>
-                                                <property name="position">0</property>
-                                              </packing>
                                             </child>
                                             <child>
                                               <object class="GtkLabel" id="inapp_label">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
                                               </object>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">True</property>
-                                                <property name="pack_type">end</property>
-                                                <property name="position">0</property>
-                                              </packing>
                                             </child>
                                           </object>
                                         </child>
@@ -585,11 +540,6 @@
                                             <property name="can_focus">False</property>
                                             <property name="label" translatable="yes">Default Matrix Server</property>
                                           </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">True</property>
-                                            <property name="position">0</property>
-                                          </packing>
                                         </child>
                                         <child>
                                           <object class="GtkImage">
@@ -597,11 +547,6 @@
                                             <property name="can_focus">False</property>
                                             <property name="icon_name">pan-down-symbolic</property>
                                           </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">True</property>
-                                            <property name="position">1</property>
-                                          </packing>
                                         </child>
                                       </object>
                                     </child>
@@ -664,12 +609,9 @@
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
                                                 <property name="active">True</property>
+                                                <property name="hexpand">True</property>
+                                                <property name="vexpand">True</property>
                                               </object>
-                                              <packing>
-                                                <property name="expand">True</property>
-                                                <property name="fill">True</property>
-                                                <property name="position">0</property>
-                                              </packing>
                                             </child>
                                           </object>
                                         </child>
@@ -722,8 +664,6 @@
                         <property name="valign">fill</property>
                         <property name="halign">fill</property>
                       </object>
-                      <packing>
-                      </packing>
                     </child>
                   </object>
                 </child>
