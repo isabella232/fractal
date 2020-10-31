@@ -18,7 +18,6 @@
       <file preprocess="xml-stripblanks">ui/login_flow.ui</file>
       <file preprocess="xml-stripblanks">ui/main_window.ui</file>
       <file preprocess="xml-stripblanks">ui/scroll_widget.ui</file>
-      <file preprocess="xml-stripblanks">ui/members.ui</file>
       <file preprocess="xml-stripblanks">ui/message_menu.ui</file>
       <file preprocess="xml-stripblanks">ui/new_room.ui</file>
       <file preprocess="xml-stripblanks">ui/room_menu.ui</file>

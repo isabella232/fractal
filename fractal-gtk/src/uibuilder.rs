@@ -31,9 +31,6 @@ impl UI {
             .add_from_resource("/org/gnome/Fractal/ui/room_menu.ui")
             .expect("Can't load ui file: room_menu.ui");
         builder
-            .add_from_resource("/org/gnome/Fractal/ui/members.ui")
-            .expect("Can't load ui file: members.ui");
-        builder
             .add_from_resource("/org/gnome/Fractal/ui/markdown_popover.ui")
             .expect("Can't load ui file: markdown_popover.ui");
         builder
