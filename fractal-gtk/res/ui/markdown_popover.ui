@@ -25,33 +25,18 @@
                   <relation type="label-for" target="markdown_switch"/>
                 </accessibility>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkSwitch" id="markdown_switch">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="halign">end</property>
                 <accessibility>
                   <relation type="labelled-by" target="markdown_label"/>
                 </accessibility>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="pack_type">end</property>
-                <property name="position">1</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkGrid" id="tutorial_text_box">
@@ -116,11 +101,6 @@
               <class name="dim-label"/>
             </style>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
     </child>
