@@ -107,11 +107,6 @@
                               </object>
                             </child>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">0</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkLabel" id="room_settings_room_name">
@@ -125,11 +120,6 @@
                               <class name="room-settings-name"/>
                             </style>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">1</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkBox" id="room_settings_room_name_box">
@@ -162,11 +152,6 @@
                               </object>
                             </child>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">2</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkLabel" id="room_settings_room_topic">
@@ -180,11 +165,6 @@
                             <property name="label" translatable="yes">Add topic</property>
                             <property name="margin_bottom">6</property>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">3</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkBox" id="room_settings_room_topic_box">
@@ -218,11 +198,6 @@
                               </object>
                             </child>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">4</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkLabel" id="room_settings_room_description">
@@ -235,11 +210,6 @@
                               <class name="dim-label"/>
                             </style>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">5</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkListBox">
@@ -264,23 +234,14 @@
                                         <property name="can_focus">False</property>
                                         <property name="label" translatable="yes">Notifications</property>
                                       </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">0</property>
-                                      </packing>
                                     </child>
                                     <child>
                                       <object class="GtkSwitch" id="room_settings_notification_switch">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
+                                        <property name="hexpand">True</property>
+                                        <property name="halign">end</property>
                                       </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">0</property>
-                                        <property name="pack_type">end</property>
-                                      </packing>
                                     </child>
                                   </object>
                                 </child>
@@ -328,29 +289,20 @@
                                             <property name="margin">20</property>
                                             <property name="spacing">12</property>
                                             <child>
-                                              <object class="GtkImage">
-                                                <property name="visible">True</property>
-                                                <property name="can_focus">False</property>
-                                                <property name="icon_name">emblem-ok-symbolic</property>
-                                              </object>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">True</property>
-                                                <property name="position">0</property>
-                                                <property name="pack_type">end</property>
-                                              </packing>
-                                            </child>
-                                            <child>
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
                                                 <property name="label" translatable="yes">For all messages</property>
                                               </object>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">True</property>
-                                                <property name="position">1</property>
-                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkImage">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">False</property>
+                                                <property name="hexpand">True</property>
+                                                <property name="icon_name">emblem-ok-symbolic</property>
+                                                <property name="halign">end</property>
+                                              </object>
                                             </child>
                                           </object>
                                         </child>
@@ -369,29 +321,20 @@
                                             <property name="margin">20</property>
                                             <property name="spacing">12</property>
                                             <child>
-                                              <object class="GtkImage">
-                                                <property name="visible">True</property>
-                                                <property name="can_focus">False</property>
-                                                <property name="icon_name">emblem-ok-symbolic</property>
-                                              </object>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">True</property>
-                                                <property name="position">0</property>
-                                                <property name="pack_type">end</property>
-                                              </packing>
-                                            </child>
-                                            <child>
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
                                                 <property name="label" translatable="yes">Only for mentions</property>
                                               </object>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">True</property>
-                                                <property name="position">1</property>
-                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkImage">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">False</property>
+                                                <property name="hexpand">True</property>
+                                                <property name="icon_name">emblem-ok-symbolic</property>
+                                                <property name="halign">end</property>
+                                              </object>
                                             </child>
                                           </object>
                                         </child>
@@ -402,11 +345,6 @@
                               </object>
                             </child>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">7</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkFrame" id="room_settings_media">
@@ -453,11 +391,6 @@
                                                 <property name="can_focus">False</property>
                                                 <property name="icon_name">emblem-photos-symbolic</property>
                                               </object>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">True</property>
-                                                <property name="position">0</property>
-                                              </packing>
                                             </child>
                                             <child>
                                               <object class="GtkLabel">
@@ -465,11 +398,6 @@
                                                 <property name="can_focus">False</property>
                                                 <property name="label" translatable="yes">photos</property>
                                               </object>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">True</property>
-                                                <property name="position">1</property>
-                                              </packing>
                                             </child>
                                           </object>
                                         </child>
@@ -493,11 +421,6 @@
                                                 <property name="can_focus">False</property>
                                                 <property name="icon_name">folder-videos-symbolic</property>
                                               </object>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">True</property>
-                                                <property name="position">0</property>
-                                              </packing>
                                             </child>
                                             <child>
                                               <object class="GtkLabel">
@@ -505,11 +428,6 @@
                                                 <property name="can_focus">False</property>
                                                 <property name="label" translatable="yes">videos</property>
                                               </object>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">True</property>
-                                                <property name="position">1</property>
-                                              </packing>
                                             </child>
                                           </object>
                                         </child>
@@ -533,11 +451,6 @@
                                                 <property name="can_focus">False</property>
                                                 <property name="icon_name">folder-documents-symbolic</property>
                                               </object>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">True</property>
-                                                <property name="position">0</property>
-                                              </packing>
                                             </child>
                                             <child>
                                               <object class="GtkLabel">
@@ -545,11 +458,6 @@
                                                 <property name="can_focus">False</property>
                                                 <property name="label" translatable="yes">documents</property>
                                               </object>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">True</property>
-                                                <property name="position">1</property>
-                                              </packing>
                                             </child>
                                           </object>
                                         </child>
@@ -560,11 +468,6 @@
                               </object>
                             </child>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">8</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkFrame" id="room_settings_history_visibility">
@@ -603,29 +506,20 @@
                                             <property name="margin">20</property>
                                             <property name="spacing">12</property>
                                             <child>
-                                              <object class="GtkImage">
-                                                <property name="visible">True</property>
-                                                <property name="can_focus">False</property>
-                                                <property name="icon_name">emblem-ok-symbolic</property>
-                                              </object>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">True</property>
-                                                <property name="position">0</property>
-                                                <property name="pack_type">end</property>
-                                              </packing>
-                                            </child>
-                                            <child>
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
                                                 <property name="label" translatable="yes">All room history</property>
                                               </object>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">True</property>
-                                                <property name="position">1</property>
-                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkImage">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">False</property>
+                                                <property name="hexpand">True</property>
+                                                <property name="icon_name">emblem-ok-symbolic</property>
+                                                <property name="halign">end</property>
+                                              </object>
                                             </child>
                                           </object>
                                         </child>
@@ -644,29 +538,20 @@
                                             <property name="margin">20</property>
                                             <property name="spacing">12</property>
                                             <child>
-                                              <object class="GtkImage">
-                                                <property name="visible">True</property>
-                                                <property name="can_focus">False</property>
-                                                <property name="icon_name">emblem-ok-symbolic</property>
-                                              </object>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">True</property>
-                                                <property name="position">0</property>
-                                                <property name="pack_type">end</property>
-                                              </packing>
-                                            </child>
-                                            <child>
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
                                                 <property name="label" translatable="yes">History after they were invited</property>
                                               </object>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">True</property>
-                                                <property name="position">1</property>
-                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkImage">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">False</property>
+                                                <property name="hexpand">True</property>
+                                                <property name="icon_name">emblem-ok-symbolic</property>
+                                                <property name="halign">end</property>
+                                              </object>
                                             </child>
                                           </object>
                                         </child>
@@ -677,11 +562,6 @@
                               </object>
                             </child>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">9</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkFrame" id="room_settings_room_visibility">
@@ -723,28 +603,19 @@
                                             <property name="margin">20</property>
                                             <property name="spacing">12</property>
                                             <child>
-                                              <object class="GtkSwitch">
-                                                <property name="visible">True</property>
-                                                <property name="can_focus">True</property>
-                                              </object>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">True</property>
-                                                <property name="position">0</property>
-                                                <property name="pack_type">end</property>
-                                              </packing>
-                                            </child>
-                                            <child>
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
                                                 <property name="label" translatable="yes">Allow guests</property>
                                               </object>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">True</property>
-                                                <property name="position">1</property>
-                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkSwitch">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">True</property>
+                                                <property name="hexpand">True</property>
+                                                <property name="halign">end</property>
+                                              </object>
                                             </child>
                                           </object>
                                         </child>
@@ -762,29 +633,20 @@
                                             <property name="orientation">horizontal</property>
                                             <property name="margin">20</property>
                                             <property name="spacing">12</property>
-                                            <child>
-                                              <object class="GtkSwitch">
-                                                <property name="visible">True</property>
-                                                <property name="can_focus">True</property>
-                                              </object>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">True</property>
-                                                <property name="position">0</property>
-                                                <property name="pack_type">end</property>
-                                              </packing>
-                                            </child>
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
                                                 <property name="label" translatable="yes">Allow joining without invite</property>
                                               </object>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">True</property>
-                                                <property name="position">1</property>
-                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkSwitch">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">True</property>
+                                                <property name="hexpand">True</property>
+                                                <property name="halign">end</property>
+                                              </object>
                                             </child>
                                           </object>
                                         </child>
@@ -803,28 +665,19 @@
                                             <property name="margin">20</property>
                                             <property name="spacing">12</property>
                                             <child>
-                                              <object class="GtkSwitch">
-                                                <property name="visible">True</property>
-                                                <property name="can_focus">True</property>
-                                              </object>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">True</property>
-                                                <property name="position">0</property>
-                                                <property name="pack_type">end</property>
-                                              </packing>
-                                            </child>
-                                            <child>
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
                                                 <property name="label" translatable="yes">Publish in room directory</property>
                                               </object>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">True</property>
-                                                <property name="position">1</property>
-                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkSwitch">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">True</property>
+                                                <property name="hexpand">True</property>
+                                                <property name="halign">end</property>
+                                              </object>
                                             </child>
                                           </object>
                                         </child>
@@ -835,11 +688,6 @@
                               </object>
                             </child>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">10</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkFrame" id="room_settings_join">
@@ -894,11 +742,6 @@
                               </object>
                             </child>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">11</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkBox">
@@ -913,32 +756,18 @@
                                   <attribute name="weight" value="PANGO_WEIGHT_BOLD"/>
                                 </attributes>
                               </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">0</property>
-                              </packing>
                             </child>
                             <child>
                               <object class="GtkButton" id="room_settings_invite">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <property name="hexpand">True</property>
                                 <property name="action_name">app.room_invite</property>
                                 <property name="label" translatable="yes">Invite New Member</property>
+                                <property name="halign">end</property>
                               </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="pack_type">end</property>
-                                <property name="position">0</property>
-                              </packing>
                             </child>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">12</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkFrame">
@@ -961,11 +790,6 @@
                                     <property name="primary_icon_sensitive">False</property>
                                     <property name="placeholder_text" translatable="yes">Search for room members</property>
                                   </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">0</property>
-                                  </packing>
                                 </child>
                                 <child>
                                   <object class="GtkBox" id="room_settings_members_list">
@@ -976,11 +800,6 @@
                               </object>
                             </child>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">13</property>
-                          </packing>
                         </child>
                       </object>
                     </child>
@@ -999,11 +818,6 @@
                         <property name="can_focus">False</property>
                         <property name="active">True</property>
                       </object>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
                     </child>
                   </object>
                   <packing>
