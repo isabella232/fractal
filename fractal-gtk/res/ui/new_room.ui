@@ -57,7 +57,6 @@
           </object>
           <packing>
             <property name="pack_type">end</property>
-            <property name="position">1</property>
           </packing>
         </child>
       </object>
@@ -66,24 +65,6 @@
       <object class="GtkBox">
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
-        <property name="spacing">2</property>
-        <child internal-child="action_area">
-          <object class="GtkButtonBox">
-            <property name="can_focus">False</property>
-            <property name="layout_style">end</property>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">2</property>
-          </packing>
-        </child>
         <child>
           <object class="GtkBox" id="new_room_box">
             <property name="visible">True</property>
@@ -113,11 +94,6 @@
                       <relation type="label-for" target="new_room_name"/>
                     </accessibility>
                   </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkEntry" id="new_room_name">
@@ -125,18 +101,8 @@
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                   </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">3</property>
-              </packing>
             </child>
             <child>
               <object class="GtkBox" id="room_box_bottom">
@@ -154,11 +120,6 @@
                       <attribute name="weight" value="bold"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkButtonBox">
@@ -176,11 +137,6 @@
                         <property name="draw_indicator">False</property>
                         <property name="group">public_visibility_button</property>
                       </object>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">3</property>
-                      </packing>
                     </child>
                     <child>
                       <object class="GtkRadioButton" id="public_visibility_button">
@@ -190,32 +146,12 @@
                         <property name="receives_default">False</property>
                         <property name="draw_indicator">False</property>
                       </object>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">3</property>
-                      </packing>
                     </child>
                   </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">4</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
     </child>
