@@ -2,6 +2,7 @@ include: 'https://gitlab.gnome.org/GNOME/citemplates/raw/master/flatpak/flatpak_
 
 stages:
   - check
+  - lint
   - test
   - deploy
 
@@ -31,6 +32,17 @@ check:
         - rustc -Vv && cargo -Vv
         - cargo --version
         - cargo fmt --all -- --check
+
+clippy:
+    image: "rust:slim"
+    stage: "lint"
+    needs:
+      - job: check
+    script:
+      - rustup component add clippy
+      - cargo clippy --version
+      - cargo clippy
+
 
 flatpak:
   extends: '.flatpak'
