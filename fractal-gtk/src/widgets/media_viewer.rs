@@ -566,7 +566,7 @@ impl Data {
         let admin = self.admins.get(&self.uid).copied().unwrap_or_default();
         let redactable = admin != 0 || self.uid == msg.sender;
         let event_id = msg.id.as_ref();
-        let menu = MessageMenu::new(event_id, &mtype, &redactable, None, None);
+        let menu = MessageMenu::new(event_id, &mtype, &redactable, None);
         let popover = &menu.get_popover();
         let menu_button = self
             .builder

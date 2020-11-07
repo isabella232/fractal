@@ -125,7 +125,6 @@ impl MessageMenu {
         id: Option<&EventId>,
         mtype: &RowType,
         redactable: &bool,
-        widget: Option<&gtk::EventBox>,
         label: Option<&gtk::Widget>,
     ) -> MessageMenu {
         let menu = MessageMenu {
@@ -136,35 +135,21 @@ impl MessageMenu {
         if let Some(label) = label {
             menu.connect_copy_selected_text(label);
         }
-        if let Some(widget) = widget {
-            menu.show(widget);
-        }
         menu
     }
 
-    fn show(&self, w: &gtk::EventBox) {
-        gdk::Display::get_default()
-            .and_then(|disp| disp.get_default_seat())
-            .and_then(|seat| seat.get_pointer())
-            .map(|ptr| {
-                let win = w.get_window()?;
-                let (_, x, y, _) = win.get_device_position(&ptr);
+    pub fn show_at_coords<T: glib::IsA<gtk::Widget>>(&self, w: &T, coords: (f64, f64)) {
+        let rect = gtk::Rectangle {
+            x: coords.0 as i32,
+            y: coords.1 as i32,
+            width: 0,
+            height: 0,
+        };
 
-                let rect = gtk::Rectangle {
-                    x,
-                    y,
-                    width: 0,
-                    height: 0,
-                };
-
-                self.widgets.popover.set_relative_to(Some(w));
-                self.widgets.popover.set_pointing_to(&rect);
-                self.widgets.popover.set_position(gtk::PositionType::Bottom);
-
-                self.widgets.popover.popup();
-
-                Some(true)
-            });
+        self.widgets.popover.set_pointing_to(&rect);
+        self.widgets.popover.set_relative_to(Some(w));
+        self.widgets.popover.set_position(gtk::PositionType::Bottom);
+        self.widgets.popover.popup();
     }
 
     /* This should also be a action, but for some reason we need to set again the selection on the

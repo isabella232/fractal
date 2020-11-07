@@ -559,7 +559,7 @@ impl MessageBox {
 
             let evid = msg.id.as_ref();
             let redactable = msg.redactable;
-            let menu = MessageMenu::new(evid, &RowType::Video, &redactable, None, None);
+            let menu = MessageMenu::new(evid, &RowType::Video, &redactable, None);
             menu_button.set_popover(Some(&menu.get_popover()));
 
             let clip_container = ClipContainer::new();
@@ -701,29 +701,23 @@ impl MessageBox {
             self.eventbox.upcast_ref::<gtk::Widget>()
         };
 
-        let eventbox = &self.eventbox;
         let id = msg.id.clone();
-        widget.connect_button_press_event(
-            clone!(@weak eventbox => @default-return Inhibit(false), move |w, e| {
-                if e.get_button() == 3 {
-                    MessageMenu::new(id.as_ref(), &mtype, &redactable, Some(&eventbox), Some(w));
-                    Inhibit(true)
-                } else {
-                    Inhibit(false)
-                }
-            }),
-        );
+        widget.connect_button_press_event(move |w, e| {
+            if e.triggers_context_menu() {
+                let menu = MessageMenu::new(id.as_ref(), &mtype, &redactable, Some(w));
+                let coords = e.get_position();
+                menu.show_at_coords(w, coords);
+                Inhibit(true)
+            } else {
+                Inhibit(false)
+            }
+        });
 
         let id = msg.id.clone();
         self.gesture
-            .connect_pressed(clone!(@weak eventbox, @weak widget => move |_, _, _| {
-                MessageMenu::new(
-                    id.as_ref(),
-                    &mtype,
-                    &redactable,
-                    Some(&eventbox),
-                    Some(&widget),
-                );
+            .connect_pressed(clone!(@weak widget => move |_, x, y| {
+                let menu = MessageMenu::new(id.as_ref(), &mtype, &redactable, Some(&widget));
+                menu.show_at_coords(&widget, (x, y));
             }));
         None
     }
