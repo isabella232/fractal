@@ -11,7 +11,6 @@ fractal-gtk/res/ui/add_room_menu.ui
 fractal-gtk/res/ui/audio_player.ui
 fractal-gtk/res/ui/autocomplete.ui
 fractal-gtk/res/ui/direct_chat.ui
-fractal-gtk/res/ui/filechooser.ui
 fractal-gtk/res/ui/invite.ui
 fractal-gtk/res/ui/invite_user.ui
 fractal-gtk/res/ui/join_room.ui
@@ -22,7 +21,6 @@ fractal-gtk/res/ui/main_menu.ui
 fractal-gtk/res/ui/main_window.ui
 fractal-gtk/res/ui/markdown_popover.ui
 fractal-gtk/res/ui/media_viewer.ui
-fractal-gtk/res/ui/members.ui
 fractal-gtk/res/ui/message_menu.ui
 fractal-gtk/res/ui/msg_src_window.ui
 fractal-gtk/res/ui/new_room.ui
