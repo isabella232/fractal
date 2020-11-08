@@ -156,7 +156,12 @@ row:not(:selected) .member-uid {
 
 .messages-history {
   background-color: @theme_base_color;
-  padding: 0 18px 18px;
+  padding: 0px 18px 18px;
+}
+
+clamp.small > box > .messages-history {
+  padding-left: 12px;
+  padding-right: 12px;
 }
 
 .history-view {
