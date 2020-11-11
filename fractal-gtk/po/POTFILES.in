@@ -91,7 +91,6 @@ fractal-gtk/src/model/message.rs
 fractal-gtk/src/model/mod.rs
 fractal-gtk/src/model/room.rs
 fractal-gtk/src/passwd.rs
-fractal-gtk/src/types.rs
 fractal-gtk/src/uibuilder.rs
 fractal-gtk/src/uitypes.rs
 fractal-gtk/src/util/mod.rs
