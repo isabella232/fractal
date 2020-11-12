@@ -62,4 +62,5 @@ pages:
           - public
     only:
         - master
+        - 'alatiera/ci'
     <<: *flatpak_cache
