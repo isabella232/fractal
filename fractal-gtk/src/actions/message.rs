@@ -12,7 +12,7 @@ use crate::app::{AppRuntime, RUNTIME};
 use crate::appop::AppOp;
 use crate::backend::HandleError;
 use crate::model::message::Message;
-use crate::uibuilder::UI;
+use crate::ui::UI;
 use crate::util::i18n::i18n;
 use gio::ActionGroupExt;
 use gio::ActionMapExt;

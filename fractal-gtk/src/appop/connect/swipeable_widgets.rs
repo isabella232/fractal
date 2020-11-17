@@ -1,4 +1,4 @@
-use crate::uibuilder::UI;
+use crate::ui::UI;
 use gio::prelude::*;
 use gtk::prelude::*;
 use libhandy::prelude::*;

@@ -2,7 +2,7 @@ use gdk::prelude::*;
 use gtk::prelude::*;
 use matrix_sdk::identifiers::EventId;
 
-use crate::uitypes::RowType;
+use crate::ui::RowType;
 
 #[derive(Clone)]
 struct Widgets {

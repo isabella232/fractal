@@ -1,6 +1,11 @@
+use crate::model::message::Message;
 use crate::util::i18n::i18n;
-use crate::widgets::SVEntry;
+use crate::widgets::{self, SVEntry};
+use chrono::prelude::{DateTime, Local};
 use gtk::{self, prelude::*};
+use matrix_sdk::identifiers::{EventId, UserId};
+use std::path::PathBuf;
+use url::Url;
 
 #[derive(Clone, Debug)]
 pub struct UI {
@@ -101,4 +106,43 @@ impl UI {
             sventry_box,
         }
     }
+}
+
+/* MessageContent contains all data needed to display one row
+ * therefore it should contain only one Message body with one format
+ * To-Do: this should be moved to a file collecting all structs used in the UI */
+#[derive(Debug, Clone)]
+pub struct MessageContent {
+    pub id: Option<EventId>,
+    pub sender: UserId,
+    pub sender_name: Option<String>,
+    pub mtype: RowType,
+    pub body: String,
+    pub date: DateTime<Local>,
+    pub replace_date: Option<DateTime<Local>>,
+    pub thumb: Option<Url>,
+    pub url: Option<Url>,
+    pub local_path: Option<PathBuf>,
+    pub formatted_body: Option<String>,
+    pub format: Option<String>,
+    /* in some places we still need the backend message type (e.g. media viewer) */
+    pub msg: Message,
+    pub highlights: Vec<String>,
+    pub redactable: bool,
+    pub last_viewed: bool,
+    pub widget: Option<widgets::MessageBox>,
+}
+
+/* To-Do: this should be moved to a file collecting all structs used in the UI */
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub enum RowType {
+    Mention,
+    Emote,
+    Message,
+    Sticker,
+    Image,
+    Audio,
+    Video,
+    File,
+    Emoji,
 }

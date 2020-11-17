@@ -13,8 +13,7 @@ mod util;
 mod cache;
 mod model;
 mod passwd;
-mod uibuilder;
-mod uitypes;
+mod ui;
 #[macro_use]
 mod app;
 mod actions;

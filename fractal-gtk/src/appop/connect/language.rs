@@ -1,6 +1,6 @@
 use crate::app::{AppRuntime, RUNTIME};
 use crate::backend::{room, HandleError};
-use crate::uibuilder::UI;
+use crate::ui::UI;
 use glib::object::Cast;
 use gtk::prelude::*;
 

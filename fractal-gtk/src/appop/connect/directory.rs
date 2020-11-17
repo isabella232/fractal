@@ -7,7 +7,7 @@ use libhandy::prelude::*;
 
 use crate::app::AppRuntime;
 use crate::appop::RoomSearchPagination;
-use crate::uibuilder::UI;
+use crate::ui::UI;
 
 pub fn connect(ui: &UI, app_runtime: AppRuntime) {
     let q = ui

@@ -2,7 +2,7 @@ use glib::clone;
 use gtk::prelude::*;
 
 use crate::app::AppRuntime;
-use crate::uibuilder::UI;
+use crate::ui::UI;
 
 pub fn connect(ui: &UI, app_runtime: AppRuntime) {
     let dialog = ui

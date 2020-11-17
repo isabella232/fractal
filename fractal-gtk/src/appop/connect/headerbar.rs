@@ -1,4 +1,4 @@
-use crate::uibuilder::UI;
+use crate::ui::UI;
 use glib::clone;
 use gtk::prelude::*;
 use libhandy::HeaderBarExt;

@@ -12,7 +12,7 @@ use crate::appop::AppOp;
 
 use crate::actions;
 use crate::config;
-use crate::uibuilder;
+use crate::ui;
 use crate::widgets;
 
 mod windowstate;
@@ -42,7 +42,7 @@ macro_rules! APPOP {
 pub struct AppRuntime(glib::Sender<Box<dyn FnOnce(&mut AppOp)>>);
 
 impl AppRuntime {
-    fn init(ui: uibuilder::UI) -> Self {
+    fn init(ui: ui::UI) -> Self {
         let (app_tx, app_rx) = glib::MainContext::channel(Default::default());
         let app_runtime = Self(app_tx);
         let mut state = AppOp::new(ui, app_runtime.clone());
@@ -65,7 +65,7 @@ impl AppRuntime {
     }
 }
 
-fn new(gtk_app: gtk::Application) -> (AppRuntime, uibuilder::UI) {
+fn new(gtk_app: gtk::Application) -> (AppRuntime, ui::UI) {
     // Set up the textdomain for gettext
     setlocale(LocaleCategory::LcAll, "");
     bindtextdomain("fractal", config::LOCALEDIR);
@@ -83,7 +83,7 @@ fn new(gtk_app: gtk::Application) -> (AppRuntime, uibuilder::UI) {
         gtk::STYLE_PROVIDER_PRIORITY_APPLICATION,
     );
 
-    let ui = uibuilder::UI::new(gtk_app.clone());
+    let ui = ui::UI::new(gtk_app.clone());
     let app_runtime = AppRuntime::init(ui.clone());
 
     let settings: gio::Settings = gio::Settings::new("org.gnome.Fractal");
@@ -208,7 +208,7 @@ pub fn on_startup(gtk_app: &gtk::Application) {
     });
 }
 
-fn on_activate(ui: &uibuilder::UI) {
+fn on_activate(ui: &ui::UI) {
     ui.main_window.show();
     ui.main_window.present();
 }

@@ -24,7 +24,7 @@ use crate::passwd::PasswordStorage;
 use crate::actions::AppState;
 use crate::app::AppRuntime;
 use crate::cache;
-use crate::uibuilder;
+use crate::ui;
 use crate::widgets;
 
 mod about;
@@ -86,7 +86,7 @@ pub struct LoginData {
 
 pub struct AppOp {
     pub app_runtime: AppRuntime,
-    pub ui: uibuilder::UI,
+    pub ui: ui::UI,
 
     pub syncing: bool, // TODO: Replace with a Mutex
     pub msg_queue: Vec<TmpMsg>,
@@ -126,7 +126,7 @@ pub struct AppOp {
 impl PasswordStorage for AppOp {}
 
 impl AppOp {
-    pub fn new(ui: uibuilder::UI, app_runtime: AppRuntime) -> AppOp {
+    pub fn new(ui: ui::UI, app_runtime: AppRuntime) -> AppOp {
         let leaflet = ui
             .builder
             .get_object::<libhandy::Leaflet>("chat_page")

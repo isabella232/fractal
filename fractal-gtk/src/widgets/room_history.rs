@@ -9,9 +9,9 @@ use std::collections::VecDeque;
 use std::rc::Rc;
 
 use crate::appop::UserInfoCache;
-use crate::uibuilder::UI;
-use crate::uitypes::MessageContent;
-use crate::uitypes::RowType;
+use crate::ui::MessageContent;
+use crate::ui::RowType;
+use crate::ui::UI;
 use crate::util::i18n::i18n;
 
 use crate::globals;

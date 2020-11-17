@@ -1,3 +1,5 @@
+// TODO: Move everything to ui module
+
 mod address;
 mod autocomplete;
 pub mod avatar;

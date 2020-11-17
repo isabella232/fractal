@@ -4,7 +4,7 @@ use sourceview4::BufferExt;
 
 use crate::actions::activate_action;
 use crate::app::AppRuntime;
-use crate::uibuilder::UI;
+use crate::ui::UI;
 
 const MAX_INPUT_HEIGHT: i32 = 100;
 

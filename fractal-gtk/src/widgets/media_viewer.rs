@@ -21,7 +21,7 @@ use url::Url;
 
 use crate::model::{message::Message, room::Room};
 
-use crate::uitypes::RowType;
+use crate::ui::RowType;
 use crate::widgets::image;
 use crate::widgets::message_menu::MessageMenu;
 use crate::widgets::ErrorDialog;

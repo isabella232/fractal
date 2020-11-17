@@ -1,5 +1,5 @@
 use crate::app::AppRuntime;
-use crate::uibuilder::UI;
+use crate::ui::UI;
 use gio::ActionMapExt;
 use glib::clone;
 use gtk::prelude::*;

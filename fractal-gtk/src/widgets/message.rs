@@ -17,8 +17,8 @@ use crate::cache::download_to_cache_username;
 use crate::cache::download_to_cache_username_emote;
 
 use crate::globals;
-use crate::uitypes::MessageContent as Message;
-use crate::uitypes::RowType;
+use crate::ui::MessageContent as Message;
+use crate::ui::RowType;
 use crate::widgets;
 use crate::widgets::message_menu::MessageMenu;
 use crate::widgets::AvatarExt;

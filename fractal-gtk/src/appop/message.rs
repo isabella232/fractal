@@ -21,8 +21,8 @@ use crate::app::RUNTIME;
 use crate::appop::room::Force;
 use crate::appop::AppOp;
 
-use crate::uitypes::MessageContent;
-use crate::uitypes::RowType;
+use crate::ui::MessageContent;
+use crate::ui::RowType;
 use crate::widgets;
 
 use crate::model::message::Message;
