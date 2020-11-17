@@ -1,21 +1,29 @@
-use crate::model::message::Message;
+use crate::actions::AppState;
+use crate::model::{member::Member, message::Message};
 use crate::util::i18n::i18n;
 use crate::widgets::{self, SVEntry};
 use chrono::prelude::{DateTime, Local};
 use gtk::{self, prelude::*};
 use matrix_sdk::identifiers::{EventId, UserId};
-use std::path::PathBuf;
+use std::{cell::RefCell, path::PathBuf, rc::Rc};
 use url::Url;
 
 pub mod connect;
 
-#[derive(Clone, Debug)]
 pub struct UI {
     pub builder: gtk::Builder,
     pub gtk_app: gtk::Application,
     pub main_window: libhandy::ApplicationWindow,
     pub sventry: SVEntry,
     pub sventry_box: Box<gtk::Stack>,
+    pub room_settings: Option<widgets::RoomSettings>,
+    pub history: Option<widgets::RoomHistory>,
+    pub roomlist: widgets::RoomList,
+    pub media_viewer: Rc<RefCell<Option<widgets::MediaViewer>>>,
+    pub room_back_history: Rc<RefCell<Vec<AppState>>>,
+    pub invite_list: Vec<(Member, gtk::TextChildAnchor)>,
+    pub leaflet: libhandy::Leaflet,
+    pub deck: libhandy::Deck,
 }
 
 impl UI {
@@ -100,12 +108,27 @@ impl UI {
         main_window.set_application(Some(&gtk_app));
         main_window.set_title("Fractal");
 
+        let leaflet = builder
+            .get_object::<libhandy::Leaflet>("chat_page")
+            .expect("Couldn't find chat_page in ui file");
+        let deck = builder
+            .get_object::<libhandy::Deck>("main_deck")
+            .expect("Couldn't find main_deck in ui file");
+
         UI {
             builder,
             gtk_app,
             main_window,
             sventry,
             sventry_box,
+            room_settings: None,
+            history: None,
+            roomlist: widgets::RoomList::new(None, None),
+            media_viewer: Rc::new(RefCell::new(None)),
+            room_back_history: Rc::new(RefCell::new(vec![])),
+            invite_list: vec![],
+            leaflet,
+            deck,
         }
     }
 }

@@ -8,7 +8,7 @@ use crate::backend::HandleError;
 
 impl AppOp {
     pub fn start_chat(&mut self) {
-        if self.invite_list.len() != 1 {
+        if self.ui.invite_list.len() != 1 {
             return;
         }
 
@@ -16,7 +16,7 @@ impl AppOp {
             .login_data
             .as_ref()
             .map(|ld| (ld.session_client.clone(), ld.uid.clone())));
-        let member = self.invite_list[0].0.clone();
+        let member = self.ui.invite_list[0].0.clone();
 
         RUNTIME.spawn(async move {
             match room::direct_chat(session_client, &user_id, member).await {
@@ -82,7 +82,7 @@ impl AppOp {
             .get_object::<gtk::Dialog>("direct_chat_dialog")
             .expect("Can't find direct_chat_dialog in ui file.");
 
-        self.invite_list = vec![];
+        self.ui.invite_list = vec![];
         if let Some(buffer) = to_chat_entry.get_buffer() {
             let mut start = buffer.get_start_iter();
             let mut end = buffer.get_end_iter();

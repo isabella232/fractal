@@ -47,7 +47,7 @@ impl AppOp {
         self.recalculate_room_name(room_id);
 
         /* FIXME: update the current room settings insteat of creating a new one */
-        if self.room_settings.is_some() && self.state == AppState::RoomSettings {
+        if self.ui.room_settings.is_some() && self.state == AppState::RoomSettings {
             self.create_room_settings();
         }
     }

@@ -96,12 +96,15 @@ impl AppOp {
         match state {
             AppState::NoRoom => {
                 self.set_state_no_room(&headerbar);
-                self.leaflet.navigate(libhandy::NavigationDirection::Back);
+                self.ui
+                    .leaflet
+                    .navigate(libhandy::NavigationDirection::Back);
                 stack.set_visible_child_name("noroom");
             }
             AppState::Room => {
                 self.set_state_room(&headerbar);
-                self.leaflet
+                self.ui
+                    .leaflet
                     .navigate(libhandy::NavigationDirection::Forward);
                 stack.set_visible_child_name("room_view");
             }
@@ -143,7 +146,7 @@ impl AppOp {
             ch.hide();
 
             // Select new active room in the sidebar
-            self.roomlist.unselect();
+            self.ui.roomlist.unselect();
         }
         self.active_room = None;
         self.clear_tmp_msgs();

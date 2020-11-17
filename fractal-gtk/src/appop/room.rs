@@ -41,7 +41,7 @@ impl AppOp {
     pub fn remove_room(&mut self, id: RoomId) {
         self.rooms.remove(&id);
         self.unsent_messages.remove(&id);
-        self.roomlist.remove_room(&id);
+        self.ui.roomlist.remove_room(&id);
     }
 
     pub fn set_rooms(&mut self, rooms: Vec<Room>, clear_room_list: bool) {
@@ -109,8 +109,8 @@ impl AppOp {
                 if clear_room_list {
                     roomlist.push(room.clone());
                 } else {
-                    self.roomlist.add_room(room.clone());
-                    self.roomlist.moveup(&room.id);
+                    self.ui.roomlist.add_room(room.clone());
+                    self.ui.roomlist.moveup(&room.id);
                 }
                 self.rooms.insert(room.id.clone(), room);
             }
@@ -141,12 +141,12 @@ impl AppOp {
                 }
             }
 
-            self.roomlist =
+            self.ui.roomlist =
                 widgets::RoomList::new(adj, Some(login_data.session_client.homeserver().clone()));
-            self.roomlist.add_rooms(roomlist);
-            container.add(self.roomlist.widget());
+            self.ui.roomlist.add_rooms(roomlist);
+            container.add(self.ui.roomlist.widget());
 
-            self.roomlist.connect_fav(move |room, tofav| {
+            self.ui.roomlist.connect_fav(move |room, tofav| {
                 let session_client = login_data.session_client.clone();
                 let uid = login_data.uid.clone();
                 RUNTIME.spawn(async move {
@@ -242,7 +242,7 @@ impl AppOp {
         /* Transform id into the active_room */
         let active_room = id;
         // Select new active room in the sidebar
-        self.roomlist.select(&active_room);
+        self.ui.roomlist.select(&active_room);
 
         // getting room details
         let session_client = login_data.session_client.clone();
@@ -293,15 +293,14 @@ impl AppOp {
 
         /* make sure we remove the old room history first, because the lazy loading could try to
          * load messages */
-        if let Some(history) = self.history.take() {
+        if let Some(history) = self.ui.history.take() {
             history.destroy();
         }
 
-        let back_history = self.room_back_history.clone();
-        let actions =
-            actions::Message::new(self.app_runtime.clone(), self.ui.clone(), back_history);
+        let back_history = self.ui.room_back_history.clone();
+        let actions = actions::Message::new(self.app_runtime.clone(), back_history);
         let history = widgets::RoomHistory::new(actions, active_room.clone(), &self.ui);
-        self.history = if let Some(mut history) = history {
+        self.ui.history = if let Some(mut history) = history {
             history.create(
                 login_data.session_client,
                 self.user_info_cache.clone(),
@@ -330,7 +329,7 @@ impl AppOp {
         self.active_room = None;
         self.clear_tmp_msgs();
         self.set_state(AppState::NoRoom);
-        self.roomlist.remove_room(&room_id);
+        self.ui.roomlist.remove_room(&room_id);
 
         RUNTIME.spawn(async move {
             let query = room::leave_room(session_client, &room_id).await;
@@ -468,7 +467,8 @@ impl AppOp {
                 }
             }
             r.avatar = avatar;
-            self.roomlist
+            self.ui
+                .roomlist
                 .set_room_avatar(room_id.clone(), r.avatar.clone());
         }
     }
@@ -493,7 +493,7 @@ impl AppOp {
     }
 
     pub fn filter_rooms(&self, term: Option<String>) {
-        self.roomlist.filter_rooms(term);
+        self.ui.roomlist.filter_rooms(term);
     }
 
     pub fn new_room_dialog(&self) {
@@ -568,8 +568,8 @@ impl AppOp {
             self.rooms.insert(r.id.clone(), r.clone());
         }
 
-        self.roomlist.add_room(r.clone());
-        self.roomlist.moveup(&r.id);
+        self.ui.roomlist.add_room(r.clone());
+        self.ui.roomlist.moveup(&r.id);
 
         self.set_active_room_by_id(r.id);
     }
@@ -637,7 +637,7 @@ impl AppOp {
                 .set_text(&name.clone().unwrap_or_default());
         }
 
-        self.roomlist.rename_room(room_id, name);
+        self.ui.roomlist.rename_room(room_id, name);
     }
 
     pub fn room_topic_change(&mut self, room_id: RoomId, topic: Option<String>) {
@@ -707,7 +707,7 @@ impl AppOp {
     pub fn update_typing_notification(&mut self) {
         let active_room_id = unwrap_or_unit_return!(self.active_room.clone());
         let active_room = unwrap_or_unit_return!(self.rooms.get(&active_room_id));
-        let history = unwrap_or_unit_return!(self.history.as_mut());
+        let history = unwrap_or_unit_return!(self.ui.history.as_mut());
 
         let typing_users = &active_room.typing_users;
         if typing_users.is_empty() {

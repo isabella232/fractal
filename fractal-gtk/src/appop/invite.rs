@@ -17,7 +17,7 @@ use crate::model::member::Member;
 
 impl AppOp {
     pub fn add_to_invite(&mut self, u: Member) {
-        if self.invite_list.iter().any(|(mem, _)| *mem == u) {
+        if self.ui.invite_list.iter().any(|(mem, _)| *mem == u) {
             return;
         }
 
@@ -33,7 +33,7 @@ impl AppOp {
             .expect("Can't find invite_entry in ui file.");
 
         if let SearchType::DirectChat = self.search_type {
-            self.invite_list = vec![];
+            self.ui.invite_list = vec![];
 
             if let Some(buffer) = invite_entry.get_buffer() {
                 let mut start = buffer.get_start_iter();
@@ -77,18 +77,18 @@ impl AppOp {
 
                 invite_entry.add_child_at_anchor(&w, &anchor);
 
-                self.invite_list.push((u, anchor));
+                self.ui.invite_list.push((u, anchor));
             }
         }
     }
 
     pub fn rm_from_invite(&mut self, uid: UserId) {
-        let idx = self.invite_list.iter().position(|x| x.0.uid == uid);
+        let idx = self.ui.invite_list.iter().position(|x| x.0.uid == uid);
         if let Some(i) = idx {
-            self.invite_list.remove(i);
+            self.ui.invite_list.remove(i);
         }
 
-        if self.invite_list.is_empty() {
+        if self.ui.invite_list.is_empty() {
             if let Some(btn) = self
                 .ui
                 .builder
@@ -117,7 +117,7 @@ impl AppOp {
     }
 
     pub fn detect_removed_invite(&mut self) {
-        let invite_list = self.invite_list.clone();
+        let invite_list = self.ui.invite_list.clone();
         for (member, anchor) in invite_list {
             if anchor.get_deleted() {
                 self.rm_from_invite(member.uid);
@@ -163,7 +163,7 @@ impl AppOp {
     pub fn invite(&mut self) {
         let login_data = unwrap_or_unit_return!(self.login_data.clone());
         if let Some(ref r) = self.active_room {
-            for user in &self.invite_list {
+            for user in &self.ui.invite_list {
                 let session_client = login_data.session_client.clone();
                 let room_id = r.clone();
                 let user_id = user.0.uid.clone();
@@ -200,7 +200,7 @@ impl AppOp {
             .get_object::<gtk::Dialog>("invite_user_dialog")
             .expect("Can't find invite_user_dialog in ui file.");
 
-        self.invite_list = vec![];
+        self.ui.invite_list = vec![];
         if let Some(buffer) = invite_entry.get_buffer() {
             let mut start = buffer.get_start_iter();
             let mut end = buffer.get_end_iter();
@@ -217,7 +217,7 @@ impl AppOp {
 
     pub fn remove_inv(&mut self, room_id: &RoomId) {
         self.rooms.remove(room_id);
-        self.roomlist.remove_room(room_id);
+        self.ui.roomlist.remove_room(room_id);
     }
 
     pub fn accept_inv(&mut self, accept: bool) {
@@ -294,7 +294,7 @@ impl AppOp {
             let end = buffer.get_end_iter();
 
             if let Some(text) = buffer.get_text(&start, &end, true) {
-                if text.is_empty() && self.invite_list.is_empty() {
+                if text.is_empty() && self.ui.invite_list.is_empty() {
                     buffer.set_text(globals::PLACEHOLDER_TEXT);
 
                     let start = buffer.get_start_iter();
@@ -323,7 +323,7 @@ impl AppOp {
             let end = buffer.get_end_iter();
 
             if let Some(text) = buffer.get_text(&start, &end, true) {
-                if text == globals::PLACEHOLDER_TEXT && self.invite_list.is_empty() {
+                if text == globals::PLACEHOLDER_TEXT && self.ui.invite_list.is_empty() {
                     buffer.set_text("");
 
                     let start = buffer.get_start_iter();

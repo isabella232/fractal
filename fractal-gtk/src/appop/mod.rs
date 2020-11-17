@@ -1,7 +1,5 @@
-use std::cell::RefCell;
 use std::collections::HashMap;
 use std::path::PathBuf;
-use std::rc::Rc;
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
@@ -15,17 +13,13 @@ use crate::cache::CacheMap;
 
 use crate::util::i18n;
 
-use crate::model::{
-    member::Member,
-    room::{Room, RoomList},
-};
+use crate::model::room::{Room, RoomList};
 use crate::passwd::PasswordStorage;
 
 use crate::actions::AppState;
 use crate::app::AppRuntime;
 use crate::cache;
 use crate::ui;
-use crate::widgets;
 
 mod about;
 mod account;
@@ -96,28 +90,19 @@ pub struct AppOp {
     pub active_room: Option<RoomId>,
     pub join_to_room: Option<RoomId>,
     pub rooms: RoomList,
-    pub room_settings: Option<widgets::RoomSettings>,
-    pub history: Option<widgets::RoomHistory>,
-    pub roomlist: widgets::RoomList,
     unread_rooms: usize,
     pub unsent_messages: HashMap<RoomId, (String, i32)>,
     pub typing: HashMap<RoomId, std::time::Instant>,
 
-    pub media_viewer: Rc<RefCell<Option<widgets::MediaViewer>>>,
-
     pub directory_pagination: RoomSearchPagination,
     pub state: AppState,
     pub since: Option<String>,
-    pub room_back_history: Rc<RefCell<Vec<AppState>>>,
 
     pub invitation_roomid: Option<RoomId>,
     pub md_enabled: bool,
-    pub invite_list: Vec<(Member, gtk::TextChildAnchor)>,
     search_type: SearchType,
 
     pub directory: Vec<Room>,
-    pub leaflet: libhandy::Leaflet,
-    pub deck: libhandy::Deck,
 
     pub user_info_cache: UserInfoCache,
 }
@@ -126,45 +111,28 @@ impl PasswordStorage for AppOp {}
 
 impl AppOp {
     pub fn new(ui: ui::UI, app_runtime: AppRuntime) -> AppOp {
-        let leaflet = ui
-            .builder
-            .get_object::<libhandy::Leaflet>("chat_page")
-            .expect("Couldn't find chat_page in ui file");
-        let deck = ui
-            .builder
-            .get_object::<libhandy::Deck>("main_deck")
-            .expect("Couldn't find main_deck in ui file");
-
         AppOp {
             app_runtime,
             ui,
             active_room: None,
             join_to_room: None,
             rooms: HashMap::new(),
-            room_settings: None,
-            history: None,
             login_data: None,
             syncing: false,
             msg_queue: vec![],
             sending_message: false,
             state: AppState::Login,
-            room_back_history: Rc::new(RefCell::new(vec![])),
-            roomlist: widgets::RoomList::new(None, None),
             directory_pagination: RoomSearchPagination::Initial,
             unread_rooms: 0,
             since: None,
             unsent_messages: HashMap::new(),
             typing: HashMap::new(),
-            media_viewer: Rc::new(RefCell::new(None)),
 
             md_enabled: false,
             invitation_roomid: None,
-            invite_list: vec![],
             search_type: SearchType::Invite,
 
             directory: vec![],
-            leaflet,
-            deck,
 
             user_info_cache: Arc::new(Mutex::new(
                 CacheMap::new().timeout(Duration::from_secs(60 * 60)),
@@ -210,7 +178,7 @@ impl AppOp {
     }
 
     pub fn update_title(&mut self) {
-        let unread = self.roomlist.rooms_with_notifications();
+        let unread = self.ui.roomlist.rooms_with_notifications();
         if self.unread_rooms != unread {
             let window = self.get_window();
             if unread == 0 {

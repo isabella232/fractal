@@ -31,11 +31,10 @@ impl AppOp {
             let mut panel = widgets::MediaViewer::new(main_window, room, &msg, login_data.uid);
             panel.display_media_viewer(login_data.session_client.clone(), msg);
             let (body, header) = panel.create(login_data.session_client.clone())?;
-            *self.media_viewer.borrow_mut() = Some(panel);
+            *self.ui.media_viewer.borrow_mut() = Some(panel);
 
-            let back_history = self.room_back_history.clone();
-            let actions =
-                actions::Message::new(self.app_runtime.clone(), self.ui.clone(), back_history);
+            let back_history = self.ui.room_back_history.clone();
+            let actions = actions::Message::new(self.app_runtime.clone(), back_history);
             header.insert_action_group("message", Some(&actions));
             body.insert_action_group("message", Some(&actions));
 

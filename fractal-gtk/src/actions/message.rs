@@ -12,7 +12,6 @@ use crate::app::{AppRuntime, RUNTIME};
 use crate::appop::AppOp;
 use crate::backend::HandleError;
 use crate::model::message::Message;
-use crate::ui::UI;
 use crate::util::i18n::i18n;
 use gio::ActionGroupExt;
 use gio::ActionMapExt;
@@ -29,7 +28,6 @@ use crate::widgets::SourceDialog;
 /* This creates all actions the room history can perform */
 pub fn new(
     app_runtime: AppRuntime,
-    ui: UI,
     back_history: Rc<RefCell<Vec<AppState>>>,
 ) -> gio::SimpleActionGroup {
     let actions = SimpleActionGroup::new();
@@ -55,15 +53,16 @@ pub fn new(
     actions.add_action(&show_source);
     actions.add_action(&load_more_messages);
 
-    let parent: gtk::Window = ui
-        .builder
-        .get_object("main_window")
-        .expect("Can't find main_window in ui file.");
-    show_source.connect_activate(clone!(@weak parent, @strong app_runtime => move |_, data| {
-        let viewer = SourceDialog::new();
-        viewer.set_parent_window(&parent);
+    show_source.connect_activate(clone!(@strong app_runtime => move |_, data| {
         let data = data.cloned();
         app_runtime.update_state_with(move |state| {
+            let parent: gtk::Window = state
+                .ui
+                .builder
+                .get_object("main_window")
+                .expect("Can't find main_window in ui file.");
+            let viewer = SourceDialog::new();
+            viewer.set_parent_window(&parent);
             if let Some(m) = get_message(state, data.as_ref()) {
                 let error = i18n("This message has no source.");
                 let source = m.source.as_ref().unwrap_or(&error);
@@ -73,28 +72,27 @@ pub fn new(
         });
     }));
 
-    let window = ui
-        .builder
-        .get_object::<gtk::ApplicationWindow>("main_window")
-        .expect("Couldn't find main_window in ui file.");
     reply.connect_activate(clone!(
     @weak back_history,
-    @weak window,
-    @weak ui.sventry.view as msg_entry,
     @strong app_runtime
     => move |_, data| {
-        let state = back_history.borrow().last().cloned();
-        if let Some(AppState::MediaViewer) = state {
-            if let Some(action_group) = window.get_action_group("app") {
-                action_group.activate_action("back", None);
-            } else {
-                error!("The action group app is not attached to the main window.");
+        let data = data.cloned();
+        let past_state = back_history.borrow().last().cloned();
+        app_runtime.update_state_with(move |state| {
+            let window = state
+                .ui
+                .builder
+                .get_object::<gtk::ApplicationWindow>("main_window")
+                .expect("Couldn't find main_window in ui file.");
+            if let Some(AppState::MediaViewer) = past_state {
+                if let Some(action_group) = window.get_action_group("app") {
+                    action_group.activate_action("back", None);
+                } else {
+                    error!("The action group app is not attached to the main window.");
+                }
             }
-        }
-        if let Some(buffer) = msg_entry.get_buffer() {
-            let mut start = buffer.get_start_iter();
-            let data = data.cloned();
-            app_runtime.update_state_with(move |state| {
+            if let Some(buffer) = state.ui.sventry.view.get_buffer() {
+                let mut start = buffer.get_start_iter();
                 if let Some(m) = get_message(state, data.as_ref()) {
                     let quote = m
                         .body
@@ -105,10 +103,10 @@ pub fn new(
                         + "\n"
                         + "\n";
                     buffer.insert(&mut start, &quote);
-                    msg_entry.grab_focus();
+                    state.ui.sventry.view.grab_focus();
                 }
-            });
-        }
+            }
+        });
     }));
 
     open_with.connect_activate(clone!(@strong app_runtime => move |_, data| {
@@ -131,42 +129,45 @@ pub fn new(
         });
     }));
 
-    save_as.connect_activate(
-        clone!(@weak parent as window, @strong app_runtime => move |_, data| {
-            let data = data.cloned();
-            app_runtime.update_state_with(move |state| {
-                let (url, name) = unwrap_or_unit_return!(
-                    get_message(state, data.as_ref()).and_then(|m| Some((m.url?, m.body)))
-                );
-                let session_client = unwrap_or_unit_return!(
-                    state.login_data.as_ref().map(|ld| ld.session_client.clone())
-                );
-                let response = RUNTIME.spawn(async move {
-                    media::get_media(session_client, &url).await
-                });
+    save_as.connect_activate(clone!(@strong app_runtime => move |_, data| {
+        let data = data.cloned();
+        app_runtime.update_state_with(move |state| {
+            let window = state
+                .ui
+                .builder
+                .get_object::<gtk::Window>("main_window")
+                .expect("Couldn't find main_window in ui file.");
+            let (url, name) = unwrap_or_unit_return!(
+                get_message(state, data.as_ref()).and_then(|m| Some((m.url?, m.body)))
+            );
+            let session_client = unwrap_or_unit_return!(
+                state.login_data.as_ref().map(|ld| ld.session_client.clone())
+            );
+            let response = RUNTIME.spawn(async move {
+                media::get_media(session_client, &url).await
+            });
 
-                glib::MainContext::default().spawn_local(async move {
-                    match response.await {
-                        Err(_) => {
-                            let msg = i18n("Could not download the file");
-                            ErrorDialog::new(false, &msg);
-                        },
-                        Ok(Ok(fname)) => {
-                            if let Some(path) = save(&window.upcast_ref(), &name, &[]) {
-                                // TODO use glib to copy file
-                                if fs::copy(fname, path).is_err() {
-                                    ErrorDialog::new(false, &i18n("Couldn’t save file"));
-                                }
+            glib::MainContext::default().spawn_local(async move {
+                match response.await {
+                    Err(_) => {
+                        let msg = i18n("Could not download the file");
+                        ErrorDialog::new(false, &msg);
+                    },
+                    Ok(Ok(fname)) => {
+                        if let Some(path) = save(&window.upcast_ref(), &name, &[]) {
+                            // TODO use glib to copy file
+                            if fs::copy(fname, path).is_err() {
+                                ErrorDialog::new(false, &i18n("Couldn’t save file"));
                             }
                         }
-                        Ok(Err(err)) => {
-                            error!("Media path could not be found due to error: {:?}", err);
-                        }
                     }
-                });
+                    Ok(Err(err)) => {
+                        error!("Media path could not be found due to error: {:?}", err);
+                    }
+                }
             });
-        }),
-    );
+        });
+    }));
 
     copy_image.connect_activate(clone!(@strong app_runtime => move |_, data| {
         let data = data.cloned();
@@ -215,19 +216,23 @@ pub fn new(
 
     delete.connect_activate(clone!(
     @weak back_history,
-    @weak window,
     @strong app_runtime
     => move |_, data| {
-        let state = back_history.borrow().last().cloned();
-        if let Some(AppState::MediaViewer) = state {
-            if let Some(action_group) = window.get_action_group("app") {
-                action_group.activate_action("back", None);
-            } else {
-                error!("The action group app is not attached to the main window.");
-            }
-        }
         let data = data.cloned();
         app_runtime.update_state_with(move |state| {
+            let window = state
+                .ui
+                .builder
+                .get_object::<gtk::ApplicationWindow>("main_window")
+                .expect("Couldn't find main_window in ui file.");
+            let past_state = back_history.borrow().last().cloned();
+            if let Some(AppState::MediaViewer) = past_state {
+                if let Some(action_group) = window.get_action_group("app") {
+                    action_group.activate_action("back", None);
+                } else {
+                    error!("The action group app is not attached to the main window.");
+                }
+            }
             let msg = unwrap_or_unit_return!(get_message(state, data.as_ref()));
             let session_client = unwrap_or_unit_return!(
                 state.login_data.as_ref().map(|ld| ld.session_client.clone())

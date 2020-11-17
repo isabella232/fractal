@@ -48,7 +48,7 @@ impl AppOp {
     pub fn add_room_message(&mut self, msg: &Message) -> Option<()> {
         let session_client = self.login_data.as_ref()?.session_client.clone();
         if let Some(ui_msg) = self.create_new_room_message(msg) {
-            if let Some(ref mut history) = self.history {
+            if let Some(ref mut history) = self.ui.history {
                 history.add_new_message(session_client, self.user_info_cache.clone(), ui_msg);
             }
         }
@@ -59,7 +59,7 @@ impl AppOp {
         let session_client =
             unwrap_or_unit_return!(self.login_data.as_ref().map(|ld| ld.session_client.clone()));
         if let Some(ui_msg) = self.create_new_room_message(msg) {
-            if let Some(ref mut history) = self.history {
+            if let Some(ref mut history) = self.ui.history {
                 history.remove_message(session_client, self.user_info_cache.clone(), ui_msg);
             }
         }
@@ -67,7 +67,7 @@ impl AppOp {
 
     pub fn add_tmp_room_message(&mut self, msg: Message) -> Option<()> {
         let login_data = self.login_data.clone()?;
-        let messages = self.history.as_ref()?.get_listbox();
+        let messages = self.ui.history.as_ref()?.get_listbox();
         if let Some(ui_msg) = self.create_new_room_message(&msg) {
             let mb = widgets::MessageBox::new().tmpwidget(
                 login_data.session_client.clone(),
@@ -91,7 +91,7 @@ impl AppOp {
     }
 
     pub fn clear_tmp_msgs(&mut self) -> Option<()> {
-        let messages = self.history.as_ref()?.get_listbox();
+        let messages = self.ui.history.as_ref()?.get_listbox();
         for t in self.msg_queue.iter_mut() {
             if let Some(ref w) = t.widget {
                 messages.remove(w);
@@ -103,7 +103,7 @@ impl AppOp {
 
     pub fn append_tmp_msgs(&mut self) -> Option<()> {
         let login_data = self.login_data.clone()?;
-        let messages = self.history.as_ref()?.get_listbox();
+        let messages = self.ui.history.as_ref()?.get_listbox();
 
         let r = self.rooms.get(self.active_room.as_ref()?)?;
         let mut widgets = vec![];
@@ -167,7 +167,7 @@ impl AppOp {
     }
 
     pub fn msg_sent(&mut self, evid: EventId) -> Option<()> {
-        let messages = self.history.as_ref()?.get_listbox();
+        let messages = self.ui.history.as_ref()?.get_listbox();
         if let Some(ref mut m) = self.msg_queue.pop() {
             if let Some(ref w) = m.widget {
                 messages.remove(w);
@@ -340,7 +340,7 @@ impl AppOp {
     /// to the matrix media server and we've the real url to use so we can
     /// replace the tmp message with the same id with this new one
     pub fn attached_file(&mut self, msg: Message) -> Option<()> {
-        let messages = self.history.as_ref()?.get_listbox();
+        let messages = self.ui.history.as_ref()?.get_listbox();
         let p = self.msg_queue.iter().position(|m| m.msg == msg);
         if let Some(i) = p {
             let w = self.msg_queue.remove(i);
@@ -394,8 +394,8 @@ impl AppOp {
                 }
             }
 
-            self.roomlist.moveup(&msg.room);
-            self.roomlist.set_bold(msg.room.clone(), true);
+            self.ui.roomlist.moveup(&msg.room);
+            self.ui.roomlist.set_bold(msg.room.clone(), true);
         }
 
         if msg_in_active {
@@ -433,7 +433,7 @@ impl AppOp {
             }
         }
 
-        if let Some(ref mut history) = self.history {
+        if let Some(ref mut history) = self.ui.history {
             history.add_old_messages_in_batch(session_client, self.user_info_cache.clone(), list);
         }
     }

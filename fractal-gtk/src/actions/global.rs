@@ -175,60 +175,60 @@ pub fn new(appop: &AppOp) {
 
     previous_room.connect_activate(clone!(@strong app_runtime => move |_, _| {
         app_runtime.update_state_with(|state| {
-            if let Some(id) = state.roomlist.prev_id() {
+            if let Some(id) = state.ui.roomlist.prev_id() {
                 state.set_active_room_by_id(id);
-            } else if let Some(last_room) = state.roomlist.last_id() {
+            } else if let Some(last_room) = state.ui.roomlist.last_id() {
                 state.set_active_room_by_id(last_room);
             }
         });
     }));
     next_room.connect_activate(clone!(@strong app_runtime => move |_, _| {
         app_runtime.update_state_with(|state| {
-            if let Some(id) = state.roomlist.next_id() {
+            if let Some(id) = state.ui.roomlist.next_id() {
                 state.set_active_room_by_id(id);
-            } else if let Some(first_room) = state.roomlist.first_id() {
+            } else if let Some(first_room) = state.ui.roomlist.first_id() {
                 state.set_active_room_by_id(first_room);
             }
         });
     }));
     prev_unread_room.connect_activate(clone!(@strong app_runtime => move |_, _| {
         app_runtime.update_state_with(|state| {
-            if let Some(id) = state.roomlist.prev_unread_id() {
+            if let Some(id) = state.ui.roomlist.prev_unread_id() {
                 state.set_active_room_by_id(id);
             }
         });
     }));
     next_unread_room.connect_activate(clone!(@strong app_runtime => move |_, _| {
         app_runtime.update_state_with(|state| {
-            if let Some(id) = state.roomlist.next_unread_id() {
+            if let Some(id) = state.ui.roomlist.next_unread_id() {
                 state.set_active_room_by_id(id);
             }
         });
     }));
     first_room.connect_activate(clone!(@strong app_runtime => move |_, _| {
         app_runtime.update_state_with(|state| {
-            if let Some(id) = state.roomlist.first_id() {
+            if let Some(id) = state.ui.roomlist.first_id() {
                 state.set_active_room_by_id(id);
             }
         });
     }));
     last_room.connect_activate(clone!(@strong app_runtime => move |_, _| {
         app_runtime.update_state_with(|state| {
-            if let Some(id) = state.roomlist.last_id() {
+            if let Some(id) = state.ui.roomlist.last_id() {
                 state.set_active_room_by_id(id);
             }
         });
     }));
     older_messages.connect_activate(clone!(@strong app_runtime => move |_, _| {
         app_runtime.update_state_with(|state| {
-            if let Some(ref mut hist) = state.history {
+            if let Some(ref mut hist) = state.ui.history {
                 hist.page_up();
             }
         });
     }));
     newer_messages.connect_activate(clone!(@strong app_runtime => move |_, _| {
         app_runtime.update_state_with(|state| {
-            if let Some(ref mut hist) = state.history {
+            if let Some(ref mut hist) = state.ui.history {
                 hist.page_down();
             }
         });
@@ -237,14 +237,14 @@ pub fn new(appop: &AppOp) {
     account.connect_activate(clone!(@strong app_runtime => move |_, _| {
         app_runtime.update_state_with(|state| {
             state.show_account_settings_dialog();
-            state.room_back_history.borrow_mut().push(AppState::AccountSettings);
+            state.ui.room_back_history.borrow_mut().push(AppState::AccountSettings);
         });
     }));
 
     directory.connect_activate(clone!(@strong app_runtime => move |_, _| {
         app_runtime.update_state_with(|state| {
             state.set_state(AppState::Directory);
-            state.room_back_history.borrow_mut().push(AppState::Directory);
+            state.ui.room_back_history.borrow_mut().push(AppState::Directory);
         });
     }));
 
@@ -259,13 +259,13 @@ pub fn new(appop: &AppOp) {
                 state.activate();
             }
             // Push a new state only if the current state is not already Room
-            let push = if let Some(last) = state.room_back_history.borrow().last() {
+            let push = if let Some(last) = state.ui.room_back_history.borrow().last() {
                 last != &AppState::Room
             } else {
                 true
             };
             if push {
-                state.room_back_history.borrow_mut().push(AppState::Room);
+                state.ui.room_back_history.borrow_mut().push(AppState::Room);
             }
         });
     }));
@@ -273,20 +273,20 @@ pub fn new(appop: &AppOp) {
     room_settings.connect_activate(clone!(@strong app_runtime => move |_, _| {
         app_runtime.update_state_with(|state| {
             state.create_room_settings();
-            state.room_back_history.borrow_mut().push(AppState::RoomSettings);
+            state.ui.room_back_history.borrow_mut().push(AppState::RoomSettings);
         });
     }));
 
     media_viewer.connect_activate(clone!(@strong app_runtime => move |_, data| {
         open_viewer(&app_runtime, data.cloned());
         app_runtime.update_state_with(|state| {
-            state.room_back_history.borrow_mut().push(AppState::MediaViewer);
+            state.ui.room_back_history.borrow_mut().push(AppState::MediaViewer);
         });
     }));
 
     deck_back.connect_activate(clone!(@strong app_runtime => move |_, _| {
         app_runtime.update_state_with(|state| {
-            let deck = state.deck.clone();
+            let deck = state.ui.deck.clone();
             if deck.get_can_swipe_back() {
                 deck.navigate(libhandy::NavigationDirection::Back);
             }
@@ -295,13 +295,13 @@ pub fn new(appop: &AppOp) {
 
     back.connect_activate(clone!(@strong app_runtime => move |_, _| {
         app_runtime.update_state_with(|state| {
-            if let Some(mut mv) = state.media_viewer.borrow_mut().take() {
+            if let Some(mut mv) = state.ui.media_viewer.borrow_mut().take() {
                 mv.disconnect_signal_id();
             }
 
             // Remove the current state from the store
-            state.room_back_history.borrow_mut().pop();
-            let app_state = state.room_back_history.borrow().last().cloned();
+            state.ui.room_back_history.borrow_mut().pop();
+            let app_state = state.ui.room_back_history.borrow().last().cloned();
             if let Some(app_state) = app_state {
                 debug!("Go back to state {:?}", app_state);
                 state.set_state(app_state);
