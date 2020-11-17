@@ -126,6 +126,6 @@ impl AppOp {
             }
         });
         self.bk_logout();
-        *self.ui.room_back_history.borrow_mut() = vec![];
+        self.ui.room_back_history = vec![];
     }
 }

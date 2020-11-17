@@ -237,14 +237,14 @@ pub fn new(appop: &AppOp) {
     account.connect_activate(clone!(@strong app_runtime => move |_, _| {
         app_runtime.update_state_with(|state| {
             state.show_account_settings_dialog();
-            state.ui.room_back_history.borrow_mut().push(AppState::AccountSettings);
+            state.ui.room_back_history.push(AppState::AccountSettings);
         });
     }));
 
     directory.connect_activate(clone!(@strong app_runtime => move |_, _| {
         app_runtime.update_state_with(|state| {
             state.set_state(AppState::Directory);
-            state.ui.room_back_history.borrow_mut().push(AppState::Directory);
+            state.ui.room_back_history.push(AppState::Directory);
         });
     }));
 
@@ -259,13 +259,13 @@ pub fn new(appop: &AppOp) {
                 state.activate();
             }
             // Push a new state only if the current state is not already Room
-            let push = if let Some(last) = state.ui.room_back_history.borrow().last() {
+            let push = if let Some(last) = state.ui.room_back_history.last() {
                 last != &AppState::Room
             } else {
                 true
             };
             if push {
-                state.ui.room_back_history.borrow_mut().push(AppState::Room);
+                state.ui.room_back_history.push(AppState::Room);
             }
         });
     }));
@@ -273,14 +273,14 @@ pub fn new(appop: &AppOp) {
     room_settings.connect_activate(clone!(@strong app_runtime => move |_, _| {
         app_runtime.update_state_with(|state| {
             state.create_room_settings();
-            state.ui.room_back_history.borrow_mut().push(AppState::RoomSettings);
+            state.ui.room_back_history.push(AppState::RoomSettings);
         });
     }));
 
     media_viewer.connect_activate(clone!(@strong app_runtime => move |_, data| {
         open_viewer(&app_runtime, data.cloned());
         app_runtime.update_state_with(|state| {
-            state.ui.room_back_history.borrow_mut().push(AppState::MediaViewer);
+            state.ui.room_back_history.push(AppState::MediaViewer);
         });
     }));
 
@@ -295,13 +295,13 @@ pub fn new(appop: &AppOp) {
 
     back.connect_activate(clone!(@strong app_runtime => move |_, _| {
         app_runtime.update_state_with(|state| {
-            if let Some(mut mv) = state.ui.media_viewer.borrow_mut().take() {
+            if let Some(mut mv) = state.ui.media_viewer.take() {
                 mv.disconnect_signal_id();
             }
 
             // Remove the current state from the store
-            state.ui.room_back_history.borrow_mut().pop();
-            let app_state = state.ui.room_back_history.borrow().last().cloned();
+            state.ui.room_back_history.pop();
+            let app_state = state.ui.room_back_history.last().cloned();
             if let Some(app_state) = app_state {
                 debug!("Go back to state {:?}", app_state);
                 state.set_state(app_state);

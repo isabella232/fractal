@@ -5,7 +5,7 @@ use crate::widgets::{self, SVEntry};
 use chrono::prelude::{DateTime, Local};
 use gtk::{self, prelude::*};
 use matrix_sdk::identifiers::{EventId, UserId};
-use std::{cell::RefCell, path::PathBuf, rc::Rc};
+use std::path::PathBuf;
 use url::Url;
 
 pub mod connect;
@@ -19,8 +19,8 @@ pub struct UI {
     pub room_settings: Option<widgets::RoomSettings>,
     pub history: Option<widgets::RoomHistory>,
     pub roomlist: widgets::RoomList,
-    pub media_viewer: Rc<RefCell<Option<widgets::MediaViewer>>>,
-    pub room_back_history: Rc<RefCell<Vec<AppState>>>,
+    pub media_viewer: Option<widgets::MediaViewer>,
+    pub room_back_history: Vec<AppState>,
     pub invite_list: Vec<(Member, gtk::TextChildAnchor)>,
     pub leaflet: libhandy::Leaflet,
     pub deck: libhandy::Deck,
@@ -124,8 +124,8 @@ impl UI {
             room_settings: None,
             history: None,
             roomlist: widgets::RoomList::new(None, None),
-            media_viewer: Rc::new(RefCell::new(None)),
-            room_back_history: Rc::new(RefCell::new(vec![])),
+            media_viewer: None,
+            room_back_history: vec![],
             invite_list: vec![],
             leaflet,
             deck,

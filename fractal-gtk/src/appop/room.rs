@@ -297,8 +297,7 @@ impl AppOp {
             history.destroy();
         }
 
-        let back_history = self.ui.room_back_history.clone();
-        let actions = actions::Message::new(self.app_runtime.clone(), back_history);
+        let actions = actions::Message::new(self.app_runtime.clone());
         let history = widgets::RoomHistory::new(actions, active_room.clone(), &self.ui);
         self.ui.history = if let Some(mut history) = history {
             history.create(

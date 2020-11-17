@@ -2,10 +2,8 @@ use crate::backend::{dw_media, media, room, ContentType};
 use glib::clone;
 use log::error;
 use matrix_sdk::identifiers::RoomId;
-use std::cell::RefCell;
 use std::fs;
 use std::process::Command;
-use std::rc::Rc;
 
 use crate::actions::AppState;
 use crate::app::{AppRuntime, RUNTIME};
@@ -26,10 +24,7 @@ use crate::widgets::FileDialog::save;
 use crate::widgets::SourceDialog;
 
 /* This creates all actions the room history can perform */
-pub fn new(
-    app_runtime: AppRuntime,
-    back_history: Rc<RefCell<Vec<AppState>>>,
-) -> gio::SimpleActionGroup {
+pub fn new(app_runtime: AppRuntime) -> gio::SimpleActionGroup {
     let actions = SimpleActionGroup::new();
     /* Action for each message */
     let reply = SimpleAction::new("reply", glib::VariantTy::new("s").ok());
@@ -72,18 +67,15 @@ pub fn new(
         });
     }));
 
-    reply.connect_activate(clone!(
-    @weak back_history,
-    @strong app_runtime
-    => move |_, data| {
+    reply.connect_activate(clone!(@strong app_runtime => move |_, data| {
         let data = data.cloned();
-        let past_state = back_history.borrow().last().cloned();
         app_runtime.update_state_with(move |state| {
             let window = state
                 .ui
                 .builder
                 .get_object::<gtk::ApplicationWindow>("main_window")
                 .expect("Couldn't find main_window in ui file.");
+            let past_state = state.ui.room_back_history.last().cloned();
             if let Some(AppState::MediaViewer) = past_state {
                 if let Some(action_group) = window.get_action_group("app") {
                     action_group.activate_action("back", None);
@@ -214,10 +206,7 @@ pub fn new(
         });
     }));
 
-    delete.connect_activate(clone!(
-    @weak back_history,
-    @strong app_runtime
-    => move |_, data| {
+    delete.connect_activate(clone!(@strong app_runtime => move |_, data| {
         let data = data.cloned();
         app_runtime.update_state_with(move |state| {
             let window = state
@@ -225,7 +214,7 @@ pub fn new(
                 .builder
                 .get_object::<gtk::ApplicationWindow>("main_window")
                 .expect("Couldn't find main_window in ui file.");
-            let past_state = back_history.borrow().last().cloned();
+            let past_state = state.ui.room_back_history.last().cloned();
             if let Some(AppState::MediaViewer) = past_state {
                 if let Some(action_group) = window.get_action_group("app") {
                     action_group.activate_action("back", None);
