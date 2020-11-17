@@ -7,6 +7,8 @@ use matrix_sdk::identifiers::{EventId, UserId};
 use std::path::PathBuf;
 use url::Url;
 
+pub mod connect;
+
 #[derive(Clone, Debug)]
 pub struct UI {
     pub builder: gtk::Builder,

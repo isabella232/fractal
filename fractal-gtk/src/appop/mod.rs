@@ -30,7 +30,6 @@ use crate::widgets;
 mod about;
 mod account;
 pub mod attach;
-mod connect;
 mod directory;
 mod invite;
 mod login;

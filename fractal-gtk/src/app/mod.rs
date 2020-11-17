@@ -159,7 +159,7 @@ fn new(gtk_app: gtk::Application) -> (AppRuntime, ui::UI) {
             .gtk_app
             .set_accels_for_action("login.back", &["Escape"]);
         actions::Global::new(state);
-        state.connect_gtk();
+        state.ui.connect_gtk(state.app_runtime.clone());
     });
 
     (app_runtime, ui)
