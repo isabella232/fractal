@@ -1,8 +1,6 @@
 use glib::clone;
 use matrix_sdk::identifiers::UserId;
-use std::cell::RefCell;
-use std::collections::hash_map::HashMap;
-use std::rc::Rc;
+use std::{cell::RefCell, collections::hash_map::HashMap};
 
 use glib::signal;
 use gtk::prelude::*;
@@ -69,12 +67,11 @@ impl MembersList {
                 Some(w.get_text().to_string()),
             );
         });
-        /* we need to remove the handler when the member list is destroyed */
-        let id: Rc<RefCell<Option<signal::SignalHandlerId>>> = Rc::new(RefCell::new(Some(id)));
+        // We need to remove the handler when the member list is destroyed
+        let id = RefCell::new(Some(id));
         let search_entry = self.search_entry.clone();
         self.container.connect_destroy(move |_| {
-            let id = id.borrow_mut().take();
-            if let Some(id) = id {
+            if let Some(id) = id.borrow_mut().take() {
                 signal::signal_handler_disconnect(&search_entry, id);
             }
         });
