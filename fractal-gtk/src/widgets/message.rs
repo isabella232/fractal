@@ -540,35 +540,44 @@ fn render_html_block(container: &MessageBoxContainer, msg: &Message, block: &Htm
             set_label_styles(&w);
             w.set_markup(&s);
             w.get_style_context().add_class(&format!("h{}", n));
+            container.connect_right_click_menu(msg, Some(&w.upcast_ref::<gtk::Widget>()));
             w.upcast::<gtk::Widget>()
         }
         HtmlBlock::UList(elements) => {
-            let w = gtk::Label::new(None);
-            set_label_styles(&w);
+            let bx = gtk::Box::new(gtk::Orientation::Vertical, 6);
 
-            let text = elements
-                .iter()
-                .map(|li| format!(" • {}", li))
-                .collect::<Vec<String>>()
-                .join("\n");
-            w.set_markup(&text);
+            for li in elements.iter() {
+                let h_box = gtk::Box::new(gtk::Orientation::Horizontal, 6);
+                let bullet = gtk::Label::new(Some("•"));
+                bullet.set_valign(gtk::Align::Start);
+                let w = gtk::Label::new(None);
+                set_label_styles(&w);
+                h_box.add(&bullet);
+                h_box.add(&w);
+                w.set_markup(&li);
+                container.connect_right_click_menu(msg, Some(&w.upcast_ref::<gtk::Widget>()));
+                bx.add(&h_box);
+            }
 
-            w.upcast::<gtk::Widget>()
+            bx.upcast::<gtk::Widget>()
         }
         HtmlBlock::OList(elements) => {
-            let w = gtk::Label::new(None);
-            set_label_styles(&w);
+            let bx = gtk::Box::new(gtk::Orientation::Vertical, 6);
 
-            let text = elements
-                .iter()
-                .enumerate()
-                .map(|(i, li)| format!(" {}. {}", i + 1, li))
-                .collect::<Vec<String>>()
-                .join("\n");
+            for (i, ol) in elements.iter().enumerate() {
+                let h_box = gtk::Box::new(gtk::Orientation::Horizontal, 6);
+                let bullet = gtk::Label::new(Some(&format!("{}.", i + 1)));
+                bullet.set_valign(gtk::Align::Start);
+                let w = gtk::Label::new(None);
+                set_label_styles(&w);
+                h_box.add(&bullet);
+                h_box.add(&w);
+                w.set_markup(&ol);
+                bx.add(&h_box);
+                container.connect_right_click_menu(msg, Some(&w.upcast_ref::<gtk::Widget>()));
+            }
 
-            w.set_markup(&text);
-
-            w.upcast::<gtk::Widget>()
+            bx.upcast::<gtk::Widget>()
         }
         HtmlBlock::Code(s) => {
             let buffer = sourceview4::Buffer::new::<gtk::TextTagTable>(None);
@@ -578,6 +587,7 @@ fn render_html_block(container: &MessageBoxContainer, msg: &Message, block: &Htm
             view.set_editable(false);
             view.set_wrap_mode(gtk::WrapMode::WordChar);
             view.get_style_context().add_class("codeview");
+            container.connect_right_click_menu(msg, Some(&view.upcast_ref::<gtk::Widget>()));
             view.upcast::<gtk::Widget>()
         }
         HtmlBlock::Quote(blocks) => {
@@ -593,10 +603,10 @@ fn render_html_block(container: &MessageBoxContainer, msg: &Message, block: &Htm
             let w = gtk::Label::new(None);
             set_label_styles(&w);
             w.set_markup(&s);
+            container.connect_right_click_menu(msg, Some(&w.upcast_ref::<gtk::Widget>()));
             w.upcast::<gtk::Widget>()
         }
     };
-    container.connect_right_click_menu(msg, Some(&widget));
     widget
 }
 
