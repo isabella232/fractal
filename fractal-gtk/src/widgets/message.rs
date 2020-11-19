@@ -580,15 +580,17 @@ fn render_html_block(container: &MessageBoxContainer, msg: &Message, block: &Htm
             bx.upcast::<gtk::Widget>()
         }
         HtmlBlock::Code(s) => {
+            let scrolled = gtk::ScrolledWindow::new(gtk::NONE_ADJUSTMENT, gtk::NONE_ADJUSTMENT);
+            scrolled.set_policy(gtk::PolicyType::Automatic, gtk::PolicyType::Never);
             let buffer = sourceview4::Buffer::new::<gtk::TextTagTable>(None);
             buffer.set_highlight_matching_brackets(false);
             buffer.set_text(&s);
             let view = sourceview4::View::with_buffer(&buffer);
             view.set_editable(false);
-            view.set_wrap_mode(gtk::WrapMode::WordChar);
             view.get_style_context().add_class("codeview");
             container.connect_right_click_menu(msg, Some(&view.upcast_ref::<gtk::Widget>()));
-            view.upcast::<gtk::Widget>()
+            scrolled.add(&view);
+            scrolled.upcast::<gtk::Widget>()
         }
         HtmlBlock::Quote(blocks) => {
             let bx = gtk::Box::new(gtk::Orientation::Vertical, 6);
