@@ -172,11 +172,11 @@ impl MessageBoxContainer {
         None
     }
 
-    fn connect_right_click_menu(&self, msg: &Message, label: Option<&gtk::Label>) -> Option<()> {
+    fn connect_right_click_menu(&self, msg: &Message, w: Option<&gtk::Widget>) -> Option<()> {
         let mtype = msg.mtype;
         let redactable = msg.redactable;
-        let widget = if let Some(l) = label {
-            l.upcast_ref::<gtk::Widget>()
+        let widget = if let Some(l) = w {
+            l
         } else {
             self.eventbox.upcast_ref::<gtk::Widget>()
         };
@@ -512,7 +512,7 @@ fn build_room_msg(
             container.connect_media_viewer(msg);
         }
         MessageBodyType::Emote(ref msg_label) => {
-            container.connect_right_click_menu(msg, Some(msg_label));
+            container.connect_right_click_menu(msg, Some(msg_label.upcast_ref::<gtk::Widget>()));
         }
         _ => {}
     }
@@ -520,21 +520,21 @@ fn build_room_msg(
     (body, type_extras)
 }
 
-fn build_room_msg_body_html(_container: &MessageBoxContainer, msg: &Message) -> anyhow::Result<gtk::Box> {
+fn build_room_msg_body_html(container: &MessageBoxContainer, msg: &Message) -> anyhow::Result<gtk::Box> {
     let raw = msg.msg.formatted_body.clone().unwrap_or_default();
 
     let blocks =
         markup_html(&raw).with_context(|| format!("Could not render message: {}", &raw))?;
     let bx = gtk::Box::new(gtk::Orientation::Vertical, 6);
     for b in blocks {
-        let widget = render_html_block(&b);
+        let widget = render_html_block(container, msg, &b);
         bx.add(&widget);
     }
     Ok(bx)
 }
 
-fn render_html_block(block: &HtmlBlock) -> gtk::Widget {
-    match block {
+fn render_html_block(container: &MessageBoxContainer, msg: &Message, block: &HtmlBlock) -> gtk::Widget {
+    let widget = match block {
         HtmlBlock::Heading(n, s) => {
             let w = gtk::Label::new(None);
             set_label_styles(&w);
@@ -584,7 +584,7 @@ fn render_html_block(block: &HtmlBlock) -> gtk::Widget {
             let bx = gtk::Box::new(gtk::Orientation::Vertical, 6);
             bx.get_style_context().add_class("quote");
             for b in blocks.iter() {
-                let w = render_html_block(&b);
+                let w = render_html_block(container, msg, &b);
                 bx.add(&w);
             }
             bx.upcast::<gtk::Widget>()
@@ -595,7 +595,9 @@ fn render_html_block(block: &HtmlBlock) -> gtk::Widget {
             w.set_markup(&s);
             w.upcast::<gtk::Widget>()
         }
-    }
+    };
+    container.connect_right_click_menu(msg, Some(&widget));
+    widget
 }
 
 fn build_room_msg_sticker(session_client: MatrixClient, msg: &Message) -> BodyAndType {
@@ -898,7 +900,7 @@ fn build_room_msg_body_text(container: &MessageBoxContainer, msg: &Message) -> g
             part.set_attributes(Some(&attr));
         }
 
-        container.connect_right_click_menu(msg, Some(&part));
+        container.connect_right_click_menu(msg, Some(&part.upcast_ref::<gtk::Widget>()));
         bx.add(&part);
     }
 
