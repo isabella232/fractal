@@ -198,6 +198,7 @@ pub fn dw_media(
 }
 
 pub trait HandleError: Debug {
+    #[track_caller]
     fn handle_error(&self) {
         let err_str = format!("{:?}", self);
         error!(
