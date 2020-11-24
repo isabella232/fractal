@@ -22,7 +22,7 @@ use fractal_api::SyncSettings;
 use fractal_api::identifiers::{EventId, RoomId, UserId};
 use fractal_api::Client as MatrixClient;
 use fractal_api::Error as MatrixError;
-use log::error;
+use log::{error, warn};
 use std::{collections::HashMap, time::Duration};
 
 use super::{get_ruma_client_error, remove_matrix_access_token_if_present, HandleError};
@@ -52,49 +52,17 @@ impl HandleError for SyncError {
     }
 }
 
-#[derive(Debug)]
-pub struct RoomsError(MatrixError);
-
-impl<T: Into<MatrixError>> From<T> for RoomsError {
-    fn from(err: T) -> Self {
-        Self(err.into())
-    }
-}
-
-impl HandleError for RoomsError {}
-
-#[derive(Debug)]
-pub struct UpdateRoomsError(MatrixError);
-
-impl<T: Into<MatrixError>> From<T> for UpdateRoomsError {
-    fn from(err: T) -> Self {
-        Self(err.into())
-    }
-}
-
-impl HandleError for UpdateRoomsError {}
-
-#[derive(Debug)]
-pub struct RoomElementError(MatrixError);
-
-impl<T: Into<MatrixError>> From<T> for RoomElementError {
-    fn from(err: T) -> Self {
-        Self(err.into())
-    }
-}
-
-impl HandleError for RoomElementError {}
-
 pub enum SyncRet {
     NoSince {
-        rooms: Result<(Vec<Room>, Option<Room>), RoomsError>,
+        rooms: Vec<Room>,
+        default: Option<Room>,
         next_batch: String,
     },
     WithSince {
-        update_rooms: Result<Vec<Room>, UpdateRoomsError>,
+        update_rooms: Vec<Room>,
         room_notifications: HashMap<RoomId, UnreadNotificationsCount>,
-        update_rooms_2: Result<Vec<Room>, UpdateRoomsError>,
-        other: Result<Vec<RoomElement>, RoomElementError>,
+        update_rooms_2: Vec<Room>,
+        other: Vec<RoomElement>,
         next_batch: String,
     },
 }
@@ -148,23 +116,21 @@ pub async fn sync(
     match session_client.sync_once(sync_settings).await {
         Ok(response) => {
             if since.is_none() {
-                let rooms = Room::from_sync_response(&response, user_id)
-                    .map(|rooms| {
-                        let def = join_to_room
-                            .and_then(|jtr| rooms.iter().find(|x| x.id == jtr).cloned());
-                        (rooms, def)
-                    })
-                    .map_err(Into::into);
-
+                let rooms = Room::from_sync_response(&response, user_id);
+                let default =
+                    join_to_room.and_then(|jtr| rooms.iter().find(|x| x.id == jtr).cloned());
                 let next_batch = response.next_batch;
 
-                Ok(SyncRet::NoSince { rooms, next_batch })
+                Ok(SyncRet::NoSince {
+                    rooms,
+                    default,
+                    next_batch,
+                })
             } else {
                 let join = &response.rooms.join;
 
                 // New rooms
-                let update_rooms =
-                    Room::from_sync_response(&response, user_id.clone()).map_err(Into::into);
+                let update_rooms = Room::from_sync_response(&response, user_id.clone());
 
                 // Room notifications
                 let room_notifications = join
@@ -179,8 +145,10 @@ pub async fn sync(
                         let typing: Vec<Member> = room.ephemeral.events
                             .iter()
                             .map(|ev| ev.deserialize())
-                            .collect::<Result<Vec<_>, _>>()?
-                            .into_iter()
+                            .inspect(|result_ev| if let Err(err) = result_ev {
+                                warn!("Bad event: {}", err);
+                            })
+                            .filter_map(Result::ok)
                             .filter_map(|event| match event.content() {
                                 AnyEphemeralRoomEventContent::Typing(content) => {
                                     Some(content.user_ids)
@@ -197,10 +165,10 @@ pub async fn sync(
                             })
                             .collect();
 
-                        Ok(Room {
+                        Room {
                             typing_users: typing,
                             ..Room::new(k.clone(), RoomMembership::Joined(RoomTag::None))
-                        })
+                        }
                     })
                     .collect();
 
@@ -214,28 +182,29 @@ pub async fn sync(
                             .iter()
                             .map(move |ev| Ok((room_id.clone(), ev.deserialize()?)))
                     })
-                    .filter_map(|rid_ev| {
-                        let (room_id, event) = match rid_ev {
-                            Ok(roomid_event) => roomid_event,
-                            Err(err) => return Some(Err(err)),
-                        };
-
+                    .inspect(|result_ev: &Result<_, serde_json::Error>| {
+                        if let Err(err) = result_ev {
+                            warn!("Bad event: {}", err);
+                        }
+                    })
+                    .filter_map(Result::ok)
+                    .filter_map(|(room_id, event)| {
                         match event {
                             AnySyncRoomEvent::State(AnySyncStateEvent::RoomName(ev)) => {
                                 let name = ev.content.name().map(Into::into).unwrap_or_default();
-                                Some(Ok(RoomElement::Name(room_id, name)))
+                                Some(RoomElement::Name(room_id, name))
                             }
                             AnySyncRoomEvent::State(AnySyncStateEvent::RoomTopic(ev)) => {
-                                Some(Ok(RoomElement::Topic(room_id, ev.content.topic)))
+                                Some(RoomElement::Topic(room_id, ev.content.topic))
                             }
                             AnySyncRoomEvent::State(AnySyncStateEvent::RoomAvatar(_)) => {
-                                Some(Ok(RoomElement::NewAvatar(room_id)))
+                                Some(RoomElement::NewAvatar(room_id))
                             }
                             AnySyncRoomEvent::State(AnySyncStateEvent::RoomMember(ev)) => {
-                                Some(Ok(RoomElement::MemberEvent(ev.into_full_event(room_id))))
+                                Some(RoomElement::MemberEvent(ev.into_full_event(room_id)))
                             }
                             AnySyncRoomEvent::Message(AnySyncMessageEvent::RoomRedaction(ev)) => {
-                                Some(Ok(RoomElement::RemoveMessage(room_id, ev.redacts)))
+                                Some(RoomElement::RemoveMessage(room_id, ev.redacts))
                             }
                             AnySyncRoomEvent::Message(AnySyncMessageEvent::RoomMessage(_)) => None,
                             AnySyncRoomEvent::Message(AnySyncMessageEvent::Sticker(_)) => {

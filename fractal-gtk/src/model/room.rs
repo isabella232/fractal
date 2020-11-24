@@ -1,6 +1,7 @@
 use crate::model::member::Member;
 use crate::model::member::MemberList;
 use crate::model::message::Message;
+use anyhow::anyhow;
 use chrono::DateTime;
 use chrono::Utc;
 use either::Either;
@@ -13,10 +14,10 @@ use fractal_api::events::{
 };
 use fractal_api::identifiers::{EventId, RoomAliasId, RoomId, UserId};
 use fractal_api::url::{ParseError as UrlError, Url};
-use fractal_api::Error as MatrixError;
-use log::{debug, info};
+use fractal_api::Raw;
+use log::{debug, info, warn};
 use serde::{Deserialize, Serialize};
-use std::collections::{HashMap, HashSet};
+use std::collections::{BTreeMap, HashMap, HashSet};
 use std::convert::{TryFrom, TryInto};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -85,6 +86,28 @@ pub enum RoomTag {
     Custom(String),
 }
 
+#[derive(Deserialize, Serialize)]
+#[serde(try_from = "&str")]
+struct DirectType;
+
+impl TryFrom<&str> for DirectType {
+    type Error = anyhow::Error;
+
+    fn try_from(event_type: &str) -> Result<Self, Self::Error> {
+        match event_type {
+            "m.direct" => Ok(Self),
+            _ => Err(anyhow!("not a m.direct event")),
+        }
+    }
+}
+
+#[derive(Deserialize, Serialize)]
+struct CustomDirectEvent {
+    content: BTreeMap<String, Vec<RoomId>>,
+    #[serde(rename = "type")]
+    _type: DirectType,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Room {
     pub id: RoomId,
@@ -136,25 +159,23 @@ impl Room {
         }
     }
 
-    pub fn from_sync_response(
-        response: &SyncResponse,
-        user_id: UserId,
-    ) -> Result<Vec<Self>, MatrixError> {
+    pub fn from_sync_response(response: &SyncResponse, user_id: UserId) -> Vec<Self> {
         // getting the list of direct rooms
         let direct: HashSet<RoomId> = response.account_data.events
             .iter()
+            .cloned()
             // Synapse sometimes sends an object with the key "[object Object]"
-            // instead of a user ID, so we have to skip those invalid objects
-            // in the array in order to avoid discarding everything
-            .filter_map(|ev| ev.deserialize().ok())
-            .find_map(|event| match event {
-                AnyBasicEvent::Direct(ev) => Some(ev.content.0),
-                _ => None,
+            // instead of a user ID. Since we don't need the key, we use our own
+            // event type so it accepts that.
+            // There's always at most one object of this type.
+            .find_map(|ev| {
+                Raw::<CustomDirectEvent>::from_json(ev.into_json())
+                    .deserialize()
+                    .ok()
             })
-            .into_iter()
-            .flatten()
-            .flat_map(|(_, rids)| rids)
-            .collect();
+            .map_or(Default::default(), |direct_event| {
+                direct_event.content.values().flatten().cloned().collect()
+            });
 
         /*
         response.rooms.join.iter().for_each(|(_, room)| {
@@ -163,18 +184,30 @@ impl Room {
         */
 
         let joined_rooms = response.rooms.join.iter().map(|(k, room)| {
-            let stevents = room
+            let stevents: Vec<_> = room
                 .state
                 .events
                 .iter()
                 .map(|ev| ev.deserialize())
-                .collect::<Result<Vec<_>, _>>()?;
-            let dataevs = room
+                .inspect(|result_ev| {
+                    if let Err(err) = result_ev {
+                        warn!("Bad event: {}", err);
+                    }
+                })
+                .filter_map(Result::ok)
+                .collect();
+            let dataevs: Vec<_> = room
                 .account_data
                 .events
                 .iter()
                 .map(|ev| ev.deserialize())
-                .collect::<Result<Vec<_>, _>>()?;
+                .inspect(|result_ev| {
+                    if let Err(err) = result_ev {
+                        warn!("Bad event: {}", err);
+                    }
+                })
+                .filter_map(Result::ok)
+                .collect();
             let room_tag = dataevs
                 .iter()
                 .find_map(|event| match event {
@@ -255,8 +288,13 @@ impl Room {
                     .events
                     .iter()
                     .map(|ev| Ok((k.clone(), ev.deserialize()?)))
-                    .filter_map(|k_ev| k_ev.map(TryInto::try_into).map(Result::ok).transpose())
-                    .collect::<Result<Vec<_>, MatrixError>>()?,
+                    .inspect(|result_ev: &Result<_, serde_json::Error>| {
+                        if let Err(err) = result_ev {
+                            warn!("Bad event: {}", err);
+                        }
+                    })
+                    .filter_map(|k_ev| k_ev.ok()?.try_into().ok())
+                    .collect(),
                 admins: stevents
                     .iter()
                     .filter_map(|event| match event {
@@ -295,13 +333,18 @@ impl Room {
                 .ephemeral
                 .events
                 .iter()
-                .find_map(|event| match event.deserialize() {
-                    Ok(AnySyncEphemeralRoomEvent::Receipt(ev)) => Some(Ok(ev.content.0)),
-                    Ok(_) => None,
-                    Err(err) => Some(Err(err)),
+                .map(|ev| ev.deserialize())
+                .inspect(|result_ev| {
+                    if let Err(err) = result_ev {
+                        warn!("Bad event: {}", err);
+                    }
                 })
-                .transpose()?
-                .into_iter()
+                .filter_map(Result::ok)
+                .filter_map(|event| match event {
+                    AnySyncEphemeralRoomEvent::Receipt(ev) => Some(ev.content.0),
+                    _ => None,
+                })
+                .take(1)
                 .flatten()
                 .map(|(event_id, receipts)| {
                     let receipts = receipts
@@ -346,12 +389,17 @@ impl Room {
                 .ephemeral
                 .events
                 .iter()
-                .find_map(|event| match event.deserialize() {
-                    Ok(AnySyncEphemeralRoomEvent::FullyRead(ev)) => Some(Ok(ev.content.event_id)),
-                    Ok(_) => None,
-                    Err(err) => Some(Err(err)),
+                .map(|ev| ev.deserialize())
+                .inspect(|result_ev| {
+                    if let Err(err) = result_ev {
+                        warn!("Bad event: {}", err);
+                    }
                 })
-                .transpose()?
+                .filter_map(Result::ok)
+                .find_map(|event| match event {
+                    AnySyncEphemeralRoomEvent::FullyRead(ev) => Some(ev.content.event_id),
+                    _ => None,
+                })
             {
                 let event_id = Some(event_id);
 
@@ -363,119 +411,123 @@ impl Room {
                     });
             }
 
-            Ok(r)
+            r
         });
 
-        let left_rooms = response.rooms.leave.iter().map(|(k, room)| {
-            // TODO: The spec doesn't explain where to get the reason
-            //       for the kicking from, so matrix-sdk doesn't support
-            //       that.
-            if let Some(last_event) = room
-                .timeline
-                .events
-                .last()
-                .map(|ev| serde_json::to_value(ev.json()))
-                .transpose()?
-            {
-                if let Some(kicker) =
-                    UserId::try_from(last_event["sender"].as_str().unwrap_or_default())
-                        .ok()
-                        .filter(|leave_uid| *leave_uid != user_id)
-                {
-                    let kick_reason = &last_event["content"]["reason"];
-                    let reason = Reason::Kicked(
-                        String::from(kick_reason.as_str().unwrap_or_default()),
-                        kicker,
-                    );
-                    return Ok(Self::new(k.clone(), RoomMembership::Left(reason)));
-                }
-            };
-
-            Ok(Self::new(k.clone(), RoomMembership::Left(Reason::None)))
-        });
-
-        let invited_rooms = response
-            .rooms
-            .invite
-            .iter()
-            .map(|(k, room)| {
-                let stevents = room
-                    .invite_state
-                    .events
-                    .iter()
-                    .map(|ev| ev.deserialize())
-                    .collect::<Result<Vec<_>, _>>()?;
-                let inv_sender = stevents
-                    .iter()
-                    .find_map(|event| match event {
-                        AnyStrippedStateEvent::RoomMember(ev)
-                            if ev.content.membership == MembershipState::Invite
-                                && ev.state_key == user_id =>
-                        {
-                            Some(ev)
+        let left_rooms =
+            response.rooms.leave.iter().map(|(k, room)| {
+                // TODO: The spec doesn't explain where to get the reason
+                //       for the kicking from, so matrix-sdk doesn't support
+                //       that.
+                if let Some(last_event) = room.timeline.events.last().and_then(|ev| {
+                    match serde_json::to_value(ev.json()) {
+                        Ok(event) => Some(event),
+                        Err(err) => {
+                            warn!("Bad event: {}", err);
+                            None
                         }
-                        _ => None,
-                    })
-                    .map(|ev| ev.sender.clone());
-                if let Some(inv_sender) = inv_sender {
-                    Ok(Some(Self {
-                        name: stevents
-                            .iter()
-                            .filter_map(|event| match event {
-                                AnyStrippedStateEvent::RoomName(ev) => {
-                                    ev.content.name().filter(|name| !name.is_empty()).map(Err)
-                                }
-                                AnyStrippedStateEvent::RoomCanonicalAlias(ev) => ev
-                                    .content
-                                    .alias
-                                    .as_ref()
-                                    .map(|r_alias| Ok(r_alias.as_str())),
-                                _ => None,
-                            })
-                            .try_fold(None, |_, alias_name| alias_name.map(Some))
-                            .unwrap_or_else(Some)
-                            .map(Into::into)
-                            .or_else(|| {
-                                let members: Vec<_> = stevents
-                                    .iter()
-                                    .filter_map(|event| member_from_stripped_event(event, &user_id))
-                                    .take(3)
-                                    .map(Into::into)
-                                    .collect();
-                                room_name_from_members(&members)
-                            }),
-                        avatar: stevents
-                            .iter()
-                            .find_map(|event| match event {
-                                AnyStrippedStateEvent::RoomAvatar(ev) => {
-                                    Some(ev.content.url.as_deref())
-                                }
-                                _ => None,
-                            })
-                            .flatten()
-                            .map(Url::parse)
-                            .and_then(Result::ok),
-                        alias: stevents
-                            .iter()
-                            .find_map(|event| match event {
-                                AnyStrippedStateEvent::RoomCanonicalAlias(ev) => {
-                                    Some(ev.content.alias.clone())
-                                }
-                                _ => None,
-                            })
-                            .flatten(),
-                        topic: stevents.iter().find_map(|event| match event {
-                            AnyStrippedStateEvent::RoomTopic(ev) => Some(ev.content.topic.clone()),
+                    }
+                }) {
+                    if let Some(kicker) =
+                        UserId::try_from(last_event["sender"].as_str().unwrap_or_default())
+                            .ok()
+                            .filter(|leave_uid| *leave_uid != user_id)
+                    {
+                        let kick_reason = &last_event["content"]["reason"];
+                        let reason = Reason::Kicked(
+                            String::from(kick_reason.as_str().unwrap_or_default()),
+                            kicker,
+                        );
+                        return Self::new(k.clone(), RoomMembership::Left(reason));
+                    }
+                };
+
+                Self::new(k.clone(), RoomMembership::Left(Reason::None))
+            });
+
+        let invited_rooms = response.rooms.invite.iter().filter_map(|(k, room)| {
+            let stevents: Vec<_> = room
+                .invite_state
+                .events
+                .iter()
+                .map(|ev| ev.deserialize())
+                .inspect(|result_ev| {
+                    if let Err(err) = result_ev {
+                        warn!("Bad event: {}", err);
+                    }
+                })
+                .filter_map(Result::ok)
+                .collect();
+            let inv_sender = stevents
+                .iter()
+                .find_map(|event| match event {
+                    AnyStrippedStateEvent::RoomMember(ev)
+                        if ev.content.membership == MembershipState::Invite
+                            && ev.state_key == user_id =>
+                    {
+                        Some(ev)
+                    }
+                    _ => None,
+                })
+                .map(|ev| ev.sender.clone());
+            if let Some(inv_sender) = inv_sender {
+                Some(Self {
+                    name: stevents
+                        .iter()
+                        .filter_map(|event| match event {
+                            AnyStrippedStateEvent::RoomName(ev) => {
+                                ev.content.name().filter(|name| !name.is_empty()).map(Err)
+                            }
+                            AnyStrippedStateEvent::RoomCanonicalAlias(ev) => ev
+                                .content
+                                .alias
+                                .as_ref()
+                                .map(|r_alias| Ok(r_alias.as_str())),
                             _ => None,
+                        })
+                        .try_fold(None, |_, alias_name| alias_name.map(Some))
+                        .unwrap_or_else(Some)
+                        .map(Into::into)
+                        .or_else(|| {
+                            let members: Vec<_> = stevents
+                                .iter()
+                                .filter_map(|event| member_from_stripped_event(event, &user_id))
+                                .take(3)
+                                .map(Into::into)
+                                .collect();
+                            room_name_from_members(&members)
                         }),
-                        direct: direct.contains(&k),
-                        ..Self::new(k.clone(), RoomMembership::Invited(inv_sender))
-                    }))
-                } else {
-                    Ok(None)
-                }
-            })
-            .filter_map(Result::transpose);
+                    avatar: stevents
+                        .iter()
+                        .find_map(|event| match event {
+                            AnyStrippedStateEvent::RoomAvatar(ev) => {
+                                Some(ev.content.url.as_deref())
+                            }
+                            _ => None,
+                        })
+                        .flatten()
+                        .map(Url::parse)
+                        .and_then(Result::ok),
+                    alias: stevents
+                        .iter()
+                        .find_map(|event| match event {
+                            AnyStrippedStateEvent::RoomCanonicalAlias(ev) => {
+                                Some(ev.content.alias.clone())
+                            }
+                            _ => None,
+                        })
+                        .flatten(),
+                    topic: stevents.iter().find_map(|event| match event {
+                        AnyStrippedStateEvent::RoomTopic(ev) => Some(ev.content.topic.clone()),
+                        _ => None,
+                    }),
+                    direct: direct.contains(&k),
+                    ..Self::new(k.clone(), RoomMembership::Invited(inv_sender))
+                })
+            } else {
+                None
+            }
+        });
 
         joined_rooms
             .chain(left_rooms)

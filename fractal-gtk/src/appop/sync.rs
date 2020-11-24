@@ -37,23 +37,20 @@ impl AppOp {
                 .await;
 
                 match query {
-                    Ok(SyncRet::NoSince { rooms, next_batch }) => {
-                        match rooms {
-                            Ok((rooms, default)) => {
-                                let clear_room_list = true;
-                                APPOP!(set_rooms, (rooms, clear_room_list));
-                                // Open the newly joined room
-                                let jtr = default.as_ref().map(|r| r.id.clone());
-                                APPOP!(set_join_to_room, (jtr));
-                                if let Some(room) = default {
-                                    let room_id = room.id;
-                                    APPOP!(set_active_room_by_id, (room_id));
-                                }
-                            }
-                            Err(err) => {
-                                err.handle_error();
-                            }
-                        };
+                    Ok(SyncRet::NoSince {
+                        rooms,
+                        default,
+                        next_batch,
+                    }) => {
+                        let clear_room_list = true;
+                        APPOP!(set_rooms, (rooms, clear_room_list));
+                        // Open the newly joined room
+                        let jtr = default.as_ref().map(|r| r.id.clone());
+                        APPOP!(set_join_to_room, (jtr));
+                        if let Some(room) = default {
+                            let room_id = room.id;
+                            APPOP!(set_active_room_by_id, (room_id));
+                        }
 
                         let s = Some(next_batch);
                         APPOP!(synced, (s));
@@ -65,28 +62,17 @@ impl AppOp {
                         other,
                         next_batch,
                     }) => {
-                        match update_rooms {
-                            Ok(rooms) => {
-                                let clear_room_list = false;
-                                let msgs: Vec<_> =
-                                    rooms.iter().flat_map(|r| &r.messages).cloned().collect();
-                                APPOP!(set_rooms, (rooms, clear_room_list));
-                                APPOP!(show_room_messages, (msgs));
-                            }
-                            Err(err) => {
-                                err.handle_error();
-                            }
-                        }
+                        let clear_room_list = false;
+                        let msgs: Vec<_> = update_rooms
+                            .iter()
+                            .flat_map(|r| &r.messages)
+                            .cloned()
+                            .collect();
+                        APPOP!(set_rooms, (update_rooms, clear_room_list));
+                        APPOP!(show_room_messages, (msgs));
 
-                        match update_rooms_2 {
-                            Ok(rooms) => {
-                                let clear_room_list = false;
-                                APPOP!(set_rooms, (rooms, clear_room_list));
-                            }
-                            Err(err) => {
-                                err.handle_error();
-                            }
-                        }
+                        let clear_room_list = false;
+                        APPOP!(set_rooms, (update_rooms_2, clear_room_list));
 
                         for (room_id, unread_notifications) in room_notifications {
                             let r = room_id;
@@ -101,32 +87,25 @@ impl AppOp {
                             APPOP!(set_room_notifications, (r, n, h));
                         }
 
-                        match other {
-                            Ok(other) => {
-                                for room_element in other {
-                                    match room_element {
-                                        RoomElement::Name(room_id, name) => {
-                                            let n = Some(name);
-                                            APPOP!(room_name_change, (room_id, n));
-                                        }
-                                        RoomElement::Topic(room_id, topic) => {
-                                            let t = Some(topic);
-                                            APPOP!(room_topic_change, (room_id, t));
-                                        }
-                                        RoomElement::NewAvatar(room_id) => {
-                                            APPOP!(new_room_avatar, (room_id));
-                                        }
-                                        RoomElement::MemberEvent(event) => {
-                                            APPOP!(room_member_event, (event));
-                                        }
-                                        RoomElement::RemoveMessage(room_id, msg_id) => {
-                                            APPOP!(remove_message, (room_id, msg_id));
-                                        }
-                                    }
+                        for room_element in other {
+                            match room_element {
+                                RoomElement::Name(room_id, name) => {
+                                    let n = Some(name);
+                                    APPOP!(room_name_change, (room_id, n));
                                 }
-                            }
-                            Err(err) => {
-                                err.handle_error();
+                                RoomElement::Topic(room_id, topic) => {
+                                    let t = Some(topic);
+                                    APPOP!(room_topic_change, (room_id, t));
+                                }
+                                RoomElement::NewAvatar(room_id) => {
+                                    APPOP!(new_room_avatar, (room_id));
+                                }
+                                RoomElement::MemberEvent(event) => {
+                                    APPOP!(room_member_event, (event));
+                                }
+                                RoomElement::RemoveMessage(room_id, msg_id) => {
+                                    APPOP!(remove_message, (room_id, msg_id));
+                                }
                             }
                         }
 
