@@ -62,6 +62,11 @@ impl PartialOrd for Message {
 }
 
 impl Message {
+    /// List all supported types. By default a message map a m.room.message event, but there's
+    /// other events that we want to show in the message history so we map other event types to our
+    /// Message struct, like stickers
+    pub const TYPES: [&'static str; 2] = ["m.room.message", "m.sticker"];
+
     pub fn new(
         room: RoomId,
         sender: UserId,
@@ -103,25 +108,12 @@ impl Message {
         format!("{:x}", digest)
     }
 
-    /// List all supported types. By default a message map a m.room.message event, but there's
-    /// other events that we want to show in the message history so we map other event types to our
-    /// Message struct, like stickers
-    pub fn types() -> [&'static str; 2] {
-        ["m.room.message", "m.sticker"]
-    }
-
     /// Helper function to use in iterator filter of a matrix.org json response to filter supported
     /// events
     pub fn supported_event(ev: &&JsonValue) -> bool {
         let type_ = ev["type"].as_str().unwrap_or_default();
 
-        for t in Message::types().iter() {
-            if t == &type_ {
-                return true;
-            }
-        }
-
-        false
+        Self::TYPES.contains(&type_)
     }
 
     /// Parses a matrix.org event and return a Message object

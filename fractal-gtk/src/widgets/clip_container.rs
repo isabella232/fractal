@@ -22,7 +22,7 @@ pub enum Corner {
     BottomRight,
 }
 
-static CORNERS: [Corner; 4] = [
+const CORNERS: [Corner; 4] = [
     Corner::TopLeft,
     Corner::TopRight,
     Corner::BottomLeft,

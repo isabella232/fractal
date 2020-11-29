@@ -5,7 +5,6 @@ use fractal_api::reqwest;
 use gio::prelude::*;
 
 use std::sync::Mutex;
-use std::time::Duration;
 
 // Special URI used by gio to indicate no proxy
 const PROXY_DIRECT_URI: &str = "direct://";
@@ -119,7 +118,7 @@ impl Client {
     ) -> fractal_api::reqwest::blocking::Client {
         builder
             .gzip(true)
-            .timeout(Duration::from_secs(globals::TIMEOUT))
+            .timeout(globals::TIMEOUT)
             .build()
             .expect("Couldn't create a http client")
     }

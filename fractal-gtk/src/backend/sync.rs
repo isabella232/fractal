@@ -27,8 +27,7 @@ use serde_json::value::from_value;
 use std::{
     collections::HashMap,
     convert::{TryFrom, TryInto},
-    thread,
-    time::{self, Duration},
+    thread, time,
 };
 
 use super::{remove_matrix_access_token_if_present, HandleError};
@@ -176,8 +175,7 @@ pub fn sync(
         set_presence: Default::default(),
     };
 
-    let client_builder_timeout =
-        Client::builder().timeout(Some(Duration::from_secs(globals::TIMEOUT) + timeout));
+    let client_builder_timeout = Client::builder().timeout(Some(globals::TIMEOUT + timeout));
 
     let query = ProxySettings::current().and_then(|proxy_settings| {
         let client = proxy_settings

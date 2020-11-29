@@ -2,23 +2,23 @@ use directories::ProjectDirs;
 use fractal_api::url::Url;
 use lazy_static::lazy_static;
 use regex::Regex;
-use std::path::PathBuf;
+use std::{path::PathBuf, time::Duration};
 
-pub static TIMEOUT: u64 = 80;
-pub static PAGE_LIMIT: i32 = 40;
-pub static ROOM_DIRECTORY_LIMIT: i32 = 20;
-pub static DEVICE_NAME: &str = "Fractal";
+pub const TIMEOUT: Duration = Duration::from_secs(80);
+pub const PAGE_LIMIT: i32 = 40;
+pub const ROOM_DIRECTORY_LIMIT: i32 = 20;
+pub const DEVICE_NAME: &str = "Fractal";
 
-pub static CACHE_SIZE: usize = 40;
-pub static MSG_ICON_SIZE: i32 = 40;
-pub static USERLIST_ICON_SIZE: i32 = 30;
-pub static PILL_ICON_SIZE: i32 = 18;
-pub static MINUTES_TO_SPLIT_MSGS: i64 = 30;
-pub static PLACEHOLDER_TEXT: &str = "Matrix username, email or phone number";
-pub static RIOT_REGISTER_URL: &str = "https://riot.im/app/#/register";
+pub const CACHE_SIZE: usize = 40;
+pub const MSG_ICON_SIZE: i32 = 40;
+pub const USERLIST_ICON_SIZE: i32 = 30;
+pub const PILL_ICON_SIZE: i32 = 18;
+pub const MINUTES_TO_SPLIT_MSGS: i64 = 30;
+pub const PLACEHOLDER_TEXT: &str = "Matrix username, email or phone number";
+pub const RIOT_REGISTER_URL: &str = "https://riot.im/app/#/register";
 
-pub static MAX_IMAGE_SIZE: (i32, i32) = (600, 400);
-pub static MAX_STICKER_SIZE: (i32, i32) = (200, 130);
+pub const MAX_IMAGE_SIZE: (i32, i32) = (600, 400);
+pub const MAX_STICKER_SIZE: (i32, i32) = (200, 130);
 
 lazy_static! {
     pub static ref DEFAULT_HOMESERVER: Url =
