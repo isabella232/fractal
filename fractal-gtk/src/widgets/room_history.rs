@@ -8,12 +8,12 @@ use std::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
 
-use crate::appop::{AppOp, UserInfoCache};
+use crate::appop::UserInfoCache;
+use crate::uibuilder::UI;
 use crate::uitypes::MessageContent;
 use crate::uitypes::RowType;
 use crate::util::i18n::i18n;
 
-use crate::api::r0::AccessToken;
 use crate::globals;
 use crate::widgets;
 use crate::widgets::{PlayerExt, VideoPlayerWidget};
@@ -270,16 +270,14 @@ impl Element {
 pub struct RoomHistory {
     /* Contains a list of msg ids to keep track of the displayed messages */
     rows: Rc<RefCell<List>>,
-    access_token: AccessToken,
     source_id: Rc<RefCell<Option<source::SourceId>>>,
     queue: Rc<RefCell<VecDeque<MessageContent>>>,
     edit_buffer: Rc<RefCell<VecDeque<MessageContent>>>,
 }
 
 impl RoomHistory {
-    pub fn new(actions: SimpleActionGroup, room_id: RoomId, op: &AppOp) -> Option<RoomHistory> {
-        let history_container = op
-            .ui
+    pub fn new(actions: SimpleActionGroup, room_id: RoomId, ui: &UI) -> Option<RoomHistory> {
+        let history_container = ui
             .builder
             .get_object::<gtk::Box>("history_container")
             .expect("Can't find history_container in ui file.");
@@ -295,10 +293,8 @@ impl RoomHistory {
 
         /* Add the action groupe to the room_history */
         listbox.insert_action_group("message", Some(&actions));
-        let login_data = op.login_data.clone()?;
         let mut rh = RoomHistory {
             rows: Rc::new(RefCell::new(List::new(scroll))),
-            access_token: login_data.access_token,
             source_id: Rc::new(RefCell::new(None)),
             queue: Rc::new(RefCell::new(VecDeque::new())),
             edit_buffer: Rc::new(RefCell::new(VecDeque::new())),
@@ -461,7 +457,6 @@ impl RoomHistory {
         } else {
             /* Lazy load initial messages */
             let source_id = self.source_id.clone();
-            let access_token = self.access_token.clone();
             *self.source_id.borrow_mut() = Some(glib::idle_add_local(move || {
                 let mut data = queue.borrow_mut();
                 let mut edits = edit_buffer.borrow_mut();
@@ -521,7 +516,6 @@ impl RoomHistory {
                         user_info_cache.clone(),
                         item.clone(),
                         has_header,
-                        access_token.clone(),
                         &rows,
                     ));
                     rows.borrow_mut().add_top(Element::Message(item));
@@ -596,7 +590,6 @@ impl RoomHistory {
             user_info_cache,
             item.clone(),
             has_header,
-            self.access_token.clone(),
             &self.rows,
         );
         item.widget = Some(b);
@@ -633,7 +626,6 @@ impl RoomHistory {
             user_info_cache,
             item.clone(),
             msg_widget.header,
-            self.access_token.clone(),
             &self.rows,
         ));
         rows.replace_item(i, Element::Message(item));
@@ -744,13 +736,11 @@ fn create_row(
     user_info_cache: UserInfoCache,
     row: MessageContent,
     has_header: bool,
-    access_token: AccessToken,
     rows: &Rc<RefCell<List>>,
 ) -> widgets::MessageBox {
-    let server_url = session_client.homeserver().clone();
     /* we need to create a message with the username, so that we don't have to pass
      * all information to the widget creating each row */
-    let mut mb = widgets::MessageBox::new(server_url, access_token);
+    let mut mb = widgets::MessageBox::new();
     mb.create(
         session_client,
         user_info_cache,

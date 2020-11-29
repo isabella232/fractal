@@ -20,7 +20,6 @@ use url::Url;
 pub struct Image {
     pub path: Either<Url, PathBuf>,
     pub local_path: Arc<Mutex<Option<PathBuf>>>,
-    pub server_url: Url,
     pub max_size: Option<(i32, i32)>,
     pub widget: DrawingArea,
     pub pixbuf: Arc<Mutex<Option<Pixbuf>>>,
@@ -46,7 +45,7 @@ impl Image {
     ///           .size(Some((50, 50)))
     ///           .build();
     /// ```
-    pub fn new(server_url: Url, path: Either<Url, PathBuf>) -> Image {
+    pub fn new(path: Either<Url, PathBuf>) -> Image {
         let da = DrawingArea::new();
         da.add_events(gdk::EventMask::ENTER_NOTIFY_MASK);
         da.add_events(gdk::EventMask::LEAVE_NOTIFY_MASK);
@@ -65,7 +64,6 @@ impl Image {
         Image {
             path,
             local_path: Arc::new(Mutex::new(None)),
-            server_url,
             max_size: None,
             widget: da,
             pixbuf: Arc::new(Mutex::new(None)),

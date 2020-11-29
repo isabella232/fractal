@@ -1,7 +1,6 @@
 use crate::util::i18n::i18n;
 use itertools::Itertools;
 
-use crate::api::r0::AccessToken;
 use crate::appop::UserInfoCache;
 use chrono::prelude::*;
 use either::Either;
@@ -10,7 +9,6 @@ use gtk::{prelude::*, ButtonExt, ContainerExt, LabelExt, Overlay, WidgetExt};
 use matrix_sdk::Client as MatrixClient;
 use std::cmp::max;
 use std::rc::Rc;
-use url::Url;
 
 use crate::util::markup_text;
 
@@ -30,8 +28,6 @@ use crate::widgets::{AudioPlayerWidget, PlayerExt, VideoPlayerWidget};
 /* A message row in the room history */
 #[derive(Clone, Debug)]
 pub struct MessageBox {
-    access_token: AccessToken,
-    server_url: Url,
     username: gtk::Label,
     pub username_event_box: gtk::EventBox,
     eventbox: gtk::EventBox,
@@ -43,7 +39,7 @@ pub struct MessageBox {
 }
 
 impl MessageBox {
-    pub fn new(server_url: Url, access_token: AccessToken) -> MessageBox {
+    pub fn new() -> MessageBox {
         let username = gtk::Label::new(None);
         let eb = gtk::EventBox::new();
         let eventbox = gtk::EventBox::new();
@@ -55,8 +51,6 @@ impl MessageBox {
         gesture.set_touch_only(true);
 
         MessageBox {
-            access_token,
-            server_url,
             username,
             username_event_box: eb,
             eventbox,
@@ -413,7 +407,7 @@ impl MessageBox {
             .or_else(|| Some(Either::Right(msg.local_path.clone()?)));
 
         if let Some(img_path) = img {
-            let image = widgets::image::Image::new(self.server_url.clone(), img_path)
+            let image = widgets::image::Image::new(img_path)
                 .size(Some(globals::MAX_IMAGE_SIZE))
                 .build(session_client);
 
@@ -431,7 +425,7 @@ impl MessageBox {
     fn build_room_msg_sticker(&self, session_client: MatrixClient, msg: &Message) -> gtk::Box {
         let bx = gtk::Box::new(gtk::Orientation::Horizontal, 0);
         if let Some(url) = msg.url.clone() {
-            let image = widgets::image::Image::new(self.server_url.clone(), Either::Left(url))
+            let image = widgets::image::Image::new(Either::Left(url))
                 .size(Some(globals::MAX_STICKER_SIZE))
                 .build(session_client);
             image.widget.set_tooltip_text(Some(&msg.body[..]));

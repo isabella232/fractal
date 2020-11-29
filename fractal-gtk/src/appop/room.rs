@@ -303,7 +303,7 @@ impl AppOp {
             self.ui.clone(),
             back_history,
         );
-        let history = widgets::RoomHistory::new(actions, active_room.clone(), self);
+        let history = widgets::RoomHistory::new(actions, active_room.clone(), &self.ui);
         self.history = if let Some(mut history) = history {
             history.create(
                 login_data.session_client,

@@ -1,4 +1,3 @@
-use crate::api::r0::AccessToken;
 use crate::backend::{room, HandleError};
 use glib::clone;
 use matrix_sdk::identifiers::UserId;
@@ -9,7 +8,6 @@ use std::rc::Rc;
 use crate::util::i18n::ni18n_f;
 use gio::prelude::*;
 use gtk::prelude::*;
-use url::Url;
 
 use crate::actions;
 use crate::actions::{ButtonState, StateExt};
@@ -27,8 +25,6 @@ pub struct RoomSettings {
     uid: UserId,
     builder: gtk::Builder,
     members_list: Option<MembersList>,
-    server_url: Url,
-    access_token: AccessToken,
     switch_handler: Option<Rc<glib::SignalHandlerId>>,
 }
 
@@ -38,9 +34,7 @@ impl RoomSettings {
         window: &gtk::Window,
         uid: UserId,
         room: Room,
-        access_token: AccessToken,
     ) -> RoomSettings {
-        let server_url = session_client.homeserver().clone();
         let builder = gtk::Builder::new();
 
         builder
@@ -60,8 +54,6 @@ impl RoomSettings {
             uid,
             builder,
             members_list: None,
-            server_url,
-            access_token,
             switch_handler: None,
         }
     }

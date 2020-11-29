@@ -70,11 +70,7 @@ impl AppOp {
         let login_data = self.login_data.clone()?;
         let messages = self.history.as_ref()?.get_listbox();
         if let Some(ui_msg) = self.create_new_room_message(&msg) {
-            let mb = widgets::MessageBox::new(
-                login_data.session_client.homeserver().clone(),
-                login_data.access_token,
-            )
-            .tmpwidget(
+            let mb = widgets::MessageBox::new().tmpwidget(
                 login_data.session_client.clone(),
                 self.user_info_cache.clone(),
                 &ui_msg,
@@ -114,11 +110,7 @@ impl AppOp {
         let mut widgets = vec![];
         for t in self.msg_queue.iter().rev().filter(|m| m.msg.room == r.id) {
             if let Some(ui_msg) = self.create_new_room_message(&t.msg) {
-                let mb = widgets::MessageBox::new(
-                    login_data.session_client.homeserver().clone(),
-                    login_data.access_token.clone(),
-                )
-                .tmpwidget(
+                let mb = widgets::MessageBox::new().tmpwidget(
                     login_data.session_client.clone(),
                     self.user_info_cache.clone(),
                     &ui_msg,

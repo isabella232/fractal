@@ -30,14 +30,7 @@ impl AppOp {
         {
             let room_id = self.active_room.as_ref()?;
             let room = self.rooms.get(room_id)?;
-            let mut panel = widgets::MediaViewer::new(
-                main_window,
-                room,
-                &msg,
-                login_data.session_client.homeserver().clone(),
-                login_data.access_token,
-                login_data.uid,
-            );
+            let mut panel = widgets::MediaViewer::new(main_window, room, &msg, login_data.uid);
             panel.display_media_viewer(login_data.session_client.clone(), msg);
             let (body, header) = panel.create(login_data.session_client.clone())?;
             *self.media_viewer.borrow_mut() = Some(panel);

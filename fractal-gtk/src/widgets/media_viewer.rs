@@ -1,4 +1,3 @@
-use crate::api::r0::AccessToken;
 use crate::app::RUNTIME;
 use crate::backend::media;
 use glib::clone;
@@ -126,8 +125,6 @@ enum Widget {
 struct Data {
     builder: gtk::Builder,
     main_window: gtk::Window,
-    server_url: Url,
-    access_token: AccessToken,
     uid: UserId,
     admins: HashMap<UserId, i64>,
 
@@ -325,7 +322,7 @@ impl Data {
 
         match msg.mtype.as_ref() {
             "m.image" => {
-                let image = image::Image::new(self.server_url.clone(), Either::Left(url))
+                let image = image::Image::new(Either::Left(url))
                     .shrink_to_fit(true)
                     .center(true)
                     .build(session_client);
@@ -588,8 +585,6 @@ impl MediaViewer {
         main_window: gtk::Window,
         room: &Room,
         current_media_msg: &Message,
-        server_url: Url,
-        access_token: AccessToken,
         uid: UserId,
     ) -> MediaViewer {
         let builder = gtk::Builder::new();
@@ -625,8 +620,6 @@ impl MediaViewer {
                 no_more_media: false,
                 widget: Widget::None,
                 builder: builder.clone(),
-                server_url,
-                access_token,
                 uid,
                 admins: room.admins.clone(),
                 main_window,
@@ -679,11 +672,10 @@ impl MediaViewer {
 
         match media_msg.mtype.as_ref() {
             "m.image" => {
-                let image =
-                    image::Image::new(self.data.borrow().server_url.clone(), Either::Left(url))
-                        .shrink_to_fit(true)
-                        .center(true)
-                        .build(session_client);
+                let image = image::Image::new(Either::Left(url))
+                    .shrink_to_fit(true)
+                    .center(true)
+                    .build(session_client);
 
                 media_container.add(&image.widget);
                 media_container.show_all();
