@@ -173,7 +173,7 @@ pub fn download_to_cache(
         tx,
     );
 
-    gtk::timeout_add(50, move || match rx.try_recv() {
+    glib::timeout_add_local(50, move || match rx.try_recv() {
         Err(TryRecvError::Empty) => Continue(true),
         Err(TryRecvError::Disconnected) => Continue(false),
         Ok(_resp) => {
@@ -196,7 +196,7 @@ pub fn download_to_cache_username(
         let query = user::get_username_async(server_url, access_token, uid);
         ctx.send(query).expect_log("Connection closed");
     });
-    gtk::timeout_add(50, move || match rx.try_recv() {
+    glib::timeout_add_local(50, move || match rx.try_recv() {
         Err(TryRecvError::Empty) => Continue(true),
         Err(TryRecvError::Disconnected) => Continue(false),
         Ok(username) => {
@@ -227,7 +227,7 @@ pub fn download_to_cache_username_emote(
         ctx.send(query).expect_log("Connection closed");
     });
     let text = text.to_string();
-    gtk::timeout_add(50, move || match rx.try_recv() {
+    glib::timeout_add_local(50, move || match rx.try_recv() {
         Err(TryRecvError::Empty) => Continue(true),
         Err(TryRecvError::Disconnected) => Continue(false),
         Ok(username) => {

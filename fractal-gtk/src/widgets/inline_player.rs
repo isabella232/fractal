@@ -512,7 +512,7 @@ impl<T: MediaPlayer + 'static> PlayerExt for T {
         let (tx, rx): (Sender<media::MediaResult>, Receiver<media::MediaResult>) = channel();
         media::get_media_async(thread_pool, server_url, media_url, tx);
         let local_path = player.get_local_path_access();
-        gtk::timeout_add(
+        glib::timeout_add_local(
             50,
             clone!(@strong player, @strong bx => move || {
                 match rx.try_recv() {

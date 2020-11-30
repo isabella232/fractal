@@ -148,7 +148,7 @@ pub fn new(
 
                 media::get_media_async(thread_pool.clone(), server_url.clone(), url, tx);
 
-                gtk::timeout_add(
+                glib::timeout_add_local(
                     50,
                     clone!(
                         @strong name,
@@ -191,7 +191,7 @@ pub fn new(
 
                 media::get_media_async(thread_pool.clone(), server_url.clone(), url, tx);
 
-                gtk::timeout_add(50, move || match rx.try_recv() {
+                glib::timeout_add_local(50, move || match rx.try_recv() {
                     Err(TryRecvError::Empty) => Continue(true),
                     Err(TryRecvError::Disconnected) => {
                         let msg = i18n("Could not download the file");

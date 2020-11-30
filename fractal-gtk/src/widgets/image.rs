@@ -286,7 +286,7 @@ impl Image {
                 let da = self.widget.clone();
 
                 da.get_style_context().add_class("image-spinner");
-                gtk::timeout_add(50, move || match rx.try_recv() {
+                glib::timeout_add_local(50, move || match rx.try_recv() {
                     Err(TryRecvError::Empty) => Continue(true),
                     Err(TryRecvError::Disconnected) => Continue(false),
                     Ok(Ok(fname)) => {

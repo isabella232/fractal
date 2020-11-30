@@ -76,7 +76,7 @@ impl AppOp {
 
         let room_id = room_id.to_string();
         let id = id.to_string();
-        gtk::timeout_add(
+        glib::timeout_add_local(
             50,
             clone!(@weak app => @default-return Continue(false), move || match rx.try_recv() {
                 Err(TryRecvError::Empty) => Continue(true),

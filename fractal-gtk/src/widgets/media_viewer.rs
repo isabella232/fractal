@@ -1036,7 +1036,7 @@ fn load_more_media(thread_pool: ThreadPool, data: Rc<RefCell<Data>>, builder: gt
     );
 
     let ui = builder.clone();
-    gtk::timeout_add(
+    glib::timeout_add_local(
         50,
         clone!(
         @weak data
