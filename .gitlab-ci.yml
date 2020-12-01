@@ -50,6 +50,8 @@ pages:
     tags:
         - flatpak
     script:
+        # Clean out the remnants from the previous stages
+        - rm -rf .flatpak-builder/ flatpak_app/ app/
         - flatpak-builder --user --disable-rofiles-fuse --build-only flatpak_app ${MANIFEST_PATH}
         - flatpak-builder --user --disable-rofiles-fuse --force-clean --build-shell=${FLATPAK_MODULE} app ${MANIFEST_PATH} 'meson _build && ninja -C _build doc'
 
@@ -60,4 +62,5 @@ pages:
           - public
     only:
         - master
+        - wip/cdavis/ci-fix
     <<: *flatpak_cache
