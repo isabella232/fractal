@@ -9,6 +9,7 @@ use matrix_sdk::api::r0::filter::LazyLoadOptions;
 use matrix_sdk::api::r0::filter::RoomEventFilter;
 use matrix_sdk::api::r0::filter::RoomFilter;
 use matrix_sdk::api::r0::sync::sync_events::Filter;
+use matrix_sdk::api::r0::sync::sync_events::JoinedRoom;
 use matrix_sdk::api::r0::sync::sync_events::Response;
 use matrix_sdk::api::r0::sync::sync_events::UnreadNotificationsCount;
 use matrix_sdk::assign;
@@ -24,7 +25,10 @@ use log::{error, warn};
 use matrix_sdk::identifiers::{EventId, RoomId, UserId};
 use matrix_sdk::Client as MatrixClient;
 use matrix_sdk::Error as MatrixError;
-use std::{collections::HashMap, time::Duration};
+use std::{
+    collections::{BTreeMap, HashMap},
+    time::Duration,
+};
 
 use super::{get_ruma_client_error, remove_matrix_access_token_if_present, HandleError};
 use crate::app::App;
@@ -53,25 +57,24 @@ impl HandleError for SyncError {
     }
 }
 
-pub enum SyncRet {
-    NoSince {
-        rooms: Vec<Room>,
-        default: Option<Room>,
-        next_batch: String,
-    },
-    WithSince {
-        update_rooms: Vec<Room>,
-        room_notifications: HashMap<RoomId, UnreadNotificationsCount>,
-        update_rooms_2: Vec<Room>,
-        other: Vec<RoomElement>,
-        next_batch: String,
-    },
+pub struct SyncRet {
+    // Only new rooms if it's an initial sync
+    pub rooms: Vec<Room>,
+    pub next_batch: String,
+    // None if it's an initial sync
+    pub updates: Option<SyncUpdates>,
+}
+
+pub struct SyncUpdates {
+    pub room_notifications: HashMap<RoomId, UnreadNotificationsCount>,
+    // TODO: Typing events should become RoomElements
+    pub typing_events_as_rooms: Vec<Room>,
+    pub new_events: Vec<RoomElement>,
 }
 
 pub async fn sync(
     session_client: MatrixClient,
     user_id: UserId,
-    join_to_room: Option<RoomId>,
     since: Option<String>,
     initial: bool,
     number_tries: u32,
@@ -115,12 +118,7 @@ pub async fn sync(
     };
 
     match session_client.sync_once(sync_settings).await {
-        Ok(response) => Ok(transform_sync_response(
-            response,
-            since.is_some(),
-            user_id,
-            join_to_room,
-        )),
+        Ok(response) => Ok(transform_sync_response(response, since.is_some(), user_id)),
         Err(err) => {
             // we wait if there's an error to avoid 100% CPU
             // we wait even longer, if it's a 429 (Too Many Requests) error
@@ -141,47 +139,25 @@ pub async fn sync(
     }
 }
 
-fn transform_sync_response(
-    response: Response,
-    has_since: bool,
-    user_id: UserId,
-    join_to_room: Option<RoomId>,
-) -> SyncRet {
-    if has_since {
-        transform_sync_response_with_since(response, user_id)
-    } else {
-        transform_sync_response_no_since(response, user_id, join_to_room)
-    }
-}
-
-fn transform_sync_response_no_since(
-    response: Response,
-    user_id: UserId,
-    join_to_room: Option<RoomId>,
-) -> SyncRet {
-    let rooms = Room::from_sync_response(&response, user_id);
-    let default = join_to_room.and_then(|jtr| rooms.iter().find(|x| x.id == jtr).cloned());
-
-    SyncRet::NoSince {
-        rooms,
-        default,
+fn transform_sync_response(response: Response, has_since: bool, user_id: UserId) -> SyncRet {
+    SyncRet {
+        rooms: Room::from_sync_response(&response, user_id.clone()),
         next_batch: response.next_batch,
+        updates: if !has_since {
+            None
+        } else {
+            Some(get_sync_updates(&response.rooms.join, &user_id))
+        },
     }
 }
 
-fn transform_sync_response_with_since(response: Response, user_id: UserId) -> SyncRet {
-    let join = &response.rooms.join;
-
-    SyncRet::WithSince {
-        // New rooms
-        update_rooms: Room::from_sync_response(&response, user_id.clone()),
-        // Room notifications
+fn get_sync_updates(join: &BTreeMap<RoomId, JoinedRoom>, user_id: &UserId) -> SyncUpdates {
+    SyncUpdates {
         room_notifications: join
             .iter()
             .map(|(k, room)| (k.clone(), room.unread_notifications.clone()))
             .collect(),
-        // Typing notifications
-        update_rooms_2: join
+        typing_events_as_rooms: join
             .iter()
             .map(|(k, room)| {
                 let typing: Vec<Member> = room.ephemeral.events
@@ -199,7 +175,7 @@ fn transform_sync_response_with_since(response: Response, user_id: UserId) -> Sy
                     })
                     .flatten()
                     // ignoring the user typing notifications
-                    .filter(|user| *user != user_id)
+                    .filter(|user| user != user_id)
                     .map(|uid| Member {
                         uid,
                         alias: None,
@@ -213,8 +189,7 @@ fn transform_sync_response_with_since(response: Response, user_id: UserId) -> Sy
                 }
             })
             .collect(),
-        // Other events
-        other: join
+        new_events: join
             .iter()
             .flat_map(|(room_id, room)| {
                 let room_id = room_id.clone();
@@ -259,6 +234,5 @@ fn transform_sync_response_with_since(response: Response, user_id: UserId) -> Sy
                 }
             })
             .collect(),
-        next_batch: response.next_batch,
     }
 }
