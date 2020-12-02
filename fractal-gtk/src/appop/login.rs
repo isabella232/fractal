@@ -57,12 +57,11 @@ impl AppOp {
             }));
 
         self.set_state(AppState::NoRoom);
-        self.since = None;
         self.get_username();
 
         // initial sync, we're shoing some feedback to the user
-        self.initial_sync(true);
-        self.sync(true, 0);
+        self.show_initial_sync();
+        self.setup_sync();
         self.init_protocols();
     }
 
@@ -71,8 +70,6 @@ impl AppOp {
         if cache::get().destroy().is_err() {
             error!("Error removing cache file");
         }
-
-        self.syncing = false;
 
         self.set_state(AppState::Login);
         self.login_data = None;

@@ -75,7 +75,6 @@ app_sources = files(
   'backend/mod.rs',
   'backend/register.rs',
   'backend/room.rs',
-  'backend/sync.rs',
   'backend/user.rs',
   'cache/mod.rs',
   'cache/state.rs',

@@ -79,7 +79,6 @@ pub struct AppOp {
     pub app_runtime: AppRuntime,
     pub ui: ui::UI,
 
-    pub syncing: bool, // TODO: Replace with a Mutex
     pub msg_queue: Vec<TmpMsg>,
     pub sending_message: bool,
 
@@ -114,7 +113,6 @@ impl AppOp {
             join_to_room: Arc::new(Mutex::new(None)),
             rooms: HashMap::new(),
             login_data: None,
-            syncing: false,
             msg_queue: vec![],
             sending_message: false,
             state: AppState::Login,

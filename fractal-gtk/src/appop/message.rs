@@ -655,9 +655,6 @@ async fn send_msg_and_manage(session_client: MatrixClient, msg: Message) {
     match room::send_msg(session_client, msg).await {
         Ok(evid) => {
             APPOP!(msg_sent, (evid));
-            let initial = false;
-            let number_tries = 0;
-            APPOP!(sync, (initial, number_tries));
         }
         Err(err) => {
             err.handle_error();

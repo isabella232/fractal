@@ -25,7 +25,6 @@ pub mod directory;
 pub mod media;
 pub mod register;
 pub mod room;
-pub mod sync;
 pub mod user;
 
 lazy_static! {
