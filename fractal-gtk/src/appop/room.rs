@@ -174,7 +174,7 @@ impl AppOp {
     }
 
     pub fn set_join_to_room(&mut self, jtr: Option<RoomId>) {
-        self.join_to_room = jtr;
+        *self.join_to_room.lock().unwrap() = jtr;
     }
 
     pub fn set_active_room_by_id(&mut self, id: RoomId) {

@@ -95,11 +95,11 @@ impl AppOp {
                             }
                         } else {
                             let rooms = sync_ret.rooms;
-                            let jtr = join_to_room.and_then(|jtr| {
+                            let jtr = join_to_room.lock().unwrap().as_ref().and_then(|jtr| {
                                 rooms
                                     .iter()
                                     .map(|room| &room.id)
-                                    .find(|rid| **rid == jtr)
+                                    .find(|rid| *rid == jtr)
                                     .cloned()
                             });
                             APPOP!(set_rooms, (rooms, clear_room_list));

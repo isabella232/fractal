@@ -86,7 +86,7 @@ pub struct AppOp {
     pub login_data: Option<LoginData>,
 
     pub active_room: Option<RoomId>,
-    pub join_to_room: Option<RoomId>,
+    pub join_to_room: Arc<Mutex<Option<RoomId>>>,
     pub rooms: RoomList,
     unread_rooms: usize,
     pub unsent_messages: HashMap<RoomId, (String, i32)>,
@@ -111,7 +111,7 @@ impl AppOp {
             app_runtime,
             ui,
             active_room: None,
-            join_to_room: None,
+            join_to_room: Arc::new(Mutex::new(None)),
             rooms: HashMap::new(),
             login_data: None,
             syncing: false,
