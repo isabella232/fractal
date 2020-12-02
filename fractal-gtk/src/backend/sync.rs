@@ -1,34 +1,22 @@
 use crate::globals;
-use crate::model::{
-    member::Member,
-    room::{Room, RoomMembership, RoomTag},
-};
+use crate::model::room::Room;
+use log::error;
 use matrix_sdk::api::r0::filter::Filter as EventFilter;
 use matrix_sdk::api::r0::filter::FilterDefinition;
 use matrix_sdk::api::r0::filter::LazyLoadOptions;
 use matrix_sdk::api::r0::filter::RoomEventFilter;
 use matrix_sdk::api::r0::filter::RoomFilter;
 use matrix_sdk::api::r0::sync::sync_events::Filter;
-use matrix_sdk::api::r0::sync::sync_events::JoinedRoom;
 use matrix_sdk::api::r0::sync::sync_events::Response;
 use matrix_sdk::api::r0::sync::sync_events::UnreadNotificationsCount;
 use matrix_sdk::assign;
 use matrix_sdk::events::room::member::MemberEventContent;
-use matrix_sdk::events::AnyEphemeralRoomEventContent;
-use matrix_sdk::events::AnySyncMessageEvent;
-use matrix_sdk::events::AnySyncRoomEvent;
-use matrix_sdk::events::AnySyncStateEvent;
 use matrix_sdk::events::StateEvent;
-use matrix_sdk::SyncSettings;
-
-use log::{error, warn};
-use matrix_sdk::identifiers::{EventId, RoomId, UserId};
+use matrix_sdk::identifiers::{EventId, RoomId};
 use matrix_sdk::Client as MatrixClient;
 use matrix_sdk::Error as MatrixError;
-use std::{
-    collections::{BTreeMap, HashMap},
-    time::Duration,
-};
+use matrix_sdk::SyncSettings;
+use std::{collections::HashMap, time::Duration};
 
 use super::{get_ruma_client_error, remove_matrix_access_token_if_present, HandleError};
 use crate::app::App;
@@ -74,10 +62,9 @@ pub struct SyncUpdates {
 
 pub async fn sync(
     session_client: MatrixClient,
-    user_id: UserId,
     since: Option<String>,
     number_tries: u32,
-) -> Result<SyncRet, SyncError> {
+) -> Result<Response, SyncError> {
     let initial = since.is_none();
     let timeline_not_types = [String::from("m.call.*")];
     let timeline_types = [String::from("m.room.message"), String::from("m.sticker")];
@@ -118,7 +105,7 @@ pub async fn sync(
     };
 
     match session_client.sync_once(sync_settings).await {
-        Ok(response) => Ok(transform_sync_response(response, since.is_some(), user_id)),
+        Ok(response) => Ok(response),
         Err(err) => {
             // we wait if there's an error to avoid 100% CPU
             // we wait even longer, if it's a 429 (Too Many Requests) error
@@ -136,103 +123,5 @@ pub async fn sync(
 
             Err(SyncError(err, number_tries))
         }
-    }
-}
-
-fn transform_sync_response(response: Response, has_since: bool, user_id: UserId) -> SyncRet {
-    SyncRet {
-        rooms: Room::from_sync_response(&response, user_id.clone()),
-        next_batch: response.next_batch,
-        updates: if !has_since {
-            None
-        } else {
-            Some(get_sync_updates(&response.rooms.join, &user_id))
-        },
-    }
-}
-
-fn get_sync_updates(join: &BTreeMap<RoomId, JoinedRoom>, user_id: &UserId) -> SyncUpdates {
-    SyncUpdates {
-        room_notifications: join
-            .iter()
-            .map(|(k, room)| (k.clone(), room.unread_notifications.clone()))
-            .collect(),
-        typing_events_as_rooms: join
-            .iter()
-            .map(|(k, room)| {
-                let typing: Vec<Member> = room.ephemeral.events
-                    .iter()
-                    .map(|ev| ev.deserialize())
-                    .inspect(|result_ev| if let Err(err) = result_ev {
-                        warn!("Bad event: {}", err);
-                    })
-                    .filter_map(Result::ok)
-                    .filter_map(|event| match event.content() {
-                        AnyEphemeralRoomEventContent::Typing(content) => {
-                            Some(content.user_ids)
-                        }
-                        _ => None,
-                    })
-                    .flatten()
-                    // ignoring the user typing notifications
-                    .filter(|user| user != user_id)
-                    .map(|uid| Member {
-                        uid,
-                        alias: None,
-                        avatar: None,
-                    })
-                    .collect();
-
-                Room {
-                    typing_users: typing,
-                    ..Room::new(k.clone(), RoomMembership::Joined(RoomTag::None))
-                }
-            })
-            .collect(),
-        new_events: join
-            .iter()
-            .flat_map(|(room_id, room)| {
-                let room_id = room_id.clone();
-                room.timeline
-                    .events
-                    .iter()
-                    .map(move |ev| Ok((room_id.clone(), ev.deserialize()?)))
-            })
-            .inspect(|result_ev: &Result<_, serde_json::Error>| {
-                if let Err(err) = result_ev {
-                    warn!("Bad event: {}", err);
-                }
-            })
-            .filter_map(Result::ok)
-            .filter_map(|(room_id, event)| {
-                match event {
-                    AnySyncRoomEvent::State(AnySyncStateEvent::RoomName(ev)) => {
-                        let name = ev.content.name().map(Into::into).unwrap_or_default();
-                        Some(RoomElement::Name(room_id, name))
-                    }
-                    AnySyncRoomEvent::State(AnySyncStateEvent::RoomTopic(ev)) => {
-                        Some(RoomElement::Topic(room_id, ev.content.topic))
-                    }
-                    AnySyncRoomEvent::State(AnySyncStateEvent::RoomAvatar(_)) => {
-                        Some(RoomElement::NewAvatar(room_id))
-                    }
-                    AnySyncRoomEvent::State(AnySyncStateEvent::RoomMember(ev)) => {
-                        Some(RoomElement::MemberEvent(ev.into_full_event(room_id)))
-                    }
-                    AnySyncRoomEvent::Message(AnySyncMessageEvent::RoomRedaction(ev)) => {
-                        Some(RoomElement::RemoveMessage(room_id, ev.redacts))
-                    }
-                    AnySyncRoomEvent::Message(AnySyncMessageEvent::RoomMessage(_)) => None,
-                    AnySyncRoomEvent::Message(AnySyncMessageEvent::Sticker(_)) => {
-                        // This event is managed in the room list
-                        None
-                    }
-                    ev => {
-                        error!("EVENT NOT MANAGED: {:?}", ev);
-                        None
-                    }
-                }
-            })
-            .collect(),
     }
 }
