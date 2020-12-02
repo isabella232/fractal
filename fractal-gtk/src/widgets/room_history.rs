@@ -81,8 +81,8 @@ impl List {
     /// ### Panics
     /// Panics if `index >= len`.
     fn remove_item(&mut self, index: usize) {
-        self.list.remove(index);
-        self.view.remove(self.list.len() - index - 1);
+        self.view.remove(index);
+        self.list.remove(self.list.len() - index - 1);
     }
 
     /// Replaces the element at the given position in the history.
@@ -90,10 +90,10 @@ impl List {
     /// ### Panics
     /// Panics if `index >= len`.
     fn replace_item(&mut self, index: usize, element: Element) {
-        self.view.remove(self.list.len() - index - 1);
-        self.view
-            .insert(self.list.len() - index - 1, element.get_listbox_row());
-        self.list[index] = element;
+        self.view.remove(index);
+        self.view.insert(index, element.get_listbox_row());
+        let i_rev = self.list.len() - index - 1;
+        self.list[i_rev] = element;
     }
 
     fn create_new_message_divider(rows: Rc<RefCell<Self>>) -> widgets::NewMessageDivider {
