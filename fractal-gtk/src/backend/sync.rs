@@ -76,9 +76,9 @@ pub async fn sync(
     session_client: MatrixClient,
     user_id: UserId,
     since: Option<String>,
-    initial: bool,
     number_tries: u32,
 ) -> Result<SyncRet, SyncError> {
+    let initial = since.is_none();
     let timeline_not_types = [String::from("m.call.*")];
     let timeline_types = [String::from("m.room.message"), String::from("m.sticker")];
     let state_types = [String::from("m.room.*")];

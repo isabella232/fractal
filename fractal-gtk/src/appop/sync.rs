@@ -30,7 +30,6 @@ impl AppOp {
                     login_data.session_client,
                     login_data.uid,
                     since,
-                    initial,
                     number_tries,
                 )
                 .await;
