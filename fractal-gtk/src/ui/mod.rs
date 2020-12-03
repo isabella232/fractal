@@ -11,6 +11,7 @@ use url::Url;
 pub mod about;
 pub mod attach;
 pub mod connect;
+pub mod directory;
 
 pub struct UI {
     pub builder: gtk::Builder,

@@ -1,14 +1,9 @@
-use gtk::prelude::*;
-
-use crate::backend::{directory, HandleError};
-
+use super::RoomSearchPagination;
 use crate::app::RUNTIME;
 use crate::appop::AppOp;
-
-use crate::widgets;
-
-use super::RoomSearchPagination;
+use crate::backend::{directory, HandleError};
 use crate::model::room::Room;
+use gtk::prelude::*;
 use matrix_sdk::directory::RoomNetwork;
 use matrix_sdk::thirdparty::ProtocolInstance;
 
@@ -29,16 +24,7 @@ impl AppOp {
     }
 
     pub fn set_protocols(&self, protocols: Vec<ProtocolInstance>) {
-        let combo = self
-            .ui
-            .builder
-            .get_object::<gtk::ListStore>("protocol_model")
-            .expect("Can't find protocol_model in ui file.");
-        combo.clear();
-
-        for p in protocols {
-            combo.insert_with_values(None, &[0, 1], &[&p.desc, &p.network_id]);
-        }
+        self.ui.set_protocols(protocols);
     }
 
     pub fn search_rooms(&mut self) {
@@ -158,66 +144,19 @@ impl AppOp {
         self.search_rooms();
     }
 
-    pub fn append_directory_rooms(&mut self, rooms: Vec<Room>, rooms_since: Option<String>) {
+    pub fn append_directory_rooms(&mut self, mut rooms: Vec<Room>, rooms_since: Option<String>) {
+        let session_client =
+            unwrap_or_unit_return!(self.login_data.as_ref().map(|ld| ld.session_client.clone()));
+        rooms.sort_by_key(|a| -i128::from(a.n_members));
+        self.directory.extend(rooms.clone());
         self.directory_pagination = rooms_since
             .map(RoomSearchPagination::Next)
             .unwrap_or(RoomSearchPagination::NoMorePages);
 
-        let directory = self
-            .ui
-            .builder
-            .get_object::<gtk::ListBox>("directory_room_list")
-            .expect("Can't find directory_room_list in ui file.");
-        directory.get_style_context().add_class("room-directory");
-
-        let directory_stack = self
-            .ui
-            .builder
-            .get_object::<gtk::Stack>("directory_stack")
-            .expect("Can't find directory_stack in ui file.");
-        let directory_clamp = self
-            .ui
-            .builder
-            .get_object::<libhandy::Clamp>("directory_clamp")
-            .expect("Can't find directory_clamp in ui file.");
-        directory_stack.set_visible_child(&directory_clamp);
-
-        let mut sorted_rooms = rooms;
-        sorted_rooms.sort_by_key(|a| -i128::from(a.n_members));
-
-        for r in sorted_rooms.iter() {
-            self.directory.push(r.clone());
-            let rb = widgets::RoomBox::new(&r, &self);
-            let room_widget = rb.widget();
-            directory.add(&room_widget);
-        }
-
-        let q = self
-            .ui
-            .builder
-            .get_object::<gtk::Entry>("directory_search_entry")
-            .expect("Can't find directory_search_entry in ui file.");
-        q.set_sensitive(true);
+        self.ui.append_directory_rooms(rooms, session_client);
     }
 
     pub fn reset_directory_state(&self) {
-        let q = self
-            .ui
-            .builder
-            .get_object::<gtk::Entry>("directory_search_entry")
-            .expect("Can't find directory_search_entry in ui file.");
-        q.set_sensitive(true);
-
-        let directory_stack = self
-            .ui
-            .builder
-            .get_object::<gtk::Stack>("directory_stack")
-            .expect("Can't find directory_stack in ui file.");
-        let directory_clamp = self
-            .ui
-            .builder
-            .get_object::<libhandy::Clamp>("directory_clamp")
-            .expect("Can't find directory_clamp in ui file.");
-        directory_stack.set_visible_child(&directory_clamp);
+        self.ui.reset_directory_state();
     }
 }
