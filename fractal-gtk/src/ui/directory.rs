@@ -1,5 +1,6 @@
 use super::UI;
 use crate::app::RUNTIME;
+use crate::appop::RoomSearchPagination;
 use crate::backend::room;
 use crate::backend::HandleError;
 use crate::model::room::Room;
@@ -27,6 +28,83 @@ impl UI {
         for p in protocols {
             combo.insert_with_values(None, &[0, 1], &[&p.desc, &p.network_id]);
         }
+    }
+
+    pub fn get_search_rooms_query(
+        &self,
+        directory_pagination: RoomSearchPagination,
+    ) -> (Option<String>, Option<String>, Option<String>) {
+        let other_protocol_radio = self
+            .builder
+            .get_object::<gtk::RadioButton>("other_protocol_radio")
+            .expect("Can't find other_protocol_radio in ui file.");
+
+        let protocol: Option<String> = if other_protocol_radio.get_active() {
+            let protocol_combo = self
+                .builder
+                .get_object::<gtk::ComboBox>("protocol_combo")
+                .expect("Can't find protocol_combo in ui file.");
+
+            let protocol_model = self
+                .builder
+                .get_object::<gtk::ListStore>("protocol_model")
+                .expect("Can't find protocol_model in ui file.");
+
+            let active = protocol_combo.get_active().map_or(-1, |uint| uint as i32);
+
+            protocol_model
+                .iter_nth_child(None, active)
+                .and_then(|it| protocol_model.get_value(&it, 1).get().ok()?)
+        } else {
+            None
+        };
+
+        let other_homeserver_radio = self
+            .builder
+            .get_object::<gtk::RadioButton>("other_homeserver_radio")
+            .expect("Can't find other_homeserver_radio in ui file.");
+
+        let other_homeserver_url = self
+            .builder
+            .get_object::<gtk::EntryBuffer>("other_homeserver_url")
+            .expect("Can't find other_homeserver_url in ui file.");
+
+        let homeserver = if other_homeserver_radio.get_active() {
+            Some(other_homeserver_url.get_text())
+        } else {
+            None
+        };
+
+        let q = self
+            .builder
+            .get_object::<gtk::Entry>("directory_search_entry")
+            .expect("Can't find directory_search_entry in ui file.");
+
+        if !directory_pagination.has_more() {
+            let directory = self
+                .builder
+                .get_object::<gtk::ListBox>("directory_room_list")
+                .expect("Can't find directory_room_list in ui file.");
+            for ch in directory.get_children() {
+                directory.remove(&ch);
+            }
+
+            let directory_stack = self
+                .builder
+                .get_object::<gtk::Stack>("directory_stack")
+                .expect("Can't find directory_stack in ui file.");
+            let directory_spinner = self
+                .builder
+                .get_object::<gtk::Box>("directory_spinner")
+                .expect("Can't find directory_spinner in ui file.");
+            directory_stack.set_visible_child(&directory_spinner);
+
+            q.set_sensitive(false);
+        }
+
+        let search_term = Some(q.get_text().to_string()).filter(|s| !s.is_empty());
+
+        (protocol, homeserver, search_term)
     }
 
     pub fn append_directory_rooms(&mut self, rooms: Vec<Room>, session_client: MatrixClient) {

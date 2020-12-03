@@ -13,7 +13,7 @@ use crate::cache::CacheMap;
 
 use crate::util::i18n;
 
-use crate::model::room::{Room, RoomList};
+use crate::model::room::RoomList;
 use crate::passwd::PasswordStorage;
 
 use crate::actions::AppState;
@@ -100,8 +100,6 @@ pub struct AppOp {
     pub md_enabled: bool,
     search_type: SearchType,
 
-    pub directory: Vec<Room>,
-
     pub user_info_cache: UserInfoCache,
 }
 
@@ -129,8 +127,6 @@ impl AppOp {
             md_enabled: false,
             invitation_roomid: None,
             search_type: SearchType::Invite,
-
-            directory: vec![],
 
             user_info_cache: Arc::new(Mutex::new(
                 CacheMap::new().timeout(Duration::from_secs(60 * 60)),

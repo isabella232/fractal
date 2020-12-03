@@ -3,7 +3,6 @@ use crate::app::RUNTIME;
 use crate::appop::AppOp;
 use crate::backend::{directory, HandleError};
 use crate::model::room::Room;
-use gtk::prelude::*;
 use matrix_sdk::directory::RoomNetwork;
 use matrix_sdk::thirdparty::ProtocolInstance;
 
@@ -30,86 +29,11 @@ impl AppOp {
     pub fn search_rooms(&mut self) {
         let session_client =
             unwrap_or_unit_return!(self.login_data.as_ref().map(|ld| ld.session_client.clone()));
-        let other_protocol_radio = self
+
+        let (protocol, homeserver, search_term) = self
             .ui
-            .builder
-            .get_object::<gtk::RadioButton>("other_protocol_radio")
-            .expect("Can't find other_protocol_radio in ui file.");
+            .get_search_rooms_query(self.directory_pagination.clone());
 
-        let protocol: Option<String> = if other_protocol_radio.get_active() {
-            let protocol_combo = self
-                .ui
-                .builder
-                .get_object::<gtk::ComboBox>("protocol_combo")
-                .expect("Can't find protocol_combo in ui file.");
-
-            let protocol_model = self
-                .ui
-                .builder
-                .get_object::<gtk::ListStore>("protocol_model")
-                .expect("Can't find protocol_model in ui file.");
-
-            let active = protocol_combo.get_active().map_or(-1, |uint| uint as i32);
-
-            protocol_model
-                .iter_nth_child(None, active)
-                .and_then(|it| protocol_model.get_value(&it, 1).get().ok()?)
-        } else {
-            None
-        };
-
-        let q = self
-            .ui
-            .builder
-            .get_object::<gtk::Entry>("directory_search_entry")
-            .expect("Can't find directory_search_entry in ui file.");
-
-        let other_homeserver_radio = self
-            .ui
-            .builder
-            .get_object::<gtk::RadioButton>("other_homeserver_radio")
-            .expect("Can't find other_homeserver_radio in ui file.");
-
-        let other_homeserver_url = self
-            .ui
-            .builder
-            .get_object::<gtk::EntryBuffer>("other_homeserver_url")
-            .expect("Can't find other_homeserver_url in ui file.");
-
-        let homeserver = if other_homeserver_radio.get_active() {
-            Some(other_homeserver_url.get_text())
-        } else {
-            None
-        };
-
-        if !self.directory_pagination.has_more() {
-            let directory = self
-                .ui
-                .builder
-                .get_object::<gtk::ListBox>("directory_room_list")
-                .expect("Can't find directory_room_list in ui file.");
-            for ch in directory.get_children() {
-                directory.remove(&ch);
-            }
-
-            let directory_stack = self
-                .ui
-                .builder
-                .get_object::<gtk::Stack>("directory_stack")
-                .expect("Can't find directory_stack in ui file.");
-            let directory_spinner = self
-                .ui
-                .builder
-                .get_object::<gtk::Box>("directory_spinner")
-                .expect("Can't find directory_spinner in ui file.");
-            directory_stack.set_visible_child(&directory_spinner);
-
-            self.directory.clear();
-
-            q.set_sensitive(false);
-        }
-
-        let search_term = Some(q.get_text().to_string()).filter(|s| !s.is_empty());
         if let RoomSearchPagination::NoMorePages = self.directory_pagination {
             // there are no more rooms. We don't need to request for more
             return;
@@ -148,7 +72,6 @@ impl AppOp {
         let session_client =
             unwrap_or_unit_return!(self.login_data.as_ref().map(|ld| ld.session_client.clone()));
         rooms.sort_by_key(|a| -i128::from(a.n_members));
-        self.directory.extend(rooms.clone());
         self.directory_pagination = rooms_since
             .map(RoomSearchPagination::Next)
             .unwrap_or(RoomSearchPagination::NoMorePages);
