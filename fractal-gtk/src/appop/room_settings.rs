@@ -45,26 +45,25 @@ impl AppOp {
     }
 
     pub fn show_new_room_avatar(&self) -> Option<()> {
-        let panel = self.ui.room_settings.clone()?;
-        panel.show_new_room_avatar();
+        self.ui.room_settings.as_ref()?.show_new_room_avatar();
         None
     }
 
     pub fn show_new_room_name(&self) -> Option<()> {
-        let panel = self.ui.room_settings.clone()?;
-        panel.show_new_room_name();
+        self.ui.room_settings.as_ref()?.show_new_room_name();
         None
     }
 
     pub fn show_new_room_topic(&self) -> Option<()> {
-        let panel = self.ui.room_settings.clone()?;
-        panel.show_new_room_topic();
+        self.ui.room_settings.as_ref()?.show_new_room_topic();
         None
     }
 
     pub fn set_notifications_switch(&self, active: bool, sensitive: bool) -> Option<()> {
-        let panel = self.ui.room_settings.clone()?;
-        panel.set_notifications_switch(active, sensitive);
+        self.ui
+            .room_settings
+            .as_ref()?
+            .set_notifications_switch(active, sensitive);
         None
     }
 }
