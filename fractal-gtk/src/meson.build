@@ -103,6 +103,7 @@ app_sources = files(
   'ui/attach.rs',
   'ui/directory.rs',
   'ui/mod.rs',
+  'ui/start_chat.rs',
   'util/i18n.rs',
   'util/mod.rs',
   'widgets/address.rs',

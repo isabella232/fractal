@@ -12,6 +12,7 @@ pub mod about;
 pub mod attach;
 pub mod connect;
 pub mod directory;
+pub mod start_chat;
 
 pub struct UI {
     pub builder: gtk::Builder,
