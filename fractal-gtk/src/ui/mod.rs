@@ -3,11 +3,12 @@ use crate::model::{member::Member, message::Message};
 use crate::util::i18n::i18n;
 use crate::widgets::{self, SVEntry};
 use chrono::prelude::{DateTime, Local};
-use gtk::{self, prelude::*};
+use gtk::prelude::*;
 use matrix_sdk::identifiers::{EventId, UserId};
 use std::path::PathBuf;
 use url::Url;
 
+pub mod about;
 pub mod connect;
 
 pub struct UI {

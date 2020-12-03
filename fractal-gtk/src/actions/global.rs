@@ -143,7 +143,7 @@ pub fn new(appop: &AppOp) {
     }));
 
     about.connect_activate(clone!(@strong app_runtime => move |_, _| {
-        app_runtime.update_state_with(|state| state.about_dialog());
+        app_runtime.update_state_with(|state| state.ui.about_dialog());
     }));
     main_menu.connect_activate(clone!(@strong app_runtime => move |_, _| {
         app_runtime.update_state_with(|state| state.main_menu());

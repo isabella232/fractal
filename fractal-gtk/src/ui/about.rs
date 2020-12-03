@@ -1,18 +1,10 @@
+use super::UI;
+use crate::config;
 use crate::util::i18n::i18n;
-
 use gtk::prelude::*;
 
-use crate::appop::AppOp;
-use crate::config;
-
-impl AppOp {
+impl UI {
     pub fn about_dialog(&self) {
-        let window: gtk::ApplicationWindow = self
-            .ui
-            .builder
-            .get_object("main_window")
-            .expect("Can't find main_window in ui file.");
-
         let program_name = format!("Fractal{}", config::NAME_SUFFIX);
 
         let dialog = gtk::AboutDialog::new();
@@ -28,7 +20,7 @@ impl AppOp {
         dialog.set_website(Some("https://wiki.gnome.org/Fractal"));
         dialog.set_website_label(Some(i18n("Learn more about Fractal").as_str()));
         dialog.set_translator_credits(Some(i18n("translator-credits").as_str()));
-        dialog.set_transient_for(Some(&window));
+        dialog.set_transient_for(Some(&self.main_window));
 
         dialog.set_artists(&["Tobias Bernard"]);
 

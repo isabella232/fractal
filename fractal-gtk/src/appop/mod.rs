@@ -21,7 +21,6 @@ use crate::app::AppRuntime;
 use crate::cache;
 use crate::ui;
 
-mod about;
 mod account;
 pub mod attach;
 mod directory;
