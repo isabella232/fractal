@@ -9,6 +9,7 @@ use std::path::PathBuf;
 use url::Url;
 
 pub mod about;
+pub mod attach;
 pub mod connect;
 
 pub struct UI {

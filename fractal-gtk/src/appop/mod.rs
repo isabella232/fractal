@@ -22,7 +22,6 @@ use crate::cache;
 use crate::ui;
 
 mod account;
-pub mod attach;
 mod directory;
 mod invite;
 mod login;

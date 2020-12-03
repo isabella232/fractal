@@ -1,20 +1,16 @@
+use super::UI;
+use crate::util::get_pixbuf_data;
 use crate::util::i18n::i18n;
-
+use crate::APPOP;
+use anyhow::Error;
+use gdk_pixbuf::Pixbuf;
 use glib::clone;
+use gtk::prelude::*;
 use std::fs::File;
 use std::io::prelude::*;
 use std::path::PathBuf;
 
-use anyhow::Error;
-
-use gtk::prelude::*;
-
-use crate::appop::AppOp;
-
-use crate::util::get_pixbuf_data;
-use gdk_pixbuf::Pixbuf;
-
-impl AppOp {
+impl UI {
     fn draw_image_paste_dialog(&self, pixb: &Pixbuf) {
         let w = pixb.get_width();
         let h = pixb.get_height();
@@ -25,15 +21,10 @@ impl AppOp {
         };
 
         if let Some(pb) = scaled {
-            let window: gtk::ApplicationWindow = self
-                .ui
-                .builder
-                .get_object("main_window")
-                .expect("Can't find main_window in ui file.");
             let img = gtk::Image::new();
             let dialog = gtk::Dialog::with_buttons(
                 Some(i18n("Image from Clipboard").as_str()),
-                Some(&window),
+                Some(&self.main_window),
                 gtk::DialogFlags::MODAL
                     | gtk::DialogFlags::USE_HEADER_BAR
                     | gtk::DialogFlags::DESTROY_WITH_PARENT,
@@ -59,7 +50,7 @@ impl AppOp {
                 closebtn.connect_clicked(clone!(@strong dialog => move |_| {
                     dialog.close();
                 }));
-                /* FIXME: make this a action */
+                /* FIXME: make this an action */
                 okbtn.connect_clicked(clone!(@strong pixb, @strong dialog => move |_| {
                     if let Ok(path) = store_pixbuf(&pixb) {
                         APPOP!(attach_message, (path))
@@ -91,6 +82,7 @@ impl AppOp {
     }
 }
 
+// TODO: Make async
 fn store_pixbuf(pixb: &Pixbuf) -> Result<PathBuf, Error> {
     let data = get_pixbuf_data(pixb)?;
     let mut path = glib::get_tmp_dir().unwrap_or_else(|| PathBuf::from("/tmp"));

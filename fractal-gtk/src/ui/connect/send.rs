@@ -51,7 +51,7 @@ pub fn connect(ui: &UI, app_runtime: AppRuntime) {
     }));
 
     msg_entry.connect_paste_clipboard(move |_| {
-        app_runtime.update_state_with(|state| state.paste());
+        app_runtime.update_state_with(|state| state.ui.paste());
     });
 
     msg_entry.connect_focus_in_event(clone!(@strong msg_entry_box => move |_, _| {
