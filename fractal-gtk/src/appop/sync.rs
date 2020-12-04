@@ -9,7 +9,7 @@ use crate::model::{
     room::{Room, RoomMembership, RoomTag},
 };
 use crate::util::i18n::i18n;
-use log::{error, warn};
+use log::warn;
 use matrix_sdk::api::r0::sync::sync_events::JoinedRoom;
 use matrix_sdk::api::r0::sync::sync_events::Response as SyncResponse;
 use matrix_sdk::events::AnyEphemeralRoomEventContent;
@@ -201,34 +201,24 @@ fn get_sync_updates(join: &BTreeMap<RoomId, JoinedRoom>, user_id: &UserId) -> Sy
                 }
             })
             .filter_map(Result::ok)
-            .filter_map(|(room_id, event)| {
-                match event {
-                    AnySyncRoomEvent::State(AnySyncStateEvent::RoomName(ev)) => {
-                        let name = ev.content.name().map(Into::into).unwrap_or_default();
-                        Some(RoomElement::Name(room_id, name))
-                    }
-                    AnySyncRoomEvent::State(AnySyncStateEvent::RoomTopic(ev)) => {
-                        Some(RoomElement::Topic(room_id, ev.content.topic))
-                    }
-                    AnySyncRoomEvent::State(AnySyncStateEvent::RoomAvatar(_)) => {
-                        Some(RoomElement::NewAvatar(room_id))
-                    }
-                    AnySyncRoomEvent::State(AnySyncStateEvent::RoomMember(ev)) => {
-                        Some(RoomElement::MemberEvent(ev.into_full_event(room_id)))
-                    }
-                    AnySyncRoomEvent::Message(AnySyncMessageEvent::RoomRedaction(ev)) => {
-                        Some(RoomElement::RemoveMessage(room_id, ev.redacts))
-                    }
-                    AnySyncRoomEvent::Message(AnySyncMessageEvent::RoomMessage(_)) => None,
-                    AnySyncRoomEvent::Message(AnySyncMessageEvent::Sticker(_)) => {
-                        // This event is managed in the room list
-                        None
-                    }
-                    ev => {
-                        error!("EVENT NOT MANAGED: {:?}", ev);
-                        None
-                    }
+            .filter_map(|(room_id, event)| match event {
+                AnySyncRoomEvent::State(AnySyncStateEvent::RoomName(ev)) => {
+                    let name = ev.content.name().map(Into::into).unwrap_or_default();
+                    Some(RoomElement::Name(room_id, name))
                 }
+                AnySyncRoomEvent::State(AnySyncStateEvent::RoomTopic(ev)) => {
+                    Some(RoomElement::Topic(room_id, ev.content.topic))
+                }
+                AnySyncRoomEvent::State(AnySyncStateEvent::RoomAvatar(_)) => {
+                    Some(RoomElement::NewAvatar(room_id))
+                }
+                AnySyncRoomEvent::State(AnySyncStateEvent::RoomMember(ev)) => {
+                    Some(RoomElement::MemberEvent(ev.into_full_event(room_id)))
+                }
+                AnySyncRoomEvent::Message(AnySyncMessageEvent::RoomRedaction(ev)) => {
+                    Some(RoomElement::RemoveMessage(room_id, ev.redacts))
+                }
+                _ => None,
             })
             .collect(),
     }
