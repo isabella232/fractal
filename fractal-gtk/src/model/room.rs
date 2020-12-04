@@ -215,6 +215,9 @@ impl Room {
                 .collect();
             let room_tag = dataevs
                 .iter()
+                .inspect(|ev| {
+                    dbg!(k, ev);
+                })
                 .find_map(|event| match event {
                     AnyBasicEvent::Tag(ev) => ev.content.tags.get("m.favourite"),
                     _ => None,
