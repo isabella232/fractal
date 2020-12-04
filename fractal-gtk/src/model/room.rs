@@ -165,6 +165,9 @@ impl Room {
         // getting the list of direct rooms
         let direct: HashSet<RoomId> = response.account_data.events
             .iter()
+            .inspect(|ev| {
+                dbg!(ev);
+            })
             .cloned()
             // Synapse sometimes sends an object with the key "[object Object]"
             // instead of a user ID. Since we don't need the key, we use our own
