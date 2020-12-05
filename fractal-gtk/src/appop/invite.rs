@@ -1,23 +1,23 @@
 use crate::util::i18n::{i18n, i18n_k};
 
-use crate::backend::room;
-use gtk::prelude::*;
-use matrix_sdk::identifiers::{RoomId, UserId};
-
 use crate::app::RUNTIME;
 use crate::appop::member::SearchType;
 use crate::appop::AppOp;
+use crate::backend::room;
 use crate::backend::HandleError;
-
 use crate::globals;
-
-use crate::widgets;
-
 use crate::model::member::Member;
+use crate::ui::member::build_memberbox_pill;
+use gtk::prelude::*;
+use matrix_sdk::identifiers::{RoomId, UserId};
 
 impl AppOp {
-    pub fn add_to_invite(&mut self, u: Member) {
-        if self.ui.invite_list.iter().any(|(mem, _)| *mem == u) {
+    pub fn add_to_invite(&mut self, member: Member) {
+        let session_client =
+            unwrap_or_unit_return!(self.login_data.as_ref().map(|ld| ld.session_client.clone()));
+        let user_info_cache = self.user_info_cache.clone();
+
+        if self.ui.invite_list.iter().any(|(mem, _)| *mem == member) {
             return;
         }
 
@@ -69,15 +69,9 @@ impl AppOp {
             buffer.delete(&mut start_word, &mut end_word);
 
             if let Some(anchor) = buffer.create_child_anchor(&mut end_word) {
-                let w;
-                {
-                    let mb = widgets::MemberBox::new(&u, &self);
-                    w = mb.pill();
-                }
-
+                let w = build_memberbox_pill(session_client, user_info_cache, member.clone());
                 invite_entry.add_child_at_anchor(&w, &anchor);
-
-                self.ui.invite_list.push((u, anchor));
+                self.ui.invite_list.push((member, anchor));
             }
         }
     }

@@ -1,17 +1,14 @@
+use crate::app::AppRuntime;
+use crate::appop::{member::member_level, AppOp};
+use crate::model::member::Member;
+use crate::ui::member::build_memberbox_widget;
 use glib::clone;
+use gtk::prelude::*;
+use gtk::TextTag;
 use log::info;
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
-
-use gtk::prelude::*;
-use gtk::TextTag;
-
-use crate::model::member::Member;
-
-use crate::app::AppRuntime;
-use crate::appop::AppOp;
-use crate::widgets;
 
 pub struct Autocomplete {
     app_runtime: AppRuntime,
@@ -425,12 +422,19 @@ impl Autocomplete {
         list: Vec<Member>,
         op: &AppOp,
     ) -> HashMap<String, gtk::EventBox> {
+        let session_client = op
+            .login_data
+            .as_ref()
+            .map(|ld| ld.session_client.clone())
+            .expect("The client is not logged in");
+        let user_info_cache = op.user_info_cache.clone();
+
         for ch in self.listbox.get_children().iter() {
             self.listbox.remove(ch);
         }
 
         let widget_list: HashMap<String, gtk::EventBox> = list
-            .iter()
+            .into_iter()
             .map(|member| {
                 let alias = member
                     .alias
@@ -438,7 +442,14 @@ impl Autocomplete {
                     .unwrap_or_default()
                     .trim_end_matches(" (IRC)")
                     .to_owned();
-                let widget = widgets::MemberBox::new(&member, op).widget(true);
+                let member_level = member_level(op.active_room.as_ref(), &op.rooms, &member.uid);
+                let widget = build_memberbox_widget(
+                    session_client.clone(),
+                    user_info_cache.clone(),
+                    member,
+                    member_level,
+                    true,
+                );
 
                 (alias, widget)
             })

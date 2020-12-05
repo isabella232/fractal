@@ -26,7 +26,7 @@ mod directory;
 mod invite;
 mod login;
 mod media_viewer;
-mod member;
+pub mod member;
 mod message;
 mod notifications;
 mod notify;
