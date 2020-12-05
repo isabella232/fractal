@@ -84,7 +84,6 @@ fractal-gtk/src/client.rs
 fractal-gtk/src/error.rs
 fractal-gtk/src/globals.rs
 fractal-gtk/src/main.rs
-fractal-gtk/src/model/event.rs
 fractal-gtk/src/model/fileinfo.rs
 fractal-gtk/src/model/member.rs
 fractal-gtk/src/model/message.rs
