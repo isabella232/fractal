@@ -1,44 +1,15 @@
 use crate::app::RUNTIME;
+use crate::appop::AppOp;
 use crate::backend::user;
+use crate::util::i18n::i18n;
 use gio::ApplicationExt;
 use gio::FileExt;
 use gio::Notification;
-use gtk::prelude::*;
 use log::info;
 use matrix_sdk::identifiers::{EventId, RoomId};
 use std::path::Path;
 
-use crate::util::i18n::i18n;
-
-use crate::appop::AppOp;
-
-use crate::widgets::ErrorDialog;
-
 impl AppOp {
-    pub fn inapp_notify(&self, msg: &str) {
-        let inapp: gtk::Revealer = self
-            .ui
-            .builder
-            .get_object("inapp_revealer")
-            .expect("Can't find inapp_revealer in ui file.");
-        let label: gtk::Label = self
-            .ui
-            .builder
-            .get_object("inapp_label")
-            .expect("Can't find inapp_label in ui file.");
-        label.set_text(msg);
-        inapp.set_reveal_child(true);
-    }
-
-    pub fn hide_inapp_notify(&self) {
-        let inapp: gtk::Revealer = self
-            .ui
-            .builder
-            .get_object("inapp_revealer")
-            .expect("Can't find inapp_revealer in ui file.");
-        inapp.set_reveal_child(false);
-    }
-
     pub fn notify(&self, app: gtk::Application, room_id: RoomId, id: EventId) -> Option<()> {
         let session_client = self.login_data.as_ref()?.session_client.clone();
         let msg = self.get_message_by_id(&room_id, &id)?;
@@ -77,14 +48,11 @@ impl AppOp {
     }
 
     pub fn show_error(&self, msg: String) {
-        ErrorDialog::new(false, &msg);
+        self.ui.show_error(msg);
     }
 
     pub fn show_error_with_info(&self, msg: String, info: Option<String>) {
-        let dialog = ErrorDialog::new(false, &msg);
-        if let Some(text) = info {
-            dialog.set_property_secondary_text(Some(text.as_ref()));
-        }
+        self.ui.show_error_with_info(msg, info);
     }
 }
 

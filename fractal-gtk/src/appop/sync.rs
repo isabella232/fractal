@@ -22,9 +22,10 @@ use std::collections::BTreeMap;
 impl AppOp {
     pub fn initial_sync(&self, show: bool) {
         if show {
-            self.inapp_notify(&i18n("Syncing, this could take a while"));
+            self.ui
+                .inapp_notify(&i18n("Syncing, this could take a while"));
         } else {
-            self.hide_inapp_notify();
+            self.ui.hide_inapp_notify();
         }
     }
 

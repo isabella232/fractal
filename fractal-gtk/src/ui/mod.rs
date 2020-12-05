@@ -14,6 +14,7 @@ pub mod connect;
 pub mod directory;
 pub mod invite;
 pub mod member;
+pub mod notify;
 pub mod start_chat;
 
 pub struct UI {
