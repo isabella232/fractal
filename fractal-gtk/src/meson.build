@@ -108,6 +108,7 @@ app_sources = files(
   'ui/notify.rs',
   'ui/room_settings.rs',
   'ui/start_chat.rs',
+  'ui/user.rs',
   'util/i18n.rs',
   'util/mod.rs',
   'widgets/address.rs',

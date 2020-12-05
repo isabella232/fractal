@@ -1,18 +1,8 @@
-use gtk::prelude::*;
-
-use crate::backend::{user, HandleError};
-
-use std::path::PathBuf;
-
+use super::LoginData;
 use crate::app::RUNTIME;
 use crate::appop::AppOp;
-
-use crate::cache::download_to_cache;
-
-use crate::widgets;
-use crate::widgets::AvatarExt;
-
-use super::LoginData;
+use crate::backend::{user, HandleError};
+use std::path::PathBuf;
 
 impl AppOp {
     pub fn get_username(&self) {
@@ -48,90 +38,14 @@ impl AppOp {
 
     pub fn show_user_info(&self) {
         let login_data = unwrap_or_unit_return!(self.login_data.clone());
-        let stack = self
-            .ui
-            .builder
-            .get_object::<gtk::Stack>("user_info")
-            .expect("Can't find user_info_avatar in ui file.");
 
-        /* Show user infos inside the popover but wait for all data to arrive */
-        if login_data.avatar.is_some() && login_data.username.is_some() {
-            let avatar = self
-                .ui
-                .builder
-                .get_object::<gtk::Container>("user_info_avatar")
-                .expect("Can't find user_info_avatar in ui file.");
-
-            let name = self
-                .ui
-                .builder
-                .get_object::<gtk::Label>("user_info_username")
-                .expect("Can't find user_info_avatar in ui file.");
-
-            let uid = self
-                .ui
-                .builder
-                .get_object::<gtk::Label>("user_info_uid")
-                .expect("Can't find user_info_avatar in ui file.");
-
-            uid.set_text(&login_data.uid.to_string());
-            name.set_text(&login_data.username.clone().unwrap_or_default());
-
-            /* remove all old avatar from the popover */
-            for w in avatar.get_children().iter() {
-                avatar.remove(w);
-            }
-
-            let w = widgets::Avatar::avatar_new(Some(40));
-            let data = w.circle(
-                login_data.uid.to_string(),
-                login_data.username.clone(),
-                40,
-                None,
-                None,
-            );
-            download_to_cache(
-                login_data.session_client.clone(),
-                self.user_info_cache.clone(),
-                login_data.uid.clone(),
-                data,
-            );
-
-            avatar.add(&w);
-            stack.set_visible_child_name("info");
-        } else {
-            stack.set_visible_child_name("spinner");
-        }
-
-        let eb = gtk::EventBox::new();
-        match login_data.avatar {
-            Some(_) => {
-                let w = widgets::Avatar::avatar_new(Some(24));
-                let data = w.circle(
-                    login_data.uid.to_string(),
-                    login_data.username,
-                    24,
-                    None,
-                    None,
-                );
-                download_to_cache(
-                    login_data.session_client,
-                    self.user_info_cache.clone(),
-                    login_data.uid,
-                    data,
-                );
-
-                eb.add(&w);
-            }
-            None => {
-                let w = gtk::Spinner::new();
-                w.show();
-                w.start();
-                eb.add(&w);
-            }
-        };
-
-        eb.connect_button_press_event(move |_, _| Inhibit(false));
+        self.ui.show_user_info(
+            login_data.session_client.clone(),
+            self.user_info_cache.clone(),
+            login_data.avatar.clone(),
+            login_data.username.clone(),
+            login_data.uid.clone(),
+        );
     }
 
     pub fn set_login_data(&mut self, login_data: LoginData) {
