@@ -136,11 +136,11 @@ pub fn connect_user(ui: &UI, app_runtime: AppRuntime) {
     }
 
     dialog.connect_delete_event(clone!(@strong app_runtime => move |_, _| {
-        app_runtime.update_state_with(|state| state.close_invite_dialog());
+        app_runtime.update_state_with(|state| state.ui.close_invite_dialog());
         glib::signal::Inhibit(true)
     }));
     cancel.connect_clicked(clone!(@strong app_runtime => move |_| {
-        app_runtime.update_state_with(|state| state.close_invite_dialog());
+        app_runtime.update_state_with(|state| state.ui.close_invite_dialog());
     }));
     invite.set_sensitive(false);
     invite.connect_clicked(move |_| {

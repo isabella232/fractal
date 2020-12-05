@@ -177,35 +177,3 @@ pub fn build_memberbox_widget(
     event_box.show_all();
     event_box
 }
-
-pub fn build_memberbox_pill(
-    session_client: MatrixClient,
-    user_info_cache: UserInfoCache,
-    member: Member,
-) -> gtk::Box {
-    let pill = gtk::Box::new(gtk::Orientation::Horizontal, 3);
-
-    let username = gtk::Label::new(None);
-
-    username.set_text(&member.get_alias());
-    username.set_margin_end(3);
-    username.get_style_context().add_class("msg-highlighted");
-
-    let avatar = widgets::Avatar::avatar_new(Some(globals::PILL_ICON_SIZE));
-    let data = avatar.circle(
-        member.uid.to_string(),
-        Some(member.get_alias()),
-        globals::PILL_ICON_SIZE,
-        None,
-        None,
-    );
-
-    download_to_cache(session_client, user_info_cache, member.uid, data);
-
-    avatar.set_margin_start(3);
-
-    pill.pack_start(&avatar, true, true, 0);
-    pill.pack_start(&username, true, true, 0);
-    pill.show_all();
-    pill
-}

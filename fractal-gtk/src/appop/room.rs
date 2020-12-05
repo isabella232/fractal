@@ -185,7 +185,7 @@ impl AppOp {
             }
             if let RoomMembership::Invited(ref sender_uid) = room.membership {
                 let sender = room.members.get(sender_uid);
-                self.show_inv_dialog(sender, room.name.as_ref());
+                self.ui.show_inv_dialog(sender, room.name.as_deref());
                 self.invitation_roomid = Some(room.id.clone());
                 return;
             }

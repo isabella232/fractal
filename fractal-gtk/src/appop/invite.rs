@@ -1,15 +1,10 @@
-use crate::util::i18n::{i18n, i18n_k};
-
 use crate::app::RUNTIME;
 use crate::appop::member::SearchType;
 use crate::appop::AppOp;
 use crate::backend::room;
 use crate::backend::HandleError;
-use crate::globals;
 use crate::model::member::Member;
-use crate::ui::member::build_memberbox_pill;
-use gtk::prelude::*;
-use matrix_sdk::identifiers::{RoomId, UserId};
+use matrix_sdk::identifiers::RoomId;
 
 impl AppOp {
     pub fn add_to_invite(&mut self, member: Member) {
@@ -17,141 +12,23 @@ impl AppOp {
             unwrap_or_unit_return!(self.login_data.as_ref().map(|ld| ld.session_client.clone()));
         let user_info_cache = self.user_info_cache.clone();
 
-        if self.ui.invite_list.iter().any(|(mem, _)| *mem == member) {
-            return;
-        }
-
-        let textviewid = match self.search_type {
-            SearchType::Invite => "invite_entry",
-            SearchType::DirectChat => "to_chat_entry",
-        };
-
-        let invite_entry = self
-            .ui
-            .builder
-            .get_object::<gtk::TextView>(textviewid)
-            .expect("Can't find invite_entry in ui file.");
-
-        if let SearchType::DirectChat = self.search_type {
-            self.ui.invite_list = vec![];
-
-            if let Some(buffer) = invite_entry.get_buffer() {
-                let mut start = buffer.get_start_iter();
-                let mut end = buffer.get_end_iter();
-
-                buffer.delete(&mut start, &mut end);
-            }
-        }
-
-        if let Some(btn) = self
-            .ui
-            .builder
-            .get_object::<gtk::Button>("direct_chat_button")
-        {
-            btn.set_sensitive(true)
-        }
-
-        if let Some(btn) = self.ui.builder.get_object::<gtk::Button>("invite_button") {
-            btn.set_sensitive(true)
-        }
-
-        if let Some(buffer) = invite_entry.get_buffer() {
-            let mut start_word = buffer.get_iter_at_offset(buffer.get_property_cursor_position());
-            let mut end_word = buffer.get_iter_at_offset(buffer.get_property_cursor_position());
-
-            // Remove the search input in the entry before inserting the member's pill
-            if !start_word.starts_word() {
-                start_word.backward_word_start();
-            }
-            if !end_word.ends_word() {
-                end_word.forward_word_end();
-            }
-            buffer.delete(&mut start_word, &mut end_word);
-
-            if let Some(anchor) = buffer.create_child_anchor(&mut end_word) {
-                let w = build_memberbox_pill(session_client, user_info_cache, member.clone());
-                invite_entry.add_child_at_anchor(&w, &anchor);
-                self.ui.invite_list.push((member, anchor));
-            }
-        }
-    }
-
-    pub fn rm_from_invite(&mut self, uid: UserId) {
-        let idx = self.ui.invite_list.iter().position(|x| x.0.uid == uid);
-        if let Some(i) = idx {
-            self.ui.invite_list.remove(i);
-        }
-
-        if self.ui.invite_list.is_empty() {
-            if let Some(btn) = self
-                .ui
-                .builder
-                .get_object::<gtk::Button>("direct_chat_button")
-            {
-                btn.set_sensitive(false)
-            }
-
-            if let Some(btn) = self.ui.builder.get_object::<gtk::Button>("invite_button") {
-                btn.set_sensitive(false)
-            }
-        }
-
-        let dialogid = match self.search_type {
-            SearchType::Invite => "invite_user_dialog",
-            SearchType::DirectChat => "direct_chat_dialog",
-        };
-
-        let dialog = self
-            .ui
-            .builder
-            .get_object::<gtk::Dialog>(dialogid)
-            .expect("Can’t find invite_user_dialog in ui file.");
-
-        dialog.resize(300, 200);
+        self.ui
+            .add_to_invite(session_client, user_info_cache, member, self.search_type);
     }
 
     pub fn detect_removed_invite(&mut self) {
-        let invite_list = self.ui.invite_list.clone();
-        for (member, anchor) in invite_list {
-            if anchor.get_deleted() {
-                self.rm_from_invite(member.uid);
-            }
-        }
+        self.ui.detect_removed_invite(self.search_type);
     }
 
     pub fn show_invite_user_dialog(&mut self) {
-        let dialog = self
-            .ui
-            .builder
-            .get_object::<gtk::Dialog>("invite_user_dialog")
-            .expect("Can't find invite_user_dialog in ui file.");
-        let scroll = self
-            .ui
-            .builder
-            .get_object::<gtk::Widget>("user_search_scroll")
-            .expect("Can't find user_search_scroll in ui file.");
-        let headerbar = self
-            .ui
-            .builder
-            .get_object::<gtk::HeaderBar>("invite_headerbar")
-            .expect("Can't find invite_headerbar in ui file.");
         self.search_type = SearchType::Invite;
+        let room_name = if let Some(ref aroom) = self.active_room {
+            self.rooms.get(aroom).and_then(|r| r.name.as_deref())
+        } else {
+            None
+        };
 
-        if let Some(aroom) = self.active_room.clone() {
-            if let Some(r) = self.rooms.get(&aroom) {
-                if let Some(ref name) = r.name {
-                    headerbar
-                        .set_title(Some(i18n_k("Invite to {name}", &[("name", name)]).as_str()));
-                } else {
-                    headerbar.set_title(Some(i18n("Invite").as_str()));
-                }
-            }
-        }
-
-        self.set_invite_user_dialog_placeholder();
-
-        dialog.present();
-        scroll.hide();
+        self.ui.show_invite_user_dialog(room_name);
     }
 
     pub fn invite(&mut self) {
@@ -169,44 +46,7 @@ impl AppOp {
                 });
             }
         }
-        self.close_invite_dialog();
-    }
-
-    pub fn close_invite_dialog(&mut self) {
-        let listbox = self
-            .ui
-            .builder
-            .get_object::<gtk::ListBox>("user_search_box")
-            .expect("Can't find user_search_box in ui file.");
-        let scroll = self
-            .ui
-            .builder
-            .get_object::<gtk::Widget>("user_search_scroll")
-            .expect("Can't find user_search_scroll in ui file.");
-        let invite_entry = self
-            .ui
-            .builder
-            .get_object::<gtk::TextView>("invite_entry")
-            .expect("Can't find invite_entry in ui file.");
-        let dialog = self
-            .ui
-            .builder
-            .get_object::<gtk::Dialog>("invite_user_dialog")
-            .expect("Can't find invite_user_dialog in ui file.");
-
-        self.ui.invite_list = vec![];
-        if let Some(buffer) = invite_entry.get_buffer() {
-            let mut start = buffer.get_start_iter();
-            let mut end = buffer.get_end_iter();
-
-            buffer.delete(&mut start, &mut end);
-        }
-        for ch in listbox.get_children().iter() {
-            listbox.remove(ch);
-        }
-        scroll.hide();
-        dialog.hide();
-        dialog.resize(300, 200);
+        self.ui.close_invite_dialog();
     }
 
     pub fn remove_inv(&mut self, room_id: &RoomId) {
@@ -240,92 +80,12 @@ impl AppOp {
         });
     }
 
-    /* FIXME: move to a widget */
-    pub fn show_inv_dialog(&self, sender: Option<&Member>, room_name: Option<&String>) {
-        let dialog = self
-            .ui
-            .builder
-            .get_object::<gtk::MessageDialog>("invite_dialog")
-            .expect("Can't find invite_dialog in ui file.");
-
-        let empty = String::new();
-        let room_name = room_name.unwrap_or(&empty);
-        let title = i18n_k("Join {room_name}?", &[("room_name", &room_name)]);
-        let secondary = if let Some(ref sender) = sender {
-            let sender_name = sender.get_alias();
-            i18n_k(
-                "You’ve been invited to join <b>{room_name}</b> room by <b>{sender_name}</b>",
-                &[("room_name", &room_name), ("sender_name", &sender_name)],
-            )
-        } else {
-            i18n_k(
-                "You’ve been invited to join <b>{room_name}</b>",
-                &[("room_name", &room_name)],
-            )
-        };
-
-        dialog.set_property_text(Some(title.as_str()));
-        dialog.set_property_secondary_use_markup(true);
-        dialog.set_property_secondary_text(Some(secondary.as_str()));
-
-        dialog.present();
-    }
-
     pub fn set_invite_user_dialog_placeholder(&mut self) {
-        let textviewid = match self.search_type {
-            SearchType::Invite => "invite_entry",
-            SearchType::DirectChat => "to_chat_entry",
-        };
-
-        let invite_entry = self
-            .ui
-            .builder
-            .get_object::<gtk::TextView>(textviewid)
-            .expect("Can't find invite_entry in ui file.");
-
-        if let Some(buffer) = invite_entry.get_buffer() {
-            let start = buffer.get_start_iter();
-            let end = buffer.get_end_iter();
-
-            if let Some(text) = buffer.get_text(&start, &end, true) {
-                if text.is_empty() && self.ui.invite_list.is_empty() {
-                    buffer.set_text(globals::PLACEHOLDER_TEXT);
-
-                    let start = buffer.get_start_iter();
-                    let end = buffer.get_end_iter();
-
-                    buffer.apply_tag_by_name("placeholder", &start, &end);
-                }
-            }
-        }
+        self.ui.set_invite_user_dialog_placeholder(self.search_type);
     }
 
     pub fn remove_invite_user_dialog_placeholder(&mut self) {
-        let textviewid = match self.search_type {
-            SearchType::Invite => "invite_entry",
-            SearchType::DirectChat => "to_chat_entry",
-        };
-
-        let invite_entry = self
-            .ui
-            .builder
-            .get_object::<gtk::TextView>(textviewid)
-            .expect("Can't find invite_entry in ui file.");
-
-        if let Some(buffer) = invite_entry.get_buffer() {
-            let start = buffer.get_start_iter();
-            let end = buffer.get_end_iter();
-
-            if let Some(text) = buffer.get_text(&start, &end, true) {
-                if text == globals::PLACEHOLDER_TEXT && self.ui.invite_list.is_empty() {
-                    buffer.set_text("");
-
-                    let start = buffer.get_start_iter();
-                    let end = buffer.get_end_iter();
-
-                    buffer.remove_tag_by_name("placeholder", &start, &end);
-                }
-            }
-        }
+        self.ui
+            .remove_invite_user_dialog_placeholder(self.search_type);
     }
 }

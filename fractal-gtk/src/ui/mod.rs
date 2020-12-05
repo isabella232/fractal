@@ -12,6 +12,7 @@ pub mod about;
 pub mod attach;
 pub mod connect;
 pub mod directory;
+pub mod invite;
 pub mod member;
 pub mod start_chat;
 
