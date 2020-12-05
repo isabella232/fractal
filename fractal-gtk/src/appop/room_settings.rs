@@ -1,69 +1,31 @@
-use gtk::prelude::*;
-
 use crate::actions::AppState;
 use crate::appop::AppOp;
 
-use crate::widgets;
-
 impl AppOp {
     pub fn create_room_settings(&mut self) -> Option<()> {
-        let login_data = self.login_data.clone()?;
-        let window = self
-            .ui
-            .builder
-            .get_object::<gtk::Window>("main_window")
-            .expect("Can't find main_window in ui file.");
-        let stack = self
-            .ui
-            .builder
-            .get_object::<gtk::Stack>("subview_stack")
-            .expect("Can't find subview_stack in ui file.");
-
-        {
-            let room = self.rooms.get(&self.active_room.clone()?)?;
-            let mut panel = widgets::RoomSettings::new(
-                login_data.session_client.clone(),
-                &window,
-                login_data.uid,
-                room.clone(),
-            );
-            let page = panel.create(login_data.session_client.clone())?;
-
-            /* remove old panel */
-            if let Some(widget) = stack.get_child_by_name("room-settings") {
-                stack.remove(&widget);
-            }
-
-            stack.add_named(&page, "room-settings");
-
-            self.ui.room_settings = Some(panel);
-        }
-
+        let (session_client, user_id) = self
+            .login_data
+            .as_ref()
+            .map(|ld| (ld.session_client.clone(), ld.uid.clone()))?;
+        let room = self.rooms.get(self.active_room.as_ref()?).cloned()?;
+        self.ui.create_room_settings(session_client, user_id, room);
         self.set_state(AppState::RoomSettings);
-
         None
     }
 
     pub fn show_new_room_avatar(&self) -> Option<()> {
-        self.ui.room_settings.as_ref()?.show_new_room_avatar();
-        None
+        self.ui.show_new_room_avatar()
     }
 
     pub fn show_new_room_name(&self) -> Option<()> {
-        self.ui.room_settings.as_ref()?.show_new_room_name();
-        None
+        self.ui.show_new_room_name()
     }
 
     pub fn show_new_room_topic(&self) -> Option<()> {
-        self.ui.room_settings.as_ref()?.show_new_room_topic();
-        None
+        self.ui.show_new_room_topic()
     }
 
     pub fn set_notifications_switch(&self, active: bool, sensitive: bool) -> Option<()> {
-        self.ui
-            .room_settings
-            .as_ref()?
-            .set_notifications_switch(active, sensitive);
-        None
+        self.ui.set_notifications_switch(active, sensitive)
     }
 }

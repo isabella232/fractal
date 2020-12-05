@@ -1,22 +1,74 @@
+use super::UI;
+use crate::actions;
+use crate::actions::{ButtonState, StateExt};
+use crate::app::RUNTIME;
 use crate::backend::{room, HandleError};
+use crate::model::{member::Member, room::Room};
+use crate::util::i18n::ni18n_f;
+use crate::util::markup_text;
+use crate::widgets;
+use crate::widgets::avatar::AvatarExt;
+use crate::widgets::members_list::MembersList;
+use crate::APPOP;
+use gio::prelude::*;
 use glib::clone;
+use gtk::prelude::*;
 use matrix_sdk::identifiers::UserId;
 use matrix_sdk::Client as MatrixClient;
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use crate::util::i18n::ni18n_f;
-use gio::prelude::*;
-use gtk::prelude::*;
+impl UI {
+    pub fn create_room_settings(
+        &mut self,
+        session_client: MatrixClient,
+        user_id: UserId,
+        room: Room,
+    ) {
+        let window = self
+            .builder
+            .get_object::<gtk::Window>("main_window")
+            .expect("Can't find main_window in ui file.");
 
-use crate::actions;
-use crate::actions::{ButtonState, StateExt};
-use crate::app::RUNTIME;
-use crate::model::{member::Member, room::Room};
-use crate::util::markup_text;
-use crate::widgets;
-use crate::widgets::avatar::AvatarExt;
-use crate::widgets::members_list::MembersList;
+        let mut panel = RoomSettings::new(session_client.clone(), &window, user_id, room);
+        let page = panel.create(session_client);
+
+        let stack = self
+            .builder
+            .get_object::<gtk::Stack>("subview_stack")
+            .expect("Can't find subview_stack in ui file.");
+        // remove old panel
+        if let Some(widget) = stack.get_child_by_name("room-settings") {
+            stack.remove(&widget);
+        }
+
+        stack.add_named(&page, "room-settings");
+
+        self.room_settings = Some(panel);
+    }
+
+    pub fn show_new_room_avatar(&self) -> Option<()> {
+        self.room_settings.as_ref()?.show_new_room_avatar();
+        None
+    }
+
+    pub fn show_new_room_name(&self) -> Option<()> {
+        self.room_settings.as_ref()?.show_new_room_name();
+        None
+    }
+
+    pub fn show_new_room_topic(&self) -> Option<()> {
+        self.room_settings.as_ref()?.show_new_room_topic();
+        None
+    }
+
+    pub fn set_notifications_switch(&self, active: bool, sensitive: bool) -> Option<()> {
+        self.room_settings
+            .as_ref()?
+            .set_notifications_switch(active, sensitive);
+        None
+    }
+}
 
 #[derive(Debug, Clone)]
 pub struct RoomSettings {
@@ -60,7 +112,7 @@ impl RoomSettings {
 
     /* creates a empty list with members.len() rows, the content will be loaded when the row is
      * drawn */
-    pub fn create(&mut self, session_client: MatrixClient) -> Option<gtk::Box> {
+    pub fn create(&mut self, session_client: MatrixClient) -> gtk::Box {
         let page = self
             .builder
             .get_object::<gtk::Box>("room_settings_box")
@@ -82,7 +134,7 @@ impl RoomSettings {
         self.init_room_settings(session_client.clone());
         self.connect(session_client);
 
-        Some(page)
+        page
     }
 
     pub fn connect(&mut self, session_client: MatrixClient) {

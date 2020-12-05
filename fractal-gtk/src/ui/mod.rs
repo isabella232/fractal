@@ -15,6 +15,7 @@ pub mod directory;
 pub mod invite;
 pub mod member;
 pub mod notify;
+pub mod room_settings;
 pub mod start_chat;
 
 pub struct UI {
@@ -23,7 +24,7 @@ pub struct UI {
     pub main_window: libhandy::ApplicationWindow,
     pub sventry: SVEntry,
     pub sventry_box: Box<gtk::Stack>,
-    pub room_settings: Option<widgets::RoomSettings>,
+    pub room_settings: Option<room_settings::RoomSettings>,
     pub history: Option<widgets::RoomHistory>,
     pub roomlist: widgets::RoomList,
     pub media_viewer: Option<widgets::MediaViewer>,
