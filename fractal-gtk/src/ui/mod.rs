@@ -17,6 +17,7 @@ pub mod member;
 pub mod notify;
 pub mod room_settings;
 pub mod start_chat;
+pub mod state;
 pub mod user;
 
 pub struct UI {
