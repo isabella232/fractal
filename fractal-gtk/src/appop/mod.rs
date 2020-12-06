@@ -158,29 +158,22 @@ impl AppOp {
         }
     }
 
-    fn get_window(&self) -> gtk::Window {
-        self.ui
-            .builder
-            .get_object("main_window")
-            .expect("Couldn't find main_window in ui file.")
-    }
-
     pub fn activate(&self) {
-        let window = self.get_window();
-        window.show();
-        window.present();
+        self.ui.main_window.show();
+        self.ui.main_window.present();
     }
 
     pub fn update_title(&mut self) {
         let unread = self.ui.roomlist.rooms_with_notifications();
         if self.unread_rooms != unread {
-            let window = self.get_window();
             if unread == 0 {
-                window.set_title(&i18n::i18n("Fractal"));
+                self.ui.main_window.set_title(&i18n::i18n("Fractal"));
             } else {
                 // Translators: The placeholder is for the number of unread messages in the
                 // application
-                window.set_title(&i18n::i18n_f("Fractal [{}]", &[&unread.to_string()]));
+                self.ui
+                    .main_window
+                    .set_title(&i18n::i18n_f("Fractal [{}]", &[&unread.to_string()]));
             }
             self.unread_rooms = unread;
         }

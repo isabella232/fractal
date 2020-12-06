@@ -357,13 +357,8 @@ impl AppOp {
     }
 
     pub fn kicked_room(&self, room_name: String, reason: String, kicker: Option<&Member>) {
-        let parent: gtk::Window = self
-            .ui
-            .builder
-            .get_object("main_window")
-            .expect("Can't find main_window in ui file.");
         let viewer = widgets::KickedDialog::new();
-        viewer.set_parent_window(&parent);
+        viewer.set_parent_window(self.ui.main_window.upcast_ref());
         let kicker_str = kicker
             .map(|k| {
                 k.alias

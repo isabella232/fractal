@@ -131,12 +131,7 @@ impl AppOp {
 
     pub fn mark_last_message_as_read(&mut self, Force(force): Force) -> Option<()> {
         let login_data = self.login_data.clone()?;
-        let window: gtk::Window = self
-            .ui
-            .builder
-            .get_object("main_window")
-            .expect("Can't find main_window in ui file.");
-        if window.is_active() || force {
+        if self.ui.main_window.is_active() || force {
             /* Move the last viewed mark to the last message */
             let active_room_id = self.active_room.as_ref()?;
             let room = self.rooms.get_mut(active_room_id)?;
@@ -384,12 +379,9 @@ impl AppOp {
                     || self.rooms.get(&msg.room).map_or(false, |r| r.direct));
 
             if should_notify {
-                let window: gtk::Window = self
-                    .ui
-                    .builder
-                    .get_object("main_window")
-                    .expect("Can't find main_window in ui file.");
-                if let (Some(app), Some(event_id)) = (window.get_application(), msg.id.clone()) {
+                if let (Some(app), Some(event_id)) =
+                    (self.ui.main_window.get_application(), msg.id.clone())
+                {
                     self.notify(app, msg.room.clone(), event_id);
                 }
             }

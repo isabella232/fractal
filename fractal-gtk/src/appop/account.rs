@@ -75,17 +75,12 @@ impl AppOp {
 
     pub fn show_phone_dialog(&self, sid: String, secret: String) {
         let login_data = unwrap_or_unit_return!(self.login_data.clone());
-        let parent = self
-            .ui
-            .builder
-            .get_object::<gtk::Window>("main_window")
-            .expect("Can't find main_window in ui file.");
 
         let entry = gtk::Entry::new();
         let msg = i18n("Enter the code received via SMS");
         let flags = gtk::DialogFlags::MODAL | gtk::DialogFlags::DESTROY_WITH_PARENT;
         let dialog = gtk::MessageDialog::new(
-            Some(&parent),
+            Some(&self.ui.main_window),
             flags,
             gtk::MessageType::Error,
             gtk::ButtonsType::None,
@@ -142,16 +137,11 @@ impl AppOp {
 
     pub fn show_email_dialog(&self, sid: String, secret: String) {
         let login_data = unwrap_or_unit_return!(self.login_data.clone());
-        let parent = self
-            .ui
-            .builder
-            .get_object::<gtk::Window>("main_window")
-            .expect("Can't find main_window in ui file.");
 
         let msg = i18n("In order to add this email address, go to your inbox and follow the link you received. Once you’ve done that, click Continue.");
         let flags = gtk::DialogFlags::MODAL | gtk::DialogFlags::DESTROY_WITH_PARENT;
         let dialog = gtk::MessageDialog::new(
-            Some(&parent),
+            Some(&self.ui.main_window),
             flags,
             gtk::MessageType::Error,
             gtk::ButtonsType::None,
@@ -205,16 +195,10 @@ impl AppOp {
     }
 
     pub fn create_error_dialog(&self, error: String) -> gtk::MessageDialog {
-        let parent = self
-            .ui
-            .builder
-            .get_object::<gtk::Window>("main_window")
-            .expect("Can't find main_window in ui file.");
-
         let msg = error;
         let flags = gtk::DialogFlags::MODAL | gtk::DialogFlags::DESTROY_WITH_PARENT;
         let dialog = gtk::MessageDialog::new(
-            Some(&parent),
+            Some(&self.ui.main_window),
             flags,
             gtk::MessageType::Error,
             gtk::ButtonsType::None,
@@ -770,16 +754,11 @@ impl AppOp {
             .builder
             .get_object::<gtk::CheckButton>("account_settings_delete_check")
             .expect("Can't find account_settings_delete_check in ui file.");
-        let parent = self
-            .ui
-            .builder
-            .get_object::<gtk::Window>("main_window")
-            .expect("Can't find main_window in ui file.");
 
         let msg = i18n("Are you sure you want to delete your account?");
         let flags = gtk::DialogFlags::MODAL | gtk::DialogFlags::DESTROY_WITH_PARENT;
         let dialog = gtk::MessageDialog::new(
-            Some(&parent),
+            Some(&self.ui.main_window),
             flags,
             gtk::MessageType::Warning,
             gtk::ButtonsType::None,

@@ -414,12 +414,7 @@ pub fn activate_action(
     action_name: &'static str,
 ) {
     app_runtime.update_state_with(move |state| {
-        let main_window = state
-            .ui
-            .builder
-            .get_object::<gtk::Window>("main_window")
-            .expect("Can't find main_window in ui file.");
-        if let Some(action_group) = main_window.get_action_group(action_group_name) {
+        if let Some(action_group) = state.ui.main_window.get_action_group(action_group_name) {
             action_group.activate_action(action_name, None);
         }
     });

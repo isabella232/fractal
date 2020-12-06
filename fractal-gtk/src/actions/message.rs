@@ -51,13 +51,8 @@ pub fn new(app_runtime: AppRuntime) -> gio::SimpleActionGroup {
     show_source.connect_activate(clone!(@strong app_runtime => move |_, data| {
         let data = data.cloned();
         app_runtime.update_state_with(move |state| {
-            let parent: gtk::Window = state
-                .ui
-                .builder
-                .get_object("main_window")
-                .expect("Can't find main_window in ui file.");
             let viewer = SourceDialog::new();
-            viewer.set_parent_window(&parent);
+            viewer.set_parent_window(state.ui.main_window.upcast_ref());
             if let Some(m) = get_message(state, data.as_ref()) {
                 let error = i18n("This message has no source.");
                 let source = m.source.as_ref().unwrap_or(&error);
@@ -70,14 +65,9 @@ pub fn new(app_runtime: AppRuntime) -> gio::SimpleActionGroup {
     reply.connect_activate(clone!(@strong app_runtime => move |_, data| {
         let data = data.cloned();
         app_runtime.update_state_with(move |state| {
-            let window = state
-                .ui
-                .builder
-                .get_object::<gtk::ApplicationWindow>("main_window")
-                .expect("Couldn't find main_window in ui file.");
             let past_state = state.ui.room_back_history.last().cloned();
             if let Some(AppState::MediaViewer) = past_state {
-                if let Some(action_group) = window.get_action_group("app") {
+                if let Some(action_group) = state.ui.main_window.get_action_group("app") {
                     action_group.activate_action("back", None);
                 } else {
                     error!("The action group app is not attached to the main window.");
@@ -124,11 +114,6 @@ pub fn new(app_runtime: AppRuntime) -> gio::SimpleActionGroup {
     save_as.connect_activate(clone!(@strong app_runtime => move |_, data| {
         let data = data.cloned();
         app_runtime.update_state_with(move |state| {
-            let window = state
-                .ui
-                .builder
-                .get_object::<gtk::Window>("main_window")
-                .expect("Couldn't find main_window in ui file.");
             let (url, name) = unwrap_or_unit_return!(
                 get_message(state, data.as_ref()).and_then(|m| Some((m.url?, m.body)))
             );
@@ -139,6 +124,7 @@ pub fn new(app_runtime: AppRuntime) -> gio::SimpleActionGroup {
                 media::get_media(session_client, &url).await
             });
 
+            let window = state.ui.main_window.clone();
             glib::MainContext::default().spawn_local(async move {
                 match response.await {
                     Err(_) => {
@@ -209,14 +195,9 @@ pub fn new(app_runtime: AppRuntime) -> gio::SimpleActionGroup {
     delete.connect_activate(clone!(@strong app_runtime => move |_, data| {
         let data = data.cloned();
         app_runtime.update_state_with(move |state| {
-            let window = state
-                .ui
-                .builder
-                .get_object::<gtk::ApplicationWindow>("main_window")
-                .expect("Couldn't find main_window in ui file.");
             let past_state = state.ui.room_back_history.last().cloned();
             if let Some(AppState::MediaViewer) = past_state {
-                if let Some(action_group) = window.get_action_group("app") {
+                if let Some(action_group) = state.ui.main_window.get_action_group("app") {
                     action_group.activate_action("back", None);
                 } else {
                     error!("The action group app is not attached to the main window.");
