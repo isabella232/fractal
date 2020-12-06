@@ -145,13 +145,8 @@ fn new(gtk_app: gtk::Application) -> AppRuntime {
             .get_object::<gtk::Stack>("subview_stack")
             .expect("Can't find subview_stack in ui file.");
 
-        /* Add account settings view to the view stack */
-        let child = state
-            .ui
-            .builder
-            .get_object::<gtk::Box>("account_settings_box")
-            .expect("Can't find account_settings_box in ui file.");
-        view_stack.add_named(&child, "account-settings");
+        // Add account settings view to the view stack
+        view_stack.add_named(&state.ui.account_settings.root, "account-settings");
 
         let main_stack = state
             .ui

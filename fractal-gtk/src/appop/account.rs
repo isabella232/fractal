@@ -230,148 +230,79 @@ impl AppOp {
         let login_data = unwrap_or_unit_return!(self.login_data.clone());
         // Reset view before displaying it
         self.close_account_settings_dialog();
-        let avatar_spinner = self
-            .ui
-            .builder
-            .get_object::<gtk::Spinner>("account_settings_avatar_spinner")
-            .expect("Can't find account_settings_avatar_spinner in ui file.");
-        let avatar_btn = self
-            .ui
-            .builder
-            .get_object::<gtk::Button>("account_settings_avatar_button")
-            .expect("Can't find account_settings_avatar_button in ui file.");
-        let name = self
-            .ui
-            .builder
-            .get_object::<gtk::Entry>("account_settings_name")
-            .expect("Can't find account_settings_name in ui file.");
-        let name_btn = self
-            .ui
-            .builder
-            .get_object::<gtk::Button>("account_settings_name_button")
-            .expect("Can't find account_settings_name_button in ui file.");
-        let uid = self
-            .ui
-            .builder
-            .get_object::<gtk::Label>("account_settings_uid")
-            .expect("Can't find account_settings_uid in ui file.");
-        let device_id = self
-            .ui
-            .builder
-            .get_object::<gtk::Label>("account_settings_device_id")
-            .expect("Can't find account_settings_device_id in ui file.");
-        let homeserver = self
-            .ui
-            .builder
-            .get_object::<gtk::Label>("account_settings_homeserver")
-            .expect("Can't find account_settings_homeserver in ui file.");
-        let advanced_box = self
-            .ui
-            .builder
-            .get_object::<gtk::Box>("account_settings_advanced_box")
-            .expect("Can't find account_settings_advanced_box in ui file.");
-        let delete_box = self
-            .ui
-            .builder
-            .get_object::<gtk::Box>("account_settings_delete_box")
-            .expect("Can't find account_settings_delete_box in ui file.");
-        let stack = self
-            .ui
-            .builder
-            .get_object::<gtk::Stack>("account_settings_stack")
-            .expect("Can't find account_settings_delete_box in ui file.");
-        let destruction_btn = self
-            .ui
-            .builder
-            .get_object::<gtk::Button>("account_settings_delete_btn")
-            .expect("Can't find account_settings_delete_btn in ui file.");
-        let destruction_entry = self
-            .ui
-            .builder
-            .get_object::<gtk::Entry>("account_settings_delete_password_confirm")
-            .expect("Can't find account_settings_delete_password_confirm in ui file.");
-        let password_btn = self
-            .ui
-            .builder
-            .get_object::<gtk::Button>("account_settings_password")
-            .expect("Can't find account_settings_password in ui file.");
-        let password_btn_stack = self
-            .ui
-            .builder
-            .get_object::<gtk::Stack>("account_settings_password_stack")
-            .expect("Can't find account_settings_password_stack in ui file.");
-        let destruction_flag = self
-            .ui
-            .builder
-            .get_object::<gtk::CheckButton>("account_settings_delete_check")
-            .expect("Can't find account_settings_delete_check in ui file.");
 
-        stack.set_visible_child_name("loading");
+        self.ui
+            .account_settings
+            .stack
+            .set_visible_child_name("loading");
         self.get_three_pid();
-        uid.set_text(&login_data.uid.to_string());
-        device_id.set_text(login_data.device_id.as_str());
-        homeserver.set_text(login_data.session_client.homeserver().as_str());
-        name.set_text(&login_data.username.unwrap_or_default());
-        name.grab_focus_without_selecting();
-        name.set_position(-1);
+        self.ui
+            .account_settings
+            .uid
+            .set_text(&login_data.uid.to_string());
+        self.ui
+            .account_settings
+            .device_id
+            .set_text(login_data.device_id.as_str());
+        self.ui
+            .account_settings
+            .homeserver
+            .set_text(login_data.session_client.homeserver().as_str());
+        self.ui
+            .account_settings
+            .name
+            .set_text(&login_data.username.unwrap_or_default());
+        self.ui.account_settings.name.grab_focus_without_selecting();
+        self.ui.account_settings.name.set_position(-1);
 
-        avatar_spinner.hide();
-        avatar_btn.set_sensitive(true);
+        self.ui.account_settings.avatar_spinner.hide();
+        self.ui.account_settings.avatar_button.set_sensitive(true);
         self.show_avatar();
 
-        name_btn.hide();
-        name.set_editable(true);
+        self.ui.account_settings.name_button.hide();
+        self.ui.account_settings.name.set_editable(true);
         let image = gtk::Image::from_icon_name(Some("emblem-ok-symbolic"), gtk::IconSize::Menu);
-        name_btn.set_image(Some(&image));
-        name_btn.set_sensitive(true);
+        self.ui.account_settings.name_button.set_image(Some(&image));
+        self.ui.account_settings.name_button.set_sensitive(true);
 
-        /* reset the password button */
-        password_btn_stack.set_visible_child_name("label");
-        password_btn.set_sensitive(true);
+        // reset the password button
+        self.ui
+            .account_settings
+            .password_stack
+            .set_visible_child_name("label");
+        self.ui.account_settings.password.set_sensitive(true);
 
-        destruction_flag.set_active(false);
-        destruction_btn.set_sensitive(false);
-        destruction_entry.set_text("");
-        advanced_box.set_redraw_on_allocate(true);
-        delete_box.set_redraw_on_allocate(true);
+        self.ui.account_settings.delete_check.set_active(false);
+        self.ui.account_settings.delete_btn.set_sensitive(false);
+        self.ui
+            .account_settings
+            .delete_password_confirm
+            .set_text("");
+        self.ui
+            .account_settings
+            .advanced_box
+            .set_redraw_on_allocate(true);
+        self.ui
+            .account_settings
+            .delete_box
+            .set_redraw_on_allocate(true);
 
         self.set_state(AppState::AccountSettings);
     }
 
     pub fn update_address(&self, data: Option<Vec<ThirdPartyIdentifier>>) {
-        let grid = self
-            .ui
-            .builder
-            .get_object::<gtk::Grid>("account_settings_grid")
-            .expect("Can't find account_settings_grid in ui file.");
-        let email = self
-            .ui
-            .builder
-            .get_object::<gtk::Box>("account_settings_email")
-            .expect("Can't find account_settings_box_email in ui file.");
-        let phone = self
-            .ui
-            .builder
-            .get_object::<gtk::Box>("account_settings_phone")
-            .expect("Can't find account_settings_box_phone in ui file.");
-        let stack = self
-            .ui
-            .builder
-            .get_object::<gtk::Stack>("account_settings_stack")
-            .expect("Can't find account_settings_delete_box in ui file.");
-        let password = self
-            .ui
-            .builder
-            .get_object::<gtk::Button>("account_settings_password")
-            .expect("Can't find account_settings_password in ui file.");
-
         let mut first_email = true;
         let mut first_phone = true;
 
+        let grid = &self.ui.account_settings.grid;
+        let mut child = grid.get_child_at(1, 1);
+        let email = &self.ui.account_settings.email;
+        let phone = &self.ui.account_settings.phone;
+        let password = &self.ui.account_settings.password;
+
         let mut i = 1;
-        let mut child = grid.get_child_at(1, i);
         while child.is_some() {
-            if let Some(child) = child.clone() {
+            if let Some(child) = child.as_ref() {
                 if child != phone && child != email && child != password {
                     grid.remove_row(i);
                 } else {
@@ -390,7 +321,10 @@ impl AppOp {
         /* Make sure we have at least one empty entry for email and phone */
         let mut empty_email = widgets::Address::new(widgets::AddressType::Email, &self);
         let mut empty_phone = widgets::Address::new(widgets::AddressType::Phone, &self);
-        email.pack_start(&empty_email.create(None), true, true, 0);
+        self.ui
+            .account_settings
+            .email
+            .pack_start(&empty_email.create(None), true, true, 0);
         phone.pack_start(&empty_phone.create(None), true, true, 0);
         if let Some(data) = data {
             for item in data {
@@ -400,10 +334,10 @@ impl AppOp {
                             empty_email.update(Some(item.address));
                             let entry = widgets::Address::new(widgets::AddressType::Email, &self)
                                 .create(None);
-                            grid.insert_next_to(&email, gtk::PositionType::Bottom);
+                            grid.insert_next_to(email, gtk::PositionType::Bottom);
                             grid.attach_next_to(
                                 &entry,
-                                Some(&email),
+                                Some(email),
                                 gtk::PositionType::Bottom,
                                 1,
                                 1,
@@ -412,10 +346,10 @@ impl AppOp {
                         } else {
                             let entry = widgets::Address::new(widgets::AddressType::Email, &self)
                                 .create(Some(item.address));
-                            grid.insert_next_to(&email, gtk::PositionType::Bottom);
+                            grid.insert_next_to(email, gtk::PositionType::Bottom);
                             grid.attach_next_to(
                                 &entry,
-                                Some(&email),
+                                Some(email),
                                 gtk::PositionType::Bottom,
                                 1,
                                 1,
@@ -427,10 +361,10 @@ impl AppOp {
                             empty_phone.update(Some(item.address));
                             let entry = widgets::Address::new(widgets::AddressType::Phone, &self)
                                 .create(None);
-                            grid.insert_next_to(&phone, gtk::PositionType::Bottom);
+                            grid.insert_next_to(phone, gtk::PositionType::Bottom);
                             grid.attach_next_to(
                                 &entry,
-                                Some(&phone),
+                                Some(phone),
                                 gtk::PositionType::Bottom,
                                 1,
                                 1,
@@ -440,10 +374,10 @@ impl AppOp {
                             let s = String::from("+") + &item.address;
                             let entry = widgets::Address::new(widgets::AddressType::Phone, &self)
                                 .create(Some(s));
-                            grid.insert_next_to(&phone, gtk::PositionType::Bottom);
+                            grid.insert_next_to(phone, gtk::PositionType::Bottom);
                             grid.attach_next_to(
                                 &entry,
-                                Some(&phone),
+                                Some(phone),
                                 gtk::PositionType::Bottom,
                                 1,
                                 1,
@@ -454,7 +388,10 @@ impl AppOp {
                 }
             }
         }
-        stack.set_visible_child_name("info");
+        self.ui
+            .account_settings
+            .stack
+            .set_visible_child_name("info");
     }
 
     pub fn show_password_dialog(&self) {
@@ -474,24 +411,14 @@ impl AppOp {
 
     pub fn show_new_avatar(&mut self, path: PathBuf) {
         let login_data = unwrap_or_unit_return!(self.login_data.clone());
-        let avatar_spinner = self
-            .ui
-            .builder
-            .get_object::<gtk::Spinner>("account_settings_avatar_spinner")
-            .expect("Can't find account_settings_avatar_spinner in ui file.");
-        let avatar_btn = self
-            .ui
-            .builder
-            .get_object::<gtk::Button>("account_settings_avatar_button")
-            .expect("Can't find account_settings_avatar_button in ui file.");
 
         info!("Request finished");
         self.set_login_data(LoginData {
             avatar: Some(path),
             ..login_data
         });
-        avatar_spinner.hide();
-        avatar_btn.set_sensitive(true);
+        self.ui.account_settings.avatar_spinner.hide();
+        self.ui.account_settings.avatar_button.set_sensitive(true);
         if let Some(login_data) = &self.login_data {
             remove_from_cache(self.user_info_cache.clone(), &login_data.uid);
         }
@@ -500,30 +427,15 @@ impl AppOp {
 
     pub fn show_avatar(&self) {
         let login_data = unwrap_or_unit_return!(self.login_data.clone());
-        let stack = self
-            .ui
-            .builder
-            .get_object::<gtk::Stack>("account_settings_stack")
-            .expect("Can't find account_settings_delete_box in ui file.");
-        let avatar = self
-            .ui
-            .builder
-            .get_object::<gtk::Overlay>("account_settings_avatar")
-            .expect("Can't find account_settings_avatar in ui file.");
-        let avatar_spinner = self
-            .ui
-            .builder
-            .get_object::<gtk::Spinner>("account_settings_avatar_spinner")
-            .expect("Can't find account_settings_avatar_spinner in ui file.");
         /* remove all old avatar */
-        for w in avatar.get_children().iter() {
-            if w != &avatar_spinner {
-                avatar.remove(w);
+        for w in self.ui.account_settings.avatar.get_children().iter() {
+            if w != &self.ui.account_settings.avatar_spinner {
+                self.ui.account_settings.avatar.remove(w);
             }
         }
 
         let w = widgets::Avatar::avatar_new(Some(100));
-        avatar.add(&w);
+        self.ui.account_settings.avatar.add(&w);
 
         let data = w.circle(
             login_data.uid.to_string(),
@@ -540,32 +452,28 @@ impl AppOp {
         );
 
         /* FIXME: hack to make the avatar drawing area clickable*/
-        let current = stack.get_visible_child_name();
-        stack.set_visible_child_name("loading");
+        let current = self.ui.account_settings.stack.get_visible_child_name();
+        self.ui
+            .account_settings
+            .stack
+            .set_visible_child_name("loading");
         if let Some(current) = current {
-            stack.set_visible_child_name(&current);
+            self.ui
+                .account_settings
+                .stack
+                .set_visible_child_name(&current);
         }
     }
 
     pub fn show_new_username(&mut self, name: Option<String>) {
         let login_data = unwrap_or_unit_return!(self.login_data.clone());
-        let entry = self
-            .ui
-            .builder
-            .get_object::<gtk::Entry>("account_settings_name")
-            .expect("Can't find account_settings_name in ui file.");
-        let button = self
-            .ui
-            .builder
-            .get_object::<gtk::Button>("account_settings_name_button")
-            .expect("Can't find account_settings_name_button in ui file.");
         if let Some(name) = name.clone() {
-            button.hide();
+            self.ui.account_settings.name_button.hide();
             let image = gtk::Image::from_icon_name(Some("emblem-ok-symbolic"), gtk::IconSize::Menu);
-            button.set_image(Some(&image));
-            button.set_sensitive(true);
-            entry.set_editable(true);
-            entry.set_text(&name);
+            self.ui.account_settings.name_button.set_image(Some(&image));
+            self.ui.account_settings.name_button.set_sensitive(true);
+            self.ui.account_settings.name.set_editable(true);
+            self.ui.account_settings.name.set_text(&name);
         }
         self.set_login_data(LoginData {
             username: name,
@@ -575,26 +483,19 @@ impl AppOp {
 
     pub fn update_username_account_settings(&self) {
         let login_data = unwrap_or_unit_return!(self.login_data.clone());
-        let name = self
-            .ui
-            .builder
-            .get_object::<gtk::Entry>("account_settings_name")
-            .expect("Can't find account_settings_name in ui file.");
-        let button = self
-            .ui
-            .builder
-            .get_object::<gtk::Button>("account_settings_name_button")
-            .expect("Can't find account_settings_name_button in ui file.");
 
         let old_username = login_data.username.clone().unwrap_or_default();
-        let username: String = name.get_text().into();
+        let username: String = self.ui.account_settings.name.get_text().into();
 
         if old_username != username {
             let spinner = gtk::Spinner::new();
             spinner.start();
-            button.set_image(Some(&spinner));
-            button.set_sensitive(false);
-            name.set_editable(false);
+            self.ui
+                .account_settings
+                .name_button
+                .set_image(Some(&spinner));
+            self.ui.account_settings.name_button.set_sensitive(false);
+            self.ui.account_settings.name.set_editable(false);
             RUNTIME.spawn(async move {
                 let query = user::set_username(
                     login_data.session_client,
@@ -613,30 +514,14 @@ impl AppOp {
                 }
             });
         } else {
-            button.hide();
+            self.ui.account_settings.name_button.hide();
         }
     }
 
     pub fn close_account_settings_dialog(&self) {
-        let advanced_box = self
-            .ui
-            .builder
-            .get_object::<gtk::Box>("account_settings_advanced_box")
-            .expect("Can't find account_settings_advanced_box in ui file.");
-        let delete_box = self
-            .ui
-            .builder
-            .get_object::<gtk::Box>("account_settings_delete_box")
-            .expect("Can't find account_settings_delete_box in ui file.");
-        let b = self
-            .ui
-            .builder
-            .get_object::<gtk::Box>("account_settings_box")
-            .expect("Can't find account_settings_delete_box in ui file.");
-
-        advanced_box.queue_draw();
-        delete_box.queue_draw();
-        b.queue_draw();
+        self.ui.account_settings.advanced_box.queue_draw();
+        self.ui.account_settings.delete_box.queue_draw();
+        self.ui.account_settings.root.queue_draw();
     }
 
     pub fn set_new_password(&mut self) {
@@ -654,22 +539,15 @@ impl AppOp {
             .builder
             .get_object::<gtk::Entry>("password-dialog-entry")
             .expect("Can't find password-dialog-entry in ui file.");
-        let password_btn = self
-            .ui
-            .builder
-            .get_object::<gtk::Button>("account_settings_password")
-            .expect("Can't find account_settings_password in ui file.");
-        let password_btn_stack = self
-            .ui
-            .builder
-            .get_object::<gtk::Stack>("account_settings_password_stack")
-            .expect("Can't find account_settings_password_stack in ui file.");
 
         let old: String = old_password.get_text().into();
         let new: String = new_password.get_text().into();
         if !old.is_empty() && !new.is_empty() {
-            password_btn.set_sensitive(false);
-            password_btn_stack.set_visible_child_name("spinner");
+            self.ui.account_settings.password.set_sensitive(false);
+            self.ui
+                .account_settings
+                .password_stack
+                .set_visible_child_name("spinner");
             RUNTIME.spawn(async move {
                 match user::change_password(session_client, &user_id, old, &new).await {
                     Ok(_) => {
@@ -684,34 +562,20 @@ impl AppOp {
     }
 
     pub fn password_changed(&self) {
-        let password_btn = self
-            .ui
-            .builder
-            .get_object::<gtk::Button>("account_settings_password")
-            .expect("Can't find account_settings_password in ui file.");
-        let password_btn_stack = self
-            .ui
-            .builder
-            .get_object::<gtk::Stack>("account_settings_password_stack")
-            .expect("Can't find account_settings_password_stack in ui file.");
-        password_btn.set_sensitive(true);
-        password_btn_stack.set_visible_child_name("label");
+        self.ui.account_settings.password.set_sensitive(true);
+        self.ui
+            .account_settings
+            .password_stack
+            .set_visible_child_name("label");
     }
 
     pub fn show_password_error_dialog(&self, error: String) {
-        let password_btn = self
-            .ui
-            .builder
-            .get_object::<gtk::Button>("account_settings_password")
-            .expect("Can't find account_settings_password in ui file.");
-        let password_btn_stack = self
-            .ui
-            .builder
-            .get_object::<gtk::Stack>("account_settings_password_stack")
-            .expect("Can't find account_settings_password_stack in ui file.");
         self.show_error_dialog_in_settings(error);
-        password_btn.set_sensitive(true);
-        password_btn_stack.set_visible_child_name("label");
+        self.ui.account_settings.password.set_sensitive(true);
+        self.ui
+            .account_settings
+            .password_stack
+            .set_visible_child_name("label");
     }
 
     pub fn close_password_dialog(&mut self) {
@@ -744,16 +608,6 @@ impl AppOp {
 
     pub fn account_destruction(&self) {
         let login_data = unwrap_or_unit_return!(self.login_data.clone());
-        let entry = self
-            .ui
-            .builder
-            .get_object::<gtk::Entry>("account_settings_delete_password_confirm")
-            .expect("Can't find account_settings_delete_password_confirm in ui file.");
-        let mark = self
-            .ui
-            .builder
-            .get_object::<gtk::CheckButton>("account_settings_delete_check")
-            .expect("Can't find account_settings_delete_check in ui file.");
 
         let msg = i18n("Are you sure you want to delete your account?");
         let flags = gtk::DialogFlags::MODAL | gtk::DialogFlags::DESTROY_WITH_PARENT;
@@ -768,8 +622,14 @@ impl AppOp {
         dialog.add_button("Confirm", gtk::ResponseType::Ok);
         dialog.add_button("Cancel", gtk::ResponseType::Cancel);
 
-        let _flag = mark.get_active(); // TODO: This is not used, remove from UI?
-        let password = entry.get_text().to_string();
+        // TODO: This is not used, remove?
+        let _flag = self.ui.account_settings.delete_check.get_active();
+        let password = self
+            .ui
+            .account_settings
+            .delete_password_confirm
+            .get_text()
+            .to_string();
         dialog.connect_response(move |w, r| {
             if let gtk::ResponseType::Ok = r {
                 let password = password.clone();

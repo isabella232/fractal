@@ -100,6 +100,7 @@ app_sources = files(
   'ui/connect/send.rs',
   'ui/connect/swipeable_widgets.rs',
   'ui/about.rs',
+  'ui/account.rs',
   'ui/attach.rs',
   'ui/directory.rs',
   'ui/invite.rs',

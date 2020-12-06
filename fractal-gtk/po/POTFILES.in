@@ -95,6 +95,7 @@ fractal-gtk/src/model/mod.rs
 fractal-gtk/src/model/room.rs
 fractal-gtk/src/passwd.rs
 fractal-gtk/src/ui/about.rs
+fractal-gtk/src/ui/account.rs
 fractal-gtk/src/ui/attach.rs
 fractal-gtk/src/ui/connect/account.rs
 fractal-gtk/src/ui/connect/autocomplete.rs

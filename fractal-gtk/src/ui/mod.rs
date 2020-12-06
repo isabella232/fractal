@@ -9,6 +9,7 @@ use std::path::PathBuf;
 use url::Url;
 
 pub mod about;
+pub mod account;
 pub mod attach;
 pub mod connect;
 pub mod directory;
@@ -34,6 +35,7 @@ pub struct UI {
     pub invite_list: Vec<(Member, gtk::TextChildAnchor)>,
     pub leaflet: libhandy::Leaflet,
     pub deck: libhandy::Deck,
+    pub account_settings: account::AccountSettings,
 }
 
 impl UI {
@@ -124,6 +126,7 @@ impl UI {
         let deck = builder
             .get_object::<libhandy::Deck>("main_deck")
             .expect("Couldn't find main_deck in ui file");
+        let account_settings = account::AccountSettings::new(&builder);
 
         UI {
             builder,
@@ -139,6 +142,7 @@ impl UI {
             invite_list: vec![],
             leaflet,
             deck,
+            account_settings,
         }
     }
 }
