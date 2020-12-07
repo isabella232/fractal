@@ -38,7 +38,9 @@ pub struct AccountSettings {
 }
 
 impl AccountSettings {
-    pub fn new(builder: &gtk::Builder) -> Self {
+    pub fn new() -> Self {
+        let builder = gtk::Builder::from_resource("/org/gnome/Fractal/ui/account_settings.ui");
+
         Self {
             root: builder
                 .get_object("account_settings_box")
@@ -179,34 +181,6 @@ impl AccountSettings {
             .connect_clicked(clone!(@strong app_runtime => move |_w| {
                 app_runtime.update_state_with(|state| state.update_username_account_settings());
             }));
-
-        fn validate_password_input(builder: &gtk::Builder) {
-            let hint = builder
-                .get_object::<gtk::Label>("password-dialog-verify-hint")
-                .expect("Can't find password-dialog-verify-hint in ui file.");
-            let confirm_password = builder
-                .get_object::<gtk::Button>("password-dialog-apply")
-                .expect("Can't find password-dialog-apply in ui file.");
-            let old = builder
-                .get_object::<gtk::Entry>("password-dialog-old-entry")
-                .expect("Can't find password-dialog-old-entry in ui file.");
-            let new = builder
-                .get_object::<gtk::Entry>("password-dialog-entry")
-                .expect("Can't find password-dialog-entry in ui file.");
-            let verify = builder
-                .get_object::<gtk::Entry>("password-dialog-verify-entry")
-                .expect("Can't find password-dialog-verify-entry in ui file.");
-
-            let old_p = old.get_text();
-            let new_p = new.get_text();
-            let verify_p = verify.get_text();
-
-            let matching = new_p == verify_p;
-            let empty = [new_p, verify_p, old_p].iter().any(|t| t.is_empty());
-
-            hint.set_visible(!matching);
-            confirm_password.set_sensitive(matching && !empty);
-        }
 
         // Password dialog
         self.password
@@ -484,4 +458,32 @@ impl AccountSettings {
         verify_password.set_text("");
         dialog.hide();
     }
+}
+
+fn validate_password_input(builder: &gtk::Builder) {
+    let hint = builder
+        .get_object::<gtk::Label>("password-dialog-verify-hint")
+        .expect("Can't find password-dialog-verify-hint in ui file.");
+    let confirm_password = builder
+        .get_object::<gtk::Button>("password-dialog-apply")
+        .expect("Can't find password-dialog-apply in ui file.");
+    let old = builder
+        .get_object::<gtk::Entry>("password-dialog-old-entry")
+        .expect("Can't find password-dialog-old-entry in ui file.");
+    let new = builder
+        .get_object::<gtk::Entry>("password-dialog-entry")
+        .expect("Can't find password-dialog-entry in ui file.");
+    let verify = builder
+        .get_object::<gtk::Entry>("password-dialog-verify-entry")
+        .expect("Can't find password-dialog-verify-entry in ui file.");
+
+    let old_p = old.get_text();
+    let new_p = new.get_text();
+    let verify_p = verify.get_text();
+
+    let matching = new_p == verify_p;
+    let empty = [new_p, verify_p, old_p].iter().any(|t| t.is_empty());
+
+    hint.set_visible(!matching);
+    confirm_password.set_sensitive(matching && !empty);
 }

@@ -110,9 +110,7 @@ impl UI {
         builder
             .add_from_resource("/org/gnome/Fractal/ui/password_dialog.ui")
             .expect("Can't load ui file: password_dialog.ui");
-        builder
-            .add_from_resource("/org/gnome/Fractal/ui/account_settings.ui")
-            .expect("Can't load ui file: account_settings.ui");
+        let account_settings = account::AccountSettings::new();
 
         let main_window: libhandy::ApplicationWindow = builder
             .get_object("main_window")
@@ -126,7 +124,6 @@ impl UI {
         let deck = builder
             .get_object::<libhandy::Deck>("main_deck")
             .expect("Couldn't find main_deck in ui file");
-        let account_settings = account::AccountSettings::new(&builder);
 
         UI {
             builder,
