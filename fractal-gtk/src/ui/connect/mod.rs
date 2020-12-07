@@ -1,4 +1,3 @@
-mod account;
 mod autocomplete;
 mod direct;
 mod directory;
@@ -27,7 +26,8 @@ impl UI {
         leave_room::connect(self, app_runtime.clone());
         new_room::connect(self, app_runtime.clone());
         join_room::connect(self, app_runtime.clone());
-        account::connect(self, app_runtime.clone());
+        self.account_settings
+            .connect(&self.builder, &self.main_window, app_runtime.clone());
         invite::connect_dialog(self, app_runtime.clone());
         invite::connect_user(self, app_runtime.clone());
         direct::connect(self, app_runtime.clone());

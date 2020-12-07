@@ -1,9 +1,13 @@
 use super::UI;
+use crate::actions::{AccountSettings as AccountSettingsActions, StateExt};
+use crate::app::AppRuntime;
 use crate::appop::AppOp;
 use crate::appop::UserInfoCache;
 use crate::cache::{download_to_cache, remove_from_cache};
 use crate::widgets;
 use crate::widgets::AvatarExt;
+use gio::ActionMapExt;
+use glib::clone;
 use gtk::prelude::*;
 use matrix_sdk::api::r0::contact::get_contacts::ThirdPartyIdentifier;
 use matrix_sdk::identifiers::{DeviceId, UserId};
@@ -97,6 +101,156 @@ impl AccountSettings {
                 .get_object("account_settings_uid")
                 .expect("Can't find account_settings_uid in ui file."),
         }
+    }
+
+    pub fn connect(
+        &self,
+        builder: &gtk::Builder,
+        main_window: &libhandy::ApplicationWindow,
+        app_runtime: AppRuntime,
+    ) {
+        let cancel_password = builder
+            .get_object::<gtk::Button>("password-dialog-cancel")
+            .expect("Can't find password-dialog-cancel in ui file.");
+        let confirm_password = builder
+            .get_object::<gtk::Button>("password-dialog-apply")
+            .expect("Can't find password-dialog-apply in ui file.");
+        let password_dialog = builder
+            .get_object::<gtk::Dialog>("password_dialog")
+            .expect("Can't find password_dialog in ui file.");
+        let old_password = builder
+            .get_object::<gtk::Entry>("password-dialog-old-entry")
+            .expect("Can't find password-dialog-old-entry in ui file.");
+        let new_password = builder
+            .get_object::<gtk::Entry>("password-dialog-entry")
+            .expect("Can't find password-dialog-entry in ui file.");
+        let verify_password = builder
+            .get_object::<gtk::Entry>("password-dialog-verify-entry")
+            .expect("Can't find password-dialog-verify-entry in ui file.");
+
+        let actions = AccountSettingsActions::new(main_window.upcast_ref(), app_runtime.clone());
+        self.root
+            .insert_action_group("user-settings", Some(&actions));
+
+        // Body
+        if let Some(action) = actions.lookup_action("change-avatar") {
+            action.bind_button_state(&self.avatar_button);
+            self.avatar_button
+                .set_action_name(Some("user-settings.change-avatar"));
+            self.avatar_button.connect_property_sensitive_notify(
+                clone!(@weak self.avatar_spinner as spinner => move |w| {
+                    if w.get_sensitive() {
+                        spinner.hide();
+                        spinner.stop();
+                    } else {
+                        spinner.start();
+                        spinner.show();
+                    }
+                }),
+            );
+        }
+
+        self.name.connect_property_text_notify(
+            clone!(@strong app_runtime, @strong self.name_button as button => move |w| {
+                app_runtime.update_state_with(clone!(@strong w, @strong button => move |state| {
+                    let username = w.get_text();
+                    if !username.is_empty()
+                        && state
+                            .login_data
+                            .as_ref()
+                            .and_then(|login_data| login_data.username.as_ref())
+                            .filter(|u| **u != username)
+                            .is_some()
+                    {
+                        button.show();
+                        return;
+                    }
+                    button.hide();
+                }));
+            }),
+        );
+
+        self.name
+            .connect_activate(clone!(@strong self.name_button as button => move |_w| {
+                let _ = button.emit("clicked", &[]);
+            }));
+
+        self.name_button
+            .connect_clicked(clone!(@strong app_runtime => move |_w| {
+                app_runtime.update_state_with(|state| state.update_username_account_settings());
+            }));
+
+        fn validate_password_input(builder: &gtk::Builder) {
+            let hint = builder
+                .get_object::<gtk::Label>("password-dialog-verify-hint")
+                .expect("Can't find password-dialog-verify-hint in ui file.");
+            let confirm_password = builder
+                .get_object::<gtk::Button>("password-dialog-apply")
+                .expect("Can't find password-dialog-apply in ui file.");
+            let old = builder
+                .get_object::<gtk::Entry>("password-dialog-old-entry")
+                .expect("Can't find password-dialog-old-entry in ui file.");
+            let new = builder
+                .get_object::<gtk::Entry>("password-dialog-entry")
+                .expect("Can't find password-dialog-entry in ui file.");
+            let verify = builder
+                .get_object::<gtk::Entry>("password-dialog-verify-entry")
+                .expect("Can't find password-dialog-verify-entry in ui file.");
+
+            let old_p = old.get_text();
+            let new_p = new.get_text();
+            let verify_p = verify.get_text();
+
+            let matching = new_p == verify_p;
+            let empty = [new_p, verify_p, old_p].iter().any(|t| t.is_empty());
+
+            hint.set_visible(!matching);
+            confirm_password.set_sensitive(matching && !empty);
+        }
+
+        // Password dialog
+        self.password
+            .connect_clicked(clone!(@strong app_runtime => move |_| {
+                app_runtime.update_state_with(|state| state.show_password_dialog());
+            }));
+
+        password_dialog.connect_delete_event(clone!(@strong app_runtime => move |_, _| {
+            app_runtime.update_state_with(|state| state.close_password_dialog());
+            glib::signal::Inhibit(true)
+        }));
+
+        /* Headerbar */
+        cancel_password.connect_clicked(clone!(@strong app_runtime => move |_| {
+            app_runtime.update_state_with(|state| state.close_password_dialog());
+        }));
+
+        confirm_password.connect_clicked(clone!(@strong app_runtime => move |_| {
+            app_runtime.update_state_with(|state| {
+                state.set_new_password();
+                state.close_password_dialog();
+            });
+        }));
+
+        /* Body */
+        verify_password.connect_property_text_notify(clone!(@strong builder => move |_| {
+            validate_password_input(&builder.clone());
+        }));
+        new_password.connect_property_text_notify(clone!(@strong builder => move |_| {
+            validate_password_input(&builder.clone());
+        }));
+        old_password.connect_property_text_notify(clone!(@strong builder => move |_| {
+            validate_password_input(&builder)
+        }));
+
+        self.delete_password_confirm.connect_property_text_notify(
+            clone!(@strong self.delete_btn as destruction_btn => move |w| {
+                destruction_btn.set_sensitive(!w.get_text().is_empty());
+            }),
+        );
+
+        self.delete_btn.connect_clicked(move |_| {
+            app_runtime.update_state_with(|state| state.account_destruction());
+        });
     }
 
     pub fn set_three_pid(&self, data: Option<Vec<ThirdPartyIdentifier>>, op: &AppOp) {

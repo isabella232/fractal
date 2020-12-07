@@ -84,7 +84,6 @@ app_sources = files(
   'model/message.rs',
   'model/mod.rs',
   'model/room.rs',
-  'ui/connect/account.rs',
   'ui/connect/autocomplete.rs',
   'ui/connect/directory.rs',
   'ui/connect/direct.rs',
