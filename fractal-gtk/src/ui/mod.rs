@@ -145,6 +145,20 @@ impl UI {
             account_settings,
         }
     }
+
+    pub fn create_error_dialog(&self, msg: &str) -> gtk::MessageDialog {
+        let flags = gtk::DialogFlags::MODAL | gtk::DialogFlags::DESTROY_WITH_PARENT;
+        let dialog = gtk::MessageDialog::new(
+            Some(&self.main_window),
+            flags,
+            gtk::MessageType::Error,
+            gtk::ButtonsType::None,
+            msg,
+        );
+        dialog.add_button(&i18n("OK"), gtk::ResponseType::Ok);
+
+        dialog
+    }
 }
 
 /* MessageContent contains all data needed to display one row
