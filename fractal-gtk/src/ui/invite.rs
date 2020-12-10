@@ -43,9 +43,7 @@ impl UI {
             }
         }
 
-        if let Some(btn) = self.builder.get_object::<gtk::Button>("direct_chat_button") {
-            btn.set_sensitive(true)
-        }
+        self.direct_chat_dialog.button.set_sensitive(true);
 
         if let Some(btn) = self.builder.get_object::<gtk::Button>("invite_button") {
             btn.set_sensitive(true)

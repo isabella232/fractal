@@ -1,5 +1,4 @@
 mod autocomplete;
-mod direct;
 mod directory;
 mod headerbar;
 mod invite;
@@ -30,7 +29,7 @@ impl UI {
             .connect(&self.builder, &self.main_window, app_runtime.clone());
         invite::connect_dialog(self, app_runtime.clone());
         invite::connect_user(self, app_runtime.clone());
-        direct::connect(self, app_runtime.clone());
+        self.direct_chat_dialog.connect(app_runtime.clone());
         roomlist_search::connect(self, app_runtime);
         swipeable_widgets::connect(self);
     }

@@ -36,6 +36,7 @@ pub struct UI {
     pub leaflet: libhandy::Leaflet,
     pub deck: libhandy::Deck,
     pub account_settings: account::AccountSettings,
+    pub direct_chat_dialog: start_chat::DirectChatDialog,
 }
 
 impl UI {
@@ -90,9 +91,6 @@ impl UI {
         // Depends on main_window
         // These are all dialogs transient for main_window
         builder
-            .add_from_resource("/org/gnome/Fractal/ui/direct_chat.ui")
-            .expect("Can't load ui file: direct_chat.ui");
-        builder
             .add_from_resource("/org/gnome/Fractal/ui/invite.ui")
             .expect("Can't load ui file: invite.ui");
         builder
@@ -125,6 +123,8 @@ impl UI {
             .get_object::<libhandy::Deck>("main_deck")
             .expect("Couldn't find main_deck in ui file");
 
+        let direct_chat_dialog = start_chat::DirectChatDialog::new(&main_window);
+
         UI {
             builder,
             gtk_app,
@@ -140,6 +140,7 @@ impl UI {
             leaflet,
             deck,
             account_settings,
+            direct_chat_dialog,
         }
     }
 

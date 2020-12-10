@@ -86,7 +86,6 @@ app_sources = files(
   'model/room.rs',
   'ui/connect/autocomplete.rs',
   'ui/connect/directory.rs',
-  'ui/connect/direct.rs',
   'ui/connect/headerbar.rs',
   'ui/connect/invite.rs',
   'ui/connect/join_room.rs',

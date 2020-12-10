@@ -24,27 +24,29 @@ impl UI {
         users: Vec<Member>,
         search_type: SearchType,
     ) {
-        let (entry_label, listbox_label, scroll_label) = match search_type {
-            SearchType::Invite => ("invite_entry", "user_search_box", "user_search_scroll"),
+        let (entry, listbox, scroll) = match search_type {
+            SearchType::Invite => {
+                let entry = self
+                    .builder
+                    .get_object::<gtk::TextView>("invite_entry")
+                    .expect("Can't find invite_entry in ui file.");
+                let listbox = self
+                    .builder
+                    .get_object::<gtk::ListBox>("user_search_box")
+                    .expect("Can't find user_search_box in ui file.");
+                let scroll = self
+                    .builder
+                    .get_object::<gtk::ScrolledWindow>("user_search_scroll")
+                    .expect("Can't find user_search_scroll in ui file.");
+
+                (entry, listbox, scroll)
+            }
             SearchType::DirectChat => (
-                "to_chat_entry",
-                "direct_chat_search_box",
-                "direct_chat_search_scroll",
+                self.direct_chat_dialog.to_chat_entry.clone(),
+                self.direct_chat_dialog.search_box.clone(),
+                self.direct_chat_dialog.search_scroll.clone(),
             ),
         };
-
-        let entry = self
-            .builder
-            .get_object::<gtk::TextView>(entry_label)
-            .expect("Can't find invite_entry in ui file.");
-        let listbox = self
-            .builder
-            .get_object::<gtk::ListBox>(listbox_label)
-            .expect("Can't find user_search_box in ui file.");
-        let scroll = self
-            .builder
-            .get_object::<gtk::Widget>(scroll_label)
-            .expect("Can't find user_search_scroll in ui file.");
 
         if let Some(buffer) = entry.get_buffer() {
             let start = buffer.get_start_iter();
@@ -73,7 +75,7 @@ fn search_finished(
     rooms: &RoomList,
     mut users: Vec<Member>,
     listbox: gtk::ListBox,
-    scroll: gtk::Widget,
+    scroll: gtk::ScrolledWindow,
     term: Option<String>,
 ) {
     for ch in listbox.get_children().iter() {

@@ -98,7 +98,6 @@ fractal-gtk/src/ui/about.rs
 fractal-gtk/src/ui/account.rs
 fractal-gtk/src/ui/attach.rs
 fractal-gtk/src/ui/connect/autocomplete.rs
-fractal-gtk/src/ui/connect/direct.rs
 fractal-gtk/src/ui/connect/directory.rs
 fractal-gtk/src/ui/connect/headerbar.rs
 fractal-gtk/src/ui/connect/invite.rs
