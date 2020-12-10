@@ -20,10 +20,10 @@
             <property name="receives_default">True</property>
             <property name="action_name">message.reply</property>
             <property name="text" translatable="yes">Reply</property>
+            <property name="vexpand">False</property>
+            <property name="valign">fill</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
             <property name="position">0</property>
           </packing>
         </child>
@@ -33,10 +33,10 @@
             <property name="receives_default">True</property>
             <property name="text" translatable="yes">Open With…</property>
             <property name="action_name">message.open_with</property>
+            <property name="vexpand">False</property>
+            <property name="valign">fill</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
             <property name="position">1</property>
           </packing>
         </child>
@@ -46,10 +46,10 @@
             <property name="receives_default">True</property>
             <property name="text" translatable="yes">Save Image As…</property>
             <property name="action_name">message.save_as</property>
+            <property name="vexpand">False</property>
+            <property name="valign">fill</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
             <property name="position">2</property>
           </packing>
         </child>
@@ -59,10 +59,10 @@
             <property name="receives_default">True</property>
             <property name="text" translatable="yes">Save Video As…</property>
             <property name="action_name">message.save_as</property>
+            <property name="vexpand">False</property>
+            <property name="valign">fill</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
             <property name="position">2</property>
           </packing>
         </child>
@@ -72,10 +72,10 @@
             <property name="receives_default">True</property>
             <property name="text" translatable="yes">Copy Image</property>
             <property name="action_name">message.copy_image</property>
+            <property name="vexpand">False</property>
+            <property name="valign">fill</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
             <property name="position">3</property>
           </packing>
         </child>
@@ -84,10 +84,10 @@
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
             <property name="text" translatable="yes">Copy Selection</property>
+            <property name="vexpand">False</property>
+            <property name="valign">fill</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
             <property name="position">4</property>
           </packing>
         </child>
@@ -98,10 +98,10 @@
             <property name="receives_default">True</property>
             <property name="text" translatable="yes">Copy Text</property>
             <property name="action_name">message.copy_text</property>
+            <property name="vexpand">False</property>
+            <property name="valign">fill</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
             <property name="position">5</property>
           </packing>
         </child>
@@ -112,10 +112,10 @@
             <property name="receives_default">True</property>
             <property name="action_name">message.show_source</property>
             <property name="text" translatable="yes">View Source</property>
+            <property name="vexpand">False</property>
+            <property name="valign">fill</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
             <property name="position">6</property>
           </packing>
         </child>
@@ -123,10 +123,10 @@
           <object class="GtkSeparator" id="message_menu_separator">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="vexpand">False</property>
+            <property name="valign">fill</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
             <property name="position">7</property>
           </packing>
         </child>
@@ -137,10 +137,10 @@
             <property name="receives_default">True</property>
             <property name="action_name">message.delete</property>
             <property name="text" translatable="yes">Delete Message</property>
+            <property name="vexpand">False</property>
+            <property name="valign">fill</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
             <property name="position">8</property>
           </packing>
         </child>
