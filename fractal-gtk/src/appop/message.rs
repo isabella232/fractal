@@ -563,11 +563,16 @@ fn create_ui_message(
 /// and populates the info Json with the information it has
 
 fn get_image_media_info(file: &Path, mimetype: &str) -> Option<JsonValue> {
-    let (_, w, h) = Pixbuf::get_file_info(file)?;
+    // We need to load the file to read the orientation in the EXIF data
+    let image = Pixbuf::from_file(&file)
+        .ok()?
+        .apply_embedded_orientation()?;
     let size = fs::metadata(file).ok()?.len();
 
     // make thumbnail max 800x600
-    let thumb = Pixbuf::from_file_at_scale(&file, 800, 600, true).ok()?;
+    let thumb = Pixbuf::from_file_at_scale(&file, 800, 600, true)
+        .ok()?
+        .apply_embedded_orientation()?;
     let mut rng = rand::thread_rng();
     let x: u64 = rng.gen_range(1, 9_223_372_036_854_775_807);
     let thumb_path = format!(
@@ -587,8 +592,8 @@ fn get_image_media_info(file: &Path, mimetype: &str) -> Option<JsonValue> {
                 "size": thumb_size,
                 "mimetype": "image/png"
             },
-            "w": w,
-            "h": h,
+            "w": image.get_width(),
+            "h": image.get_height(),
             "size": size,
             "mimetype": mimetype,
             "orientation": 0

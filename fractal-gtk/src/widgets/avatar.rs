@@ -135,9 +135,13 @@ impl AvatarExt for gtk::Overlay {
 fn load_pixbuf(path: &Path, size: i32) -> Option<Pixbuf> {
     let (_, width, height) = Pixbuf::get_file_info(&path)?;
     let pb = if width > height {
-        Pixbuf::from_file_at_scale(&path, -1, size, true).ok()?
+        Pixbuf::from_file_at_scale(&path, -1, size, true)
+            .ok()?
+            .apply_embedded_orientation()?
     } else {
-        Pixbuf::from_file_at_scale(&path, size, -1, true).ok()?
+        Pixbuf::from_file_at_scale(&path, size, -1, true)
+            .ok()?
+            .apply_embedded_orientation()?
     };
 
     Some(pb)

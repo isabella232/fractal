@@ -184,7 +184,10 @@ pub fn new(
                         ErrorDialog::new(false, &msg);
                     }
                     Ok(Ok(fname)) => {
-                        if let Ok(pixbuf) = gdk_pixbuf::Pixbuf::from_file(fname) {
+                        if let Some(pixbuf) = gdk_pixbuf::Pixbuf::from_file(fname)
+                            .ok()
+                            .and_then(|pb| pb.apply_embedded_orientation())
+                        {
                             let atom = gdk::Atom::intern("CLIPBOARD");
                             let clipboard = gtk::Clipboard::get(&atom);
                             clipboard.set_image(&pixbuf);

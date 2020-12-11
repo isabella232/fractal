@@ -318,8 +318,11 @@ pub fn load_pixbuf(
         return;
     }
 
-    match Pixbuf::from_file(fname) {
-        Ok(px) => {
+    match Pixbuf::from_file(fname)
+        .ok()
+        .and_then(|pb| pb.apply_embedded_orientation())
+    {
+        Some(px) => {
             *pix.lock().unwrap() = Some(px);
             *scaled.lock().unwrap() = None;
         }
