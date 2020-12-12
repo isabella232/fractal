@@ -64,7 +64,7 @@ pub fn new(
             .expect("Could not grab toplevel widget")
             .downcast::<gtk::Window>()
             .expect("Could not cast toplevel to GtkWindow");
-        let uri = globals::RIOT_REGISTER_URL;
+        let uri = globals::ELEMENT_REGISTER_URL;
         if let Err(e) = gtk::show_uri_on_window(Some(&toplevel), uri, gtk::get_current_event_time())
         {
             warn!("Could not show {}: {}", uri, e)

@@ -355,7 +355,7 @@
               <object class="GtkLinkButton" id="forgot_password">
                 <property name="use_underline">True</property>
                 <property name="label" translatable="yes">_Forgot Password?</property>
-                <property name="uri">https://riot.im/app/#/login</property>
+                <property name="uri">https://app.element.io/#/login</property>
                 <property name="halign">start</property>
                 <style>
                   <class name="forgot-password"/>

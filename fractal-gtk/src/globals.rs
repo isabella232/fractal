@@ -16,7 +16,7 @@ pub const USERLIST_ICON_SIZE: i32 = 30;
 pub const PILL_ICON_SIZE: i32 = 18;
 pub const MINUTES_TO_SPLIT_MSGS: i64 = 30;
 pub const PLACEHOLDER_TEXT: &str = "Matrix username, email or phone number";
-pub const RIOT_REGISTER_URL: &str = "https://riot.im/app/#/register";
+pub const ELEMENT_REGISTER_URL: &str = "https://app.element.io/#/register";
 
 pub const MAX_IMAGE_SIZE: (i32, i32) = (600, 400);
 pub const MAX_STICKER_SIZE: (i32, i32) = (200, 130);

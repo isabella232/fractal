@@ -245,7 +245,7 @@ impl AppOp {
                     m.mtype = String::from("m.emote");
                 }
 
-                // Riot does not properly show emotes with Markdown;
+                // Element (Riot) does not properly show emotes with Markdown;
                 // Emotes with markdown have a newline after the username
                 if m.mtype != "m.emote" && self.md_enabled {
                     let mut md_options = ComrakOptions::default();
