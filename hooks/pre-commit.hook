@@ -1,16 +1,14 @@
 #!/bin/sh
 
-if ! which rustup &> /dev/null; then
-    curl https://sh.rustup.rs -sSf  | sh -s -- -y
-    export PATH=$PATH:$HOME/.cargo/bin
-    if ! which rustup &> /dev/null; then
-        echo "Failed to install rustup"
-    fi
+if ! which cargo &> /dev/null; then
+   echo "Commit aborted! Please install cargo and rustfmt to check the code style of Fractal."
+   exit -1
 fi
 
-if ! rustup component list|grep rustfmt &> /dev/null; then
-    echo "Installing rustfmt.."
-    rustup component add rustfmt
+if ! cargo fmt --help &> /dev/null; then
+    echo "Commit aborted! You need rustfmt to check the code style of Fractal."
+    echo "Install it via rustup ('rustup component add rustfmt') or your package manager."
+    exit -1
 fi
 
 echo "--Checking style--"
