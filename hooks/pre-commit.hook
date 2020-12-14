@@ -1,14 +1,38 @@
 #!/bin/sh
+set -e
 
-if ! which cargo &> /dev/null; then
-   echo "Commit aborted! Please install cargo and rustfmt to check the code style of Fractal."
-   exit -1
-fi
+install_rustfmt() {
+    if ! which rustup &> /dev/null; then
+        curl https://sh.rustup.rs -sSf  | sh -s -- -y
+        export PATH=$PATH:$HOME/.cargo/bin
+        if ! which rustup &> /dev/null; then
+            echo "Failed to install rustup. Performing the commit without style checking."
+            exit 0
+        fi
+    fi
 
-if ! cargo fmt --help &> /dev/null; then
-    echo "Commit aborted! You need rustfmt to check the code style of Fractal."
-    echo "Install it via rustup ('rustup component add rustfmt') or your package manager."
-    exit -1
+    if ! rustup component list|grep rustfmt &> /dev/null; then
+        echo "Installing rustfmt.."
+        rustup component add rustfmt
+    fi
+}
+
+if ! which cargo &> /dev/null || ! cargo fmt --help &> /dev/null; then
+    echo "Can't check Fractal's code style, because rustfmt could not be run."
+    echo ""
+    echo "y: Install rustfmt via rustup"
+    echo "n: Don't install rustfmt and perform the commit"
+    echo "Q: Don't install rustfmt and abort the commit"
+
+    while true; do
+        read -p "Install rustfmt via rustup? [y/n/Q]: " yn
+        case $yn in
+            [Yy]* ) install_rustfmt; break;;
+            [Nn]* ) echo "Performing commit."; exit 0;;
+            [Qq]* | "" ) echo "Aborting commit."; exit -1;;
+            * ) echo "Invalid input";;
+        esac
+    done
 fi
 
 echo "--Checking style--"
