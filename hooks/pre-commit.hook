@@ -19,6 +19,13 @@ install_rustfmt() {
 
 if ! which cargo &> /dev/null || ! cargo fmt --help &> /dev/null; then
     echo "Can't check Fractal's code style, because rustfmt could not be run."
+
+    if [ ! -t 1 ]; then
+        # No input is possible
+        echo "Performing commit."
+        exit 0
+    fi
+
     echo ""
     echo "y: Install rustfmt via rustup"
     echo "n: Don't install rustfmt and perform the commit"
