@@ -523,6 +523,12 @@ fn build_room_msg(
 fn build_room_msg_body_html(container: &MessageBoxContainer, msg: &Message) -> anyhow::Result<gtk::Box> {
     let raw = msg.msg.formatted_body.clone().unwrap_or_default();
 
+    if raw.contains("<!-- raw HTML omitted -->") {
+        anyhow::bail!(
+            "Empty message omited: <!-- raw HTML omitted -->, using plain text instead."
+        );
+    }
+
     let blocks =
         markup_html(&raw).with_context(|| format!("Could not render message: {}", &raw))?;
     let bx = gtk::Box::new(gtk::Orientation::Vertical, 6);
