@@ -551,6 +551,8 @@ fn render_html_block(container: &MessageBoxContainer, msg: &Message, block: &Htm
         }
         HtmlBlock::UList(elements) => {
             let bx = gtk::Box::new(gtk::Orientation::Vertical, 6);
+            bx.set_margin_end(6);
+            bx.set_margin_start(6);
 
             for li in elements.iter() {
                 let h_box = gtk::Box::new(gtk::Orientation::Horizontal, 6);
@@ -569,6 +571,8 @@ fn render_html_block(container: &MessageBoxContainer, msg: &Message, block: &Htm
         }
         HtmlBlock::OList(elements) => {
             let bx = gtk::Box::new(gtk::Orientation::Vertical, 6);
+            bx.set_margin_end(6);
+            bx.set_margin_start(6);
 
             for (i, ol) in elements.iter().enumerate() {
                 let h_box = gtk::Box::new(gtk::Orientation::Horizontal, 6);
