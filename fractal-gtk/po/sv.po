@@ -2,13 +2,14 @@
 # Copyright © 2018-2020 fractal's COPYRIGHT HOLDER
 # This file is distributed under the same license as the fractal package.
 # Anders Jonsson <anders.jonsson@norsjovallen.se>, 2018, 2019, 2020.
+# Luna Jernberg <droidbittin@gmail.com>, 2020.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: fractal master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2020-08-13 10:34+0000\n"
-"PO-Revision-Date: 2020-09-07 13:47+0200\n"
+"POT-Creation-Date: 2020-12-14 20:39+0000\n"
+"PO-Revision-Date: 2020-12-14 22:14+0100\n"
 "Last-Translator: Anders Jonsson <anders.jonsson@norsjovallen.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
@@ -16,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.4.1\n"
+"X-Generator: Poedit 2.4.2\n"
 
 #: fractal-gtk/res/gtk/help-overlay.ui:13
 msgctxt "shortcut window"
@@ -100,7 +101,7 @@ msgstr "Skriv på en ny rad"
 
 #: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:3
 #: fractal-gtk/res/org.gnome.Fractal.metainfo.xml.in.in:5
-#: fractal-gtk/res/ui/login_flow.ui:294 fractal-gtk/src/appop/mod.rs:213
+#: fractal-gtk/res/ui/login_flow.ui:19 fractal-gtk/src/appop/mod.rs:218
 msgid "Fractal"
 msgstr "Fractal"
 
@@ -118,8 +119,8 @@ msgstr "Fractal gruppmeddelanden"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:14
-msgid "Matrix;matrix.org;chat;irc;communications;talk;riot;"
-msgstr "Matrix;matrix.org;chatt;irc;kommunikation;samtal;riot;"
+msgid "Matrix;matrix.org;chat;irc;communications;talk;riot;element;"
+msgstr "Matrix;matrix.org;chatt;irc;kommunikation;samtal;riot;element;"
 
 #: fractal-gtk/res/org.gnome.Fractal.gschema.xml:13
 msgid "Type of password and token storage"
@@ -176,52 +177,62 @@ msgstr ""
 "gränssnitt är optimerat för samarbete i stora grupper, så som projekt inom "
 "fri programvara."
 
-#: fractal-gtk/res/ui/account_settings.ui:73
+#: fractal-gtk/res/ui/account_settings.ui:14 fractal-gtk/res/ui/main_menu.ui:94
+msgid "Account Settings"
+msgstr "Kontoinställningar"
+
+#: fractal-gtk/res/ui/account_settings.ui:30
+#: fractal-gtk/res/ui/main_window.ui:217 fractal-gtk/res/ui/main_window.ui:487
+#: fractal-gtk/res/ui/media_viewer.ui:36 fractal-gtk/res/ui/room_settings.ui:30
+msgid "Back"
+msgstr "Bakåt"
+
+#: fractal-gtk/res/ui/account_settings.ui:92
 msgid "Other people can find you by searching for any of these identifiers."
 msgstr "Andra kan hitta dig genom att söka efter någon av dessa identifierare."
 
-#: fractal-gtk/res/ui/account_settings.ui:101
+#: fractal-gtk/res/ui/account_settings.ui:115
 msgid "Name"
 msgstr "Namn"
 
-#: fractal-gtk/res/ui/account_settings.ui:124
+#: fractal-gtk/res/ui/account_settings.ui:138
 msgid "Type in your name"
 msgstr "Mata in ditt namn"
 
-#: fractal-gtk/res/ui/account_settings.ui:153
+#: fractal-gtk/res/ui/account_settings.ui:167
 msgid "Email"
 msgstr "E-post"
 
-#: fractal-gtk/res/ui/account_settings.ui:182
+#: fractal-gtk/res/ui/account_settings.ui:196
 msgid "Phone"
 msgstr "Telefon"
 
-#: fractal-gtk/res/ui/account_settings.ui:211
+#: fractal-gtk/res/ui/account_settings.ui:225
 msgid "Password"
 msgstr "Lösenord"
 
-#: fractal-gtk/res/ui/account_settings.ui:278
+#: fractal-gtk/res/ui/account_settings.ui:287
 msgid "Advanced Information"
 msgstr "Avancerad information"
 
-#: fractal-gtk/res/ui/account_settings.ui:308
+#: fractal-gtk/res/ui/account_settings.ui:312
 msgid "Homeserver"
 msgstr "Hemserver"
 
-#: fractal-gtk/res/ui/account_settings.ui:337
+#: fractal-gtk/res/ui/account_settings.ui:341
 msgid "Matrix ID"
 msgstr "Matrix-ID"
 
-#: fractal-gtk/res/ui/account_settings.ui:366
+#: fractal-gtk/res/ui/account_settings.ui:370
 msgid "Device ID"
 msgstr "Enhets-ID"
 
-#: fractal-gtk/res/ui/account_settings.ui:421
-#: fractal-gtk/res/ui/account_settings.ui:502
+#: fractal-gtk/res/ui/account_settings.ui:410
+#: fractal-gtk/res/ui/account_settings.ui:466
 msgid "Deactivate Account"
 msgstr "Inaktivera konto"
 
-#: fractal-gtk/res/ui/account_settings.ui:447
+#: fractal-gtk/res/ui/account_settings.ui:431
 msgid ""
 "Deactivating your account means that you will lose all your messages, "
 "contacts, and files."
@@ -229,7 +240,7 @@ msgstr ""
 "Att inaktivera ditt konto betyder att du kommer att förlora alla dina "
 "meddelanden, kontakter och filer."
 
-#: fractal-gtk/res/ui/account_settings.ui:462
+#: fractal-gtk/res/ui/account_settings.ui:441
 msgid ""
 "To confirm that you really want to deactivate this account type in your "
 "password:"
@@ -237,100 +248,84 @@ msgstr ""
 "Mata in ditt lösenord för att bekräfta att du verkligen vill inaktivera "
 "detta konto:"
 
-#: fractal-gtk/res/ui/account_settings.ui:487
+#: fractal-gtk/res/ui/account_settings.ui:456
 msgid "Also erase all messages"
 msgstr "Ta även bort alla meddelanden"
 
-#: fractal-gtk/res/ui/account_settings.ui:586
-#: fractal-gtk/res/ui/main_menu.ui:109
-msgid "Account Settings"
-msgstr "Kontoinställningar"
-
-#: fractal-gtk/res/ui/account_settings.ui:602
-#: fractal-gtk/res/ui/main_window.ui:522 fractal-gtk/res/ui/main_window.ui:662
-#: fractal-gtk/res/ui/main_window.ui:762 fractal-gtk/res/ui/media_viewer.ui:236
-#: fractal-gtk/res/ui/room_settings.ui:1034
-msgid "Back"
-msgstr "Bakåt"
-
-#: fractal-gtk/res/ui/account_settings.ui:623
+#: fractal-gtk/res/ui/account_settings.ui:523
 msgid "Check your email"
 msgstr "Kontrollera din e-post"
 
-#: fractal-gtk/res/ui/account_settings.ui:626
-#: fractal-gtk/res/ui/direct_chat.ui:129 fractal-gtk/res/ui/invite_user.ui:129
-#: fractal-gtk/res/ui/join_room.ui:94 fractal-gtk/res/ui/leave_room.ui:32
-#: fractal-gtk/res/ui/new_room.ui:42 fractal-gtk/src/appop/account.rs:95
-#: fractal-gtk/src/appop/account.rs:158 fractal-gtk/src/appop/attach.rs:52
+#: fractal-gtk/res/ui/account_settings.ui:526
+#: fractal-gtk/res/ui/direct_chat.ui:84 fractal-gtk/res/ui/invite_user.ui:84
+#: fractal-gtk/res/ui/join_room.ui:71 fractal-gtk/res/ui/leave_room.ui:31
+#: fractal-gtk/res/ui/new_room.ui:24 fractal-gtk/src/appop/account.rs:99
+#: fractal-gtk/src/appop/account.rs:160 fractal-gtk/src/appop/attach.rs:50
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: fractal-gtk/res/ui/account_settings.ui:634
+#: fractal-gtk/res/ui/account_settings.ui:534
 msgid "Apply"
 msgstr "Verkställ"
 
-#: fractal-gtk/res/ui/add_room_menu.ui:22
+#: fractal-gtk/res/ui/add_room_menu.ui:8
 msgid "Room Directory"
 msgstr "Rumskatalog"
 
-#: fractal-gtk/res/ui/add_room_menu.ui:36
+#: fractal-gtk/res/ui/add_room_menu.ui:12
 msgid "Join Room"
 msgstr "Gå in i rum"
 
-#: fractal-gtk/res/ui/add_room_menu.ui:63
+#: fractal-gtk/res/ui/add_room_menu.ui:18
 msgid "New Room"
 msgstr "Nytt rum"
 
-#: fractal-gtk/res/ui/add_room_menu.ui:77
+#: fractal-gtk/res/ui/add_room_menu.ui:22
 msgid "New Direct Chat"
 msgstr "Ny direktchatt"
 
-#: fractal-gtk/res/ui/audio_player.ui:34 fractal-gtk/res/ui/audio_player.ui:50
+#: fractal-gtk/res/ui/audio_player.ui:34 fractal-gtk/res/ui/audio_player.ui:45
 msgid "Play"
 msgstr "Spela upp"
 
-#: fractal-gtk/res/ui/direct_chat.ui:126
+#: fractal-gtk/res/ui/direct_chat.ui:81
 msgid "New direct chat"
 msgstr "Ny direktchatt"
 
-#: fractal-gtk/res/ui/direct_chat.ui:137
+#: fractal-gtk/res/ui/direct_chat.ui:92
 msgid "Start chat"
 msgstr "Starta chatt"
-
-#: fractal-gtk/res/ui/filechooser.ui:61
-msgid "Select room image file"
-msgstr "Välj bildfil för rum"
 
 #: fractal-gtk/res/ui/invite.ui:18
 msgid "Invitation"
 msgstr "Inbjudan"
 
-#: fractal-gtk/res/ui/invite.ui:33
+#: fractal-gtk/res/ui/invite.ui:32
 msgid "Reject"
 msgstr "Avvisa"
 
-#: fractal-gtk/res/ui/invite.ui:46
+#: fractal-gtk/res/ui/invite.ui:40
 msgid "Accept"
 msgstr "Acceptera"
 
-#: fractal-gtk/res/ui/invite_user.ui:126 fractal-gtk/res/ui/invite_user.ui:137
-#: fractal-gtk/src/appop/invite.rs:153
+#: fractal-gtk/res/ui/invite_user.ui:81 fractal-gtk/res/ui/invite_user.ui:92
+#: fractal-gtk/src/appop/invite.rs:152
 msgid "Invite"
 msgstr "Bjud in"
 
-#: fractal-gtk/res/ui/join_room.ui:52
+#: fractal-gtk/res/ui/join_room.ui:34
 msgid "ID or Alias"
 msgstr "ID eller alias"
 
-#: fractal-gtk/res/ui/join_room.ui:91
+#: fractal-gtk/res/ui/join_room.ui:68
 msgid "Join room"
 msgstr "Gå in i rum"
 
-#: fractal-gtk/res/ui/join_room.ui:102 fractal-gtk/src/widgets/room.rs:124
+#: fractal-gtk/res/ui/join_room.ui:79 fractal-gtk/src/widgets/room.rs:123
 msgid "Join"
 msgstr "Gå in"
 
-#: fractal-gtk/res/ui/kicked_room.ui:30 fractal-gtk/res/ui/msg_src_window.ui:32
+#: fractal-gtk/res/ui/kicked_room.ui:29 fractal-gtk/res/ui/msg_src_window.ui:32
 msgid "Close"
 msgstr "Stäng"
 
@@ -345,121 +340,109 @@ msgid ""
 msgstr ""
 "Då du lämnar kommer du inte längre kunna interagera med personer i rummet."
 
-#: fractal-gtk/res/ui/leave_room.ui:45
+#: fractal-gtk/res/ui/leave_room.ui:39
 msgid "Leave room"
 msgstr "Lämna rum"
 
-#: fractal-gtk/res/ui/login_flow.ui:33
+#: fractal-gtk/res/ui/login_flow.ui:47
 msgid "Welcome to Fractal"
 msgstr "Välkommen till Fractal"
 
-#: fractal-gtk/res/ui/login_flow.ui:47 fractal-gtk/res/ui/login_flow.ui:371
+#: fractal-gtk/res/ui/login_flow.ui:61 fractal-gtk/res/ui/login_flow.ui:251
 msgid "_Log In"
 msgstr "_Logga in"
 
-#: fractal-gtk/res/ui/login_flow.ui:59
+#: fractal-gtk/res/ui/login_flow.ui:73
 msgid "_Create Account"
 msgstr "_Skapa konto"
 
-#: fractal-gtk/res/ui/login_flow.ui:95
-msgid "What is your Provider?"
-msgstr "Vad är din leverantör?"
-
-#: fractal-gtk/res/ui/login_flow.ui:124
-msgid "Matrix provider domain, e.g. myserver.co"
-msgstr "Matrix-leverantörsdomän, t.ex. myserver.co"
-
-#: fractal-gtk/res/ui/login_flow.ui:140
-msgid "The domain may not be empty."
-msgstr "Domänen får inte vara tom."
-
-#: fractal-gtk/res/ui/login_flow.ui:166
-msgid "_User ID"
-msgstr "_Användar-ID"
-
-#: fractal-gtk/res/ui/login_flow.ui:182
-msgid "_Password"
-msgstr "Lösen_ord"
-
-#: fractal-gtk/res/ui/login_flow.ui:214
-msgid "User name, email, or phone number"
-msgstr "Användarnamn, e-post eller telefonnummer"
-
-#: fractal-gtk/res/ui/login_flow.ui:247
-msgid "_Forgot Password?"
-msgstr "_Glömt lösenordet?"
-
-#: fractal-gtk/res/ui/login_flow.ui:265
-msgid "Invalid username or password"
-msgstr "Ogiltigt användarnamn eller lösenord"
-
-#: fractal-gtk/res/ui/login_flow.ui:306
+#: fractal-gtk/res/ui/login_flow.ui:97
 msgid "Choose Provider"
 msgstr "Välj leverantör"
 
-#: fractal-gtk/res/ui/login_flow.ui:329
+#: fractal-gtk/res/ui/login_flow.ui:120
 msgid "_Next"
 msgstr "_Nästa"
 
-#: fractal-gtk/res/ui/login_flow.ui:348
+#: fractal-gtk/res/ui/login_flow.ui:158
+msgid "What is your Provider?"
+msgstr "Vad är din leverantör?"
+
+#: fractal-gtk/res/ui/login_flow.ui:187
+msgid "Matrix provider domain, e.g. myserver.co"
+msgstr "Matrix-leverantörsdomän, t.ex. myserver.co"
+
+#: fractal-gtk/res/ui/login_flow.ui:203
+msgid "The domain may not be empty."
+msgstr "Domänen får inte vara tom."
+
+#: fractal-gtk/res/ui/login_flow.ui:228
 msgid "Log In"
 msgstr "Logga in"
 
-#: fractal-gtk/res/ui/main_menu.ui:123
+#: fractal-gtk/res/ui/login_flow.ui:276
+msgid "_User ID"
+msgstr "_Användar-ID"
+
+#: fractal-gtk/res/ui/login_flow.ui:292
+msgid "_Password"
+msgstr "Lösen_ord"
+
+#: fractal-gtk/res/ui/login_flow.ui:324
+msgid "User name, email, or phone number"
+msgstr "Användarnamn, e-post eller telefonnummer"
+
+#: fractal-gtk/res/ui/login_flow.ui:357
+msgid "_Forgot Password?"
+msgstr "_Glömt lösenordet?"
+
+#: fractal-gtk/res/ui/login_flow.ui:375
+msgid "Invalid username or password"
+msgstr "Ogiltigt användarnamn eller lösenord"
+
+#: fractal-gtk/res/ui/main_menu.ui:103
 msgid "Log Out"
 msgstr "Logga ut"
 
-#: fractal-gtk/res/ui/main_menu.ui:150
+#: fractal-gtk/res/ui/main_menu.ui:120
 msgid "Keyboard _Shortcuts"
 msgstr "_Tangentbordsgenvägar"
 
-#: fractal-gtk/res/ui/main_menu.ui:164
+#: fractal-gtk/res/ui/main_menu.ui:129
 msgid "_About Fractal"
 msgstr "_Om Fractal"
 
-#: fractal-gtk/res/ui/main_window.ui:185
-msgid "No room selected"
-msgstr "Inget rum markerat"
-
-#: fractal-gtk/res/ui/main_window.ui:200
-msgid "Join a room to start chatting"
-msgstr "Gå in i ett rum för att börja chatta"
-
-#: fractal-gtk/res/ui/main_window.ui:210
-msgid "No room"
-msgstr "Inget rum"
-
-#: fractal-gtk/res/ui/main_window.ui:291
-msgid "Chat"
-msgstr "Chatt"
-
-#: fractal-gtk/res/ui/main_window.ui:343
-msgid "Directory"
-msgstr "Katalog"
-
-#: fractal-gtk/res/ui/main_window.ui:367
-msgid "Loading"
-msgstr "Läser in"
-
-#: fractal-gtk/res/ui/main_window.ui:412
+#: fractal-gtk/res/ui/main_window.ui:56
 msgid "User"
 msgstr "Användare"
 
-#: fractal-gtk/res/ui/main_window.ui:439
+#: fractal-gtk/res/ui/main_window.ui:82
 msgid "Add"
 msgstr "Lägg till"
 
-#: fractal-gtk/res/ui/main_window.ui:469
+#: fractal-gtk/res/ui/main_window.ui:111
 msgid "Room search"
 msgstr "Rumssökning"
 
-#: fractal-gtk/res/ui/main_window.ui:596
+#: fractal-gtk/res/ui/main_window.ui:282
 msgid "Room Menu"
 msgstr "Rumsmeny"
 
-#: fractal-gtk/res/ui/main_window.ui:702
-#: fractal-gtk/res/ui/server_chooser_menu.ui:65
-#: fractal-gtk/src/app/connect/directory.rs:137
+#: fractal-gtk/res/ui/main_window.ui:362
+msgid "No room selected"
+msgstr "Inget rum markerat"
+
+#: fractal-gtk/res/ui/main_window.ui:377
+msgid "Join a room to start chatting"
+msgstr "Gå in i ett rum för att börja chatta"
+
+#: fractal-gtk/res/ui/main_window.ui:387
+msgid "No room"
+msgstr "Inget rum"
+
+#: fractal-gtk/res/ui/main_window.ui:527
+#: fractal-gtk/res/ui/server_chooser_menu.ui:51
+#: fractal-gtk/src/appop/connect/directory.rs:117
 msgid "Default Matrix Server"
 msgstr "Standard-Matrix-server"
 
@@ -467,67 +450,63 @@ msgstr "Standard-Matrix-server"
 msgid "Markdown"
 msgstr "Markdown"
 
-#: fractal-gtk/res/ui/markdown_popover.ui:67
+#: fractal-gtk/res/ui/markdown_popover.ui:52
 msgid "> quote"
 msgstr "> citat"
 
-#: fractal-gtk/res/ui/markdown_popover.ui:78
+#: fractal-gtk/res/ui/markdown_popover.ui:63
 msgid "**bold**"
 msgstr "**fet**"
 
-#: fractal-gtk/res/ui/markdown_popover.ui:93
+#: fractal-gtk/res/ui/markdown_popover.ui:78
 msgid "`code`"
 msgstr "`kod`"
 
-#: fractal-gtk/res/ui/markdown_popover.ui:105
+#: fractal-gtk/res/ui/markdown_popover.ui:90
 msgid "*italic*"
 msgstr "*kursiv*"
 
-#: fractal-gtk/res/ui/media_viewer.ui:173
-msgid "Loading more media"
-msgstr "Läser in mer media"
-
-#: fractal-gtk/res/ui/media_viewer.ui:264
+#: fractal-gtk/res/ui/media_viewer.ui:63
 msgid "Toggle fullscreen"
 msgstr "Växla helskärmsläge"
 
-#: fractal-gtk/res/ui/members.ui:25 fractal-gtk/res/ui/room_settings.ui:940
-msgid "Search for room members"
-msgstr "Sök efter rumsmedlemmar"
+#: fractal-gtk/res/ui/media_viewer.ui:226
+msgid "Loading more media"
+msgstr "Läser in mer media"
 
 #: fractal-gtk/res/ui/message_menu.ui:22
 msgid "Reply"
 msgstr "Svara"
 
-#: fractal-gtk/res/ui/message_menu.ui:34
+#: fractal-gtk/res/ui/message_menu.ui:29
 msgid "Open With…"
 msgstr "Öppna med…"
 
-#: fractal-gtk/res/ui/message_menu.ui:47
+#: fractal-gtk/res/ui/message_menu.ui:37
 msgid "Save Image As…"
 msgstr "Spara bild som…"
 
-#: fractal-gtk/res/ui/message_menu.ui:60
+#: fractal-gtk/res/ui/message_menu.ui:45
 msgid "Save Video As…"
 msgstr "Spara video som…"
 
-#: fractal-gtk/res/ui/message_menu.ui:73
+#: fractal-gtk/res/ui/message_menu.ui:53
 msgid "Copy Image"
 msgstr "Kopiera bild"
 
-#: fractal-gtk/res/ui/message_menu.ui:86
+#: fractal-gtk/res/ui/message_menu.ui:61
 msgid "Copy Selection"
 msgstr "Kopiera markering"
 
-#: fractal-gtk/res/ui/message_menu.ui:99
+#: fractal-gtk/res/ui/message_menu.ui:69
 msgid "Copy Text"
 msgstr "Kopiera text"
 
-#: fractal-gtk/res/ui/message_menu.ui:114
+#: fractal-gtk/res/ui/message_menu.ui:79
 msgid "View Source"
 msgstr "Visa källa"
 
-#: fractal-gtk/res/ui/message_menu.ui:139
+#: fractal-gtk/res/ui/message_menu.ui:94
 msgid "Delete Message"
 msgstr "Ta bort meddelande"
 
@@ -539,33 +518,29 @@ msgstr "Meddelandekälla"
 msgid "Copy To Clipboard"
 msgstr "Kopiera till urklipp"
 
-#: fractal-gtk/res/ui/new_room.ui:14
-msgid "Private Chat"
-msgstr "Privat chatt"
-
-#: fractal-gtk/res/ui/new_room.ui:18 fractal-gtk/res/ui/new_room.ui:187
-msgid "Public"
-msgstr "Öppen"
-
-#: fractal-gtk/res/ui/new_room.ui:39
+#: fractal-gtk/res/ui/new_room.ui:21
 msgid "Create new room"
 msgstr "Skapa nytt rum"
 
-#: fractal-gtk/res/ui/new_room.ui:50
+#: fractal-gtk/res/ui/new_room.ui:32
 msgid "Create"
 msgstr "Skapa"
 
-#: fractal-gtk/res/ui/new_room.ui:108
+#: fractal-gtk/res/ui/new_room.ui:71
 msgid "Room name"
 msgstr "Rummets namn"
 
-#: fractal-gtk/res/ui/new_room.ui:152
+#: fractal-gtk/res/ui/new_room.ui:100
 msgid "Visibility"
 msgstr "Synlighet"
 
-#: fractal-gtk/res/ui/new_room.ui:171
+#: fractal-gtk/res/ui/new_room.ui:114
 msgid "Private"
 msgstr "Privat"
+
+#: fractal-gtk/res/ui/new_room.ui:125
+msgid "Public"
+msgstr "Öppen"
 
 #: fractal-gtk/res/ui/password_dialog.ui:22
 #: fractal-gtk/src/widgets/file_dialog.rs:12
@@ -577,47 +552,51 @@ msgstr "_Avbryt"
 msgid "Ch_ange"
 msgstr "Än_dra"
 
-#: fractal-gtk/res/ui/password_dialog.ui:133
+#: fractal-gtk/res/ui/password_dialog.ui:125
 msgid "The passwords do not match."
 msgstr "Lösenorden stämmer inte överens."
 
-#: fractal-gtk/res/ui/password_dialog.ui:151
+#: fractal-gtk/res/ui/password_dialog.ui:143
 msgid "_Verify New Password"
 msgstr "_Verifiera nytt lösenord"
 
-#: fractal-gtk/res/ui/password_dialog.ui:168
+#: fractal-gtk/res/ui/password_dialog.ui:160
 msgid "_New Password"
 msgstr "_Nytt lösenord"
 
-#: fractal-gtk/res/ui/password_dialog.ui:212
+#: fractal-gtk/res/ui/password_dialog.ui:204
 msgid "Current _Password"
 msgstr "Aktuellt _lösenord"
 
-#: fractal-gtk/res/ui/room_menu.ui:22
+#: fractal-gtk/res/ui/room_menu.ui:8
 msgid "Room Details"
 msgstr "Rumsdetaljer"
 
-#: fractal-gtk/res/ui/room_menu.ui:36
+#: fractal-gtk/res/ui/room_menu.ui:12
 msgid "Invite to This Room"
 msgstr "Bjud in till detta rum"
 
-#: fractal-gtk/res/ui/room_menu.ui:63
+#: fractal-gtk/res/ui/room_menu.ui:18
 msgid "Leave Room"
 msgstr "Lämna rum"
 
-#: fractal-gtk/res/ui/room_settings.ui:92
+#: fractal-gtk/res/ui/room_settings.ui:14
+msgid "Details"
+msgstr "Detaljer"
+
+#: fractal-gtk/res/ui/room_settings.ui:112
 msgid "Unknown"
 msgstr "Okänt"
 
-#: fractal-gtk/res/ui/room_settings.ui:118
+#: fractal-gtk/res/ui/room_settings.ui:133
 msgid "Add name"
 msgstr "Lägg till namn"
 
-#: fractal-gtk/res/ui/room_settings.ui:150
+#: fractal-gtk/res/ui/room_settings.ui:160
 msgid "Add topic"
 msgstr "Lägg till ämne"
 
-#: fractal-gtk/res/ui/room_settings.ui:174
+#: fractal-gtk/res/ui/room_settings.ui:179
 msgid "Type in your room topic"
 msgstr "Skriv in ditt ämne för rummet"
 
@@ -625,134 +604,134 @@ msgstr "Skriv in ditt ämne för rummet"
 msgid "No room description"
 msgstr "Ingen rumsbeskrivning"
 
-#: fractal-gtk/res/ui/room_settings.ui:239
+#: fractal-gtk/res/ui/room_settings.ui:230
 msgid "Notifications"
 msgstr "Aviseringar"
 
-#: fractal-gtk/res/ui/room_settings.ui:280
+#: fractal-gtk/res/ui/room_settings.ui:258
 msgid "Notification sounds"
 msgstr "Aviseringsljud"
 
-#: fractal-gtk/res/ui/room_settings.ui:325
+#: fractal-gtk/res/ui/room_settings.ui:290
 msgid "For all messages"
 msgstr "För alla meddelanden"
 
-#: fractal-gtk/res/ui/room_settings.ui:366
+#: fractal-gtk/res/ui/room_settings.ui:322
 msgid "Only for mentions"
 msgstr "Endast för omnämnanden"
 
-#: fractal-gtk/res/ui/room_settings.ui:397
+#: fractal-gtk/res/ui/room_settings.ui:352
 msgid "Shared Media"
 msgstr "Delade media"
 
-#: fractal-gtk/res/ui/room_settings.ui:444
+#: fractal-gtk/res/ui/room_settings.ui:394
 msgid "photos"
 msgstr "foton"
 
-#: fractal-gtk/res/ui/room_settings.ui:484
+#: fractal-gtk/res/ui/room_settings.ui:424
 msgid "videos"
 msgstr "videoklipp"
 
-#: fractal-gtk/res/ui/room_settings.ui:524
+#: fractal-gtk/res/ui/room_settings.ui:454
 msgid "documents"
 msgstr "dokument"
 
-#: fractal-gtk/res/ui/room_settings.ui:555
+#: fractal-gtk/res/ui/room_settings.ui:475
 msgid "New members can see"
 msgstr "Nya medlemmar kan se"
 
-#: fractal-gtk/res/ui/room_settings.ui:600
+#: fractal-gtk/res/ui/room_settings.ui:507
 msgid "All room history"
 msgstr "All rumshistorik"
 
-#: fractal-gtk/res/ui/room_settings.ui:641
+#: fractal-gtk/res/ui/room_settings.ui:539
 msgid "History after they were invited"
 msgstr "Historik efter att de bjöds in"
 
-#: fractal-gtk/res/ui/room_settings.ui:672
+#: fractal-gtk/res/ui/room_settings.ui:569
 msgid "Room Visibility"
 msgstr "Synlighet för rum"
 
-#: fractal-gtk/res/ui/room_settings.ui:719
+#: fractal-gtk/res/ui/room_settings.ui:604
 msgid "Allow guests"
 msgstr "Tillåt gäster"
 
-#: fractal-gtk/res/ui/room_settings.ui:759
+#: fractal-gtk/res/ui/room_settings.ui:635
 msgid "Allow joining without invite"
 msgstr "Tillåt ingång utan inbjudan"
 
-#: fractal-gtk/res/ui/room_settings.ui:799
+#: fractal-gtk/res/ui/room_settings.ui:666
 msgid "Publish in room directory"
 msgstr "Publicera i rumskatalog"
 
-#: fractal-gtk/res/ui/room_settings.ui:830
+#: fractal-gtk/res/ui/room_settings.ui:695
 msgid "Join addresses"
 msgstr "Ingångsadresser"
 
-#: fractal-gtk/res/ui/room_settings.ui:889
+#: fractal-gtk/res/ui/room_settings.ui:749
 msgid "members"
 msgstr "medlemmar"
 
-#: fractal-gtk/res/ui/room_settings.ui:905
+#: fractal-gtk/res/ui/room_settings.ui:761
 msgid "Invite New Member"
 msgstr "Bjud in ny medlem"
 
-#: fractal-gtk/res/ui/room_settings.ui:1018
-msgid "Details"
-msgstr "Detaljer"
+#: fractal-gtk/res/ui/room_settings.ui:786
+msgid "Search for room members"
+msgstr "Sök efter rumsmedlemmar"
 
 #: fractal-gtk/res/ui/scroll_widget.ui:63
 msgid "Scroll to bottom"
 msgstr "Rulla längst ner"
 
-#: fractal-gtk/res/ui/server_chooser_menu.ui:34
+#: fractal-gtk/res/ui/server_chooser_menu.ui:30
 msgid "Show rooms from:"
 msgstr "Visa rum från:"
 
-#: fractal-gtk/res/ui/server_chooser_menu.ui:90
+#: fractal-gtk/res/ui/server_chooser_menu.ui:65
 msgid "Your homeserver"
 msgstr "Din hemserver"
 
-#: fractal-gtk/res/ui/server_chooser_menu.ui:134
+#: fractal-gtk/res/ui/server_chooser_menu.ui:93
 msgid "Other Protocol"
 msgstr "Annat protokoll"
 
-#: fractal-gtk/res/ui/server_chooser_menu.ui:207
+#: fractal-gtk/res/ui/server_chooser_menu.ui:139
 msgid "Other Homeserver"
 msgstr "Annan hemserver"
 
-#: fractal-gtk/res/ui/server_chooser_menu.ui:235
+#: fractal-gtk/res/ui/server_chooser_menu.ui:156
 msgid "Homeserver URL"
 msgstr "URL för hemserver"
 
-#: fractal-gtk/src/actions/account_settings.rs:34
-#: fractal-gtk/src/actions/room_settings.rs:43
+#: fractal-gtk/src/actions/account_settings.rs:31
+#: fractal-gtk/src/actions/room_settings.rs:37
 msgid "Images"
 msgstr "Bilder"
 
-#: fractal-gtk/src/actions/account_settings.rs:35
-#: fractal-gtk/src/actions/room_settings.rs:45
+#: fractal-gtk/src/actions/account_settings.rs:32
+#: fractal-gtk/src/actions/room_settings.rs:39
 msgid "Select a new avatar"
 msgstr "Välj en ny profilbild"
 
-#: fractal-gtk/src/actions/global.rs:298
+#: fractal-gtk/src/actions/global.rs:320
 msgid "Select a file"
 msgstr "Välj en fil"
 
-#: fractal-gtk/src/actions/message.rs:74
+#: fractal-gtk/src/actions/message.rs:68
 msgid "This message has no source."
 msgstr "Det här meddelandet har ingen källa."
 
-#: fractal-gtk/src/actions/message.rs:159
-#: fractal-gtk/src/actions/message.rs:197
+#: fractal-gtk/src/actions/message.rs:151
+#: fractal-gtk/src/actions/message.rs:183
 msgid "Could not download the file"
 msgstr "Kunde inte hämta filen"
 
-#: fractal-gtk/src/actions/message.rs:168
+#: fractal-gtk/src/actions/message.rs:158
 msgid "Couldn’t save file"
 msgstr "Det gick inte att spara fil"
 
-#: fractal-gtk/src/actions/room_settings.rs:61
+#: fractal-gtk/src/actions/room_settings.rs:53
 msgid "Couldn’t open file"
 msgstr "Det gick inte att öppna fil"
 
@@ -780,19 +759,19 @@ msgstr ""
 msgid "Name by"
 msgstr "Namn av"
 
-#: fractal-gtk/src/appop/account.rs:68
+#: fractal-gtk/src/appop/account.rs:72
 msgid "The validation code is not correct."
 msgstr "Valideringskoden är felaktig."
 
-#: fractal-gtk/src/appop/account.rs:81
+#: fractal-gtk/src/appop/account.rs:85
 msgid "Enter the code received via SMS"
 msgstr "Ange koden du mottagit via SMS"
 
-#: fractal-gtk/src/appop/account.rs:96 fractal-gtk/src/appop/account.rs:159
+#: fractal-gtk/src/appop/account.rs:100 fractal-gtk/src/appop/account.rs:161
 msgid "Continue"
 msgstr "Fortsätt"
 
-#: fractal-gtk/src/appop/account.rs:149
+#: fractal-gtk/src/appop/account.rs:151
 msgid ""
 "In order to add this email address, go to your inbox and follow the link you "
 "received. Once you’ve done that, click Continue."
@@ -800,152 +779,148 @@ msgstr ""
 "För att lägga till denna e-postadress, gå till din inkorg och följ länken "
 "som du tog emot. Klicka sedan Fortsätt då du gjort detta."
 
-#: fractal-gtk/src/appop/account.rs:218
+#: fractal-gtk/src/appop/account.rs:224
 msgid "OK"
 msgstr "OK"
 
-#: fractal-gtk/src/appop/account.rs:786
+#: fractal-gtk/src/appop/account.rs:779
 msgid "Are you sure you want to delete your account?"
 msgstr "Är du säker på att du vill ta bort ditt konto?"
 
-#: fractal-gtk/src/appop/attach.rs:37
+#: fractal-gtk/src/appop/attach.rs:35
 msgid "Image from Clipboard"
 msgstr "Bild från urklipp"
 
-#: fractal-gtk/src/appop/attach.rs:53
+#: fractal-gtk/src/appop/attach.rs:51
 msgid "Send"
 msgstr "Skicka"
 
 #. Filename for the attached image
-#: fractal-gtk/src/appop/attach.rs:82
+#: fractal-gtk/src/appop/attach.rs:98
 msgid "image"
 msgstr "bild"
 
-#: fractal-gtk/src/appop/invite.rs:151
+#: fractal-gtk/src/appop/invite.rs:150
 msgid "Invite to {name}"
 msgstr "Bjud in till {name}"
 
-#: fractal-gtk/src/appop/invite.rs:269
+#: fractal-gtk/src/appop/invite.rs:259
 msgid "Join {room_name}?"
 msgstr "Gå in i {room_name}?"
 
-#: fractal-gtk/src/appop/invite.rs:274
+#: fractal-gtk/src/appop/invite.rs:263
 msgid ""
 "You’ve been invited to join <b>{room_name}</b> room by <b>{sender_name}</b>"
 msgstr ""
 "Du har bjudits in att gå in i rummet <b>{room_name}</b> av <b>{sender_name}</"
 "b>"
 
-#: fractal-gtk/src/appop/invite.rs:279
+#: fractal-gtk/src/appop/invite.rs:268
 msgid "You’ve been invited to join <b>{room_name}</b>"
 msgstr "Du har bjudits in att gå in i <b>{room_name}</b>"
 
 #. Translators: The placeholder is for the number of unread messages in the
 #. application
-#: fractal-gtk/src/appop/mod.rs:217
+#: fractal-gtk/src/appop/mod.rs:222
 msgid "Fractal [{}]"
 msgstr "Fractal [{}]"
 
-#: fractal-gtk/src/appop/notify.rs:52
+#: fractal-gtk/src/appop/notify.rs:47
 msgid "An audio file has been added to the conversation."
 msgstr "En ljudfil har lagts till i konversationen."
 
-#: fractal-gtk/src/appop/notify.rs:53
+#: fractal-gtk/src/appop/notify.rs:48
 msgid "An image has been added to the conversation."
 msgstr "En bild har lagts till i konversationen."
 
-#: fractal-gtk/src/appop/notify.rs:54
+#: fractal-gtk/src/appop/notify.rs:49
 msgid "A video has been added to the conversation."
 msgstr "Ett videoklipp har lagts till i konversationen."
 
-#: fractal-gtk/src/appop/notify.rs:55
+#: fractal-gtk/src/appop/notify.rs:50
 msgid "A file has been added to the conversation."
 msgstr "En fil har lagts till i konversationen."
 
-#: fractal-gtk/src/appop/notify.rs:60
+#: fractal-gtk/src/appop/notify.rs:55
 msgid " (direct message)"
 msgstr " (direktmeddelande)"
 
-#: fractal-gtk/src/appop/room.rs:358
+#: fractal-gtk/src/appop/room.rs:354
 msgid "Leave {room_name}?"
 msgstr "Lämna {room_name}?"
 
-#: fractal-gtk/src/appop/room.rs:573
+#: fractal-gtk/src/appop/room.rs:545
 msgid "The room ID is malformed"
 msgstr "Rums-ID:t är felaktigt utformat"
 
-#: fractal-gtk/src/appop/room.rs:643
+#: fractal-gtk/src/appop/room.rs:613
 msgid "EMPTY ROOM"
 msgstr "TOMT RUM"
 
-#: fractal-gtk/src/appop/room.rs:645
+#: fractal-gtk/src/appop/room.rs:615
 msgid "{m1} and {m2}"
 msgstr "{m1} och {m2}"
 
-#: fractal-gtk/src/appop/room.rs:646
+#: fractal-gtk/src/appop/room.rs:616
 msgid "{m1} and Others"
 msgstr "{m1} med flera"
 
-#: fractal-gtk/src/appop/room.rs:745
+#: fractal-gtk/src/appop/room.rs:716
 msgid "Several users are typing…"
 msgstr "Flera användare skriver…"
 
-#: fractal-gtk/src/appop/room.rs:748
+#: fractal-gtk/src/appop/room.rs:719
 msgid "<b>{}</b> is typing…"
 msgid_plural "<b>{}</b> and <b>{}</b> are typing…"
 msgstr[0] "<b>{}</b> skriver…"
 msgstr[1] "<b>{}</b> och <b>{}</b> skriver…"
 
-#: fractal-gtk/src/appop/sync.rs:16
+#: fractal-gtk/src/appop/sync.rs:25
 msgid "Syncing, this could take a while"
 msgstr "Synkroniserar, detta kan ta ett tag"
 
-#: fractal-gtk/src/backend/directory.rs:39
-#: fractal-gtk/src/backend/directory.rs:80
+#: fractal-gtk/src/backend/directory.rs:35
+#: fractal-gtk/src/backend/directory.rs:81
 msgid "Error searching for rooms"
 msgstr "Fel vid sökning efter rum"
 
-#: fractal-gtk/src/backend/register.rs:37
+#: fractal-gtk/src/backend/register.rs:42
 msgid "Can’t login, try again"
 msgstr "Det går inte att logga in, försök igen"
 
-#: fractal-gtk/src/backend/room.rs:352
+#: fractal-gtk/src/backend/room.rs:403
 msgid "Error deleting message"
 msgstr "Fel vid borttagning av meddelande"
 
-#: fractal-gtk/src/backend/room.rs:419
+#: fractal-gtk/src/backend/room.rs:443
 msgid "Can’t join the room, try again."
 msgstr "Det går inte att gå in i rummet, försök igen."
 
-#: fractal-gtk/src/backend/room.rs:684 fractal-gtk/src/backend/room.rs:741
+#: fractal-gtk/src/backend/room.rs:675 fractal-gtk/src/backend/room.rs:727
 msgid "Can’t create the room, try again"
 msgstr "Det går inte att skapa rummet, försök igen"
 
-#: fractal-gtk/src/backend/user.rs:162
+#: fractal-gtk/src/backend/user.rs:113
 msgid "Sorry, account settings can’t be loaded."
 msgstr "Tyvärr, kontoinställningar kan inte läsas in."
 
-#: fractal-gtk/src/backend/user.rs:201
+#: fractal-gtk/src/backend/user.rs:141
 msgid "Email is already in use"
 msgstr "E-postadressen används redan"
 
-#: fractal-gtk/src/backend/user.rs:205
+#: fractal-gtk/src/backend/user.rs:144
 msgid "Please enter a valid email address."
 msgstr "Ange en giltig e-postadress."
 
-#: fractal-gtk/src/backend/user.rs:209
+#: fractal-gtk/src/backend/user.rs:147
 msgid "Couldn’t add the email address."
 msgstr "Kunde inte lägga till e-postadressen."
 
-#: fractal-gtk/src/backend/user.rs:218 fractal-gtk/src/backend/user.rs:296
-msgid "The identity server is invalid."
-msgstr "Identitetsservern är ogiltig."
-
-#: fractal-gtk/src/backend/user.rs:277
+#: fractal-gtk/src/backend/user.rs:184
 msgid "Phone number is already in use"
 msgstr "Telefonnumret används redan"
 
-#: fractal-gtk/src/backend/user.rs:282
+#: fractal-gtk/src/backend/user.rs:188
 msgid ""
 "Please enter your phone number in the format: \n"
 " + your country code and your phone number."
@@ -953,19 +928,19 @@ msgstr ""
 "Ange ditt telefonnummer i formatet: \n"
 " + din landskod och ditt telefonnummer."
 
-#: fractal-gtk/src/backend/user.rs:287
+#: fractal-gtk/src/backend/user.rs:192
 msgid "Couldn’t add the phone number."
 msgstr "Kunde inte lägga till telefonnumret."
 
-#: fractal-gtk/src/backend/user.rs:443
+#: fractal-gtk/src/backend/user.rs:330
 msgid "Couldn’t change the password"
 msgstr "Kunde inte ändra lösenordet"
 
-#: fractal-gtk/src/backend/user.rs:487
+#: fractal-gtk/src/backend/user.rs:383
 msgid "Couldn’t delete the account"
 msgstr "Kunde inte ta bort kontot"
 
-#: fractal-gtk/src/uibuilder.rs:52
+#: fractal-gtk/src/uibuilder.rs:51
 msgid "You don’t have permission to post to this room"
 msgstr "Du har inte behörighet att posta i detta rum"
 
@@ -981,7 +956,7 @@ msgstr "_Spara"
 msgid "_Select"
 msgstr "_Välj"
 
-#: fractal-gtk/src/widgets/inline_player.rs:521
+#: fractal-gtk/src/widgets/inline_player.rs:513
 msgid "Could not retrieve file URI"
 msgstr "Kunde inte erhålla fil-URI"
 
@@ -997,71 +972,71 @@ msgstr ""
 "Sparkades ut av: {}\n"
 " ”{}”"
 
-#: fractal-gtk/src/widgets/login.rs:98
+#: fractal-gtk/src/widgets/login.rs:95
 msgid "Malformed server URL"
 msgstr "Felaktigt utformad server-URL"
 
-#: fractal-gtk/src/widgets/media_viewer.rs:1050
+#: fractal-gtk/src/widgets/media_viewer.rs:1026
 msgid "Error while loading previous media"
 msgstr "Fel vid inläsning av tidigare media"
 
-#: fractal-gtk/src/widgets/members_list.rs:51
+#: fractal-gtk/src/widgets/members_list.rs:52
 msgid "No matching members found"
 msgstr "Inga matchande medlemmar hittades"
 
-#: fractal-gtk/src/widgets/members_list.rs:167
+#: fractal-gtk/src/widgets/members_list.rs:149
 msgid "Admin"
 msgstr "Admin"
 
-#: fractal-gtk/src/widgets/members_list.rs:168
+#: fractal-gtk/src/widgets/members_list.rs:150
 msgid "Moderator"
 msgstr "Moderator"
 
-#: fractal-gtk/src/widgets/members_list.rs:169
+#: fractal-gtk/src/widgets/members_list.rs:151
 msgid "Privileged"
 msgstr "Privilegierad"
 
-#: fractal-gtk/src/widgets/message.rs:90
+#: fractal-gtk/src/widgets/message.rs:85
 msgid "Uploading video."
 msgstr "Skickar video."
 
-#: fractal-gtk/src/widgets/message.rs:95
+#: fractal-gtk/src/widgets/message.rs:90
 msgid "Uploading audio."
 msgstr "Skickar ljud."
 
-#: fractal-gtk/src/widgets/message.rs:100
+#: fractal-gtk/src/widgets/message.rs:95
 msgid "Uploading image."
 msgstr "Skickar bild."
 
-#: fractal-gtk/src/widgets/message.rs:104
+#: fractal-gtk/src/widgets/message.rs:99
 msgid "Uploading file."
 msgstr "Skickar fil."
 
-#: fractal-gtk/src/widgets/message.rs:256
+#: fractal-gtk/src/widgets/message.rs:249
 #, c-format
 msgid "Last edited %c"
 msgstr "Senast redigerat %c"
 
-#: fractal-gtk/src/widgets/message.rs:481
-#: fractal-gtk/src/widgets/message.rs:596
+#: fractal-gtk/src/widgets/message.rs:460
+#: fractal-gtk/src/widgets/message.rs:576
 msgid "Save"
 msgstr "Spara"
 
-#: fractal-gtk/src/widgets/message.rs:610
+#: fractal-gtk/src/widgets/message.rs:590
 msgid "Open"
 msgstr "Öppna"
 
 #. Use 12h time format (AM/PM)
-#: fractal-gtk/src/widgets/message.rs:630
+#: fractal-gtk/src/widgets/message.rs:610
 msgid "%l∶%M %p"
 msgstr "%l∶%M %p"
 
 #. Use 24 time format
-#: fractal-gtk/src/widgets/message.rs:633
+#: fractal-gtk/src/widgets/message.rs:613
 msgid "%R"
 msgstr "%R"
 
-#: fractal-gtk/src/widgets/room_history.rs:96
+#: fractal-gtk/src/widgets/room_history.rs:108
 msgid "New Messages"
 msgstr "Nya meddelanden"
 
@@ -1075,13 +1050,13 @@ msgstr "%e %B"
 msgid "%B %e, %Y"
 msgstr "%e %B, %Y"
 
-#: fractal-gtk/src/widgets/room_settings.rs:211
+#: fractal-gtk/src/widgets/room_settings.rs:216
 msgid "Room · {} member"
 msgid_plural "Room · {} members"
 msgstr[0] "Rum · {} medlem"
 msgstr[1] "Rum · {} medlemmar"
 
-#: fractal-gtk/src/widgets/room_settings.rs:659
+#: fractal-gtk/src/widgets/room_settings.rs:651
 msgid "{} member"
 msgid_plural "{} members"
 msgstr[0] "{} medlem"
@@ -1110,6 +1085,24 @@ msgstr "Rum"
 #: fractal-gtk/src/widgets/roomlist.rs:491
 msgid "You don’t have any rooms yet"
 msgstr "Du har inga rum ännu"
+
+#~ msgid "Select room image file"
+#~ msgstr "Välj bildfil för rum"
+
+#~ msgid "Chat"
+#~ msgstr "Chatt"
+
+#~ msgid "Directory"
+#~ msgstr "Katalog"
+
+#~ msgid "Loading"
+#~ msgstr "Läser in"
+
+#~ msgid "Private Chat"
+#~ msgstr "Privat chatt"
+
+#~ msgid "The identity server is invalid."
+#~ msgstr "Identitetsservern är ogiltig."
 
 #~ msgid "Error sending message"
 #~ msgstr "Fel vid sändning av meddelande"
