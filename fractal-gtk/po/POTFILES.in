@@ -31,6 +31,11 @@ fractal-gtk/res/ui/scroll_widget.ui
 fractal-gtk/res/ui/server_chooser_menu.ui
 
 # rust files
+
+
+
+
+
 fractal-gtk/src/actions/account_settings.rs
 fractal-gtk/src/actions/global.rs
 fractal-gtk/src/actions/login.rs
@@ -54,9 +59,7 @@ fractal-gtk/src/api/r0/server.rs
 fractal-gtk/src/api/r0/server/domain_info.rs
 fractal-gtk/src/app/mod.rs
 fractal-gtk/src/app/windowstate.rs
-fractal-gtk/src/appop/about.rs
 fractal-gtk/src/appop/account.rs
-fractal-gtk/src/appop/attach.rs
 fractal-gtk/src/appop/directory.rs
 fractal-gtk/src/appop/invite.rs
 fractal-gtk/src/appop/login.rs
@@ -91,6 +94,8 @@ fractal-gtk/src/model/message.rs
 fractal-gtk/src/model/mod.rs
 fractal-gtk/src/model/room.rs
 fractal-gtk/src/passwd.rs
+fractal-gtk/src/ui/about.rs
+fractal-gtk/src/ui/attach.rs
 fractal-gtk/src/ui/connect/account.rs
 fractal-gtk/src/ui/connect/autocomplete.rs
 fractal-gtk/src/ui/connect/direct.rs
@@ -106,7 +111,16 @@ fractal-gtk/src/ui/connect/new_room.rs
 fractal-gtk/src/ui/connect/roomlist_search.rs
 fractal-gtk/src/ui/connect/send.rs
 fractal-gtk/src/ui/connect/swipeable_widgets.rs
+fractal-gtk/src/ui/directory.rs
+fractal-gtk/src/ui/invite.rs
+fractal-gtk/src/ui/member.rs
 fractal-gtk/src/ui/mod.rs
+fractal-gtk/src/ui/notify.rs
+fractal-gtk/src/ui/room_settings.rs
+fractal-gtk/src/ui/start_chat.rs
+fractal-gtk/src/ui/state.rs
+fractal-gtk/src/ui/user.rs
+fractal-gtk/src/util/i18n.rs
 fractal-gtk/src/util/mod.rs
 fractal-gtk/src/widgets/address.rs
 fractal-gtk/src/widgets/autocomplete.rs
@@ -125,9 +139,7 @@ fractal-gtk/src/widgets/members_list.rs
 fractal-gtk/src/widgets/message.rs
 fractal-gtk/src/widgets/message_menu.rs
 fractal-gtk/src/widgets/mod.rs
-fractal-gtk/src/widgets/room.rs
 fractal-gtk/src/widgets/room_history.rs
-fractal-gtk/src/widgets/room_settings.rs
 fractal-gtk/src/widgets/roomlist.rs
 fractal-gtk/src/widgets/roomrow.rs
 fractal-gtk/src/widgets/scroll_widget.rs
