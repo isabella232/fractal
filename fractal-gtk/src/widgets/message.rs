@@ -13,8 +13,6 @@ use std::rc::Rc;
 use crate::util::markup_text;
 
 use crate::cache::download_to_cache;
-use crate::cache::download_to_cache_username;
-use crate::cache::download_to_cache_username_emote;
 
 use crate::globals;
 use crate::ui::MessageContent as Message;
@@ -231,7 +229,7 @@ impl MessageBox {
         let body = match msg.mtype {
             RowType::Sticker => self.build_room_msg_sticker(session_client, msg),
             RowType::Image => self.build_room_msg_image(session_client, msg),
-            RowType::Emote => self.build_room_msg_emote(session_client, msg),
+            RowType::Emote => self.build_room_msg_emote(msg),
             RowType::Audio => self.build_room_audio_player(session_client, msg),
             RowType::Video => self.build_room_video_player(session_client, msg),
             RowType::File => self.build_room_msg_file(msg),
@@ -284,7 +282,6 @@ impl MessageBox {
             uid.clone(),
             data.clone(),
         );
-        download_to_cache_username(session_client, uid, self.username.clone(), Some(data));
 
         avatar
     }
@@ -648,7 +645,7 @@ impl MessageBox {
         info
     }
 
-    fn build_room_msg_emote(&self, session_client: MatrixClient, msg: &Message) -> gtk::Box {
+    fn build_room_msg_emote(&self, msg: &Message) -> gtk::Box {
         let bx = gtk::Box::new(gtk::Orientation::Horizontal, 0);
         /* Use MXID till we have a alias */
         let sname = msg
@@ -658,14 +655,6 @@ impl MessageBox {
         let msg_label = gtk::Label::new(None);
         let body: &str = &msg.body;
         let markup = markup_text(body);
-
-        download_to_cache_username_emote(
-            session_client,
-            msg.sender.clone(),
-            &markup,
-            msg_label.clone(),
-            None,
-        );
 
         self.connect_right_click_menu(msg, Some(&msg_label));
         msg_label.set_markup(&format!("<b>{}</b> {}", sname, markup));
