@@ -102,6 +102,7 @@ app_sources = files(
   'ui/attach.rs',
   'ui/directory.rs',
   'ui/invite.rs',
+  'ui/media_viewer.rs',
   'ui/member.rs',
   'ui/mod.rs',
   'ui/notify.rs',

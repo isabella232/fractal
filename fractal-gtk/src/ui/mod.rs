@@ -14,6 +14,7 @@ pub mod attach;
 pub mod connect;
 pub mod directory;
 pub mod invite;
+pub mod media_viewer;
 pub mod member;
 pub mod notify;
 pub mod room_settings;
@@ -27,6 +28,7 @@ pub struct UI {
     pub main_window: libhandy::ApplicationWindow,
     pub sventry: SVEntry,
     pub sventry_box: Box<gtk::Stack>,
+    pub subview_stack: gtk::Stack,
     pub room_settings: Option<room_settings::RoomSettings>,
     pub history: Option<widgets::RoomHistory>,
     pub roomlist: widgets::RoomList,
@@ -88,6 +90,10 @@ impl UI {
         let parent: gtk::Box = builder.get_object("room_parent").unwrap();
         parent.add(&sventry_stack);
 
+        let subview_stack = builder
+            .get_object("subview_stack")
+            .expect("Can't find subview_stack in ui file.");
+
         // Depends on main_window
         // These are all dialogs transient for main_window
         builder
@@ -131,6 +137,7 @@ impl UI {
             main_window,
             sventry,
             sventry_box,
+            subview_stack,
             room_settings: None,
             history: None,
             roomlist: widgets::RoomList::new(None, None),

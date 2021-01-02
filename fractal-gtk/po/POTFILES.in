@@ -107,6 +107,7 @@ fractal-gtk/src/ui/connect/send.rs
 fractal-gtk/src/ui/connect/swipeable_widgets.rs
 fractal-gtk/src/ui/directory.rs
 fractal-gtk/src/ui/invite.rs
+fractal-gtk/src/ui/media_viewer.rs
 fractal-gtk/src/ui/member.rs
 fractal-gtk/src/ui/mod.rs
 fractal-gtk/src/ui/notify.rs

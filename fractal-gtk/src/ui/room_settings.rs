@@ -33,16 +33,12 @@ impl UI {
         let mut panel = RoomSettings::new(session_client.clone(), &window, user_id, room);
         let page = panel.create(session_client);
 
-        let stack = self
-            .builder
-            .get_object::<gtk::Stack>("subview_stack")
-            .expect("Can't find subview_stack in ui file.");
         // remove old panel
-        if let Some(widget) = stack.get_child_by_name("room-settings") {
-            stack.remove(&widget);
+        if let Some(widget) = self.subview_stack.get_child_by_name("room-settings") {
+            self.subview_stack.remove(&widget);
         }
 
-        stack.add_named(&page, "room-settings");
+        self.subview_stack.add_named(&page, "room-settings");
 
         self.room_settings = Some(panel);
     }

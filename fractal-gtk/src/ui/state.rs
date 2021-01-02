@@ -10,10 +10,6 @@ impl UI {
             .builder
             .get_object::<libhandy::Deck>("main_deck")
             .expect("Could not find main_deck in ui file");
-        let stack = self
-            .builder
-            .get_object::<gtk::Stack>("subview_stack")
-            .expect("Could not find subview_stack in ui file");
         let app = gio::Application::get_default().unwrap();
 
         let global_back = app.lookup_action("back");
@@ -24,7 +20,7 @@ impl UI {
         };
 
         if let Some(v) = view {
-            stack.set_visible_child_name(v);
+            self.subview_stack.set_visible_child_name(v);
         }
 
         if deck.get_adjacent_child(direction).is_some() {
