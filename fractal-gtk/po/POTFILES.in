@@ -31,11 +31,6 @@ fractal-gtk/res/ui/scroll_widget.ui
 fractal-gtk/res/ui/server_chooser_menu.ui
 
 # rust files
-
-
-
-
-
 fractal-gtk/src/actions/account_settings.rs
 fractal-gtk/src/actions/global.rs
 fractal-gtk/src/actions/login.rs
@@ -133,7 +128,6 @@ fractal-gtk/src/widgets/inline_player.rs
 fractal-gtk/src/widgets/kicked_dialog.rs
 fractal-gtk/src/widgets/login.rs
 fractal-gtk/src/widgets/media_viewer.rs
-fractal-gtk/src/widgets/member.rs
 fractal-gtk/src/widgets/members_list.rs
 fractal-gtk/src/widgets/message.rs
 fractal-gtk/src/widgets/message_menu.rs
