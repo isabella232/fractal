@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the fractal package.
 #
 # Artem Polishchuk <ego.cordatus@gmail.com>, 2019.
-# Yuri Chornoivan <yurchor@ukr.net>, 2020.
+# Yuri Chornoivan <yurchor@ukr.net>, 2020, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: fractal master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2020-12-14 16:42+0000\n"
-"PO-Revision-Date: 2020-12-14 20:01+0200\n"
+"POT-Creation-Date: 2021-01-02 18:19+0000\n"
+"PO-Revision-Date: 2021-01-02 20:46+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -102,7 +102,7 @@ msgstr "Написати на новому рядку"
 
 #: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:3
 #: fractal-gtk/res/org.gnome.Fractal.metainfo.xml.in.in:5
-#: fractal-gtk/res/ui/login_flow.ui:19 fractal-gtk/src/appop/mod.rs:218
+#: fractal-gtk/res/ui/login_flow.ui:19 fractal-gtk/src/appop/mod.rs:170
 msgid "Fractal"
 msgstr "Фрактал"
 
@@ -120,12 +120,10 @@ msgstr "Груповий обмін повідомленнями у «Фракт
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:14
-#| msgid "Matrix;matrix.org;chat;irc;communications;talk;riot;"
 msgid "Matrix;matrix.org;chat;irc;communications;talk;riot;element;"
 msgstr ""
-"Matrix;matrix.org;chat;irc;communications;talk;riot;element;матрікс;метрікс;ма"
-"триця;"
-"чат;балачка;спілкування;ірк;ріот;райот;елемент;"
+"Matrix;matrix.org;chat;irc;communications;talk;riot;element;матрікс;метрікс;"
+"матриця;чат;балачка;спілкування;ірк;ріот;райот;елемент;"
 
 #: fractal-gtk/res/org.gnome.Fractal.gschema.xml:13
 msgid "Type of password and token storage"
@@ -262,10 +260,10 @@ msgid "Check your email"
 msgstr "Перевірте свою електронну пошту"
 
 #: fractal-gtk/res/ui/account_settings.ui:526
-#: fractal-gtk/res/ui/direct_chat.ui:84 fractal-gtk/res/ui/invite_user.ui:84
+#: fractal-gtk/res/ui/direct_chat.ui:83 fractal-gtk/res/ui/invite_user.ui:84
 #: fractal-gtk/res/ui/join_room.ui:71 fractal-gtk/res/ui/leave_room.ui:31
-#: fractal-gtk/res/ui/new_room.ui:24 fractal-gtk/src/appop/account.rs:99
-#: fractal-gtk/src/appop/account.rs:160 fractal-gtk/src/appop/attach.rs:50
+#: fractal-gtk/res/ui/new_room.ui:24 fractal-gtk/src/appop/account.rs:87
+#: fractal-gtk/src/appop/account.rs:143 fractal-gtk/src/ui/attach.rs:41
 msgid "Cancel"
 msgstr "Скасувати"
 
@@ -293,11 +291,11 @@ msgstr "Новий чат"
 msgid "Play"
 msgstr "Відтворити"
 
-#: fractal-gtk/res/ui/direct_chat.ui:81
+#: fractal-gtk/res/ui/direct_chat.ui:80
 msgid "New direct chat"
 msgstr "Новий чат"
 
-#: fractal-gtk/res/ui/direct_chat.ui:92
+#: fractal-gtk/res/ui/direct_chat.ui:91
 msgid "Start chat"
 msgstr "Почати чат"
 
@@ -314,7 +312,7 @@ msgid "Accept"
 msgstr "Прийняти"
 
 #: fractal-gtk/res/ui/invite_user.ui:81 fractal-gtk/res/ui/invite_user.ui:92
-#: fractal-gtk/src/appop/invite.rs:152
+#: fractal-gtk/src/ui/invite.rs:133
 msgid "Invite"
 msgstr "Запросити"
 
@@ -326,7 +324,7 @@ msgstr "Ідентифікатор або псевдонім"
 msgid "Join room"
 msgstr "Увійти в кімнату"
 
-#: fractal-gtk/res/ui/join_room.ui:79 fractal-gtk/src/widgets/room.rs:123
+#: fractal-gtk/res/ui/join_room.ui:79 fractal-gtk/src/ui/directory.rs:245
 msgid "Join"
 msgstr "Увійти"
 
@@ -448,7 +446,7 @@ msgstr "Немає кімнати"
 
 #: fractal-gtk/res/ui/main_window.ui:527
 #: fractal-gtk/res/ui/server_chooser_menu.ui:51
-#: fractal-gtk/src/appop/connect/directory.rs:117
+#: fractal-gtk/src/ui/connect/directory.rs:117
 msgid "Default Matrix Server"
 msgstr "Типовий Matrix-сервер"
 
@@ -724,16 +722,16 @@ msgstr "Виберіть новий аватар"
 msgid "Select a file"
 msgstr "Виберіть файл"
 
-#: fractal-gtk/src/actions/message.rs:68
+#: fractal-gtk/src/actions/message.rs:57
 msgid "This message has no source."
 msgstr "У цьому повідомленні немає джерела."
 
-#: fractal-gtk/src/actions/message.rs:151
-#: fractal-gtk/src/actions/message.rs:183
+#: fractal-gtk/src/actions/message.rs:131
+#: fractal-gtk/src/actions/message.rs:162
 msgid "Could not download the file"
 msgstr "Не вдалося завантажити файл"
 
-#: fractal-gtk/src/actions/message.rs:158
+#: fractal-gtk/src/actions/message.rs:138
 msgid "Couldn’t save file"
 msgstr "Не вдалося зберегти файл"
 
@@ -741,39 +739,19 @@ msgstr "Не вдалося зберегти файл"
 msgid "Couldn’t open file"
 msgstr "Не вдалося відкрити файл"
 
-#: fractal-gtk/src/appop/about.rs:20
-msgid "A Matrix.org client for GNOME"
-msgstr "Matrix.org клієнт для GNOME"
-
-#: fractal-gtk/src/appop/about.rs:22
-msgid "© 2017–2020 Daniel García Moreno, et al."
-msgstr "© 2017–2020 Daniel García Moreno, та ін."
-
-#: fractal-gtk/src/appop/about.rs:29
-msgid "Learn more about Fractal"
-msgstr "Дізнайтеся більше про «Фрактал»"
-
-#: fractal-gtk/src/appop/about.rs:30
-msgid "translator-credits"
-msgstr "Artem Polishchuk <ego.cordatus@gmail.com>, 2019."
-
-#: fractal-gtk/src/appop/about.rs:45
-msgid "Name by"
-msgstr "Авторка назви"
-
-#: fractal-gtk/src/appop/account.rs:72
+#: fractal-gtk/src/appop/account.rs:65
 msgid "The validation code is not correct."
 msgstr "Код перевірки невірний."
 
-#: fractal-gtk/src/appop/account.rs:85
+#: fractal-gtk/src/appop/account.rs:73
 msgid "Enter the code received via SMS"
 msgstr "Введіть код отриманий в SMS"
 
-#: fractal-gtk/src/appop/account.rs:100 fractal-gtk/src/appop/account.rs:161
+#: fractal-gtk/src/appop/account.rs:88 fractal-gtk/src/appop/account.rs:144
 msgid "Continue"
 msgstr "Продовжити"
 
-#: fractal-gtk/src/appop/account.rs:151
+#: fractal-gtk/src/appop/account.rs:134
 msgid ""
 "In order to add this email address, go to your inbox and follow the link you "
 "received. Once you’ve done that, click Continue."
@@ -782,95 +760,59 @@ msgstr ""
 "та перейдіть за отриманим вами посиланням. Після цього, натисніть "
 "«Продовжити»."
 
-#: fractal-gtk/src/appop/account.rs:224
-msgid "OK"
-msgstr "Гаразд"
-
-#: fractal-gtk/src/appop/account.rs:779
+#: fractal-gtk/src/appop/account.rs:348
 msgid "Are you sure you want to delete your account?"
 msgstr "Ви дійсно хочете видалити свій обліковий запис?"
 
-#: fractal-gtk/src/appop/attach.rs:35
-msgid "Image from Clipboard"
-msgstr "Зображення з буфера обміну"
-
-#: fractal-gtk/src/appop/attach.rs:51
-msgid "Send"
-msgstr "Надіслати"
-
-#. Filename for the attached image
-#: fractal-gtk/src/appop/attach.rs:98
-msgid "image"
-msgstr "зображення"
-
-#: fractal-gtk/src/appop/invite.rs:150
-msgid "Invite to {name}"
-msgstr "Запросити в {name}"
-
-#: fractal-gtk/src/appop/invite.rs:259
-msgid "Join {room_name}?"
-msgstr "Увійти в {room_name}?"
-
-#: fractal-gtk/src/appop/invite.rs:263
-msgid ""
-"You’ve been invited to join <b>{room_name}</b> room by <b>{sender_name}</b>"
-msgstr "<b>{sender_name}</b> запросив вас увійти в <b>{room_name}</b>"
-
-#: fractal-gtk/src/appop/invite.rs:268
-msgid "You’ve been invited to join <b>{room_name}</b>"
-msgstr "Вас запросили увійти в <b>{room_name}</b>"
-
-#. Translators: The placeholder is for the number of unread messages in the
-#. application
-#: fractal-gtk/src/appop/mod.rs:222
+#: fractal-gtk/src/appop/mod.rs:176
 msgid "Fractal [{}]"
 msgstr "Фрактал [{}]"
 
-#: fractal-gtk/src/appop/notify.rs:47
+#: fractal-gtk/src/appop/notify.rs:18
 msgid "An audio file has been added to the conversation."
 msgstr "До спілкування було додано файл звукових даних."
 
-#: fractal-gtk/src/appop/notify.rs:48
+#: fractal-gtk/src/appop/notify.rs:19
 msgid "An image has been added to the conversation."
 msgstr "До спілкування було додано файл зображення."
 
-#: fractal-gtk/src/appop/notify.rs:49
+#: fractal-gtk/src/appop/notify.rs:20
 msgid "A video has been added to the conversation."
 msgstr "До спілкування було додано файл відео."
 
-#: fractal-gtk/src/appop/notify.rs:50
+#: fractal-gtk/src/appop/notify.rs:21
 msgid "A file has been added to the conversation."
 msgstr "До спілкування було додано файл даних."
 
-#: fractal-gtk/src/appop/notify.rs:55
+#: fractal-gtk/src/appop/notify.rs:26
 msgid " (direct message)"
 msgstr " (приватне повідомлення)"
 
-#: fractal-gtk/src/appop/room.rs:354
+#: fractal-gtk/src/appop/room.rs:352
 msgid "Leave {room_name}?"
 msgstr "Покинути {room_name}?"
 
-#: fractal-gtk/src/appop/room.rs:545
+#: fractal-gtk/src/appop/room.rs:539
 msgid "The room ID is malformed"
 msgstr "Форматування запису ідентифікатора кімнати є помилковим"
 
-#: fractal-gtk/src/appop/room.rs:613
+#: fractal-gtk/src/appop/room.rs:607
 msgid "EMPTY ROOM"
 msgstr "ПОРОЖНЯ КІМНАТА"
 
-#: fractal-gtk/src/appop/room.rs:615
+#: fractal-gtk/src/appop/room.rs:609
 msgid "{m1} and {m2}"
 msgstr "{m1} та {m2}"
 
-#: fractal-gtk/src/appop/room.rs:616
+#: fractal-gtk/src/appop/room.rs:610
 msgid "{m1} and Others"
 msgstr "{m1} і інші"
 
-#: fractal-gtk/src/appop/room.rs:716
+#: fractal-gtk/src/appop/room.rs:710
 msgid "Several users are typing…"
 msgstr "Декілька користувачів набирають повідомлення…"
 
-#: fractal-gtk/src/appop/room.rs:719
+#: fractal-gtk/src/appop/room.rs:713
 msgid "<b>{}</b> is typing…"
 msgid_plural "<b>{}</b> and <b>{}</b> are typing…"
 msgstr[0] "<b>{}</b> і <b>{}</b> вводять повідомлення…"
@@ -878,7 +820,7 @@ msgstr[1] "<b>{}</b> і <b>{}</b> вводять повідомлення…"
 msgstr[2] "<b>{}</b> і <b>{}</b> вводять повідомлення…"
 msgstr[3] "<b>{}</b> вводить повідомлення…"
 
-#: fractal-gtk/src/appop/sync.rs:25
+#: fractal-gtk/src/appop/sync.rs:26
 msgid "Syncing, this could take a while"
 msgstr "Синхронізація, це може зайняти деякий час"
 
@@ -943,9 +885,181 @@ msgstr "Не вдалося змінити пароль"
 msgid "Couldn’t delete the account"
 msgstr "Не вдалося видалити обліковий запис"
 
-#: fractal-gtk/src/uibuilder.rs:51
+#: fractal-gtk/src/ui/about.rs:12
+msgid "A Matrix.org client for GNOME"
+msgstr "Matrix.org клієнт для GNOME"
+
+#: fractal-gtk/src/ui/about.rs:14
+msgid "© 2017–2020 Daniel García Moreno, et al."
+msgstr "© 2017–2020 Daniel García Moreno, та ін."
+
+#: fractal-gtk/src/ui/about.rs:21
+msgid "Learn more about Fractal"
+msgstr "Дізнайтеся більше про «Фрактал»"
+
+#: fractal-gtk/src/ui/about.rs:22
+msgid "translator-credits"
+msgstr "Artem Polishchuk <ego.cordatus@gmail.com>, 2019."
+
+#: fractal-gtk/src/ui/about.rs:37
+msgid "Name by"
+msgstr "Авторка назви"
+
+#: fractal-gtk/src/ui/attach.rs:26
+msgid "Image from Clipboard"
+msgstr "Зображення з буфера обміну"
+
+#: fractal-gtk/src/ui/attach.rs:42
+msgid "Send"
+msgstr "Надіслати"
+
+#. Filename for the attached image
+#: fractal-gtk/src/ui/attach.rs:90
+msgid "image"
+msgstr "зображення"
+
+#: fractal-gtk/src/ui/invite.rs:131
+msgid "Invite to {name}"
+msgstr "Запросити в {name}"
+
+#: fractal-gtk/src/ui/invite.rs:183
+msgid "Join {room_name}?"
+msgstr "Увійти в {room_name}?"
+
+#: fractal-gtk/src/ui/invite.rs:187
+msgid ""
+"You’ve been invited to join <b>{room_name}</b> room by <b>{sender_name}</b>"
+msgstr "<b>{sender_name}</b> запросив вас увійти в <b>{room_name}</b>"
+
+#: fractal-gtk/src/ui/invite.rs:192
+msgid "You’ve been invited to join <b>{room_name}</b>"
+msgstr "Вас запросили увійти в <b>{room_name}</b>"
+
+#: fractal-gtk/src/ui/mod.rs:79
 msgid "You don’t have permission to post to this room"
 msgstr "У вас немає права дописувати у цій кімнаті"
+
+#: fractal-gtk/src/ui/mod.rs:156
+msgid "OK"
+msgstr "Гаразд"
+
+#: fractal-gtk/src/ui/room_settings.rs:268
+msgid "Room · {} member"
+msgid_plural "Room · {} members"
+msgstr[0] "Кімната · {} учасник"
+msgstr[1] "Кімната · {} учасника"
+msgstr[2] "Кімната · {} учасників"
+msgstr[3] "Кімната · {} учасник"
+
+#: fractal-gtk/src/ui/room_settings.rs:703
+msgid "{} member"
+msgid_plural "{} members"
+msgstr[0] "{} учасник"
+msgstr[1] "{} учасника"
+msgstr[2] "{} учасників"
+msgstr[3] "{} учасник"
+
+#: fractal-gtk/src/util/i18n.rs:119 fractal-gtk/src/util/i18n.rs:122
+#: fractal-gtk/src/util/i18n.rs:124
+#| msgid "translator-credits"
+msgid "translate1"
+msgid_plural "translate multi"
+msgstr[0] "translate1"
+msgstr[1] "translate multi"
+msgstr[2] "translate multi"
+msgstr[3] "translate multi"
+
+#: fractal-gtk/src/util/i18n.rs:130
+msgid "{} param"
+msgstr "{} param"
+
+#: fractal-gtk/src/util/i18n.rs:133
+msgid "middle {} param"
+msgstr "middle {} param"
+
+#: fractal-gtk/src/util/i18n.rs:136
+msgid "end {}"
+msgstr "end {}"
+
+#: fractal-gtk/src/util/i18n.rs:139
+msgid "multiple {} and {}"
+msgstr "multiple {} and {}"
+
+#: fractal-gtk/src/util/i18n.rs:142 fractal-gtk/src/util/i18n.rs:144
+msgid "singular {} and {}"
+msgid_plural "plural {} and {}"
+msgstr[0] "singular {} and {}"
+msgstr[1] "plural {} and {}"
+msgstr[2] "plural {} and {}"
+msgstr[3] "plural {} and {}"
+
+#: fractal-gtk/src/util/i18n.rs:150
+msgid "{one} param"
+msgstr "{one} param"
+
+#: fractal-gtk/src/util/i18n.rs:153
+msgid "middle {one} param"
+msgstr "middle {one} param"
+
+#: fractal-gtk/src/util/i18n.rs:156
+msgid "end {one}"
+msgstr "end {one}"
+
+#: fractal-gtk/src/util/i18n.rs:159
+msgid "multiple {one} and {two}"
+msgstr "multiple {one} and {two}"
+
+#: fractal-gtk/src/util/i18n.rs:162
+msgid "multiple {two} and {one}"
+msgstr "multiple {two} and {one}"
+
+#: fractal-gtk/src/util/i18n.rs:165
+msgid "multiple {one} and {one}"
+msgstr "multiple {one} and {one}"
+
+#: fractal-gtk/src/util/i18n.rs:169 fractal-gtk/src/util/i18n.rs:176
+msgid "singular {one} and {two}"
+msgid_plural "plural {one} and {two}"
+msgstr[0] "singular {one} and {two}"
+msgstr[1] "plural {one} and {two}"
+msgstr[2] "plural {one} and {two}"
+msgstr[3] "plural {one} and {two}"
+
+#: fractal-gtk/src/util/i18n.rs:186
+#| msgid "translator-credits"
+msgctxt "This is the context"
+msgid "translate1"
+msgstr "translate1"
+
+#: fractal-gtk/src/util/i18n.rs:189
+#| msgid "translator-credits"
+msgctxt "context"
+msgid "translate1"
+msgid_plural "translate multi"
+msgstr[0] "translate1"
+msgstr[1] "translate multi"
+msgstr[2] "translate multi"
+msgstr[3] "translate multi"
+
+#: fractal-gtk/src/util/i18n.rs:191
+#| msgid "translator-credits"
+msgctxt "The context string"
+msgid "translate1"
+msgid_plural "translate multi"
+msgstr[0] "translate1"
+msgstr[1] "translate multi"
+msgstr[2] "translate multi"
+msgstr[3] "translate multi"
+
+#: fractal-gtk/src/util/i18n.rs:194
+msgctxt "Context for translation"
+msgid "{} param"
+msgstr "{} param"
+
+#: fractal-gtk/src/util/i18n.rs:197
+msgctxt "context"
+msgid "{one} param"
+msgstr "{one} param"
 
 #: fractal-gtk/src/widgets/file_dialog.rs:8
 msgid "Save media as"
@@ -983,19 +1097,19 @@ msgstr "Помилкове форматування адреси сервера"
 msgid "Error while loading previous media"
 msgstr "Помилка при завантаженні попереднього медіа"
 
-#: fractal-gtk/src/widgets/members_list.rs:52
+#: fractal-gtk/src/widgets/members_list.rs:50
 msgid "No matching members found"
 msgstr "Не знайдено жодного відповідного учасника"
 
-#: fractal-gtk/src/widgets/members_list.rs:149
+#: fractal-gtk/src/widgets/members_list.rs:146
 msgid "Admin"
 msgstr "Адміністратор"
 
-#: fractal-gtk/src/widgets/members_list.rs:150
+#: fractal-gtk/src/widgets/members_list.rs:147
 msgid "Moderator"
 msgstr "Модератор"
 
-#: fractal-gtk/src/widgets/members_list.rs:151
+#: fractal-gtk/src/widgets/members_list.rs:148
 msgid "Privileged"
 msgstr "Привілейований"
 
@@ -1052,22 +1166,6 @@ msgstr "%B %e"
 #: fractal-gtk/src/widgets/room_history.rs:798
 msgid "%B %e, %Y"
 msgstr "%B %e, %Y"
-
-#: fractal-gtk/src/widgets/room_settings.rs:216
-msgid "Room · {} member"
-msgid_plural "Room · {} members"
-msgstr[0] "Кімната · {} учасник"
-msgstr[1] "Кімната · {} учасника"
-msgstr[2] "Кімната · {} учасників"
-msgstr[3] "Кімната · {} учасник"
-
-#: fractal-gtk/src/widgets/room_settings.rs:651
-msgid "{} member"
-msgid_plural "{} members"
-msgstr[0] "{} учасник"
-msgstr[1] "{} учасника"
-msgstr[2] "{} учасників"
-msgstr[3] "{} учасник"
 
 #: fractal-gtk/src/widgets/roomlist.rs:480
 msgid "Invites"
