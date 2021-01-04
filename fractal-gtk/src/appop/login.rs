@@ -119,7 +119,7 @@ impl AppOp {
                 ld.session_client.homeserver().clone(),
                 ld.access_token.clone()
             )));
-        let _ = self.delete_pass("fractal");
+        let _ = self.delete_secret("fractal");
         RUNTIME.spawn(async move {
             match register::logout(homeserver, access_token).await {
                 Ok(_) => {
