@@ -85,16 +85,18 @@ impl AppOp {
         server: Url,
         identity: Box<ServerName>,
     ) {
-        self.store_pass(
+        match self.store_pass(
             username.clone(),
             password.clone(),
             server.clone(),
             identity.clone(),
-        )
-        .unwrap_or_else(|_| {
-            // TODO: show an error
-            error!("Can't store the password using libsecret");
-        });
+        ) {
+            Err(SsError::Locked) => error!("Can’t store the password, keyring is locked."),
+            Err(SsError::Dbus(_)) => {
+                error!("Can’t store the password, no Secret Service available.")
+            }
+            _ => (),
+        };
 
         RUNTIME.spawn(async move {
             match register::login(username, password, server.clone()).await {

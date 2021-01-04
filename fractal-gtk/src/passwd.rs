@@ -39,7 +39,7 @@ pub trait PasswordStorage {
         password: String,
         server: Url,
         identity: Box<ServerName>,
-    ) -> Result<(), Error> {
+    ) -> Result<(), secret_service::SsError> {
         ss_storage::store_pass(username, password, server, identity)
     }
 
@@ -140,7 +140,7 @@ mod ss_storage {
         password: String,
         server: Url,
         identity: Box<ServerName>,
-    ) -> Result<(), Error> {
+    ) -> Result<(), secret_service::SsError> {
         let ss = SecretService::new(EncryptionType::Dh)?;
         let collection = get_default_collection_unlocked(&ss)?;
         let key = "fractal";
