@@ -29,7 +29,7 @@ impl From<IdError> for Error {
 }
 
 pub trait PasswordStorage {
-    fn delete_pass(&self, key: &str) -> Result<(), Error> {
+    fn delete_pass(&self, key: &str) -> Result<(), secret_service::SsError> {
         ss_storage::delete_pass(key)
     }
 
@@ -47,7 +47,7 @@ pub trait PasswordStorage {
         ss_storage::get_pass()
     }
 
-    fn store_token(&self, uid: UserId, token: AccessToken) -> Result<(), Error> {
+    fn store_token(&self, uid: UserId, token: AccessToken) -> Result<(), secret_service::SsError> {
         ss_storage::store_token(uid, token)
     }
 
@@ -67,7 +67,7 @@ mod ss_storage {
 
     use crate::globals;
 
-    pub fn delete_pass(key: &str) -> Result<(), Error> {
+    pub fn delete_pass(key: &str) -> Result<(), secret_service::SsError> {
         let ss = SecretService::new(EncryptionType::Dh)?;
         let collection = get_default_collection_unlocked(&ss)?;
 
@@ -84,7 +84,7 @@ mod ss_storage {
         Ok(())
     }
 
-    pub fn store_token(uid: UserId, token: AccessToken) -> Result<(), Error> {
+    pub fn store_token(uid: UserId, token: AccessToken) -> Result<(), SsError> {
         let ss = SecretService::new(EncryptionType::Dh)?;
         let collection = get_default_collection_unlocked(&ss)?;
         let key = "fractal-token";
