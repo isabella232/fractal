@@ -14,6 +14,7 @@ use crate::cache;
 use crate::client::get_matrix_client;
 
 use crate::passwd::PasswordStorage;
+use secret_service::SsError;
 
 use crate::actions::AppState;
 
@@ -28,9 +29,11 @@ impl AppOp {
         server_url: Url,
         identity_url: Box<ServerName>,
     ) {
-        if self.store_token(uid.clone(), access_token.clone()).is_err() {
-            error!("Can't store the token using libsecret");
-        }
+        match self.store_token(uid.clone(), access_token.clone()) {
+            Err(SsError::Locked) => error!("Can’t store the token, keyring is locked."),
+            Err(SsError::Dbus(_)) => error!("Can’t store the token, no Secret Service available."),
+            _ => (),
+        };
 
         let matrix_client =
             get_matrix_client(server_url).expect("Failed to login with the Matrix client");
