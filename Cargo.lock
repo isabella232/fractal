@@ -117,9 +117,9 @@ dependencies = [
 
 [[package]]
 name = "anyhow"
-version = "1.0.34"
+version = "1.0.37"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bf8dcb5b4bbaa28653b647d8c77bd4ed40183b48882e130c1f1ffb73de069fd7"
+checksum = "ee67c11feeac938fae061b232e38e0b6d94f97a9df10e6271319325ac4c56a86"
 
 [[package]]
 name = "arrayref"
@@ -1536,9 +1536,9 @@ dependencies = [
 
 [[package]]
 name = "html2pango"
-version = "0.3.3"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "469b284033c3c93e7df758d316cb2e0da4408e4138d5add903b8be356a841738"
+checksum = "a2a7f65103a4da1b629f519474a51ae89077c61f88954eb9e6df7b22e1a7fd98"
 dependencies = [
  "ammonia",
  "anyhow",
