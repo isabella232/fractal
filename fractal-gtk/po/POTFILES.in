@@ -114,7 +114,6 @@ fractal-gtk/src/ui/room_settings.rs
 fractal-gtk/src/ui/start_chat.rs
 fractal-gtk/src/ui/state.rs
 fractal-gtk/src/ui/user.rs
-fractal-gtk/src/util/i18n.rs
 fractal-gtk/src/util/mod.rs
 fractal-gtk/src/widgets/address.rs
 fractal-gtk/src/widgets/autocomplete.rs
