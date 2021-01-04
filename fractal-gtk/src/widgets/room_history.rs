@@ -133,15 +133,14 @@ impl List {
         self.find_all_visible_indices()
             .iter()
             .filter_map(|&index| match self.list.get(index)? {
-                Element::Message(content) => match content.mtype {
-                    RowType::Video => {
-                        Some(content
-                            .widget
-                            .as_ref()?
-                            .get_video_widget()
-                            .expect("The widget of every MessageContent, whose mtype is RowType::Video, must have a video_player."))
-                    }
-                    _ => None,
+                Element::Message(content) if content.mtype == RowType::Video => {
+                    Some(content
+                        .widget
+                        .as_ref()?
+                        .video_player
+                        .clone()
+                        .expect("The widget of every MessageContent, whose mtype is RowType::Video, must have a video_player.")
+                    )
                 },
                 _ => None,
             })
@@ -256,11 +255,13 @@ enum Element {
 impl Element {
     fn get_listbox_row(&self) -> &gtk::ListBoxRow {
         match self {
-            Element::Message(content) => content
-                .widget
-                .as_ref()
-                .expect("The content of every message element must have widget.")
-                .get_listbox_row(),
+            Element::Message(content) => {
+                &content
+                    .widget
+                    .as_ref()
+                    .expect("The content of every message element must have widget.")
+                    .root
+            }
             Element::NewDivider(widgets) => widgets.get_widget(),
             Element::DayDivider(widget) => widget,
         }
@@ -740,8 +741,7 @@ fn create_row(
 ) -> widgets::MessageBox {
     /* we need to create a message with the username, so that we don't have to pass
      * all information to the widget creating each row */
-    let mut mb = widgets::MessageBox::new();
-    mb.create(
+    let mb = widgets::MessageBox::create(
         session_client,
         user_info_cache,
         &row,
@@ -752,7 +752,8 @@ fn create_row(
     if let RowType::Video = row.mtype {
         /* The followign callback requires `Send` but is handled by the gtk main loop */
         let fragile_rows = Fragile::new(Rc::downgrade(rows));
-        PlayerExt::get_player(&mb.get_video_widget()
+        PlayerExt::get_player(mb.video_player
+                .as_ref()
                 .expect("The widget of every MessageContent, whose mtype is RowType::Video, must have a video_player."))
                 .connect_uri_loaded(move |player, _| {
                     if let Some(rows) = fragile_rows.get().upgrade() {

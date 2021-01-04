@@ -1,82 +1,78 @@
-use crate::util::i18n::i18n;
-use itertools::Itertools;
-
 use crate::appop::UserInfoCache;
-use chrono::prelude::*;
-use either::Either;
-use glib::clone;
-use gtk::{prelude::*, ButtonExt, ContainerExt, LabelExt, Overlay, WidgetExt};
-use matrix_sdk::Client as MatrixClient;
-use std::cmp::max;
-use std::rc::Rc;
-
-use crate::util::markup_text;
-
 use crate::cache::download_to_cache;
-
 use crate::globals;
 use crate::ui::MessageContent as Message;
 use crate::ui::RowType;
+use crate::util::i18n::i18n;
+use crate::util::markup_text;
 use crate::widgets;
 use crate::widgets::message_menu::MessageMenu;
 use crate::widgets::AvatarExt;
 use crate::widgets::ClipContainer;
 use crate::widgets::{AudioPlayerWidget, PlayerExt, VideoPlayerWidget};
+use chrono::prelude::*;
+use either::Either;
+use glib::clone;
+use gtk::{prelude::*, ButtonExt, ContainerExt, LabelExt, Overlay, WidgetExt};
+use itertools::Itertools;
+use matrix_sdk::Client as MatrixClient;
+use std::cmp::max;
+use std::rc::Rc;
 
-/* A message row in the room history */
+// A message row in the room history
 #[derive(Clone, Debug)]
 pub struct MessageBox {
+    pub root: gtk::ListBoxRow,
     username: gtk::Label,
     pub username_event_box: gtk::EventBox,
     eventbox: gtk::EventBox,
     gesture: gtk::GestureLongPress,
-    row: gtk::ListBoxRow,
     image: Option<gtk::DrawingArea>,
-    video_player: Option<Rc<VideoPlayerWidget>>,
+    pub video_player: Option<Rc<VideoPlayerWidget>>,
     pub header: bool,
 }
 
 impl MessageBox {
-    pub fn new() -> MessageBox {
+    fn new() -> Self {
         let username = gtk::Label::new(None);
-        let eb = gtk::EventBox::new();
+        let username_event_box = gtk::EventBox::new();
         let eventbox = gtk::EventBox::new();
-        let row = gtk::ListBoxRow::new();
+        let root = gtk::ListBoxRow::new();
         let gesture = gtk::GestureLongPress::new(&eventbox);
 
         username.set_ellipsize(pango::EllipsizeMode::End);
         gesture.set_propagation_phase(gtk::PropagationPhase::Capture);
         gesture.set_touch_only(true);
 
-        MessageBox {
+        Self {
+            root,
             username,
-            username_event_box: eb,
+            username_event_box,
             eventbox,
             gesture,
-            row,
             image: None,
             video_player: None,
             header: true,
         }
     }
 
-    /* create the message row with or without a header */
+    // create the message row with or without a header
     pub fn create(
-        &mut self,
         session_client: MatrixClient,
         user_info_cache: UserInfoCache,
         msg: &Message,
         has_header: bool,
         is_temp: bool,
-    ) {
-        self.set_msg_styles(msg, &self.row);
-        self.row.set_selectable(false);
+    ) -> Self {
+        let mut mb = Self::new();
+        mb.set_msg_styles(msg);
+        mb.root.set_selectable(false);
         let upload_attachment_msg = gtk::Box::new(gtk::Orientation::Horizontal, 10);
         let w = match msg.mtype {
             RowType::Emote => {
-                self.row.set_margin_top(12);
-                self.header = false;
-                self.small_widget(session_client, msg)
+                mb.root.set_margin_top(12);
+                mb.header = false;
+                mb.small_widget(session_client, msg)
             }
             RowType::Video if is_temp => {
                 upload_attachment_msg
@@ -98,38 +94,32 @@ impl MessageBox {
                 upload_attachment_msg
             }
             _ if has_header => {
-                self.row.set_margin_top(12);
-                self.header = true;
-                self.widget(session_client, user_info_cache, msg)
+                mb.root.set_margin_top(12);
+                mb.header = true;
+                mb.widget(session_client, user_info_cache, msg)
             }
             _ => {
-                self.header = false;
-                self.small_widget(session_client, msg)
+                mb.header = false;
+                mb.small_widget(session_client, msg)
             }
         };
 
-        self.eventbox.add(&w);
-        self.row.add(&self.eventbox);
-        self.row.show_all();
-        self.connect_right_click_menu(msg, None);
-    }
+        mb.eventbox.add(&w);
+        mb.root.add(&mb.eventbox);
+        mb.root.show_all();
+        mb.connect_right_click_menu(msg, None);
 
-    pub fn get_listbox_row(&self) -> &gtk::ListBoxRow {
-        &self.row
+        mb
     }
 
     pub fn tmpwidget(
-        mut self,
         session_client: MatrixClient,
         user_info_cache: UserInfoCache,
         msg: &Message,
-    ) -> MessageBox {
-        self.create(session_client, user_info_cache, msg, true, true);
-        {
-            let w = self.get_listbox_row();
-            w.get_style_context().add_class("msg-tmp");
-        }
-        self
+    ) -> Self {
+        let mb = Self::create(session_client, user_info_cache, msg, true, true);
+        mb.root.get_style_context().add_class("msg-tmp");
+        mb
     }
 
     pub fn update_header(
@@ -140,12 +130,12 @@ impl MessageBox {
         has_header: bool,
     ) {
         let w = if has_header && msg.mtype != RowType::Emote {
-            self.row.set_margin_top(12);
+            self.root.set_margin_top(12);
             self.header = true;
             self.widget(session_client, user_info_cache, &msg)
         } else {
             if let RowType::Emote = msg.mtype {
-                self.row.set_margin_top(12);
+                self.root.set_margin_top(12);
             }
             self.header = false;
             self.small_widget(session_client, &msg)
@@ -154,7 +144,7 @@ impl MessageBox {
             self.eventbox.remove(&eb);
         }
         self.eventbox.add(&w);
-        self.row.show_all();
+        self.root.show_all();
     }
 
     fn widget(
@@ -169,7 +159,7 @@ impl MessageBox {
         // +--------+---------+
         let msg_widget = gtk::Box::new(gtk::Orientation::Horizontal, 10);
         let content = self.build_room_msg_content(session_client.clone(), msg, false);
-        /* Todo: make build_room_msg_avatar() faster (currently ~1ms) */
+        // TODO: make build_room_msg_avatar() faster (currently ~1ms)
         let avatar = self.build_room_msg_avatar(session_client, user_info_cache, msg);
 
         msg_widget.pack_start(&avatar, false, false, 0);
@@ -270,11 +260,9 @@ impl MessageBox {
             None,
             None,
         );
-        if let Some(name) = alias {
-            self.username.set_text(&name);
-        } else {
-            self.username.set_text(&uid.to_string());
-        }
+
+        self.username
+            .set_text(alias.as_deref().unwrap_or(uid.as_str()));
 
         download_to_cache(
             session_client.clone(),
@@ -286,8 +274,8 @@ impl MessageBox {
         avatar
     }
 
-    fn build_room_msg_username(&self, uname: String) -> gtk::Label {
-        self.username.set_text(&uname);
+    fn build_room_msg_username(&self, uname: &str) -> gtk::Label {
+        self.username.set_text(uname);
         self.username.set_justify(gtk::Justification::Left);
         self.username.set_halign(gtk::Align::Start);
         self.username.get_style_context().add_class("username");
@@ -295,9 +283,9 @@ impl MessageBox {
         self.username.clone()
     }
 
-    /* Add classes to the widget based on message type */
-    fn set_msg_styles(&self, msg: &Message, w: &gtk::ListBoxRow) {
-        let style = w.get_style_context();
+    // Add classes to the widget based on message type
+    fn set_msg_styles(&self, msg: &Message) {
+        let style = self.root.get_style_context();
         match msg.mtype {
             RowType::Mention => style.add_class("msg-mention"),
             RowType::Emote => style.add_class("msg-emote"),
@@ -306,23 +294,38 @@ impl MessageBox {
         }
     }
 
-    fn set_label_styles(&self, w: &gtk::Label) {
-        w.set_line_wrap(true);
-        w.set_line_wrap_mode(pango::WrapMode::WordChar);
-        w.set_justify(gtk::Justification::Left);
-        w.set_xalign(0.0);
-        w.set_valign(gtk::Align::Start);
-        w.set_halign(gtk::Align::Fill);
-        w.set_selectable(true);
-    }
-
     fn build_room_msg_body(&self, msg: &Message) -> gtk::Box {
         let bx = gtk::Box::new(gtk::Orientation::Vertical, 6);
 
-        let msg_parts = self.create_msg_parts(&msg.body);
+        let msgs_by_kind_of_line = msg.body.lines().group_by(|&line| kind_of_line(line));
+        let msg_parts = msgs_by_kind_of_line.into_iter().map(|(k, group)| {
+            let mut v: Vec<&str> = if k == MsgPartType::Quote {
+                group.map(trim_start_quote).collect()
+            } else {
+                group.collect()
+            };
+            // We need to remove the first and last empty line (if any) because quotes use \n\n
+            if v.starts_with(&[""]) {
+                v.drain(..1);
+            }
+            if v.ends_with(&[""]) {
+                v.pop();
+            }
+            let part = v.join("\n");
 
-        if msg.mtype == RowType::Mention {
-            for part in msg_parts.iter() {
+            let part_widget = gtk::Label::new(None);
+            part_widget.set_markup(&markup_text(&part));
+            set_label_styles(&part_widget);
+
+            if k == MsgPartType::Quote {
+                part_widget.get_style_context().add_class("quote");
+            }
+
+            part_widget
+        });
+
+        for part in msg_parts {
+            if msg.mtype == RowType::Mention {
                 let highlights = msg.highlights.clone();
                 part.connect_property_cursor_position_notify(move |w| {
                     let attr = pango::AttrList::new();
@@ -347,48 +350,12 @@ impl MessageBox {
                 }
                 part.set_attributes(Some(&attr));
             }
-        }
 
-        for part in msg_parts {
             self.connect_right_click_menu(msg, Some(&part));
             bx.add(&part);
         }
+
         bx
-    }
-
-    fn create_msg_parts(&self, body: &str) -> Vec<gtk::Label> {
-        let mut parts_labels: Vec<gtk::Label> = vec![];
-
-        for (k, group) in body.lines().group_by(kind_of_line).into_iter() {
-            let mut v: Vec<&str> = if k == MsgPartType::Quote {
-                group.map(|l| trim_start_quote(l)).collect()
-            } else {
-                group.collect()
-            };
-            /* We need to remove the first and last empty line (if any) because quotes use /n/n */
-            if v.starts_with(&[""]) {
-                v.drain(..1);
-            }
-            if v.ends_with(&[""]) {
-                v.pop();
-            }
-            let part = v.join("\n");
-
-            parts_labels.push(self.create_msg(part.as_str(), k));
-        }
-
-        parts_labels
-    }
-
-    fn create_msg(&self, body: &str, k: MsgPartType) -> gtk::Label {
-        let msg_part = gtk::Label::new(None);
-        msg_part.set_markup(&markup_text(body));
-        self.set_label_styles(&msg_part);
-
-        if k == MsgPartType::Quote {
-            msg_part.get_style_context().add_class("quote");
-        }
-        msg_part
     }
 
     fn build_room_msg_image(&mut self, session_client: MatrixClient, msg: &Message) -> gtk::Box {
@@ -553,10 +520,6 @@ impl MessageBox {
         bx
     }
 
-    pub fn get_video_widget(&self) -> Option<Rc<VideoPlayerWidget>> {
-        self.video_player.clone()
-    }
-
     fn build_room_msg_file(&self, msg: &Message) -> gtk::Box {
         let bx = gtk::Box::new(gtk::Orientation::Horizontal, 12);
         let btn_bx = gtk::Box::new(gtk::Orientation::Horizontal, 0);
@@ -600,13 +563,13 @@ impl MessageBox {
     }
 
     fn build_room_msg_date(&self, dt: &DateTime<Local>) -> gtk::Label {
-        /* TODO: get system preference for 12h/24h */
+        // TODO: get system preference for 12h/24h
         let use_ampm = false;
         let format = if use_ampm {
-            /* Use 12h time format (AM/PM) */
+            // Use 12h time format (AM/PM)
             i18n("%l∶%M %p")
         } else {
-            /* Use 24 time format */
+            // Use 24 time format
             i18n("%R")
         };
 
@@ -630,11 +593,8 @@ impl MessageBox {
         // +----------+------+
         let info = gtk::Box::new(gtk::Orientation::Horizontal, 0);
 
-        let username = self.build_room_msg_username(
-            msg.sender_name
-                .clone()
-                .unwrap_or_else(|| msg.sender.to_string()),
-        );
+        let username =
+            self.build_room_msg_username(msg.sender_name.as_deref().unwrap_or(msg.sender.as_str()));
         let date = self.build_room_msg_date(&msg.date);
 
         self.username_event_box.add(&username);
@@ -647,18 +607,17 @@ impl MessageBox {
 
     fn build_room_msg_emote(&self, msg: &Message) -> gtk::Box {
         let bx = gtk::Box::new(gtk::Orientation::Horizontal, 0);
-        /* Use MXID till we have a alias */
+        // Use MXID till we have a alias
         let sname = msg
             .sender_name
             .clone()
             .unwrap_or_else(|| msg.sender.to_string());
         let msg_label = gtk::Label::new(None);
-        let body: &str = &msg.body;
-        let markup = markup_text(body);
+        let markup = markup_text(&msg.body);
 
         self.connect_right_click_menu(msg, Some(&msg_label));
         msg_label.set_markup(&format!("<b>{}</b> {}", sname, markup));
-        self.set_label_styles(&msg_label);
+        set_label_styles(&msg_label);
 
         bx.add(&msg_label);
         bx
@@ -697,10 +656,20 @@ impl MessageBox {
     fn connect_media_viewer(&self, msg: &Message) -> Option<()> {
         let evid = msg.id.as_ref()?.to_string();
         let data = glib::Variant::from(evid);
-        self.row.set_action_name(Some("app.open-media-viewer"));
-        self.row.set_action_target_value(Some(&data));
+        self.root.set_action_name(Some("app.open-media-viewer"));
+        self.root.set_action_target_value(Some(&data));
         None
     }
+}
+
+fn set_label_styles(w: &gtk::Label) {
+    w.set_line_wrap(true);
+    w.set_line_wrap_mode(pango::WrapMode::WordChar);
+    w.set_justify(gtk::Justification::Left);
+    w.set_xalign(0.0);
+    w.set_valign(gtk::Align::Start);
+    w.set_halign(gtk::Align::Fill);
+    w.set_selectable(true);
 }
 
 fn highlight_username(
@@ -737,24 +706,24 @@ fn highlight_username(
         let mark_start = removed_char as i32 + pos.0;
         let mark_end = removed_char as i32 + pos.1;
         let mut final_pos = Some((mark_start, mark_end));
-        /* exclude selected text */
+        // exclude selected text
         if let Some((bounds_start, bounds_end)) = bounds {
-            /* If the selection is within the alias */
+            // If the selection is within the alias
             if contains((mark_start, mark_end), bounds_start)
                 && contains((mark_start, mark_end), bounds_end)
             {
                 final_pos = Some((mark_start, bounds_start));
-                /* Add blue color after a selection */
+                // Add blue color after a selection
                 let mut color = color.clone();
                 color.set_start_index(bounds_end as u32);
                 color.set_end_index(mark_end as u32);
                 attr.insert(color);
             } else {
-                /* The alias starts inside a selection */
+                // The alias starts inside a selection
                 if contains(bounds?, mark_start) {
                     final_pos = Some((bounds_end, final_pos?.1));
                 }
-                /* The alias ends inside a selection */
+                // The alias ends inside a selection
                 if contains(bounds?, mark_end - 1) {
                     final_pos = Some((final_pos?.0, bounds_start));
                 }
@@ -782,7 +751,7 @@ enum MsgPartType {
     Quote,
 }
 
-fn kind_of_line(line: &&str) -> MsgPartType {
+fn kind_of_line(line: &str) -> MsgPartType {
     if line.trim_start().starts_with('>') {
         MsgPartType::Quote
     } else {
