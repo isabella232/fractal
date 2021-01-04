@@ -88,15 +88,13 @@ impl UI {
             }
         }
 
-        let dialogid = match search_type {
-            SearchType::Invite => "invite_user_dialog",
-            SearchType::DirectChat => "direct_chat_dialog",
+        let dialog = match search_type {
+            SearchType::Invite => self
+                .builder
+                .get_object::<gtk::Dialog>("invite_user_dialog")
+                .expect("Can’t find invite_user_dialog in ui file."),
+            SearchType::DirectChat => self.direct_chat_dialog.root.clone(),
         };
-
-        let dialog = self
-            .builder
-            .get_object::<gtk::Dialog>(dialogid)
-            .expect("Can’t find invite_user_dialog in ui file.");
 
         dialog.resize(300, 200);
     }
