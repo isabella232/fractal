@@ -11,6 +11,16 @@ use matrix_sdk::identifiers::UserId;
 use matrix_sdk::Client as MatrixClient;
 
 impl UI {
+    fn get_invite_entry(&self, search_type: SearchType) -> gtk::TextView {
+        match search_type {
+            SearchType::Invite => self
+                .builder
+                .get_object("invite_entry")
+                .expect("Can't find invite_entry in ui file."),
+            SearchType::DirectChat => self.direct_chat_dialog.to_chat_entry.clone(),
+        }
+    }
+
     pub fn add_to_invite(
         &mut self,
         session_client: MatrixClient,
@@ -22,13 +32,7 @@ impl UI {
             return;
         }
 
-        let invite_entry = match search_type {
-            SearchType::Invite => self
-                .builder
-                .get_object::<gtk::TextView>("invite_entry")
-                .expect("Can't find invite_entry in ui file."),
-            SearchType::DirectChat => self.direct_chat_dialog.to_chat_entry.clone(),
-        };
+        let invite_entry = self.get_invite_entry(search_type);
 
         if let SearchType::DirectChat = search_type {
             self.invite_list = vec![];
@@ -200,13 +204,7 @@ impl UI {
     }
 
     pub fn set_invite_user_dialog_placeholder(&mut self, search_type: SearchType) {
-        let invite_entry = match search_type {
-            SearchType::Invite => self
-                .builder
-                .get_object::<gtk::TextView>("invite_entry")
-                .expect("Can't find invite_entry in ui file."),
-            SearchType::DirectChat => self.direct_chat_dialog.to_chat_entry.clone(),
-        };
+        let invite_entry = self.get_invite_entry(search_type);
 
         if let Some(buffer) = invite_entry.get_buffer() {
             let start = buffer.get_start_iter();
@@ -226,13 +224,7 @@ impl UI {
     }
 
     pub fn remove_invite_user_dialog_placeholder(&mut self, search_type: SearchType) {
-        let invite_entry = match search_type {
-            SearchType::Invite => self
-                .builder
-                .get_object::<gtk::TextView>("invite_entry")
-                .expect("Can't find invite_entry in ui file."),
-            SearchType::DirectChat => self.direct_chat_dialog.to_chat_entry.clone(),
-        };
+        let invite_entry = self.get_invite_entry(search_type);
 
         if let Some(buffer) = invite_entry.get_buffer() {
             let start = buffer.get_start_iter();
