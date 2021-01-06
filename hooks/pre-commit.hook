@@ -12,13 +12,13 @@ install_rustfmt() {
     fi
 
     if ! rustup component list|grep rustfmt &> /dev/null; then
-        echo "Installing rustfmt.."
+        echo "Installing rustfmt…"
         rustup component add rustfmt
     fi
 }
 
 if ! which cargo &> /dev/null || ! cargo fmt --help &> /dev/null; then
-    echo "Can't check Fractal's code style, because rustfmt could not be run."
+    echo "Unable to check Fractal’s code style, because rustfmt could not be run."
 
     if [ ! -t 1 ]; then
         # No input is possible
