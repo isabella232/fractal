@@ -23,7 +23,7 @@ pub struct RoomUpdated {
 
 impl RoomUpdated {
     pub fn new(room: Room) -> RoomUpdated {
-        let updated = match room.messages.last() {
+        let updated = match room.messages.iter().last() {
             Some(l) => l.date,
             None => Local.ymd(1970, 1, 1).and_hms(0, 0, 0),
         };
@@ -367,7 +367,7 @@ impl RoomListGroup {
     }
 
     pub fn add_rooms(&mut self, mut array: Vec<Room>) {
-        array.sort_by_key(|ref x| match x.messages.last() {
+        array.sort_by_key(|ref x| match x.messages.iter().last() {
             Some(l) => l.date,
             None => Local.ymd(1970, 1, 1).and_hms(0, 0, 0),
         });

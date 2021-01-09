@@ -594,7 +594,8 @@ impl MediaViewer {
 
         let media_list: Vec<Message> = room
             .messages
-            .clone()
+            .iter()
+            .cloned()
             .into_iter()
             .filter(|msg| msg.mtype == "m.image" || msg.mtype == "m.video")
             .collect();

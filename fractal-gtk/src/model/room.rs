@@ -1,6 +1,7 @@
 use crate::model::member::Member;
 use crate::model::member::MemberList;
 use crate::model::message::Message;
+use crate::model::message_list::MessageList;
 use anyhow::anyhow;
 use chrono::DateTime;
 use chrono::Utc;
@@ -123,7 +124,7 @@ pub struct Room {
     pub members: MemberList,
     pub notifications: u64,
     pub highlight: u64,
-    pub messages: Vec<Message>,
+    pub messages: MessageList,
     pub membership: RoomMembership,
     pub direct: bool,
     pub prev_batch: Option<String>,
@@ -324,30 +325,27 @@ impl Room {
                 })
                 .collect();
 
-            r.messages
-                .iter_mut()
+            let changed_msgs: Vec<_> = r
+                .messages
+                .iter()
                 .filter_map(|msg| {
-                    let receipt = msg
-                        .id
-                        .as_ref()
-                        .and_then(|evid| receipts.get(evid))
-                        .cloned()?;
-                    Some((msg, receipt))
+                    let receipt = msg.id.as_ref().and_then(|evid| receipts.get(evid))?;
+                    Some((msg.clone(), receipt.clone()))
                 })
-                .for_each(|(msg, receipt)| msg.set_receipt(receipt));
+                .collect();
+            for (mut msg, receipt) in changed_msgs {
+                msg.set_receipt(receipt);
+                r.take_new_message(msg);
+            }
 
             if let Some(event_id) = room.ephemeral.events.iter().find_map(|event| match event {
                 AnySyncEphemeralRoomEvent::FullyRead(ev) => Some(ev.content.event_id.clone()),
                 _ => None,
             }) {
-                let event_id = Some(event_id);
-
-                r.messages
-                    .iter_mut()
-                    .filter(|msg| msg.id == event_id)
-                    .for_each(|msg| {
-                        msg.receipt.insert(user_id.clone(), 0);
-                    });
+                if let Some(mut msg) = r.messages.get(&event_id).cloned() {
+                    msg.receipt.insert(user_id.clone(), 0);
+                    r.take_new_message(msg);
+                }
             }
 
             r
@@ -451,6 +449,11 @@ impl Room {
             .chain(left_rooms)
             .chain(invited_rooms)
             .collect()
+    }
+
+    /// Inserts the given message into the room.
+    pub fn take_new_message(&mut self, msg: Message) {
+        self.messages.add(msg);
     }
 }
 

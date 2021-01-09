@@ -136,17 +136,24 @@ impl AppOp {
             let active_room_id = self.active_room.as_ref()?;
             let room = self.rooms.get_mut(active_room_id)?;
             let uid = login_data.uid.clone();
-            room.messages.iter_mut().for_each(|msg| {
-                if msg.receipt.contains_key(&uid) {
-                    msg.receipt.remove(&uid);
-                }
-            });
-            let last_message = room.messages.last_mut()?;
+
+            let dirty_msgs: Vec<_> = room
+                .messages
+                .iter()
+                .filter(|m| m.receipt.contains_key(&uid))
+                .cloned()
+                .collect();
+            for mut msg in dirty_msgs {
+                msg.receipt.remove(&uid);
+                room.take_new_message(msg);
+            }
+            let mut last_message = room.messages.iter().last()?.clone();
+            let event_id = last_message.id.clone()?;
+            let room_id = last_message.room.clone();
             last_message.receipt.insert(uid, 0);
+            room.take_new_message(last_message);
 
             let session_client = login_data.session_client;
-            let room_id = last_message.room.clone();
-            let event_id = last_message.id.clone()?;
             RUNTIME.spawn(async move {
                 match room::mark_as_read(session_client, room_id, event_id).await {
                     Ok((r, _)) => {
@@ -353,10 +360,10 @@ impl AppOp {
 
         for msg in newmsgs.iter() {
             if let Some(r) = self.rooms.get_mut(&msg.room) {
-                if !r.messages.contains(msg) {
-                    r.messages.push(msg.clone());
+                if !r.messages.contains(msg.id.as_ref().unwrap()) {
                     msgs.push(msg.clone());
                 }
+                r.take_new_message(msg.clone());
             }
         }
 
@@ -421,7 +428,7 @@ impl AppOp {
             }
 
             if let Some(r) = self.rooms.get_mut(&item.room) {
-                r.messages.insert(0, item.clone());
+                r.take_new_message(item.clone());
             }
         }
 
@@ -433,12 +440,11 @@ impl AppOp {
     pub fn remove_message(&mut self, room_id: RoomId, id: EventId) -> Option<()> {
         let message = self.get_message_by_id(&room_id, &id);
 
-        if let Some(msg) = message {
+        if let Some(mut msg) = message {
             self.remove_room_message(msg.clone());
             if let Some(ref mut room) = self.rooms.get_mut(&msg.room) {
-                if let Some(ref mut message) = room.messages.iter_mut().find(|e| e.id == msg.id) {
-                    message.redacted = true;
-                }
+                msg.redacted = true;
+                room.take_new_message(msg);
             }
         }
         None

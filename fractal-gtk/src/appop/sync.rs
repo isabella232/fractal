@@ -50,8 +50,11 @@ impl AppOp {
                         let clear_room_list = sync_ret.updates.is_none();
                         if let Some(updates) = sync_ret.updates {
                             let rooms = sync_ret.rooms;
-                            let msgs: Vec<_> =
-                                rooms.iter().flat_map(|r| &r.messages).cloned().collect();
+                            let msgs: Vec<_> = rooms
+                                .iter()
+                                .flat_map(|r| r.messages.iter())
+                                .cloned()
+                                .collect();
                             APPOP!(set_rooms, (rooms, clear_room_list));
                             APPOP!(show_room_messages, (msgs));
                             let typing_events_as_rooms = updates.typing_events_as_rooms;
