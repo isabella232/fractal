@@ -433,6 +433,15 @@ impl Message {
         }
     }
 
+    /// Returns all event IDs this message relates to.
+    pub fn relations(&self) -> Vec<EventId> {
+        vec![self.in_reply_to.as_ref(), self.replace.as_ref()]
+            .into_iter()
+            .flat_map(|r| r.into_iter())
+            .cloned()
+            .collect()
+    }
+
     /// Generates an unique transaction id for this message
     /// The txn_id is generated using the md5sum of a concatenation of the message room id, the
     /// message body and the date.
