@@ -39,7 +39,7 @@ flatpak remote-add --user --if-not-exists gnome-nightly https://nightly.gnome.or
 flatpak install --user gnome-nightly org.gnome.Sdk org.gnome.Platform
 
 # Install the required rust-stable extension from Flathub
-flatpak install --user flathub org.freedesktop.Sdk.Extension.rust-stable//19.08
+flatpak install --user flathub org.freedesktop.Sdk.Extension.rust-stable//20.08
 ```
 
 Then you go ahead and build Fractal.
