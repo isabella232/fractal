@@ -137,9 +137,9 @@ impl List {
                     Some(content
                         .widget
                         .as_ref()?
-                        .video_player
-                        .clone()
+                        .get_video_player()
                         .expect("The widget of every MessageContent, whose mtype is RowType::Video, must have a video_player.")
+                        .clone()
                     )
                 },
                 _ => None,
@@ -255,13 +255,11 @@ enum Element {
 impl Element {
     fn get_listbox_row(&self) -> &gtk::ListBoxRow {
         match self {
-            Element::Message(content) => {
-                &content
-                    .widget
-                    .as_ref()
-                    .expect("The content of every message element must have widget.")
-                    .root
-            }
+            Element::Message(content) => content
+                .widget
+                .as_ref()
+                .expect("The content of every message element must have widget.")
+                .get_widget(),
             Element::NewDivider(widgets) => widgets.get_widget(),
             Element::DayDivider(widget) => widget,
         }
@@ -626,7 +624,7 @@ impl RoomHistory {
             session_client,
             user_info_cache,
             item.clone(),
-            msg_widget.header,
+            msg_widget.has_header(),
             &self.rows,
         ));
         rows.replace_item(i, Element::Message(item));
@@ -658,7 +656,7 @@ impl RoomHistory {
 
         // If the redacted message was a header message let's set
         // the header on the next non-redacted message instead.
-        if msg_widget.header {
+        if msg_widget.has_header() {
             let rows_list_len = rows.list.len();
             if let Some((msg_next_cloned, msg_widget)) = rows
                 .list
@@ -752,8 +750,8 @@ fn create_row(
     if let RowType::Video = row.mtype {
         /* The followign callback requires `Send` but is handled by the gtk main loop */
         let fragile_rows = Fragile::new(Rc::downgrade(rows));
-        PlayerExt::get_player(mb.video_player
-                .as_ref()
+        PlayerExt::get_player(mb
+                .get_video_player()
                 .expect("The widget of every MessageContent, whose mtype is RowType::Video, must have a video_player."))
                 .connect_uri_loaded(move |player, _| {
                     if let Some(rows) = fragile_rows.get().upgrade() {

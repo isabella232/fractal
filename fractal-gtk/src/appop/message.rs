@@ -74,7 +74,7 @@ impl AppOp {
                 self.user_info_cache.clone(),
                 &ui_msg,
             );
-            let m = &mb.root;
+            let m = mb.get_widget();
             messages.add(m);
 
             if let Some(w) = messages.get_children().iter().last() {
@@ -114,7 +114,7 @@ impl AppOp {
                     self.user_info_cache.clone(),
                     &ui_msg,
                 );
-                let m = &mb.root;
+                let m = mb.get_widget();
                 messages.add(m);
 
                 if let Some(w) = messages.get_children().iter().last() {
