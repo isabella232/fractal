@@ -45,7 +45,7 @@ impl AppOp {
         self.mark_last_message_as_read(Force(true));
     }
 
-    pub fn add_room_message(&mut self, msg: &Message) -> Option<()> {
+    pub fn add_room_message(&mut self, msg: Message) -> Option<()> {
         let session_client = self.login_data.as_ref()?.session_client.clone();
         if let Some(ui_msg) = self.create_new_room_message(msg) {
             if let Some(ref mut history) = self.ui.history {
@@ -55,7 +55,7 @@ impl AppOp {
         None
     }
 
-    pub fn remove_room_message(&mut self, msg: &Message) {
+    pub fn remove_room_message(&mut self, msg: Message) {
         let session_client =
             unwrap_or_unit_return!(self.login_data.as_ref().map(|ld| ld.session_client.clone()));
         if let Some(ui_msg) = self.create_new_room_message(msg) {
@@ -68,7 +68,7 @@ impl AppOp {
     pub fn add_tmp_room_message(&mut self, msg: Message) -> Option<()> {
         let login_data = self.login_data.clone()?;
         let messages = self.ui.history.as_ref()?.get_listbox();
-        if let Some(ui_msg) = self.create_new_room_message(&msg) {
+        if let Some(ui_msg) = self.create_new_room_message(msg.clone()) {
             let mb = widgets::MessageBox::tmpwidget(
                 login_data.session_client.clone(),
                 self.user_info_cache.clone(),
@@ -108,7 +108,7 @@ impl AppOp {
         let r = self.rooms.get(self.active_room.as_ref()?)?;
         let mut widgets = vec![];
         for t in self.msg_queue.iter().rev().filter(|m| m.msg.room == r.id) {
-            if let Some(ui_msg) = self.create_new_room_message(&t.msg) {
+            if let Some(ui_msg) = self.create_new_room_message(t.msg.clone()) {
                 let mb = widgets::MessageBox::tmpwidget(
                     login_data.session_client.clone(),
                     self.user_info_cache.clone(),
@@ -365,7 +365,7 @@ impl AppOp {
         let uid = login_data.uid;
         for msg in msgs.iter() {
             if !msg.redacted && self.active_room.as_ref().map_or(false, |x| x == &msg.room) {
-                self.add_room_message(&msg);
+                self.add_room_message(msg.clone());
                 msg_in_active = true;
             }
 
@@ -415,7 +415,7 @@ impl AppOp {
         for item in msgs.iter().rev() {
             /* create a list of new messages to load to the history */
             if active_room.map_or(false, |a_room| item.room == *a_room) && !item.redacted {
-                if let Some(ui_msg) = self.create_new_room_message(item) {
+                if let Some(ui_msg) = self.create_new_room_message(item.clone()) {
                     list.push(ui_msg);
                 }
             }
@@ -434,7 +434,7 @@ impl AppOp {
         let message = self.get_message_by_id(&room_id, &id);
 
         if let Some(msg) = message {
-            self.remove_room_message(&msg);
+            self.remove_room_message(msg.clone());
             if let Some(ref mut room) = self.rooms.get_mut(&msg.room) {
                 if let Some(ref mut message) = room.messages.iter_mut().find(|e| e.id == msg.id) {
                     message.redacted = true;
@@ -445,7 +445,7 @@ impl AppOp {
     }
 
     /* parese a backend Message into a Message for the UI */
-    pub fn create_new_room_message(&self, msg: &Message) -> Option<MessageContent> {
+    pub fn create_new_room_message(&self, msg: Message) -> Option<MessageContent> {
         let login_data = self.login_data.clone()?;
         let mut highlights = vec![];
         lazy_static! {
@@ -506,48 +506,15 @@ impl AppOp {
         let redactable = admin != 0 || login_data.uid == msg.sender;
 
         let is_last_viewed = msg.receipt.contains_key(&login_data.uid);
-        Some(create_ui_message(
-            msg.clone(),
-            name,
-            t,
+        Some(MessageContent {
+            msg,
+            sender_name: name,
+            mtype: t,
             highlights,
             redactable,
-            is_last_viewed,
-        ))
-    }
-}
-
-/* FIXME: don't convert msg to ui messages here, we should later get a ui message from storage */
-fn create_ui_message(
-    msg: Message,
-    name: Option<String>,
-    t: RowType,
-    highlights: Vec<String>,
-    redactable: bool,
-    last_viewed: bool,
-) -> MessageContent {
-    MessageContent {
-        msg: msg.clone(),
-        id: msg.id,
-        sender: msg.sender,
-        sender_name: name,
-        mtype: t,
-        body: msg.body,
-        date: msg.date,
-        replace_date: if msg.replace.is_some() {
-            Some(msg.date)
-        } else {
-            None
-        },
-        thumb: msg.thumb,
-        url: msg.url,
-        local_path: msg.local_path,
-        formatted_body: msg.formatted_body,
-        format: msg.format,
-        last_viewed,
-        highlights,
-        redactable,
-        widget: None,
+            last_viewed: is_last_viewed,
+            widget: None,
+        })
     }
 }
 

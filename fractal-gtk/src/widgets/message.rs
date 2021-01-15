@@ -261,7 +261,7 @@ impl MessageBox {
 
         body_bx.pack_start(&body, true, true, 0);
 
-        if let Some(replace_date) = msg.replace_date {
+        if let Some(replace_date) = msg.msg.replace_date() {
             let edit_mark =
                 gtk::Image::from_icon_name(Some("document-edit-symbolic"), gtk::IconSize::Button);
             edit_mark.get_style_context().add_class("edit-mark");
@@ -290,7 +290,7 @@ impl MessageBox {
     fn build_room_msg_body(&self, msg: &Message) -> gtk::Box {
         let bx = gtk::Box::new(gtk::Orientation::Vertical, 6);
 
-        let msgs_by_kind_of_line = msg.body.lines().group_by(|&line| kind_of_line(line));
+        let msgs_by_kind_of_line = msg.msg.body.lines().group_by(|&line| kind_of_line(line));
         let msg_parts = msgs_by_kind_of_line.into_iter().map(|(k, group)| {
             let mut v: Vec<&str> = if k == MsgPartType::Quote {
                 group.map(trim_start_quote).collect()
@@ -360,7 +360,7 @@ impl MessageBox {
             self.eventbox.upcast_ref::<gtk::Widget>()
         };
 
-        let id = msg.id.clone();
+        let id = msg.msg.id.clone();
         widget.connect_button_press_event(move |w, e| {
             if e.triggers_context_menu() {
                 let menu = MessageMenu::new(id.as_ref(), &mtype, &redactable, Some(w));
@@ -372,7 +372,7 @@ impl MessageBox {
             }
         });
 
-        let id = msg.id.clone();
+        let id = msg.msg.id.clone();
         self.gesture
             .connect_pressed(clone!(@weak widget => move |_, x, y| {
                 let menu = MessageMenu::new(id.as_ref(), &mtype, &redactable, Some(&widget));
@@ -382,7 +382,7 @@ impl MessageBox {
     }
 
     fn connect_media_viewer(&self, msg: &Message) -> Option<()> {
-        let evid = msg.id.as_ref()?.to_string();
+        let evid = msg.msg.id.as_ref()?.to_string();
         let data = glib::Variant::from(evid);
         self.root.set_action_name(Some("app.open-media-viewer"));
         self.root.set_action_target_value(Some(&data));
@@ -395,7 +395,7 @@ fn build_room_msg_avatar(
     user_info_cache: UserInfoCache,
     msg: &Message,
 ) -> widgets::Avatar {
-    let uid = msg.sender.clone();
+    let uid = msg.msg.sender.clone();
     let alias = msg.sender_name.clone();
     let avatar = widgets::Avatar::avatar_new(Some(globals::MSG_ICON_SIZE));
     avatar.set_valign(gtk::Align::Start);
@@ -420,11 +420,11 @@ fn build_room_msg_avatar(
 
 fn build_room_msg_sticker(session_client: MatrixClient, msg: &Message) -> gtk::Box {
     let bx = gtk::Box::new(gtk::Orientation::Horizontal, 0);
-    if let Some(url) = msg.url.clone() {
+    if let Some(url) = msg.msg.url.clone() {
         let image = widgets::image::Image::new(Either::Left(url))
             .size(Some(globals::MAX_STICKER_SIZE))
             .build(session_client);
-        image.widget.set_tooltip_text(Some(&msg.body[..]));
+        image.widget.set_tooltip_text(Some(&msg.msg.body[..]));
 
         bx.add(&image.widget);
     }
@@ -435,7 +435,7 @@ fn build_room_msg_sticker(session_client: MatrixClient, msg: &Message) -> gtk::B
 fn build_room_audio_player(session_client: MatrixClient, msg: &Message) -> gtk::Box {
     let bx = gtk::Box::new(gtk::Orientation::Horizontal, 6);
 
-    if let Some(url) = msg.url.clone() {
+    if let Some(url) = msg.msg.url.clone() {
         let player = AudioPlayerWidget::new();
         let start_playing = false;
         PlayerExt::initialize_stream(
@@ -456,6 +456,7 @@ fn build_room_audio_player(session_client: MatrixClient, msg: &Message) -> gtk::
     download_btn.set_tooltip_text(Some(i18n("Save").as_str()));
 
     let evid = msg
+        .msg
         .id
         .as_ref()
         .map(|evid| evid.to_string())
@@ -466,7 +467,7 @@ fn build_room_audio_player(session_client: MatrixClient, msg: &Message) -> gtk::
     bx.pack_start(&download_btn, false, false, 3);
 
     let outer_box = gtk::Box::new(gtk::Orientation::Vertical, 6);
-    let file_name = gtk::Label::new(Some(&format!("<b>{}</b>", msg.body)));
+    let file_name = gtk::Label::new(Some(&format!("<b>{}</b>", msg.msg.body)));
     file_name.set_use_markup(true);
     file_name.set_xalign(0.0);
     file_name.set_line_wrap(true);
@@ -481,7 +482,7 @@ fn build_room_msg_file(msg: &Message) -> gtk::Box {
     let bx = gtk::Box::new(gtk::Orientation::Horizontal, 12);
     let btn_bx = gtk::Box::new(gtk::Orientation::Horizontal, 0);
 
-    let name = msg.body.as_str();
+    let name = msg.msg.body.as_str();
     let name_lbl = gtk::Label::new(Some(name));
     name_lbl.set_tooltip_text(Some(name));
     name_lbl.set_ellipsize(pango::EllipsizeMode::End);
@@ -493,6 +494,7 @@ fn build_room_msg_file(msg: &Message) -> gtk::Box {
     download_btn.set_tooltip_text(Some(i18n("Save").as_str()));
 
     let evid = msg
+        .msg
         .id
         .as_ref()
         .map(|evid| evid.to_string())
@@ -527,12 +529,13 @@ fn build_room_msg_image(
 
     // If the thumbnail is not a valid URL we use the msg.url
     let img = msg
+        .msg
         .thumb
         .clone()
         .filter(|m| m.scheme() == "mxc" || m.scheme().starts_with("http"))
-        .or_else(|| msg.url.clone())
+        .or_else(|| msg.msg.url.clone())
         .map(Either::Left)
-        .or_else(|| Some(Either::Right(msg.local_path.clone()?)));
+        .or_else(|| Some(Either::Right(msg.msg.local_path.clone()?)));
 
     let image = if let Some(img_path) = img {
         let image = widgets::image::Image::new(img_path)
@@ -558,7 +561,7 @@ fn build_room_video_player(
 ) -> (gtk::Box, Option<Rc<VideoPlayerWidget>>) {
     let bx = gtk::Box::new(gtk::Orientation::Vertical, 6);
 
-    let player = if let Some(url) = msg.url.clone() {
+    let player = if let Some(url) = msg.msg.url.clone() {
         let with_controls = false;
         let player = VideoPlayerWidget::new(with_controls);
         let start_playing = false;
@@ -588,6 +591,7 @@ fn build_room_video_player(
         play_button.get_style_context().add_class("play-icon");
         play_button.get_style_context().add_class("flat");
         let evid = msg
+            .msg
             .id
             .as_ref()
             .map(|evid| evid.to_string())
@@ -615,7 +619,7 @@ fn build_room_video_player(
         });
         overlay.add_overlay(&menu_button);
 
-        let evid = msg.id.as_ref();
+        let evid = msg.msg.id.as_ref();
         let redactable = msg.redactable;
         let menu = MessageMenu::new(evid, &RowType::Video, &redactable, None);
         menu_button.set_popover(Some(&menu.get_popover()));
@@ -639,9 +643,9 @@ fn build_room_msg_emote(msg: &Message) -> (gtk::Box, gtk::Label) {
     let sname = msg
         .sender_name
         .clone()
-        .unwrap_or_else(|| msg.sender.to_string());
+        .unwrap_or_else(|| msg.msg.sender.to_string());
     let msg_label = gtk::Label::new(None);
-    let markup = markup_text(&msg.body);
+    let markup = markup_text(&msg.msg.body);
 
     msg_label.set_markup(&format!("<b>{}</b> {}", sname, markup));
     set_label_styles(&msg_label);
@@ -750,9 +754,12 @@ impl From<&Message> for MessageBoxInfoHeader {
         // +----------+------+
         let root = gtk::Box::new(gtk::Orientation::Horizontal, 0);
 
-        let username =
-            build_room_msg_username(msg.sender_name.as_deref().unwrap_or(msg.sender.as_str()));
-        let date = build_room_msg_date(&msg.date);
+        let username = build_room_msg_username(
+            msg.sender_name
+                .as_deref()
+                .unwrap_or(msg.msg.sender.as_str()),
+        );
+        let date = build_room_msg_date(&msg.msg.date);
 
         let username_event_box = gtk::EventBox::new();
         username_event_box.add(&username);

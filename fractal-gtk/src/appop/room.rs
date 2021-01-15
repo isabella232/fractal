@@ -275,7 +275,7 @@ impl AppOp {
         /* create the intitial list of messages to fill the new room history */
         let mut messages = vec![];
         if let Some(room) = self.rooms.get(&active_room) {
-            for msg in room.messages.iter() {
+            for msg in room.messages.iter().cloned() {
                 /* Make sure the message is from this room and not redacted */
                 if msg.room == active_room && !msg.redacted {
                     let row = self.create_new_room_message(msg);

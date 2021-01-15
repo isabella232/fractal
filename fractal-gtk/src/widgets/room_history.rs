@@ -471,8 +471,11 @@ impl RoomHistory {
                         }
                         return Continue(true);
                     }
-                    if let Some(pos) = edits.iter().position(|edit| item.id == edit.msg.replace) {
-                        edits[pos].date = item.date;
+                    if let Some(pos) = edits
+                        .iter()
+                        .position(|edit| item.msg.id == edit.msg.replace)
+                    {
+                        edits[pos].msg.date = item.msg.date;
                         item = edits.remove(pos).unwrap();
                     }
 
@@ -482,17 +485,17 @@ impl RoomHistory {
 
                     if let Some(first) = rows.borrow().list.back() {
                         if let Element::Message(ref message) = first {
-                            if item.date.day() != message.date.day() {
+                            if item.msg.date.day() != message.msg.date.day() {
                                 prev_day_divider =
-                                    Some(Element::DayDivider(create_day_divider(message.date)));
+                                    Some(Element::DayDivider(create_day_divider(message.msg.date)));
                             }
                         }
                     };
                     let has_header = {
                         if let Some(last) = last {
-                            if item.date.day() != last.date.day() {
+                            if item.msg.date.day() != last.msg.date.day() {
                                 day_divider =
-                                    Some(Element::DayDivider(create_day_divider(item.date)));
+                                    Some(Element::DayDivider(create_day_divider(item.msg.date)));
                             }
                             last.mtype == RowType::Emote || !should_group_message(&item, &last)
                         } else {
@@ -562,8 +565,9 @@ impl RoomHistory {
             if let Some(last) = last {
                 match last {
                     Element::Message(ref message) => {
-                        if item.date.day() != message.date.day() {
-                            day_divider = Some(Element::DayDivider(create_day_divider(item.date)));
+                        if item.msg.date.day() != message.msg.date.day() {
+                            day_divider =
+                                Some(Element::DayDivider(create_day_divider(item.msg.date)));
                         }
                         message.mtype == RowType::Emote || !should_group_message(&item, &message)
                     }
@@ -610,14 +614,14 @@ impl RoomHistory {
             .enumerate()
             .find_map(|(i, e)| match e {
                 Element::Message(ref mut itermessage)
-                    if itermessage.id == item.msg.replace
+                    if itermessage.msg.id == item.msg.replace
                         || itermessage.msg.replace == item.msg.replace =>
                 {
                     Some((i, itermessage))
                 }
                 _ => None,
             })?;
-        item.date = msg.date;
+        item.msg.date = msg.msg.date;
         let msg_widget = msg.widget.clone()?;
 
         item.widget = Some(create_row(
@@ -643,14 +647,14 @@ impl RoomHistory {
             .iter_mut()
             .enumerate()
             .find_map(|(i, e)| match e {
-                Element::Message(ref mut itermessage) if itermessage.id == item.id => {
+                Element::Message(ref mut itermessage) if itermessage.msg.id == item.msg.id => {
                     Some((i, itermessage))
                 }
                 _ => None,
             })?;
 
         let msg_widget = msg.widget.clone()?;
-        let msg_sender = msg.sender.clone();
+        let msg_sender = msg.msg.sender.clone();
         msg.msg.redacted = true;
         rows.remove_item(i);
 
@@ -676,7 +680,7 @@ impl RoomHistory {
                 })
                 .next()
                 .filter(|(msg_next_cloned, _)| {
-                    msg_next_cloned.redactable && msg_next_cloned.sender == msg_sender
+                    msg_next_cloned.redactable && msg_next_cloned.msg.sender == msg_sender
                 })
             {
                 msg_widget.update_header(session_client, user_info_cache, msg_next_cloned, true);
@@ -769,8 +773,8 @@ fn create_row(
 
 /* returns if two messages should have only a single header or not */
 fn should_group_message(msg: &MessageContent, prev: &MessageContent) -> bool {
-    if msg.sender == prev.sender && !prev.msg.redacted {
-        let diff = msg.date.signed_duration_since(prev.date);
+    if msg.msg.sender == prev.msg.sender && !prev.msg.redacted {
+        let diff = msg.msg.date.signed_duration_since(prev.msg.date);
         let minutes = diff.num_minutes();
         minutes < globals::MINUTES_TO_SPLIT_MSGS
     } else {

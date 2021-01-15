@@ -400,6 +400,14 @@ impl Message {
         }
     }
 
+    pub const fn replace_date(&self) -> Option<&DateTime<Local>> {
+        if self.replace.is_some() {
+            Some(&self.date)
+        } else {
+            None
+        }
+    }
+
     /// Generates an unique transaction id for this message
     /// The txn_id is generated using the md5sum of a concatenation of the message room id, the
     /// message body and the date.
