@@ -10,8 +10,8 @@ pub enum Error {
     IdParseError(IdError),
 }
 
-impl From<secret_service::SsError> for Error {
-    fn from(_: secret_service::SsError) -> Error {
+impl From<secret_service::Error> for Error {
+    fn from(_: secret_service::Error) -> Error {
         Error::SecretServiceError
     }
 }
@@ -29,7 +29,7 @@ impl From<IdError> for Error {
 }
 
 pub trait PasswordStorage {
-    fn delete_secret(&self, key: &str) -> Result<(), secret_service::SsError> {
+    fn delete_secret(&self, key: &str) -> Result<(), secret_service::Error> {
         ss_storage::delete_secret(key)
     }
 
@@ -39,7 +39,7 @@ pub trait PasswordStorage {
         password: String,
         server: Url,
         identity: Box<ServerName>,
-    ) -> Result<(), secret_service::SsError> {
+    ) -> Result<(), secret_service::Error> {
         ss_storage::store_pass(username, password, server, identity)
     }
 
@@ -47,7 +47,7 @@ pub trait PasswordStorage {
         ss_storage::get_pass()
     }
 
-    fn store_token(&self, uid: UserId, token: AccessToken) -> Result<(), secret_service::SsError> {
+    fn store_token(&self, uid: UserId, token: AccessToken) -> Result<(), secret_service::Error> {
         ss_storage::store_token(uid, token)
     }
 
@@ -57,19 +57,23 @@ pub trait PasswordStorage {
 }
 
 mod ss_storage {
-    use super::Error;
-    use crate::api::r0::AccessToken;
-    use matrix_sdk::identifiers::{ServerName, UserId};
+    use std::collections::HashMap;
     use std::convert::{TryFrom, TryInto};
+
+    use matrix_sdk::identifiers::{ServerName, UserId};
+    use once_cell::sync::Lazy;
+    use secret_service::{Collection, EncryptionType, Error as SsError, SecretService};
     use url::Url;
 
-    use secret_service::{Collection, EncryptionType, SecretService, SsError};
-
+    use super::Error;
+    use crate::api::r0::AccessToken;
     use crate::globals;
 
-    pub fn delete_secret(key: &str) -> Result<(), secret_service::SsError> {
-        let ss = SecretService::new(EncryptionType::Dh)?;
-        let collection = get_default_collection_unlocked(&ss)?;
+    static SECRET_SERVICE: Lazy<Result<SecretService<'static>, SsError>> =
+        Lazy::new(|| SecretService::new(EncryptionType::Dh));
+
+    pub fn delete_secret(key: &str) -> Result<(), SsError> {
+        let collection = get_default_collection_unlocked()?;
 
         // deleting previous items
         let allpass = collection.get_all_items()?;
@@ -85,28 +89,28 @@ mod ss_storage {
     }
 
     pub fn store_token(uid: UserId, token: AccessToken) -> Result<(), SsError> {
-        let ss = SecretService::new(EncryptionType::Dh)?;
-        let collection = get_default_collection_unlocked(&ss)?;
+        let collection = get_default_collection_unlocked()?;
         let key = "fractal-token";
 
         // deleting previous items
         delete_secret(key)?;
 
         // create new item
+        let mut attributes = HashMap::new();
+        attributes.insert("uid", uid.as_str());
         collection.create_item(
-            key,                             // label
-            vec![("uid", &uid.to_string())], // properties
-            token.to_string().as_bytes(),    // secret
-            true,                            // replace item with same attributes
-            "text/plain",                    // secret content type
+            key,                          // label
+            attributes,                   // properties
+            token.to_string().as_bytes(), // secret
+            true,                         // replace item with same attributes
+            "text/plain",                 // secret content type
         )?;
 
         Ok(())
     }
 
     pub fn get_token() -> Result<(Option<AccessToken>, UserId), Error> {
-        let ss = SecretService::new(EncryptionType::Dh)?;
-        let collection = get_default_collection_unlocked(&ss)?;
+        let collection = get_default_collection_unlocked()?;
         let allpass = collection.get_all_items()?;
         let key = "fractal-token";
 
@@ -140,33 +144,31 @@ mod ss_storage {
         password: String,
         server: Url,
         identity: Box<ServerName>,
-    ) -> Result<(), secret_service::SsError> {
-        let ss = SecretService::new(EncryptionType::Dh)?;
-        let collection = get_default_collection_unlocked(&ss)?;
+    ) -> Result<(), SsError> {
+        let collection = get_default_collection_unlocked()?;
         let key = "fractal";
 
         // deleting previous items
         delete_secret(key)?;
 
         // create new item
+        let mut attributes = HashMap::new();
+        attributes.insert("username", username.as_str());
+        attributes.insert("server", server.as_str());
+        attributes.insert("identity", identity.as_str());
         collection.create_item(
-            key, // label
-            vec![
-                ("username", &username),
-                ("server", server.as_str()),
-                ("identity", identity.as_str()),
-            ], // properties
+            key,                 // label
+            attributes,          // properties
             password.as_bytes(), //secret
-            true, // replace item with same attributes
-            "text/plain", // secret content type
+            true,                // replace item with same attributes
+            "text/plain",        // secret content type
         )?;
 
         Ok(())
     }
 
     pub fn migrate_old_passwd() -> Result<(), Error> {
-        let ss = SecretService::new(EncryptionType::Dh)?;
-        let collection = get_default_collection_unlocked(&ss)?;
+        let collection = get_default_collection_unlocked()?;
         let allpass = collection.get_all_items()?;
 
         // old name password
@@ -210,8 +212,7 @@ mod ss_storage {
     pub fn get_pass() -> Result<(String, String, Url, Box<ServerName>), Error> {
         migrate_old_passwd()?;
 
-        let ss = SecretService::new(EncryptionType::Dh)?;
-        let collection = get_default_collection_unlocked(&ss)?;
+        let collection = get_default_collection_unlocked()?;
         let allpass = collection.get_all_items()?;
         let key = "fractal";
 
@@ -265,17 +266,22 @@ mod ss_storage {
         Ok(tup)
     }
 
-    fn get_default_collection_unlocked(
-        secret_service: &SecretService,
-    ) -> Result<Collection, secret_service::SsError> {
-        let collection = match secret_service.get_default_collection() {
-            Ok(col) => col,
-            Err(SsError::NoResult) => secret_service.create_collection("default", "default")?,
-            Err(x) => return Err(x),
-        };
+    fn get_default_collection_unlocked<'a>() -> Result<Collection<'a>, SsError> {
+        if SECRET_SERVICE.is_ok() {
+            let ss = SECRET_SERVICE.as_ref().unwrap();
+            let collection = match ss.get_default_collection() {
+                Ok(col) => col,
+                Err(SsError::NoResult) => ss.create_collection("default", "default")?,
+                Err(x) => return Err(x),
+            };
 
-        collection.unlock()?;
+            collection.unlock()?;
 
-        Ok(collection)
+            Ok(collection)
+        } else {
+            Err(SsError::Crypto(
+                "Error encountered when initiating secret service connection.".to_string(),
+            ))
+        }
     }
 }

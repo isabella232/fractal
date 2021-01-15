@@ -14,7 +14,7 @@ use crate::cache;
 use crate::client::get_matrix_client;
 
 use crate::passwd::PasswordStorage;
-use secret_service::SsError;
+use secret_service::Error as SsError;
 
 use crate::actions::AppState;
 
@@ -31,7 +31,7 @@ impl AppOp {
     ) {
         match self.store_token(uid.clone(), access_token.clone()) {
             Err(SsError::Locked) => error!("Can’t store the token, keyring is locked."),
-            Err(SsError::Dbus(_)) => error!("Can’t store the token, no Secret Service available."),
+            Err(SsError::Zbus(_)) => error!("Can’t store the token, no Secret Service available."),
             _ => (),
         };
 
@@ -92,7 +92,7 @@ impl AppOp {
             identity.clone(),
         ) {
             Err(SsError::Locked) => error!("Can’t store the password, keyring is locked."),
-            Err(SsError::Dbus(_)) => {
+            Err(SsError::Zbus(_)) => {
                 error!("Can’t store the password, no Secret Service available.")
             }
             _ => (),
