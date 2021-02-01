@@ -15,7 +15,7 @@ use chrono::prelude::*;
 use either::Either;
 use glib::clone;
 use gtk::{prelude::*, ButtonExt, ContainerExt, LabelExt, Overlay, WidgetExt};
-use html2pango::block::{HtmlBlock, markup_html};
+use html2pango::block::{markup_html, HtmlBlock};
 use itertools::Itertools;
 use matrix_sdk::Client as MatrixClient;
 use sourceview4::BufferExt;
@@ -520,13 +520,14 @@ fn build_room_msg(
     (body, type_extras)
 }
 
-fn build_room_msg_body_html(container: &MessageBoxContainer, msg: &Message) -> anyhow::Result<gtk::Box> {
+fn build_room_msg_body_html(
+    container: &MessageBoxContainer,
+    msg: &Message,
+) -> anyhow::Result<gtk::Box> {
     let raw = msg.msg.formatted_body.clone().unwrap_or_default();
 
     if raw.contains("<!-- raw HTML omitted -->") {
-        anyhow::bail!(
-            "Empty message omited: <!-- raw HTML omitted -->, using plain text instead."
-        );
+        anyhow::bail!("Empty message omited: <!-- raw HTML omitted -->, using plain text instead.");
     }
 
     let blocks =
@@ -539,7 +540,11 @@ fn build_room_msg_body_html(container: &MessageBoxContainer, msg: &Message) -> a
     Ok(bx)
 }
 
-fn render_html_block(container: &MessageBoxContainer, msg: &Message, block: &HtmlBlock) -> gtk::Widget {
+fn render_html_block(
+    container: &MessageBoxContainer,
+    msg: &Message,
+    block: &HtmlBlock,
+) -> gtk::Widget {
     let widget = match block {
         HtmlBlock::Heading(n, s) => {
             let w = gtk::Label::new(None);
@@ -857,8 +862,7 @@ fn build_room_msg_file(msg: &Message) -> BodyAndType {
 
 fn build_room_msg_body(container: &MessageBoxContainer, msg: &Message) -> BodyAndType {
     let bx = match msg.msg.format.as_deref() {
-        Some("org.matrix.custom.html") =>
-            build_room_msg_body_html(container, &msg)
+        Some("org.matrix.custom.html") => build_room_msg_body_html(container, &msg)
             .unwrap_or_else(|_err| build_room_msg_body_text(container, &msg)),
         _ => build_room_msg_body_text(container, &msg),
     };
