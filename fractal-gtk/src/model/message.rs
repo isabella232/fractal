@@ -145,17 +145,23 @@ impl From<MessageEvent<MessageEventContent>> for Message {
                         Relation::Reply { in_reply_to } => (Some(in_reply_to.event_id), None),
                         _ => (None, None),
                     });
-                let (body, formatted, in_reply_to) = content.new_content.map_or(
-                    (content.body, content.formatted, in_reply_to),
-                    |nc| {
-                        let in_reply_to = nc.relates_to.and_then(|r| match r {
-                            Relation::Reply { in_reply_to } => Some(in_reply_to.event_id),
-                            _ => None,
-                        });
+                let (body, formatted, in_reply_to) = content
+                    .new_content
+                    .and_then(|nc| {
+                        // FIXME: this could go wrong if a text message wasn't replaced with a text
+                        // message.
+                        if let MessageEventContent::Text(nc) = *nc {
+                            let in_reply_to = nc.relates_to.and_then(|r| match r {
+                                Relation::Reply { in_reply_to } => Some(in_reply_to.event_id),
+                                _ => None,
+                            });
 
-                        (nc.body, nc.formatted, in_reply_to)
-                    },
-                );
+                            Some((nc.body, nc.formatted, in_reply_to))
+                        } else {
+                            None
+                        }
+                    })
+                    .unwrap_or((content.body, content.formatted, in_reply_to));
                 let (formatted_body, format) = formatted.map_or(Default::default(), |f| {
                     (Some(f.body), Some(f.format.as_str().into()))
                 });
@@ -195,17 +201,23 @@ impl From<MessageEvent<MessageEventContent>> for Message {
                         Relation::Reply { in_reply_to } => (Some(in_reply_to.event_id), None),
                         _ => (None, None),
                     });
-                let (body, formatted, in_reply_to) = content.new_content.map_or(
-                    (content.body, content.formatted, in_reply_to),
-                    |nc| {
-                        let in_reply_to = nc.relates_to.and_then(|r| match r {
-                            Relation::Reply { in_reply_to } => Some(in_reply_to.event_id),
-                            _ => None,
-                        });
+                let (body, formatted, in_reply_to) = content
+                    .new_content
+                    .and_then(|nc| {
+                        // FIXME: this could go wrong if a notice message wasn't replaced with a
+                        // notice message.
+                        if let MessageEventContent::Notice(nc) = *nc {
+                            let in_reply_to = nc.relates_to.and_then(|r| match r {
+                                Relation::Reply { in_reply_to } => Some(in_reply_to.event_id),
+                                _ => None,
+                            });
 
-                        (nc.body, nc.formatted, in_reply_to)
-                    },
-                );
+                            Some((nc.body, nc.formatted, in_reply_to))
+                        } else {
+                            None
+                        }
+                    })
+                    .unwrap_or((content.body, content.formatted, in_reply_to));
                 let (formatted_body, format) = formatted.map_or(Default::default(), |f| {
                     (Some(f.body), Some(f.format.as_str().into()))
                 });

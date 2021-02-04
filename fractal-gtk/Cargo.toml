@@ -70,8 +70,8 @@ version = "0.9.0"
 features = ["v2_56"]
 
 [dependencies.tokio]
-version = "0.2.22"
-features = ["rt-threaded", "time"]
+version = "1.1.1"
+features = ["rt-multi-thread", "time", "fs"]
 
 [dependencies.url]
 version = "2.1.1"
@@ -79,5 +79,5 @@ features = ["serde"]
 
 [dependencies.matrix-sdk]
 git = "https://github.com/matrix-org/matrix-rust-sdk.git"
-rev = "0422bae92485b033d4f9b56f2331909653655609"
+rev = "bdaed6237e104b738b5ad25c063675373d9fa60d"
 features = ["unstable-synapse-quirks", "socks"]

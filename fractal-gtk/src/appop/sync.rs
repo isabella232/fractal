@@ -9,9 +9,7 @@ use crate::model::{
     room::{Room, RoomMembership, RoomTag},
 };
 use crate::util::i18n::i18n;
-use log::warn;
-use matrix_sdk::api::r0::sync::sync_events::JoinedRoom;
-use matrix_sdk::api::r0::sync::sync_events::Response as SyncResponse;
+use matrix_sdk::deserialized_responses::{JoinedRoom, SyncResponse};
 use matrix_sdk::events::AnyEphemeralRoomEventContent;
 use matrix_sdk::events::AnySyncMessageEvent;
 use matrix_sdk::events::AnySyncRoomEvent;
@@ -61,14 +59,8 @@ impl AppOp {
 
                             for (room_id, unread_notifications) in updates.room_notifications {
                                 let r = room_id;
-                                let n: u64 = unread_notifications
-                                    .notification_count
-                                    .map(Into::into)
-                                    .unwrap_or_default();
-                                let h: u64 = unread_notifications
-                                    .highlight_count
-                                    .map(Into::into)
-                                    .unwrap_or_default();
+                                let n: u64 = unread_notifications.notification_count;
+                                let h: u64 = unread_notifications.highlight_count;
                                 APPOP!(set_room_notifications, (r, n, h));
                             }
 
@@ -160,11 +152,6 @@ fn get_sync_updates(join: &BTreeMap<RoomId, JoinedRoom>, user_id: &UserId) -> Sy
             .map(|(k, room)| {
                 let typing: Vec<Member> = room.ephemeral.events
                     .iter()
-                    .map(|ev| ev.deserialize())
-                    .inspect(|result_ev| if let Err(err) = result_ev {
-                        warn!("Bad event: {}", err);
-                    })
-                    .filter_map(Result::ok)
                     .filter_map(|event| match event.content() {
                         AnyEphemeralRoomEventContent::Typing(content) => {
                             Some(content.user_ids)
@@ -194,30 +181,24 @@ fn get_sync_updates(join: &BTreeMap<RoomId, JoinedRoom>, user_id: &UserId) -> Sy
                 room.timeline
                     .events
                     .iter()
-                    .map(move |ev| Ok((room_id.clone(), ev.deserialize()?)))
+                    .map(move |ev| (room_id.clone(), ev))
             })
-            .inspect(|result_ev: &Result<_, serde_json::Error>| {
-                if let Err(err) = result_ev {
-                    warn!("Bad event: {}", err);
-                }
-            })
-            .filter_map(Result::ok)
             .filter_map(|(room_id, event)| match event {
                 AnySyncRoomEvent::State(AnySyncStateEvent::RoomName(ev)) => {
                     let name = ev.content.name().map(Into::into).unwrap_or_default();
                     Some(RoomElement::Name(room_id, name))
                 }
                 AnySyncRoomEvent::State(AnySyncStateEvent::RoomTopic(ev)) => {
-                    Some(RoomElement::Topic(room_id, ev.content.topic))
+                    Some(RoomElement::Topic(room_id, ev.content.topic.clone()))
                 }
                 AnySyncRoomEvent::State(AnySyncStateEvent::RoomAvatar(_)) => {
                     Some(RoomElement::NewAvatar(room_id))
                 }
-                AnySyncRoomEvent::State(AnySyncStateEvent::RoomMember(ev)) => {
-                    Some(RoomElement::MemberEvent(ev.into_full_event(room_id)))
-                }
+                AnySyncRoomEvent::State(AnySyncStateEvent::RoomMember(ev)) => Some(
+                    RoomElement::MemberEvent(ev.clone().into_full_event(room_id)),
+                ),
                 AnySyncRoomEvent::Message(AnySyncMessageEvent::RoomRedaction(ev)) => {
-                    Some(RoomElement::RemoveMessage(room_id, ev.redacts))
+                    Some(RoomElement::RemoveMessage(room_id, ev.redacts.clone()))
                 }
                 _ => None,
             })

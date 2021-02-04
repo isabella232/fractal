@@ -48,13 +48,11 @@ impl AppOp {
             identity_url,
         });
 
-        let _ = RUNTIME
-            .handle()
-            .block_on(matrix_client.restore_login(Session {
-                access_token: access_token.to_string(),
-                user_id: uid,
-                device_id,
-            }));
+        let _ = RUNTIME.block_on(matrix_client.restore_login(Session {
+            access_token: access_token.to_string(),
+            user_id: uid,
+            device_id,
+        }));
 
         self.set_state(AppState::NoRoom);
         self.since = None;

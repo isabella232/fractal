@@ -98,7 +98,7 @@ impl LoginWidget {
                 };
 
                 let query = get_well_known(homeserver_url.clone());
-                let (homeserver_url, idserver) = RUNTIME.handle().block_on(query)
+                let (homeserver_url, idserver) = RUNTIME.block_on(query)
                     .and_then(|response| {
                         let hs_url = Url::parse(&response.homeserver.base_url)?;
                         let ids = response

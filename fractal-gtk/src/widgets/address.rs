@@ -181,7 +181,7 @@ impl<'a> Address<'a> {
             match action {
                 Some(AddressAction::Delete) => {
                     if let Some(address) = address.clone() {
-                        RUNTIME.handle().block_on(delete_address(
+                        RUNTIME.block_on(delete_address(
                             medium,
                             address,
                             session_client.homeserver().clone(),

@@ -7,9 +7,9 @@ use matrix_sdk::api::r0::filter::LazyLoadOptions;
 use matrix_sdk::api::r0::filter::RoomEventFilter;
 use matrix_sdk::api::r0::filter::RoomFilter;
 use matrix_sdk::api::r0::sync::sync_events::Filter;
-use matrix_sdk::api::r0::sync::sync_events::Response;
-use matrix_sdk::api::r0::sync::sync_events::UnreadNotificationsCount;
 use matrix_sdk::assign;
+use matrix_sdk::deserialized_responses::SyncResponse;
+use matrix_sdk::deserialized_responses::UnreadNotificationsCount;
 use matrix_sdk::events::room::member::MemberEventContent;
 use matrix_sdk::events::StateEvent;
 use matrix_sdk::identifiers::{EventId, RoomId};
@@ -63,7 +63,7 @@ pub async fn sync(
     session_client: MatrixClient,
     since: Option<String>,
     number_tries: u32,
-) -> Result<Response, SyncError> {
+) -> Result<SyncResponse, SyncError> {
     let initial = since.is_none();
     let timeline_not_types = [String::from("m.call.*")];
     let timeline_types = [String::from("m.room.message"), String::from("m.sticker")];
@@ -118,7 +118,7 @@ pub async fn sync(
                 "Sync Error, waiting {} seconds to respond for the next sync",
                 waiting_time.as_secs()
             );
-            tokio::time::delay_for(waiting_time).await;
+            tokio::time::sleep(waiting_time).await;
 
             Err(SyncError(err, number_tries))
         }

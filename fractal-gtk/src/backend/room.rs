@@ -972,7 +972,7 @@ pub async fn set_pushrules(
         ],
     };
 
-    let request = SetRoomRulesRequest::new("global", RuleKind::Room, room_id.as_str(), actions);
+    let request = SetRoomRulesRequest::new("global", RuleKind::Room, room_id.as_str(), &actions);
 
     session_client.send(request).await?;
 
