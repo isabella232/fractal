@@ -1,0 +1,5 @@
+data/resources/ui/shortcuts.ui
+data/resources/ui/window.ui.in
+data/org.gnome.Fractal.desktop.in.in
+data/org.gnome.Fractal.gschema.xml.in
+data/org.gnome.Fractal.metainfo.xml.in.in
