@@ -11,7 +11,7 @@ mod imp {
     use glib::subclass;
 
     #[derive(Debug, CompositeTemplate)]
-    #[template(resource = "/org/gnome/Fractal/window.ui")]
+    #[template(resource = "/org/gnome/FractalNext/window.ui")]
     pub struct ExampleApplicationWindow {
         #[template_child]
         pub headerbar: TemplateChild<gtk::HeaderBar>,
@@ -49,7 +49,7 @@ mod imp {
         fn constructed(&self, obj: &Self::Type) {
             self.parent_constructed(obj);
 
-            let builder = gtk::Builder::from_resource("/org/gnome/Fractal/shortcuts.ui");
+            let builder = gtk::Builder::from_resource("/org/gnome/FractalNext/shortcuts.ui");
             let shortcuts = builder.get_object("shortcuts").unwrap();
             obj.set_help_overlay(Some(&shortcuts));
 

@@ -51,7 +51,7 @@ mod imp {
                 return;
             }
 
-            app.set_resource_base_path(Some("/org/gnome/Fractal/"));
+            app.set_resource_base_path(Some("/org/gnome/FractalNext/"));
             app.setup_css();
 
             let window = ExampleApplicationWindow::new(app);
@@ -124,7 +124,7 @@ impl ExampleApplication {
 
     fn setup_css(&self) {
         let provider = gtk::CssProvider::new();
-        provider.load_from_resource("/org/gnome/Fractal/style.css");
+        provider.load_from_resource("/org/gnome/FractalNext/style.css");
         if let Some(display) = gdk::Display::get_default() {
             gtk::StyleContext::add_provider_for_display(
                 &display,

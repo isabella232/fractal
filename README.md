@@ -12,7 +12,7 @@ Fractal is a Matrix messaging app for GNOME written in Rust. Its interface is op
 Flatpak is the recommended installation method. You can get the official
 Fractal Flatpak on Flathub.
 
-<a href="https://flathub.org/apps/details/org.gnome.Fractal">
+<a href="https://flathub.org/apps/details/org.gnome.FractalNext">
 <img src="https://flathub.org/assets/badges/flathub-badge-i-en.png" width="190px" />
 </a>
 
@@ -45,7 +45,7 @@ flatpak install --user flathub org.freedesktop.Sdk.Extension.rust-stable//20.08
 Then you go ahead and build Fractal.
 
 ```
-flatpak-builder --user --install fractal flatpak/org.gnome.Fractal.json
+flatpak-builder --user --install fractal flatpak/org.gnome.FractalNext.json
 ```
 
 ### Snap

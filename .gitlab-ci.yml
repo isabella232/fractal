@@ -9,9 +9,9 @@ flatpak:
     - flatpak
   variables:
     BUNDLE: "fractal-nightly.flatpak"
-    MANIFEST_PATH: "build-aux/org.gnome.Fractal.Devel.json"
+    MANIFEST_PATH: "build-aux/org.gnome.FractalNext.Devel.json"
     FLATPAK_MODULE: "fractal"
-    APP_ID: "org.gnome.Fractal.Devel"
+    APP_ID: "org.gnome.FractalNext.Devel"
     RUNTIME_REPO: "https://nightly.gnome.org/gnome-nightly.flatpakrepo"
   script:
     - >
