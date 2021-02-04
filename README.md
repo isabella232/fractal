@@ -1,55 +1,156 @@
-# GTK + Rust + Meson + Flatpak = <3
+# Fractal
 
-A boilerplate template to get started with GTK, Rust, Meson, Flatpak made for GNOME. It can be adapted for other desktop environments like elementary.
+Fractal is a Matrix messaging app for GNOME written in Rust. Its interface is optimized for collaboration in large groups, such as free software projects.
 
-<div align="center">
-![Main Window](data/resources/screenshots/screenshot1.png "Main Window")
-</div>
+* Come to talk to us on Matrix: <https://matrix.to/#/#fractal-gtk:matrix.org>
+* Main repository: <https://gitlab.gnome.org/GNOME/fractal/>
 
-## What does it contains?
+![screenshot](https://gitlab.gnome.org/GNOME/fractal/raw/master/screenshots/fractal.png)
 
-- A simple window with a headerbar
-- Bunch of useful files that you SHOULD ship with your application on Linux:
-  - Metainfo: describe your application for the different application stores out there;
-  - Desktop: the application launcher;
-  - Icons: This repo contains three icons, a normal, a nightly & monochromatic icon (symbolic) per the GNOME HIG, exported using [App Icon Preview](https://flathub.org/apps/details/org.gnome.design.AppIconPreview).
-- Flatpak Manifest for nightly builds
-- Dual installation support
-- Uses Meson for building the application
-- Bundles the UI files & the CSS using gresources
-- A pre-commit hook to run rustfmt on your code
-- Tests to validate your Metainfo, Schemas & Desktop files
-- Gsettings to store the window state, more settings could be added
-- Gitlab CI to produce flatpak nightlies
-- i18n support
+## Installation instructions
 
-## How to init a project ?
+Flatpak is the recommended installation method. You can get the official
+Fractal Flatpak on Flathub.
 
-The template ships a simple python script to init a project easily. It asks you a few questions and replaces & renames all the necessary files.
+<a href="https://flathub.org/apps/details/org.gnome.Fractal">
+<img src="https://flathub.org/assets/badges/flathub-badge-i-en.png" width="190px" />
+</a>
 
-The script requires having `git` installed on your system.
+Fractal can also be installed as a snap on any distro with snap support enabled
 
-You can run it with,
+<a href="https://snapcraft.io/fractal">
+<img src="https://github.com/snapcore/snap-store-badges/raw/master/EN/[EN]-snap-store-white.png" width="182px" />
+</a>
 
-```shell
-python3 create-project.py
+## Build Instructions
+
+### Flatpak
+
+Flatpak is the recommended way of building and installing Fractal.
+
+First you need to make sure you have the GNOME SDK and Rust toolchain installed.
+
+```
+# Add Flathub and the gnome-nightly repo
+flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+flatpak remote-add --user --if-not-exists gnome-nightly https://nightly.gnome.org/gnome-nightly.flatpakrepo
+
+# Install the gnome-nightly Sdk and Platform runtime
+flatpak install --user gnome-nightly org.gnome.Sdk org.gnome.Platform
+
+# Install the required rust-stable extension from Flathub
+flatpak install --user flathub org.freedesktop.Sdk.Extension.rust-stable//20.08
 ```
 
-```shell
-➜ python3 create-project.py
-Welcome to GTK Rust Template
-Name: Contrast
-Project Name: contrast
-Application ID (see: https://developer.gnome.org/ChooseApplicationID/): org.gnome.design.Contrast
-Author: Bilal Elmoussaoui
-Email: bil.elmoussaoui@gmail.com
-Github/Gitlab repository: https://gitlab.gnome.org/World/design/contrast/
-Use gtk4 [Y/n]: y
+Then you go ahead and build Fractal.
+
+```
+flatpak-builder --user --install fractal flatpak/org.gnome.Fractal.json
 ```
 
-A new directory named `contrast` containing the generated project
+### Snap
 
-## Credits
+To build as a snap simply install snapcraft
 
-- [Podcasts](https://gitlab.gnome.org/World/podcasts)
-- [Shortwave](https://gitlab.gnome.org/World/Shortwave)
+```
+snap install --classic snapcraft
+snapcraft
+```
+
+The snapcraft build will produce a file that ends with .snap that can be easily installed with the snap command
+
+```
+snap install --dangerous FILENAME.snap
+```
+
+### GNU/Linux
+
+If you decide to ignore our recommendation and build on your host system,
+outside of Flatpak or snap, you will need Meson and Ninja (as well as Rust and Cargo).
+
+```sh
+meson . _build --prefix=/usr/local
+ninja -C _build
+sudo ninja -C _build install
+```
+
+### macOS
+
+```sh
+brew install gtk+3 dbus bash adwaita-icon-theme libhandy gtksourceview4 \
+    gspell gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-editing-services
+# empirically needs 3.22.19 or later of gtk3+
+# ...and run configure as:
+/usr/local/bin/bash -c "meson . _build --prefix=/usr/local"
+ninja -C _build
+sudo ninja -C _build install
+```
+
+### Translations
+
+Fractal is translated by the GNOME translation team on
+[Damned lies](https://l10n.gnome.org/).
+
+If you want to add *a new language* you should update the file
+`fractal-gtk/po/LINGUAS` and add the code for that language
+to the list.
+
+Get the pot file from [the Fractal module page on Damned lies](https://l10n.gnome.org/module/fractal/).
+
+### Password Storage
+
+Fractal uses [Secret Service](https://www.freedesktop.org/wiki/Specifications/secret-storage-spec/)
+to store the password so you should have something providing 
+that service on your system. If you're using GNOME or KDE
+this should work for you out of the box with gnome-keyring or
+ksecretservice.
+
+## Supported m.room.message (msgtypes)
+
+msgtypes          | Recv                | Send
+--------          | -----               | ------
+m.text            | Done                | Done
+m.emote           | Done                | Done
+m.notice          |                     |
+m.image           | Done                | Done
+m.file            | Done                | Done
+m.location        |                     |
+m.video           | Done                | Done
+m.audio           | Done                | Done
+
+Full reference in: <https://matrix.org/docs/spec/client_server/r0.2.0.html#m-room-message-msgtypes>
+
+## Frequently Asked Questions
+
+* Does Fractal have encryption support? Will it ever?
+
+Fractal does not currently have encryption support, but
+there is an initiative for it.
+
+We are heading towards using matrix-rust-sdk rather than our own implementation. (See https://gitlab.gnome.org/GNOME/fractal/-/issues/636)
+
+Code and further information for this module can be found at [matrix/matrix-rust-sdk](https://github.com/matrix-org/matrix-rust-sdk).
+
+* Can I run Fractal with the window closed?
+
+Currently Fractal does not support this. Fractal is a
+GNOME application, and accordingly adheres GNOME
+guidelines and paradigms. This will be revisited if or
+when GNOME gets a "Do Not Disturb" feature.
+
+## The origin of Fractal
+
+This project is based on Fest <https://github.com/fest-im/fest>, formerly called ruma-gtk.
+
+Instead of using RUMA Client, Fractal calls directly to the matrix.org
+REST API.
+
+The first version of this project was called guillotine, based on French revolution,
+in relation with the Riot client name, but it's a negative name so we decide
+to change for a math one.
+
+The name Fractal was proposed by Regina Bíró.
+
+## Code of Conduct
+
+Fractal follows the official GNOME Foundation code of conduct. You can read it [here](/code-of-conduct.md).
