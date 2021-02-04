@@ -20,59 +20,46 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox" id="login_greeter">
+          <object class="HdyStatusPage" id="login_greeter">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="halign">center</property>
-            <property name="valign">center</property>
-            <property name="expand">True</property>
-            <property name="orientation">vertical</property>
-            <property name="spacing">18</property>
+            <property name="hexpand">True</property>
+            <property name="vexpand">True</property>
+            <property name="icon_name">chat-icon</property>
+            <property name="title" translatable="yes">Welcome to Fractal</property>
             <child>
-              <object class="GtkImage" id="login_greeter_image">
+              <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="halign">center</property>
-                <property name="margin_start">18</property>
-                <property name="margin_end">18</property>
-                <property name="margin_top">18</property>
-                <property name="pixel_size">128</property>
-                <property name="icon_name">chat-icon</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Welcome to Fractal</property>
-                <property name="margin_bottom">48</property>
-                <property name="wrap">True</property>
-                <property name="wrap_mode">PANGO_WRAP_WORD_CHAR</property>
-                <attributes>
-                  <attribute name="weight" value="ultrabold"/>
-                  <attribute name="scale" value="1.7"/>
-                </attributes>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton" id="login_button">
-                <property name="visible">True</property>
-                <property name="use_underline">True</property>
-                <property name="label" translatable="yes">_Log In</property>
-                <property name="action_name">login.server_chooser</property>
-                <property name="height-request">48</property>
-                <style>
-                  <class name="suggested-action"/>
-                </style>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton" id="create_account_button">
-                <property name="visible">True</property>
-                <property name="use_underline">True</property>
-                <property name="label" translatable="yes">_Create Account</property>
-                <property name="height-request">48</property>
-                <property name="action_name">login.create-account</property>
+                <property name="orientation">vertical</property>
+                <property name="spacing">18</property>
+                <property name="margin_top">12</property>
+                <child>
+                  <object class="GtkButton" id="login_button">
+                    <property name="visible">True</property>
+                    <property name="use_underline">True</property>
+                    <property name="label" translatable="yes">_Log In</property>
+                    <property name="action_name">login.server_chooser</property>
+                    <property name="height-request">48</property>
+                    <style>
+                      <class name="suggested-action"/>
+                      <class name="pill-button"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="create_account_button">
+                    <property name="visible">True</property>
+                    <property name="use_underline">True</property>
+                    <property name="label" translatable="yes">_Create Account</property>
+                    <property name="height-request">48</property>
+                    <property name="action_name">login.create-account</property>
+                    <style>
+                      <class name="pill-button"/>
+                    </style>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
@@ -129,46 +116,18 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox" id="login_server_chooser">
+          <object class="HdyStatusPage" id="login_server_chooser">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="halign">center</property>
-            <property name="valign">center</property>
-            <property name="expand">True</property>
-            <property name="orientation">vertical</property>
-            <property name="spacing">18</property>
-            <child>
-              <object class="GtkImage">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="halign">center</property>
-                <property name="margin_start">18</property>
-                <property name="margin_end">18</property>
-                <property name="pixel_size">128</property>
-                <property name="icon_name">network-server-symbolic</property>
-                <style>
-                  <class name="dim-label"/>
-                </style>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label" translatable="yes">What is your Provider?</property>
-                <property name="margin_bottom">30</property>
-                <property name="wrap">True</property>
-                <property name="wrap_mode">PANGO_WRAP_WORD_CHAR</property>
-                <attributes>
-                  <attribute name="weight" value="ultrabold"/>
-                  <attribute name="scale" value="1.7"/>
-                </attributes>
-              </object>
-            </child>
+            <property name="hexpand">True</property>
+            <property name="vexpand">True</property>
+            <property name="icon_name">network-server-symbolic</property>
+            <property name="title" translatable="yes">What is your Provider?</property>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="margin_top">12</property>
                 <property name="orientation">vertical</property>
                 <property name="spacing">6</property>
                 <child>
@@ -193,19 +152,20 @@
                     </style>
                   </object>
                 </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel" id="server_err_label">
-                <property name="visible">False</property>
-                <property name="can_focus">False</property>
-                <property name="no_show_all">True</property>
-                <property name="label" translatable="yes">The domain may not be empty.</property>
-                <property name="wrap">True</property>
-                <property name="wrap_mode">PANGO_WRAP_WORD_CHAR</property>
-                <style>
-                  <class name="error-label"/>
-                </style>
+                <child>
+                  <object class="GtkLabel" id="server_err_label">
+                    <property name="visible">False</property>
+                    <property name="can_focus">False</property>
+                    <property name="no_show_all">True</property>
+                    <property name="margin_top">12</property>
+                    <property name="label" translatable="yes">The domain may not be empty.</property>
+                    <property name="wrap">True</property>
+                    <property name="wrap_mode">PANGO_WRAP_WORD_CHAR</property>
+                    <style>
+                      <class name="error-label"/>
+                    </style>
+                  </object>
+                </child>
               </object>
             </child>
           </object>

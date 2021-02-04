@@ -443,3 +443,8 @@ box.folded-history
 #clip-container {
   border-radius: 6px;
 }
+
+.pill-button {
+  border-radius: 9999px;
+  -gtk-outline-radius: 9999px;
+}
