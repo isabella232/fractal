@@ -49,8 +49,7 @@ mod imp {
         fn constructed(&self, obj: &Self::Type) {
             self.parent_constructed(obj);
 
-            let builder =
-                gtk::Builder::from_resource("/org/gnome/Fractal/shortcuts.ui");
+            let builder = gtk::Builder::from_resource("/org/gnome/Fractal/shortcuts.ui");
             let shortcuts = builder.get_object("shortcuts").unwrap();
             obj.set_help_overlay(Some(&shortcuts));
 
