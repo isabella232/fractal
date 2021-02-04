@@ -340,47 +340,14 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkBox">
+                                  <object class="HdyStatusPage">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="orientation">vertical</property>
-                                    <property name="margin_bottom">30</property>
-                                    <property name="valign">center</property>
-                                    <property name="expand">True</property>
-                                    <child>
-                                      <object class="GtkImage">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="margin_bottom">16</property>
-                                        <property name="resource">/org/gnome/Fractal/icons/chat-icon.svg</property>
-                                      </object>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="label" translatable="yes">No room selected</property>
-                                        <property name="margin_bottom">3</property>
-                                        <property name="justify">center</property>
-                                        <attributes>
-                                          <attribute name="weight" value="bold"/>
-                                        </attributes>
-                                        <style>
-                                          <class name="noroom-title"/>
-                                        </style>
-                                      </object>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="label" translatable="yes">Join a room to start chatting</property>
-                                        <property name="justify">center</property>
-                                        <style>
-                                          <class name="noroom-description"/>
-                                        </style>
-                                      </object>
-                                    </child>
+                                    <property name="hexpand">True</property>
+                                    <property name="vexpand">True</property>
+                                    <property name="icon_name">chat-icon</property>
+                                    <property name="title" translatable="yes">No Room Selected</property>
+                                    <property name="description" translatable="yes">Join a room to start chatting.</property>
                                   </object>
                                   <packing>
                                     <property name="name">noroom</property>
