@@ -8,16 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2021-01-02 18:19+0000\n"
-"PO-Revision-Date: 2021-01-02 20:46+0200\n"
+"POT-Creation-Date: 2021-02-05 12:39+0000\n"
+"PO-Revision-Date: 2021-02-05 22:17+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
-"%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Lokalize 20.11.70\n"
 
 #: fractal-gtk/res/gtk/help-overlay.ui:13
@@ -185,7 +184,7 @@ msgid "Account Settings"
 msgstr "Налаштування облікового запису"
 
 #: fractal-gtk/res/ui/account_settings.ui:30
-#: fractal-gtk/res/ui/main_window.ui:217 fractal-gtk/res/ui/main_window.ui:487
+#: fractal-gtk/res/ui/main_window.ui:217 fractal-gtk/res/ui/main_window.ui:454
 #: fractal-gtk/res/ui/media_viewer.ui:36 fractal-gtk/res/ui/room_settings.ui:30
 msgid "Back"
 msgstr "Назад"
@@ -348,59 +347,59 @@ msgstr ""
 msgid "Leave room"
 msgstr "Покинути кімнату"
 
-#: fractal-gtk/res/ui/login_flow.ui:47
+#: fractal-gtk/res/ui/login_flow.ui:29
 msgid "Welcome to Fractal"
 msgstr "Вітаємо у «Фракталі»"
 
-#: fractal-gtk/res/ui/login_flow.ui:61 fractal-gtk/res/ui/login_flow.ui:251
+#: fractal-gtk/res/ui/login_flow.ui:42 fractal-gtk/res/ui/login_flow.ui:211
 msgid "_Log In"
 msgstr "_Увійти"
 
-#: fractal-gtk/res/ui/login_flow.ui:73
+#: fractal-gtk/res/ui/login_flow.ui:55
 msgid "_Create Account"
 msgstr "С_творити обліковий запис"
 
-#: fractal-gtk/res/ui/login_flow.ui:97
+#: fractal-gtk/res/ui/login_flow.ui:84
 msgid "Choose Provider"
 msgstr "Виберіть надавача послуг"
 
-#: fractal-gtk/res/ui/login_flow.ui:120
+#: fractal-gtk/res/ui/login_flow.ui:107
 msgid "_Next"
 msgstr "_Далі"
 
-#: fractal-gtk/res/ui/login_flow.ui:158
+#: fractal-gtk/res/ui/login_flow.ui:125
 msgid "What is your Provider?"
 msgstr "Який у вас надавач послуг?"
 
-#: fractal-gtk/res/ui/login_flow.ui:187
+#: fractal-gtk/res/ui/login_flow.ui:146
 msgid "Matrix provider domain, e.g. myserver.co"
 msgstr "Домен надавача послуг Matrix, наприклад myserver.co"
 
-#: fractal-gtk/res/ui/login_flow.ui:203
+#: fractal-gtk/res/ui/login_flow.ui:161
 msgid "The domain may not be empty."
 msgstr "Запис домену не може бути порожнім."
 
-#: fractal-gtk/res/ui/login_flow.ui:228
+#: fractal-gtk/res/ui/login_flow.ui:188
 msgid "Log In"
 msgstr "Увійти"
 
-#: fractal-gtk/res/ui/login_flow.ui:276
+#: fractal-gtk/res/ui/login_flow.ui:236
 msgid "_User ID"
 msgstr "Ід. _користувача"
 
-#: fractal-gtk/res/ui/login_flow.ui:292
+#: fractal-gtk/res/ui/login_flow.ui:252
 msgid "_Password"
 msgstr "_Пароль"
 
-#: fractal-gtk/res/ui/login_flow.ui:324
+#: fractal-gtk/res/ui/login_flow.ui:284
 msgid "User name, email, or phone number"
 msgstr "Ім'я користувача, адреса електронної пошти або номер телефону"
 
-#: fractal-gtk/res/ui/login_flow.ui:357
+#: fractal-gtk/res/ui/login_flow.ui:317
 msgid "_Forgot Password?"
 msgstr "За_були пароль?"
 
-#: fractal-gtk/res/ui/login_flow.ui:375
+#: fractal-gtk/res/ui/login_flow.ui:335
 msgid "Invalid username or password"
 msgstr "Неправильне ім'я користувача або пароль"
 
@@ -432,19 +431,21 @@ msgstr "Пошук кімнати"
 msgid "Room Menu"
 msgstr "Меню кімнати"
 
-#: fractal-gtk/res/ui/main_window.ui:362
-msgid "No room selected"
+#: fractal-gtk/res/ui/main_window.ui:349
+#| msgid "No room selected"
+msgid "No Room Selected"
 msgstr "Не вибрано жодної кімнати"
 
-#: fractal-gtk/res/ui/main_window.ui:377
-msgid "Join a room to start chatting"
-msgstr "Увійдіть в кімнату, щоб почати чат"
+#: fractal-gtk/res/ui/main_window.ui:350
+#| msgid "Join a room to start chatting"
+msgid "Join a room to start chatting."
+msgstr "Увійдіть до кімнати, щоб почати спілкування."
 
-#: fractal-gtk/res/ui/main_window.ui:387
+#: fractal-gtk/res/ui/main_window.ui:354
 msgid "No room"
 msgstr "Немає кімнати"
 
-#: fractal-gtk/res/ui/main_window.ui:527
+#: fractal-gtk/res/ui/main_window.ui:494
 #: fractal-gtk/res/ui/server_chooser_menu.ui:51
 #: fractal-gtk/src/ui/connect/directory.rs:117
 msgid "Default Matrix Server"
@@ -820,7 +821,7 @@ msgstr[1] "<b>{}</b> і <b>{}</b> вводять повідомлення…"
 msgstr[2] "<b>{}</b> і <b>{}</b> вводять повідомлення…"
 msgstr[3] "<b>{}</b> вводить повідомлення…"
 
-#: fractal-gtk/src/appop/sync.rs:26
+#: fractal-gtk/src/appop/sync.rs:24
 msgid "Syncing, this could take a while"
 msgstr "Синхронізація, це може зайняти деякий час"
 
@@ -935,15 +936,15 @@ msgstr "<b>{sender_name}</b> запросив вас увійти в <b>{room_na
 msgid "You’ve been invited to join <b>{room_name}</b>"
 msgstr "Вас запросили увійти в <b>{room_name}</b>"
 
-#: fractal-gtk/src/ui/mod.rs:79
+#: fractal-gtk/src/ui/mod.rs:77
 msgid "You don’t have permission to post to this room"
 msgstr "У вас немає права дописувати у цій кімнаті"
 
-#: fractal-gtk/src/ui/mod.rs:156
+#: fractal-gtk/src/ui/mod.rs:159
 msgid "OK"
 msgstr "Гаразд"
 
-#: fractal-gtk/src/ui/room_settings.rs:268
+#: fractal-gtk/src/ui/room_settings.rs:264
 msgid "Room · {} member"
 msgid_plural "Room · {} members"
 msgstr[0] "Кімната · {} учасник"
@@ -951,115 +952,13 @@ msgstr[1] "Кімната · {} учасника"
 msgstr[2] "Кімната · {} учасників"
 msgstr[3] "Кімната · {} учасник"
 
-#: fractal-gtk/src/ui/room_settings.rs:703
+#: fractal-gtk/src/ui/room_settings.rs:699
 msgid "{} member"
 msgid_plural "{} members"
 msgstr[0] "{} учасник"
 msgstr[1] "{} учасника"
 msgstr[2] "{} учасників"
 msgstr[3] "{} учасник"
-
-#: fractal-gtk/src/util/i18n.rs:119 fractal-gtk/src/util/i18n.rs:122
-#: fractal-gtk/src/util/i18n.rs:124
-#| msgid "translator-credits"
-msgid "translate1"
-msgid_plural "translate multi"
-msgstr[0] "translate1"
-msgstr[1] "translate multi"
-msgstr[2] "translate multi"
-msgstr[3] "translate multi"
-
-#: fractal-gtk/src/util/i18n.rs:130
-msgid "{} param"
-msgstr "{} param"
-
-#: fractal-gtk/src/util/i18n.rs:133
-msgid "middle {} param"
-msgstr "middle {} param"
-
-#: fractal-gtk/src/util/i18n.rs:136
-msgid "end {}"
-msgstr "end {}"
-
-#: fractal-gtk/src/util/i18n.rs:139
-msgid "multiple {} and {}"
-msgstr "multiple {} and {}"
-
-#: fractal-gtk/src/util/i18n.rs:142 fractal-gtk/src/util/i18n.rs:144
-msgid "singular {} and {}"
-msgid_plural "plural {} and {}"
-msgstr[0] "singular {} and {}"
-msgstr[1] "plural {} and {}"
-msgstr[2] "plural {} and {}"
-msgstr[3] "plural {} and {}"
-
-#: fractal-gtk/src/util/i18n.rs:150
-msgid "{one} param"
-msgstr "{one} param"
-
-#: fractal-gtk/src/util/i18n.rs:153
-msgid "middle {one} param"
-msgstr "middle {one} param"
-
-#: fractal-gtk/src/util/i18n.rs:156
-msgid "end {one}"
-msgstr "end {one}"
-
-#: fractal-gtk/src/util/i18n.rs:159
-msgid "multiple {one} and {two}"
-msgstr "multiple {one} and {two}"
-
-#: fractal-gtk/src/util/i18n.rs:162
-msgid "multiple {two} and {one}"
-msgstr "multiple {two} and {one}"
-
-#: fractal-gtk/src/util/i18n.rs:165
-msgid "multiple {one} and {one}"
-msgstr "multiple {one} and {one}"
-
-#: fractal-gtk/src/util/i18n.rs:169 fractal-gtk/src/util/i18n.rs:176
-msgid "singular {one} and {two}"
-msgid_plural "plural {one} and {two}"
-msgstr[0] "singular {one} and {two}"
-msgstr[1] "plural {one} and {two}"
-msgstr[2] "plural {one} and {two}"
-msgstr[3] "plural {one} and {two}"
-
-#: fractal-gtk/src/util/i18n.rs:186
-#| msgid "translator-credits"
-msgctxt "This is the context"
-msgid "translate1"
-msgstr "translate1"
-
-#: fractal-gtk/src/util/i18n.rs:189
-#| msgid "translator-credits"
-msgctxt "context"
-msgid "translate1"
-msgid_plural "translate multi"
-msgstr[0] "translate1"
-msgstr[1] "translate multi"
-msgstr[2] "translate multi"
-msgstr[3] "translate multi"
-
-#: fractal-gtk/src/util/i18n.rs:191
-#| msgid "translator-credits"
-msgctxt "The context string"
-msgid "translate1"
-msgid_plural "translate multi"
-msgstr[0] "translate1"
-msgstr[1] "translate multi"
-msgstr[2] "translate multi"
-msgstr[3] "translate multi"
-
-#: fractal-gtk/src/util/i18n.rs:194
-msgctxt "Context for translation"
-msgid "{} param"
-msgstr "{} param"
-
-#: fractal-gtk/src/util/i18n.rs:197
-msgctxt "context"
-msgid "{one} param"
-msgstr "{one} param"
 
 #: fractal-gtk/src/widgets/file_dialog.rs:8
 msgid "Save media as"
@@ -1113,43 +1012,27 @@ msgstr "Модератор"
 msgid "Privileged"
 msgstr "Привілейований"
 
-#: fractal-gtk/src/widgets/message.rs:85
-msgid "Uploading video."
-msgstr "Вивантажуємо відео."
-
-#: fractal-gtk/src/widgets/message.rs:90
-msgid "Uploading audio."
-msgstr "Вивантажуємо звукові дані."
-
-#: fractal-gtk/src/widgets/message.rs:95
-msgid "Uploading image."
-msgstr "Вивантажуємо зображення."
-
-#: fractal-gtk/src/widgets/message.rs:99
-msgid "Uploading file."
-msgstr "Вивантажуємо файл."
-
-#: fractal-gtk/src/widgets/message.rs:249
+#: fractal-gtk/src/widgets/message.rs:471
 #, c-format
 msgid "Last edited %c"
 msgstr "Востаннє редаговано %c"
 
-#: fractal-gtk/src/widgets/message.rs:460
-#: fractal-gtk/src/widgets/message.rs:576
+#: fractal-gtk/src/widgets/message.rs:665
+#: fractal-gtk/src/widgets/message.rs:832
 msgid "Save"
 msgstr "Зберегти"
 
-#: fractal-gtk/src/widgets/message.rs:590
+#: fractal-gtk/src/widgets/message.rs:847
 msgid "Open"
 msgstr "Відкрити"
 
 #. Use 12h time format (AM/PM)
-#: fractal-gtk/src/widgets/message.rs:610
+#: fractal-gtk/src/widgets/message.rs:990
 msgid "%l∶%M %p"
 msgstr "%l∶%M %p"
 
 #. Use 24 time format
-#: fractal-gtk/src/widgets/message.rs:613
+#: fractal-gtk/src/widgets/message.rs:993
 msgid "%R"
 msgstr "%R"
 
@@ -1158,12 +1041,12 @@ msgid "New Messages"
 msgstr "Нові повідомлення"
 
 #. Translators: This is a date format in the day divider without the year
-#: fractal-gtk/src/widgets/room_history.rs:795
+#: fractal-gtk/src/widgets/room_history.rs:798
 msgid "%B %e"
 msgstr "%B %e"
 
 #. Translators: This is a date format in the day divider with the year
-#: fractal-gtk/src/widgets/room_history.rs:798
+#: fractal-gtk/src/widgets/room_history.rs:801
 msgid "%B %e, %Y"
 msgstr "%B %e, %Y"
 
@@ -1190,6 +1073,101 @@ msgstr "кімнати"
 #: fractal-gtk/src/widgets/roomlist.rs:491
 msgid "You don’t have any rooms yet"
 msgstr "У вас поки немає кімнат"
+
+#~| msgid "translator-credits"
+#~ msgid "translate1"
+#~ msgid_plural "translate multi"
+#~ msgstr[0] "translate1"
+#~ msgstr[1] "translate multi"
+#~ msgstr[2] "translate multi"
+#~ msgstr[3] "translate multi"
+
+#~ msgid "{} param"
+#~ msgstr "{} param"
+
+#~ msgid "middle {} param"
+#~ msgstr "middle {} param"
+
+#~ msgid "end {}"
+#~ msgstr "end {}"
+
+#~ msgid "multiple {} and {}"
+#~ msgstr "multiple {} and {}"
+
+#~ msgid "singular {} and {}"
+#~ msgid_plural "plural {} and {}"
+#~ msgstr[0] "singular {} and {}"
+#~ msgstr[1] "plural {} and {}"
+#~ msgstr[2] "plural {} and {}"
+#~ msgstr[3] "plural {} and {}"
+
+#~ msgid "{one} param"
+#~ msgstr "{one} param"
+
+#~ msgid "middle {one} param"
+#~ msgstr "middle {one} param"
+
+#~ msgid "end {one}"
+#~ msgstr "end {one}"
+
+#~ msgid "multiple {one} and {two}"
+#~ msgstr "multiple {one} and {two}"
+
+#~ msgid "multiple {two} and {one}"
+#~ msgstr "multiple {two} and {one}"
+
+#~ msgid "multiple {one} and {one}"
+#~ msgstr "multiple {one} and {one}"
+
+#~ msgid "singular {one} and {two}"
+#~ msgid_plural "plural {one} and {two}"
+#~ msgstr[0] "singular {one} and {two}"
+#~ msgstr[1] "plural {one} and {two}"
+#~ msgstr[2] "plural {one} and {two}"
+#~ msgstr[3] "plural {one} and {two}"
+
+#~| msgid "translator-credits"
+#~ msgctxt "This is the context"
+#~ msgid "translate1"
+#~ msgstr "translate1"
+
+#~| msgid "translator-credits"
+#~ msgctxt "context"
+#~ msgid "translate1"
+#~ msgid_plural "translate multi"
+#~ msgstr[0] "translate1"
+#~ msgstr[1] "translate multi"
+#~ msgstr[2] "translate multi"
+#~ msgstr[3] "translate multi"
+
+#~| msgid "translator-credits"
+#~ msgctxt "The context string"
+#~ msgid "translate1"
+#~ msgid_plural "translate multi"
+#~ msgstr[0] "translate1"
+#~ msgstr[1] "translate multi"
+#~ msgstr[2] "translate multi"
+#~ msgstr[3] "translate multi"
+
+#~ msgctxt "Context for translation"
+#~ msgid "{} param"
+#~ msgstr "{} param"
+
+#~ msgctxt "context"
+#~ msgid "{one} param"
+#~ msgstr "{one} param"
+
+#~ msgid "Uploading video."
+#~ msgstr "Вивантажуємо відео."
+
+#~ msgid "Uploading audio."
+#~ msgstr "Вивантажуємо звукові дані."
+
+#~ msgid "Uploading image."
+#~ msgstr "Вивантажуємо зображення."
+
+#~ msgid "Uploading file."
+#~ msgstr "Вивантажуємо файл."
 
 #~ msgid "Select room image file"
 #~ msgstr "Виберіть файл зображення для кімнати"
