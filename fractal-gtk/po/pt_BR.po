@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the fractal package.
 # Bruno Lopes da Silva <brunolopesbldsb@gmail.com>, 2018.
 # Rafael Fontenelle <rafaelff@gnome.org>, 2018-2020.
-# Enrico Nicoletto <liverig@gmail.com>, 2020.
+# Enrico Nicoletto <liverig@gmail.com>, 2020, 2021.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: fractal master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2020-12-14 16:42+0000\n"
-"PO-Revision-Date: 2020-12-14 17:37-0300\n"
+"POT-Creation-Date: 2021-02-05 12:39+0000\n"
+"PO-Revision-Date: 2021-02-05 14:38-0300\n"
 "Last-Translator: Enrico Nicoletto <liverig@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "Language: pt_BR\n"
@@ -102,7 +102,7 @@ msgstr "Escreve em uma nova linha"
 
 #: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:3
 #: fractal-gtk/res/org.gnome.Fractal.metainfo.xml.in.in:5
-#: fractal-gtk/res/ui/login_flow.ui:19 fractal-gtk/src/appop/mod.rs:218
+#: fractal-gtk/res/ui/login_flow.ui:19 fractal-gtk/src/appop/mod.rs:170
 msgid "Fractal"
 msgstr "Fractal"
 
@@ -183,7 +183,7 @@ msgid "Account Settings"
 msgstr "Configurações de conta"
 
 #: fractal-gtk/res/ui/account_settings.ui:30
-#: fractal-gtk/res/ui/main_window.ui:217 fractal-gtk/res/ui/main_window.ui:487
+#: fractal-gtk/res/ui/main_window.ui:217 fractal-gtk/res/ui/main_window.ui:454
 #: fractal-gtk/res/ui/media_viewer.ui:36 fractal-gtk/res/ui/room_settings.ui:30
 msgid "Back"
 msgstr "Voltar"
@@ -260,10 +260,10 @@ msgid "Check your email"
 msgstr "Verifique seu e-mail"
 
 #: fractal-gtk/res/ui/account_settings.ui:526
-#: fractal-gtk/res/ui/direct_chat.ui:84 fractal-gtk/res/ui/invite_user.ui:84
+#: fractal-gtk/res/ui/direct_chat.ui:83 fractal-gtk/res/ui/invite_user.ui:84
 #: fractal-gtk/res/ui/join_room.ui:71 fractal-gtk/res/ui/leave_room.ui:31
-#: fractal-gtk/res/ui/new_room.ui:24 fractal-gtk/src/appop/account.rs:99
-#: fractal-gtk/src/appop/account.rs:160 fractal-gtk/src/appop/attach.rs:50
+#: fractal-gtk/res/ui/new_room.ui:24 fractal-gtk/src/appop/account.rs:87
+#: fractal-gtk/src/appop/account.rs:143 fractal-gtk/src/ui/attach.rs:41
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -291,11 +291,11 @@ msgstr "Novo bate-papo direto"
 msgid "Play"
 msgstr "Executar"
 
-#: fractal-gtk/res/ui/direct_chat.ui:81
+#: fractal-gtk/res/ui/direct_chat.ui:80
 msgid "New direct chat"
 msgstr "Novo bate-papo direto"
 
-#: fractal-gtk/res/ui/direct_chat.ui:92
+#: fractal-gtk/res/ui/direct_chat.ui:91
 msgid "Start chat"
 msgstr "Iniciar bate-papo"
 
@@ -312,7 +312,7 @@ msgid "Accept"
 msgstr "Aceitar"
 
 #: fractal-gtk/res/ui/invite_user.ui:81 fractal-gtk/res/ui/invite_user.ui:92
-#: fractal-gtk/src/appop/invite.rs:152
+#: fractal-gtk/src/ui/invite.rs:133
 msgid "Invite"
 msgstr "Convidar"
 
@@ -324,7 +324,7 @@ msgstr "ID ou Apelido"
 msgid "Join room"
 msgstr "Entrar na sala"
 
-#: fractal-gtk/res/ui/join_room.ui:79 fractal-gtk/src/widgets/room.rs:123
+#: fractal-gtk/res/ui/join_room.ui:79 fractal-gtk/src/ui/directory.rs:245
 msgid "Join"
 msgstr "Entrar"
 
@@ -346,59 +346,59 @@ msgstr "Depois de sair, você não poderá mais interagir com pessoas na sala."
 msgid "Leave room"
 msgstr "Sair da sala"
 
-#: fractal-gtk/res/ui/login_flow.ui:47
+#: fractal-gtk/res/ui/login_flow.ui:29
 msgid "Welcome to Fractal"
 msgstr "Bem-vindo ao Fractal"
 
-#: fractal-gtk/res/ui/login_flow.ui:61 fractal-gtk/res/ui/login_flow.ui:251
+#: fractal-gtk/res/ui/login_flow.ui:42 fractal-gtk/res/ui/login_flow.ui:211
 msgid "_Log In"
 msgstr "_Iniciar sessão"
 
-#: fractal-gtk/res/ui/login_flow.ui:73
+#: fractal-gtk/res/ui/login_flow.ui:55
 msgid "_Create Account"
 msgstr "_Criar conta"
 
-#: fractal-gtk/res/ui/login_flow.ui:97
+#: fractal-gtk/res/ui/login_flow.ui:84
 msgid "Choose Provider"
 msgstr "Escolha o provedor"
 
-#: fractal-gtk/res/ui/login_flow.ui:120
+#: fractal-gtk/res/ui/login_flow.ui:107
 msgid "_Next"
 msgstr "_Próximo"
 
-#: fractal-gtk/res/ui/login_flow.ui:158
+#: fractal-gtk/res/ui/login_flow.ui:125
 msgid "What is your Provider?"
 msgstr "Qual é o seu provedor?"
 
-#: fractal-gtk/res/ui/login_flow.ui:187
+#: fractal-gtk/res/ui/login_flow.ui:146
 msgid "Matrix provider domain, e.g. myserver.co"
 msgstr "Domínio do provedor de Matrix como, p.ex., meuservidor.co"
 
-#: fractal-gtk/res/ui/login_flow.ui:203
+#: fractal-gtk/res/ui/login_flow.ui:161
 msgid "The domain may not be empty."
 msgstr "O domínio não pode estar vazio."
 
-#: fractal-gtk/res/ui/login_flow.ui:228
+#: fractal-gtk/res/ui/login_flow.ui:188
 msgid "Log In"
 msgstr "Iniciar sessão"
 
-#: fractal-gtk/res/ui/login_flow.ui:276
+#: fractal-gtk/res/ui/login_flow.ui:236
 msgid "_User ID"
 msgstr "ID de _usuário"
 
-#: fractal-gtk/res/ui/login_flow.ui:292
+#: fractal-gtk/res/ui/login_flow.ui:252
 msgid "_Password"
 msgstr "_Senha"
 
-#: fractal-gtk/res/ui/login_flow.ui:324
+#: fractal-gtk/res/ui/login_flow.ui:284
 msgid "User name, email, or phone number"
 msgstr "Nome de usuário, e-mail ou número de telefone"
 
-#: fractal-gtk/res/ui/login_flow.ui:357
+#: fractal-gtk/res/ui/login_flow.ui:317
 msgid "_Forgot Password?"
 msgstr "_Esqueceu sua senha?"
 
-#: fractal-gtk/res/ui/login_flow.ui:375
+#: fractal-gtk/res/ui/login_flow.ui:335
 msgid "Invalid username or password"
 msgstr "Usuário ou senha inválida"
 
@@ -430,21 +430,21 @@ msgstr "Pesquisa de sala"
 msgid "Room Menu"
 msgstr "Menu da sala"
 
-#: fractal-gtk/res/ui/main_window.ui:362
-msgid "No room selected"
+#: fractal-gtk/res/ui/main_window.ui:349
+msgid "No Room Selected"
 msgstr "Nenhuma sala selecionada"
 
-#: fractal-gtk/res/ui/main_window.ui:377
-msgid "Join a room to start chatting"
-msgstr "Entre em uma sala para começar a conversar"
+#: fractal-gtk/res/ui/main_window.ui:350
+msgid "Join a room to start chatting."
+msgstr "Entre em uma sala para começar a conversar."
 
-#: fractal-gtk/res/ui/main_window.ui:387
+#: fractal-gtk/res/ui/main_window.ui:354
 msgid "No room"
 msgstr "Nenhuma sala"
 
-#: fractal-gtk/res/ui/main_window.ui:527
+#: fractal-gtk/res/ui/main_window.ui:494
 #: fractal-gtk/res/ui/server_chooser_menu.ui:51
-#: fractal-gtk/src/appop/connect/directory.rs:117
+#: fractal-gtk/src/ui/connect/directory.rs:117
 msgid "Default Matrix Server"
 msgstr "Servidor Matrix padrão"
 
@@ -721,16 +721,16 @@ msgstr "Selecione um novo avatar"
 msgid "Select a file"
 msgstr "Selecionar um arquivo"
 
-#: fractal-gtk/src/actions/message.rs:68
+#: fractal-gtk/src/actions/message.rs:57
 msgid "This message has no source."
 msgstr "Essa mensagem não possui fonte."
 
-#: fractal-gtk/src/actions/message.rs:151
-#: fractal-gtk/src/actions/message.rs:183
+#: fractal-gtk/src/actions/message.rs:131
+#: fractal-gtk/src/actions/message.rs:162
 msgid "Could not download the file"
 msgstr "Não foi possível baixar o arquivo"
 
-#: fractal-gtk/src/actions/message.rs:158
+#: fractal-gtk/src/actions/message.rs:138
 msgid "Couldn’t save file"
 msgstr "Não foi possível salvar o arquivo"
 
@@ -738,42 +738,19 @@ msgstr "Não foi possível salvar o arquivo"
 msgid "Couldn’t open file"
 msgstr "Não foi possível abrir o arquivo"
 
-#: fractal-gtk/src/appop/about.rs:20
-msgid "A Matrix.org client for GNOME"
-msgstr "Um cliente do Matrix.org para o GNOME"
-
-#: fractal-gtk/src/appop/about.rs:22
-msgid "© 2017–2020 Daniel García Moreno, et al."
-msgstr "© 2017–2020 Daniel García Moreno, et al."
-
-#: fractal-gtk/src/appop/about.rs:29
-msgid "Learn more about Fractal"
-msgstr "Aprenda mais sobre o Fractal"
-
-# Outras equipes de tradução parecem não estar colocando e-mail e ano.
-#: fractal-gtk/src/appop/about.rs:30
-msgid "translator-credits"
-msgstr ""
-"Rafael Fontenelle\n"
-"Bruno Lopes da Silva"
-
-#: fractal-gtk/src/appop/about.rs:45
-msgid "Name by"
-msgstr "Nome por"
-
-#: fractal-gtk/src/appop/account.rs:72
+#: fractal-gtk/src/appop/account.rs:65
 msgid "The validation code is not correct."
 msgstr "O código de validação não está correto."
 
-#: fractal-gtk/src/appop/account.rs:85
+#: fractal-gtk/src/appop/account.rs:73
 msgid "Enter the code received via SMS"
 msgstr "Digite o código recebido via SMS"
 
-#: fractal-gtk/src/appop/account.rs:100 fractal-gtk/src/appop/account.rs:161
+#: fractal-gtk/src/appop/account.rs:88 fractal-gtk/src/appop/account.rs:144
 msgid "Continue"
 msgstr "Continuar"
 
-#: fractal-gtk/src/appop/account.rs:151
+#: fractal-gtk/src/appop/account.rs:134
 msgid ""
 "In order to add this email address, go to your inbox and follow the link you "
 "received. Once you’ve done that, click Continue."
@@ -781,112 +758,69 @@ msgstr ""
 "Para adicionar esse endereço de e-mail, acesse sua caixa de entrada e siga o "
 "link que você recebeu. Uma vez tendo feito isso, clique em Continuar."
 
-#: fractal-gtk/src/appop/account.rs:224
-msgid "OK"
-msgstr "OK"
-
-#: fractal-gtk/src/appop/account.rs:779
+#: fractal-gtk/src/appop/account.rs:348
 msgid "Are you sure you want to delete your account?"
 msgstr "Tem certeza que deseja excluir sua conta?"
 
-#: fractal-gtk/src/appop/attach.rs:35
-msgid "Image from Clipboard"
-msgstr "Imagem da área de transferência"
-
-#: fractal-gtk/src/appop/attach.rs:51
-msgid "Send"
-msgstr "Enviar"
-
-#. Filename for the attached image
-#: fractal-gtk/src/appop/attach.rs:98
-msgid "image"
-msgstr "imagem"
-
-# name = nome da sala
-# O conteúdo entre chaves é uma variável e NÃO PODE ser traduzida
-#: fractal-gtk/src/appop/invite.rs:150
-msgid "Invite to {name}"
-msgstr "Convidar para {name}"
-
-# O conteúdo entre chaves é uma variável e NÃO PODE ser traduzida
-#: fractal-gtk/src/appop/invite.rs:259
-msgid "Join {room_name}?"
-msgstr "Entrar em {room_name}?"
-
-# O conteúdo entre chaves é uma variável e NÃO PODE ser traduzida
-#: fractal-gtk/src/appop/invite.rs:263
-msgid ""
-"You’ve been invited to join <b>{room_name}</b> room by <b>{sender_name}</b>"
-msgstr ""
-"Você foi convidado a se juntar à sala <b>{room_name}</b> por <b>{sender_name}"
-"</b>"
-
-# O conteúdo entre chaves é uma variável e NÃO PODE ser traduzida
-#: fractal-gtk/src/appop/invite.rs:268
-msgid "You’ve been invited to join <b>{room_name}</b>"
-msgstr "Você foi convidado a se juntar à sala <b>{room_name}</b>"
-
-#. Translators: The placeholder is for the number of unread messages in the
-#. application
-#: fractal-gtk/src/appop/mod.rs:222
+#: fractal-gtk/src/appop/mod.rs:176
 msgid "Fractal [{}]"
 msgstr "Fractal [{}]"
 
-#: fractal-gtk/src/appop/notify.rs:47
+#: fractal-gtk/src/appop/notify.rs:18
 msgid "An audio file has been added to the conversation."
 msgstr "Um arquivo de áudio foi adicionado à conversa."
 
-#: fractal-gtk/src/appop/notify.rs:48
+#: fractal-gtk/src/appop/notify.rs:19
 msgid "An image has been added to the conversation."
 msgstr "Um arquivo de imagem foi adicionado à conversa."
 
-#: fractal-gtk/src/appop/notify.rs:49
+#: fractal-gtk/src/appop/notify.rs:20
 msgid "A video has been added to the conversation."
 msgstr "Um vídeo foi adicionado à conversa."
 
-#: fractal-gtk/src/appop/notify.rs:50
+#: fractal-gtk/src/appop/notify.rs:21
 msgid "A file has been added to the conversation."
 msgstr "Um arquivo foi adicionado à conversa."
 
 # O conteúdo entre chaves é uma variável e NÃO PODE ser traduzida
-#: fractal-gtk/src/appop/notify.rs:55
+#: fractal-gtk/src/appop/notify.rs:26
 msgid " (direct message)"
 msgstr " (mensagem direta)"
 
 # O conteúdo entre chaves é uma variável e NÃO PODE ser traduzida
-#: fractal-gtk/src/appop/room.rs:354
+#: fractal-gtk/src/appop/room.rs:352
 msgid "Leave {room_name}?"
 msgstr "Sair de {room_name}?"
 
-#: fractal-gtk/src/appop/room.rs:545
+#: fractal-gtk/src/appop/room.rs:539
 msgid "The room ID is malformed"
 msgstr "O ID da sala está malformado"
 
-#: fractal-gtk/src/appop/room.rs:613
+#: fractal-gtk/src/appop/room.rs:607
 msgid "EMPTY ROOM"
 msgstr "SALA VAZIA"
 
 # O conteúdo entre chaves é uma variável e NÃO PODE ser traduzida
-#: fractal-gtk/src/appop/room.rs:615
+#: fractal-gtk/src/appop/room.rs:609
 msgid "{m1} and {m2}"
 msgstr "{m1} e {m2}"
 
 # O conteúdo entre chaves é uma variável e NÃO PODE ser traduzida
-#: fractal-gtk/src/appop/room.rs:616
+#: fractal-gtk/src/appop/room.rs:610
 msgid "{m1} and Others"
 msgstr "{m1} e outros"
 
-#: fractal-gtk/src/appop/room.rs:716
+#: fractal-gtk/src/appop/room.rs:710
 msgid "Several users are typing…"
 msgstr "Vários usuários estão digitando…"
 
-#: fractal-gtk/src/appop/room.rs:719
+#: fractal-gtk/src/appop/room.rs:713
 msgid "<b>{}</b> is typing…"
 msgid_plural "<b>{}</b> and <b>{}</b> are typing…"
 msgstr[0] "<b>{}</b> está digitando…"
 msgstr[1] "<b>{}</b> e <b>{}</b> estão digitando…"
 
-#: fractal-gtk/src/appop/sync.rs:25
+#: fractal-gtk/src/appop/sync.rs:24
 msgid "Syncing, this could take a while"
 msgstr "Sincronizando, isso pode levar um tempo"
 
@@ -951,9 +885,87 @@ msgstr "Não foi possível alterar a senha"
 msgid "Couldn’t delete the account"
 msgstr "Não foi possível apagar a conta"
 
-#: fractal-gtk/src/uibuilder.rs:51
+#: fractal-gtk/src/ui/about.rs:12
+msgid "A Matrix.org client for GNOME"
+msgstr "Um cliente do Matrix.org para o GNOME"
+
+#: fractal-gtk/src/ui/about.rs:14
+msgid "© 2017–2020 Daniel García Moreno, et al."
+msgstr "© 2017–2020 Daniel García Moreno, et al."
+
+#: fractal-gtk/src/ui/about.rs:21
+msgid "Learn more about Fractal"
+msgstr "Aprenda mais sobre o Fractal"
+
+# Outras equipes de tradução parecem não estar colocando e-mail e ano.
+#: fractal-gtk/src/ui/about.rs:22
+msgid "translator-credits"
+msgstr ""
+"Rafael Fontenelle\n"
+"Bruno Lopes da Silva"
+
+#: fractal-gtk/src/ui/about.rs:37
+msgid "Name by"
+msgstr "Nome por"
+
+#: fractal-gtk/src/ui/attach.rs:26
+msgid "Image from Clipboard"
+msgstr "Imagem da área de transferência"
+
+#: fractal-gtk/src/ui/attach.rs:42
+msgid "Send"
+msgstr "Enviar"
+
+#. Filename for the attached image
+#: fractal-gtk/src/ui/attach.rs:90
+msgid "image"
+msgstr "imagem"
+
+# name = nome da sala
+# O conteúdo entre chaves é uma variável e NÃO PODE ser traduzida
+#: fractal-gtk/src/ui/invite.rs:131
+msgid "Invite to {name}"
+msgstr "Convidar para {name}"
+
+# O conteúdo entre chaves é uma variável e NÃO PODE ser traduzida
+#: fractal-gtk/src/ui/invite.rs:183
+msgid "Join {room_name}?"
+msgstr "Entrar em {room_name}?"
+
+# O conteúdo entre chaves é uma variável e NÃO PODE ser traduzida
+#: fractal-gtk/src/ui/invite.rs:187
+msgid ""
+"You’ve been invited to join <b>{room_name}</b> room by <b>{sender_name}</b>"
+msgstr ""
+"Você foi convidado a se juntar à sala <b>{room_name}</b> por <b>{sender_name}"
+"</b>"
+
+# O conteúdo entre chaves é uma variável e NÃO PODE ser traduzida
+#: fractal-gtk/src/ui/invite.rs:192
+msgid "You’ve been invited to join <b>{room_name}</b>"
+msgstr "Você foi convidado a se juntar à sala <b>{room_name}</b>"
+
+#: fractal-gtk/src/ui/mod.rs:77
 msgid "You don’t have permission to post to this room"
 msgstr "Você não tem permissão para enviar mensagens para esta sala"
+
+#: fractal-gtk/src/ui/mod.rs:159
+msgid "OK"
+msgstr "OK"
+
+# O conteúdo entre chaves é uma variável e NÃO PODE ser traduzida
+#: fractal-gtk/src/ui/room_settings.rs:264
+msgid "Room · {} member"
+msgid_plural "Room · {} members"
+msgstr[0] "Sala · {} membro"
+msgstr[1] "Sala · {} membros"
+
+# O conteúdo entre chaves é uma variável e NÃO PODE ser traduzida
+#: fractal-gtk/src/ui/room_settings.rs:699
+msgid "{} member"
+msgid_plural "{} members"
+msgstr[0] "{} membro"
+msgstr[1] "{} membros"
 
 #: fractal-gtk/src/widgets/file_dialog.rs:8
 msgid "Save media as"
@@ -991,59 +1003,43 @@ msgstr "URL do servidor malformada"
 msgid "Error while loading previous media"
 msgstr "Erro ao carregar a mídia anterior"
 
-#: fractal-gtk/src/widgets/members_list.rs:52
+#: fractal-gtk/src/widgets/members_list.rs:50
 msgid "No matching members found"
 msgstr "Nenhuma membro correspondente localizado"
 
-#: fractal-gtk/src/widgets/members_list.rs:149
+#: fractal-gtk/src/widgets/members_list.rs:146
 msgid "Admin"
 msgstr "Administrador"
 
-#: fractal-gtk/src/widgets/members_list.rs:150
+#: fractal-gtk/src/widgets/members_list.rs:147
 msgid "Moderator"
 msgstr "Moderador"
 
-#: fractal-gtk/src/widgets/members_list.rs:151
+#: fractal-gtk/src/widgets/members_list.rs:148
 msgid "Privileged"
 msgstr "Privilegiado"
 
-#: fractal-gtk/src/widgets/message.rs:85
-msgid "Uploading video."
-msgstr "Carregando vídeo."
-
-#: fractal-gtk/src/widgets/message.rs:90
-msgid "Uploading audio."
-msgstr "Carregando áudio."
-
-#: fractal-gtk/src/widgets/message.rs:95
-msgid "Uploading image."
-msgstr "Carregando imagem."
-
-#: fractal-gtk/src/widgets/message.rs:99
-msgid "Uploading file."
-msgstr "Carregando arquivo."
-
-#: fractal-gtk/src/widgets/message.rs:249
+#: fractal-gtk/src/widgets/message.rs:471
 #, c-format
 msgid "Last edited %c"
 msgstr "Última edição %c"
 
-#: fractal-gtk/src/widgets/message.rs:460
-#: fractal-gtk/src/widgets/message.rs:576
+#: fractal-gtk/src/widgets/message.rs:665
+#: fractal-gtk/src/widgets/message.rs:832
 msgid "Save"
 msgstr "Salvar"
 
-#: fractal-gtk/src/widgets/message.rs:590
+#: fractal-gtk/src/widgets/message.rs:847
 msgid "Open"
 msgstr "Abrir"
 
 #. Use 12h time format (AM/PM)
-#: fractal-gtk/src/widgets/message.rs:610
+#: fractal-gtk/src/widgets/message.rs:990
 msgid "%l∶%M %p"
 msgstr "%l∶%M %p"
 
 #. Use 24 time format
-#: fractal-gtk/src/widgets/message.rs:613
+#: fractal-gtk/src/widgets/message.rs:993
 msgid "%R"
 msgstr "%R"
 
@@ -1052,28 +1048,14 @@ msgid "New Messages"
 msgstr "Novas mensagens"
 
 #. Translators: This is a date format in the day divider without the year
-#: fractal-gtk/src/widgets/room_history.rs:795
+#: fractal-gtk/src/widgets/room_history.rs:798
 msgid "%B %e"
 msgstr "%e de %B"
 
 #. Translators: This is a date format in the day divider with the year
-#: fractal-gtk/src/widgets/room_history.rs:798
+#: fractal-gtk/src/widgets/room_history.rs:801
 msgid "%B %e, %Y"
 msgstr "%e de %B, %Y"
-
-# O conteúdo entre chaves é uma variável e NÃO PODE ser traduzida
-#: fractal-gtk/src/widgets/room_settings.rs:216
-msgid "Room · {} member"
-msgid_plural "Room · {} members"
-msgstr[0] "Sala · {} membro"
-msgstr[1] "Sala · {} membros"
-
-# O conteúdo entre chaves é uma variável e NÃO PODE ser traduzida
-#: fractal-gtk/src/widgets/room_settings.rs:651
-msgid "{} member"
-msgid_plural "{} members"
-msgstr[0] "{} membro"
-msgstr[1] "{} membros"
 
 #: fractal-gtk/src/widgets/roomlist.rs:480
 msgid "Invites"
@@ -1098,6 +1080,18 @@ msgstr "Salas"
 #: fractal-gtk/src/widgets/roomlist.rs:491
 msgid "You don’t have any rooms yet"
 msgstr "Você ainda não tem salas"
+
+#~ msgid "Uploading video."
+#~ msgstr "Carregando vídeo."
+
+#~ msgid "Uploading audio."
+#~ msgstr "Carregando áudio."
+
+#~ msgid "Uploading image."
+#~ msgstr "Carregando imagem."
+
+#~ msgid "Uploading file."
+#~ msgstr "Carregando arquivo."
 
 #~ msgid "Select room image file"
 #~ msgstr "Selecionar arquivo de imagem da sala"
