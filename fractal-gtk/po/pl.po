@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2021-01-04 17:18+0000\n"
-"PO-Revision-Date: 2021-01-10 17:50+0100\n"
+"POT-Creation-Date: 2021-02-05 12:39+0000\n"
+"PO-Revision-Date: 2021-02-07 12:09+0100\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -184,7 +184,7 @@ msgid "Account Settings"
 msgstr "Ustawienia konta"
 
 #: fractal-gtk/res/ui/account_settings.ui:30
-#: fractal-gtk/res/ui/main_window.ui:217 fractal-gtk/res/ui/main_window.ui:487
+#: fractal-gtk/res/ui/main_window.ui:217 fractal-gtk/res/ui/main_window.ui:454
 #: fractal-gtk/res/ui/media_viewer.ui:36 fractal-gtk/res/ui/room_settings.ui:30
 msgid "Back"
 msgstr "Wstecz"
@@ -346,59 +346,59 @@ msgstr ""
 msgid "Leave room"
 msgstr "Opuść pokój"
 
-#: fractal-gtk/res/ui/login_flow.ui:47
+#: fractal-gtk/res/ui/login_flow.ui:29
 msgid "Welcome to Fractal"
 msgstr "Witamy w programie Fractal"
 
-#: fractal-gtk/res/ui/login_flow.ui:61 fractal-gtk/res/ui/login_flow.ui:251
+#: fractal-gtk/res/ui/login_flow.ui:42 fractal-gtk/res/ui/login_flow.ui:211
 msgid "_Log In"
 msgstr "_Zaloguj się"
 
-#: fractal-gtk/res/ui/login_flow.ui:73
+#: fractal-gtk/res/ui/login_flow.ui:55
 msgid "_Create Account"
 msgstr "_Utwórz konto"
 
-#: fractal-gtk/res/ui/login_flow.ui:97
+#: fractal-gtk/res/ui/login_flow.ui:84
 msgid "Choose Provider"
 msgstr "Wybór dostawcy"
 
-#: fractal-gtk/res/ui/login_flow.ui:120
+#: fractal-gtk/res/ui/login_flow.ui:107
 msgid "_Next"
 msgstr "_Dalej"
 
-#: fractal-gtk/res/ui/login_flow.ui:158
+#: fractal-gtk/res/ui/login_flow.ui:125
 msgid "What is your Provider?"
 msgstr "Jakiego dostawcy używać?"
 
-#: fractal-gtk/res/ui/login_flow.ui:187
+#: fractal-gtk/res/ui/login_flow.ui:146
 msgid "Matrix provider domain, e.g. myserver.co"
 msgstr "Domena dostawcy Matrix, np. example.com"
 
-#: fractal-gtk/res/ui/login_flow.ui:203
+#: fractal-gtk/res/ui/login_flow.ui:161
 msgid "The domain may not be empty."
 msgstr "Domena nie może być pusta."
 
-#: fractal-gtk/res/ui/login_flow.ui:228
+#: fractal-gtk/res/ui/login_flow.ui:188
 msgid "Log In"
 msgstr "Logowanie"
 
-#: fractal-gtk/res/ui/login_flow.ui:276
+#: fractal-gtk/res/ui/login_flow.ui:236
 msgid "_User ID"
 msgstr "_Identyfikator użytkownika"
 
-#: fractal-gtk/res/ui/login_flow.ui:292
+#: fractal-gtk/res/ui/login_flow.ui:252
 msgid "_Password"
 msgstr "_Hasło"
 
-#: fractal-gtk/res/ui/login_flow.ui:324
+#: fractal-gtk/res/ui/login_flow.ui:284
 msgid "User name, email, or phone number"
 msgstr "Nazwa użytkownika, adres e-mail lub numer telefonu"
 
-#: fractal-gtk/res/ui/login_flow.ui:357
+#: fractal-gtk/res/ui/login_flow.ui:317
 msgid "_Forgot Password?"
 msgstr "_Nie pamiętasz hasła?"
 
-#: fractal-gtk/res/ui/login_flow.ui:375
+#: fractal-gtk/res/ui/login_flow.ui:335
 msgid "Invalid username or password"
 msgstr "Nieprawidłowa nazwa użytkownika lub hasło"
 
@@ -430,19 +430,19 @@ msgstr "Wyszukiwanie pokoju"
 msgid "Room Menu"
 msgstr "Menu pokoju"
 
-#: fractal-gtk/res/ui/main_window.ui:362
-msgid "No room selected"
+#: fractal-gtk/res/ui/main_window.ui:349
+msgid "No Room Selected"
 msgstr "Nie wybrano pokoju"
 
-#: fractal-gtk/res/ui/main_window.ui:377
-msgid "Join a room to start chatting"
-msgstr "Dołączenie do pokoju umożliwi rozpoczęcie rozmowy"
+#: fractal-gtk/res/ui/main_window.ui:350
+msgid "Join a room to start chatting."
+msgstr "Dołączenie do pokoju umożliwi rozpoczęcie rozmowy."
 
-#: fractal-gtk/res/ui/main_window.ui:387
+#: fractal-gtk/res/ui/main_window.ui:354
 msgid "No room"
 msgstr "Brak pokoju"
 
-#: fractal-gtk/res/ui/main_window.ui:527
+#: fractal-gtk/res/ui/main_window.ui:494
 #: fractal-gtk/res/ui/server_chooser_menu.ui:51
 #: fractal-gtk/src/ui/connect/directory.rs:117
 msgid "Default Matrix Server"
@@ -816,7 +816,7 @@ msgstr[0] "<b>{}</b> pisze…"
 msgstr[1] "<b>{}</b> i <b>{}</b> piszą…"
 msgstr[2] "<b>{}</b> i <b>{}</b> piszą…"
 
-#: fractal-gtk/src/appop/sync.rs:26
+#: fractal-gtk/src/appop/sync.rs:24
 msgid "Syncing, this could take a while"
 msgstr "Synchronizowanie. Może to chwilę zająć."
 
@@ -935,22 +935,22 @@ msgstr ""
 msgid "You’ve been invited to join <b>{room_name}</b>"
 msgstr "Otrzymano zaproszenie do pokoju <b>{room_name}</b>"
 
-#: fractal-gtk/src/ui/mod.rs:79
+#: fractal-gtk/src/ui/mod.rs:77
 msgid "You don’t have permission to post to this room"
 msgstr "Brak uprawnienia do pisania wiadomości w tym pokoju"
 
-#: fractal-gtk/src/ui/mod.rs:156
+#: fractal-gtk/src/ui/mod.rs:159
 msgid "OK"
 msgstr "OK"
 
-#: fractal-gtk/src/ui/room_settings.rs:268
+#: fractal-gtk/src/ui/room_settings.rs:264
 msgid "Room · {} member"
 msgid_plural "Room · {} members"
 msgstr[0] "Pokój · {} członek"
 msgstr[1] "Pokój · {} członków"
 msgstr[2] "Pokój · {} członków"
 
-#: fractal-gtk/src/ui/room_settings.rs:703
+#: fractal-gtk/src/ui/room_settings.rs:699
 msgid "{} member"
 msgid_plural "{} members"
 msgstr[0] "{} członek"
@@ -1009,43 +1009,27 @@ msgstr "Moderator"
 msgid "Privileged"
 msgstr "Z uprawnieniami"
 
-#: fractal-gtk/src/widgets/message.rs:83
-msgid "Uploading video."
-msgstr "Wysyłanie filmu."
-
-#: fractal-gtk/src/widgets/message.rs:88
-msgid "Uploading audio."
-msgstr "Wysyłanie dźwięku."
-
-#: fractal-gtk/src/widgets/message.rs:93
-msgid "Uploading image."
-msgstr "Wysyłanie obrazu."
-
-#: fractal-gtk/src/widgets/message.rs:97
-msgid "Uploading file."
-msgstr "Wysyłanie pliku."
-
-#: fractal-gtk/src/widgets/message.rs:247
+#: fractal-gtk/src/widgets/message.rs:471
 #, c-format
 msgid "Last edited %c"
 msgstr "Ostatnia modyfikacja: %c"
 
-#: fractal-gtk/src/widgets/message.rs:457
-#: fractal-gtk/src/widgets/message.rs:573
+#: fractal-gtk/src/widgets/message.rs:665
+#: fractal-gtk/src/widgets/message.rs:832
 msgid "Save"
 msgstr "Zapisuje"
 
-#: fractal-gtk/src/widgets/message.rs:587
+#: fractal-gtk/src/widgets/message.rs:847
 msgid "Open"
 msgstr "Otwiera"
 
 #. Use 12h time format (AM/PM)
-#: fractal-gtk/src/widgets/message.rs:607
+#: fractal-gtk/src/widgets/message.rs:990
 msgid "%l∶%M %p"
 msgstr "%-l∶%M %p"
 
 #. Use 24 time format
-#: fractal-gtk/src/widgets/message.rs:610
+#: fractal-gtk/src/widgets/message.rs:993
 msgid "%R"
 msgstr "%H∶%M"
 
@@ -1054,12 +1038,12 @@ msgid "New Messages"
 msgstr "Nowe wiadomości"
 
 #. Translators: This is a date format in the day divider without the year
-#: fractal-gtk/src/widgets/room_history.rs:795
+#: fractal-gtk/src/widgets/room_history.rs:798
 msgid "%B %e"
 msgstr "%-d %B"
 
 #. Translators: This is a date format in the day divider with the year
-#: fractal-gtk/src/widgets/room_history.rs:798
+#: fractal-gtk/src/widgets/room_history.rs:801
 msgid "%B %e, %Y"
 msgstr "%-d %B %Y"
 
