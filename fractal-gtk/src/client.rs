@@ -5,12 +5,13 @@ use async_trait::async_trait;
 use gio::prelude::*;
 use matrix_sdk::{
     reqwest, Client as MatrixClient, ClientConfig as MatrixClientConfig, Error as MatrixSdkError,
-    HttpSend,
+    HttpError, HttpSend,
 };
 use url::Url;
 
 use std::convert::TryInto;
 use std::sync::{Arc, Mutex};
+use std::time::Duration;
 
 // Special URI used by gio to indicate no proxy
 const PROXY_DIRECT_URI: &str = "direct://";
@@ -132,8 +133,9 @@ impl HttpSend for Client {
     async fn send_request(
         &self,
         req: http::Request<Vec<u8>>,
-    ) -> matrix_sdk::Result<http::Response<Vec<u8>>> {
-        self.get_client().send_request(req).await
+        duration: Option<Duration>,
+    ) -> Result<http::Response<Vec<u8>>, HttpError> {
+        self.get_client().send_request(req, duration).await
     }
 }
 

@@ -3,8 +3,7 @@ use log::error;
 use matrix_sdk::identifiers::{EventId, RoomId, ServerName};
 use matrix_sdk::{
     api::{error::ErrorKind as RumaErrorKind, Error as RumaClientError},
-    Client as MatrixClient, Error as MatrixError, FromHttpResponseError as RumaResponseError,
-    ServerError,
+    Client as MatrixClient, Error as MatrixError, FromHttpResponseError, HttpError, ServerError,
 };
 use regex::Regex;
 use std::convert::TryFrom;
@@ -60,7 +59,7 @@ pub async fn get_prev_batch_from(
     });
 
     let prev_batch = session_client
-        .send(request)
+        .send(request, None)
         .await?
         .start
         .unwrap_or_default();
@@ -147,10 +146,10 @@ pub async fn dw_media(
             method: Some(Method::Crop),
         });
 
-        session_client.send(request).await?.file
+        session_client.send(request, None).await?.file
     } else {
         let request = GetContentRequest::new(&media_id, &server_name);
-        session_client.send(request).await?.file
+        session_client.send(request, None).await?.file
     };
 
     tokio::fs::write(&fname, media).await?;
@@ -172,9 +171,9 @@ pub trait HandleError: Debug {
 // Returns the encapsulated error in case it originated at the Matrix API level
 pub(self) fn get_ruma_client_error(matrix_error: &MatrixError) -> Option<&RumaClientError> {
     match matrix_error {
-        MatrixError::RumaResponse(RumaResponseError::Http(ServerError::Known(error))) => {
-            Some(error)
-        }
+        MatrixError::Http(HttpError::FromHttpResponse(FromHttpResponseError::Http(
+            ServerError::Known(error),
+        ))) => Some(error),
         _ => None,
     }
 }

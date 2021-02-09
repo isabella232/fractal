@@ -4,8 +4,7 @@ use serde_json::json;
 use matrix_sdk::{
     api::error::ErrorKind as RumaErrorKind,
     identifiers::{EventId, RoomId, RoomIdOrAliasId, UserId},
-    Client as MatrixClient, Error as MatrixError, FromHttpResponseError as RumaResponseError,
-    ServerError,
+    Client as MatrixClient, Error as MatrixError, FromHttpResponseError, HttpError, ServerError,
 };
 use serde::Serialize;
 use std::io::Error as IoError;
@@ -109,7 +108,7 @@ pub async fn get_room_detail(
 
     let request = GetStateEventForKeyRequest::new(&room_id, event_type.clone(), "");
 
-    let response = match session_client.send(request).await {
+    let response = match session_client.send(request, None).await {
         Ok(response) => Some(response),
         Err(err) if get_ruma_error_kind(&err) == Some(&RumaErrorKind::NotFound) => None,
         Err(err) => return Err(err.into()),
@@ -158,7 +157,7 @@ pub async fn get_room_avatar(
 ) -> Result<(RoomId, Option<Url>), RoomAvatarError> {
     let request = GetStateEventForKeyRequest::new(&room_id, EventType::RoomAvatar, "");
 
-    let response = match session_client.send(request).await {
+    let response = match session_client.send(request, None).await {
         Ok(response) => Some(response),
         Err(err) if get_ruma_error_kind(&err) == Some(&RumaErrorKind::NotFound) => None,
         Err(err) => return Err(err.into()),
@@ -212,7 +211,7 @@ pub async fn get_room_members(
     room_id: RoomId,
 ) -> Result<(RoomId, Vec<Member>), RoomMembersError> {
     let request = JoinedMembersRequest::new(&room_id);
-    let response = session_client.send(request).await?;
+    let response = session_client.send(request, None).await?;
 
     let ms = response
         .joined
@@ -413,7 +412,7 @@ pub async fn redact_msg(
     let event_id = msg.id.ok_or(SendMsgRedactionError::MessageNotSent)?;
 
     let request = RedactEventRequest::new(&msg.room, &event_id, txn_id);
-    let response = session_client.send(request).await?;
+    let response = session_client.send(request, None).await?;
 
     Ok((event_id, response.event_id))
 }
@@ -430,9 +429,9 @@ impl From<MatrixError> for JoinRoomError {
 impl HandleError for JoinRoomError {
     fn handle_error(&self) {
         let (err_str, info) = match &self.0 {
-            MatrixError::RumaResponse(RumaResponseError::Http(ServerError::Known(error))) => {
-                (error.message.clone(), Some(error.message.clone()))
-            }
+            MatrixError::Http(HttpError::FromHttpResponse(FromHttpResponseError::Http(
+                ServerError::Known(error),
+            ))) => (error.message.clone(), Some(error.message.clone())),
             error => (error.to_string(), None),
         };
 
@@ -527,7 +526,7 @@ pub async fn set_room_name(
     let content = &AnyStateEventContent::RoomName(NameEventContent::new(name)?);
     let request = SendStateEventForKeyRequest::new(room_id, "m.room.name", content);
 
-    session_client.send(request).await?;
+    session_client.send(request, None).await?;
 
     Ok(())
 }
@@ -551,7 +550,7 @@ pub async fn set_room_topic(
     let content = &AnyStateEventContent::RoomTopic(TopicEventContent { topic });
     let request = SendStateEventForKeyRequest::new(room_id, "m.room.topic", content);
 
-    session_client.send(request).await?;
+    session_client.send(request, None).await?;
 
     Ok(())
 }
@@ -593,7 +592,7 @@ pub async fn set_room_avatar(
         url: Some(avatar_uri),
     }));
     let request = SendStateEventForKeyRequest::new(room_id, "m.room.avatar", content);
-    session_client.send(request).await?;
+    session_client.send(request, None).await?;
 
     Ok(())
 }
@@ -646,7 +645,7 @@ pub async fn upload_file(
         content_type: Some(&content_type),
     });
 
-    session_client.send(request).await.map_err(Into::into)
+    session_client.send(request, None).await.map_err(Into::into)
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -740,7 +739,7 @@ async fn update_direct_chats(
     let event_type = EventType::Direct;
 
     let request = GetGlobalAccountDataRequest::new(user_id, event_type.as_ref());
-    let response = session_client.send(request).await?;
+    let response = session_client.send(request, None).await?;
 
     let mut directs = match response
         .account_data
@@ -759,7 +758,7 @@ async fn update_direct_chats(
         user_id,
     );
 
-    session_client.send(request).await?;
+    session_client.send(request, None).await?;
 
     Ok(())
 }
@@ -830,10 +829,10 @@ pub async fn add_to_fav(
                 order: Some(0.5),
             }),
         );
-        session_client.send(request).await?;
+        session_client.send(request, None).await?;
     } else {
         let request = DeleteTagRequest::new(user_id, room_id, tag);
-        session_client.send(request).await?;
+        session_client.send(request, None).await?;
     }
 
     Ok((rid, tofav))
@@ -903,7 +902,7 @@ pub async fn set_language(
         user_id,
     );
 
-    session_client.send(request).await?;
+    session_client.send(request, None).await?;
 
     Ok(())
 }
@@ -936,7 +935,7 @@ pub async fn get_pushrules(
 ) -> Result<RoomNotify, PushRulesError> {
     let request = GetRoomRulesRequest::new("global", RuleKind::Room, room_id.as_str());
 
-    let value = match session_client.send(request).await {
+    let value = match session_client.send(request, None).await {
         Ok(response) => {
             response
                 .rule
@@ -974,7 +973,7 @@ pub async fn set_pushrules(
 
     let request = SetRoomRulesRequest::new("global", RuleKind::Room, room_id.as_str(), &actions);
 
-    session_client.send(request).await?;
+    session_client.send(request, None).await?;
 
     Ok(())
 }
@@ -984,7 +983,7 @@ pub async fn delete_pushrules(
     room_id: &RoomId,
 ) -> Result<(), PushRulesError> {
     let request = DeleteRoomRulesRequest::new("global", RuleKind::Room, room_id.as_str());
-    session_client.send(request).await?;
+    session_client.send(request, None).await?;
 
     Ok(())
 }

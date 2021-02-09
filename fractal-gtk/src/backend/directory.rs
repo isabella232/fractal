@@ -42,7 +42,7 @@ pub async fn protocols(
     session_client: MatrixClient,
 ) -> Result<Vec<ProtocolInstance>, DirectoryProtocolsError> {
     Ok(session_client
-        .send(GetProtocolsRequest::new())
+        .send(GetProtocolsRequest::new(), None)
         .await?
         .protocols
         .into_iter()

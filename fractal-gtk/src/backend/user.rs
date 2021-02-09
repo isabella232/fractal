@@ -72,7 +72,7 @@ pub async fn get_username(
     user_id: &UserId,
 ) -> Result<Option<String>, NameError> {
     let request = GetDisplayNameRequest::new(user_id);
-    let response = session_client.send(request).await?;
+    let response = session_client.send(request, None).await?;
 
     Ok(response.displayname)
 }
@@ -94,7 +94,7 @@ pub async fn set_username(
     username: Option<String>,
 ) -> Result<Option<String>, SetUserNameError> {
     let request = SetDisplayNameRequest::new(user_id, username.as_ref().map(String::as_str));
-    session_client.send(request).await?;
+    session_client.send(request, None).await?;
 
     Ok(username)
 }
@@ -118,7 +118,7 @@ impl HandleError for GetThreePIDError {
 pub async fn get_threepid(
     session_client: MatrixClient,
 ) -> Result<Vec<ThirdPartyIdentifier>, GetThreePIDError> {
-    let response = session_client.send(GetContactsRequest::new()).await?;
+    let response = session_client.send(GetContactsRequest::new(), None).await?;
 
     Ok(response.threepids)
 }
@@ -161,7 +161,7 @@ pub async fn get_email_token(
     client_secret: String,
 ) -> Result<(String, String), GetTokenEmailError> {
     let request = EmailTokenRequest::new(&client_secret, email, 1_u32.into());
-    let response = session_client.send(request).await?;
+    let response = session_client.send(request, None).await?;
 
     Ok((response.sid, client_secret))
 }
@@ -206,7 +206,7 @@ pub async fn get_phone_token(
     client_secret: String,
 ) -> Result<(String, String), GetTokenPhoneError> {
     let request = PhoneTokenRequest::new(&client_secret, "", phone_number, 1_u32.into());
-    let response = session_client.send(request).await?;
+    let response = session_client.send(request, None).await?;
 
     Ok((response.sid, client_secret))
 }
@@ -364,7 +364,7 @@ pub async fn change_password(
         }),
     });
 
-    session_client.send(request).await?;
+    session_client.send(request, None).await?;
 
     Ok(())
 }
@@ -446,7 +446,7 @@ pub async fn set_user_avatar(
         .content_uri;
 
     let request = SetAvatarUrlRequest::new(user_id, Some(&avatar_url));
-    session_client.send(request).await?;
+    session_client.send(request, None).await?;
 
     Ok(avatar)
 }
@@ -494,7 +494,7 @@ pub async fn search(
     search_term: &str,
 ) -> Result<Vec<Member>, UserSearchError> {
     let request = UserDirectoryRequest::new(search_term);
-    let response = session_client.send(request).await?;
+    let response = session_client.send(request, None).await?;
 
     response
         .results
@@ -536,7 +536,7 @@ pub async fn get_user_avatar(
     user_id: &UserId,
 ) -> Result<(String, PathBuf), GetUserAvatarError> {
     let request = GetProfileRequest::new(user_id);
-    let response = session_client.send(request).await?;
+    let response = session_client.send(request, None).await?;
 
     let img = match response
         .avatar_url
