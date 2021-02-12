@@ -608,19 +608,20 @@ impl RoomHistory {
     ) -> Option<()> {
         let mut rows = self.rows.borrow_mut();
 
-        let (i, ref mut msg) = rows
-            .list
-            .iter_mut()
-            .enumerate()
-            .find_map(|(i, e)| match e {
-                Element::Message(ref mut itermessage)
-                    if itermessage.msg.id == item.msg.replace
-                        || itermessage.msg.replace == item.msg.replace =>
-                {
-                    Some((i, itermessage))
-                }
-                _ => None,
-            })?;
+        let (i, ref mut msg) =
+            rows.list
+                .iter_mut()
+                .rev()
+                .enumerate()
+                .find_map(|(i, e)| match e {
+                    Element::Message(ref mut itermessage)
+                        if itermessage.msg.id == item.msg.replace
+                            || itermessage.msg.replace == item.msg.replace =>
+                    {
+                        Some((i, itermessage))
+                    }
+                    _ => None,
+                })?;
         item.msg.date = msg.msg.date;
         let msg_widget = msg.widget.clone()?;
 
