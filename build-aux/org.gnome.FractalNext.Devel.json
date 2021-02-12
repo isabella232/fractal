@@ -89,6 +89,22 @@
             ]
         },
         {
+            "name": "libadwaita",
+            "buildsystem": "meson",
+            "config-opts": [
+                "-Dlibadwaita:tests=false",
+                "-Dlibadwaita:examples=false",
+                "-Dlibadwaita:vapi=false"
+            ],
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://gitlab.gnome.org/exalm/libadwaita.git",
+                    "branch": "main"
+                }
+            ]
+        },
+        {
             "name": "fractal",
             "buildsystem": "meson",
             "run-tests": true,
