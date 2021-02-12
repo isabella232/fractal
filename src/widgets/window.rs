@@ -1,5 +1,8 @@
 use crate::application::ExampleApplication;
 use crate::config::{APP_ID, PROFILE};
+use crate::widgets::FrctlLogin;
+use crate::widgets::FrctlSession;
+use adw::subclass::prelude::AdwApplicationWindowImpl;
 use glib::signal::Inhibit;
 use gtk::subclass::prelude::*;
 use gtk::{self, prelude::*};
@@ -12,16 +15,22 @@ mod imp {
 
     #[derive(Debug, CompositeTemplate)]
     #[template(resource = "/org/gnome/FractalNext/window.ui")]
-    pub struct ExampleApplicationWindow {
+    pub struct FrctlWindow {
         #[template_child]
-        pub headerbar: TemplateChild<gtk::HeaderBar>,
+        pub main_stack: TemplateChild<gtk::Stack>,
+        #[template_child]
+        pub login: TemplateChild<FrctlLogin>,
+        // Eventually we want to create the session dynamically, since we want multi account
+        // support
+        #[template_child]
+        pub session: TemplateChild<FrctlSession>,
         pub settings: gio::Settings,
     }
 
-    impl ObjectSubclass for ExampleApplicationWindow {
-        const NAME: &'static str = "ExampleApplicationWindow";
-        type Type = super::ExampleApplicationWindow;
-        type ParentType = gtk::ApplicationWindow;
+    impl ObjectSubclass for FrctlWindow {
+        const NAME: &'static str = "FrctlWindow";
+        type Type = super::FrctlWindow;
+        type ParentType = adw::ApplicationWindow;
         type Interfaces = ();
         type Instance = subclass::simple::InstanceStruct<Self>;
         type Class = subclass::simple::ClassStruct<Self>;
@@ -30,7 +39,9 @@ mod imp {
 
         fn new() -> Self {
             Self {
-                headerbar: TemplateChild::default(),
+                main_stack: TemplateChild::default(),
+                login: TemplateChild::default(),
+                session: TemplateChild::default(),
                 settings: gio::Settings::new(APP_ID),
             }
         }
@@ -45,7 +56,7 @@ mod imp {
         }
     }
 
-    impl ObjectImpl for ExampleApplicationWindow {
+    impl ObjectImpl for FrctlWindow {
         fn constructed(&self, obj: &Self::Type) {
             self.parent_constructed(obj);
 
@@ -55,7 +66,7 @@ mod imp {
 
             // Devel Profile
             if PROFILE == "Devel" {
-                obj.get_style_context().add_class("devel");
+                obj.add_css_class("devel");
             }
 
             // load latest window state
@@ -63,7 +74,7 @@ mod imp {
         }
     }
 
-    impl WindowImpl for ExampleApplicationWindow {
+    impl WindowImpl for FrctlWindow {
         // save window state on delete event
         fn close_request(&self, obj: &Self::Type) -> Inhibit {
             if let Err(err) = obj.save_window_size() {
@@ -73,29 +84,24 @@ mod imp {
         }
     }
 
-    impl WidgetImpl for ExampleApplicationWindow {}
-    impl ApplicationWindowImpl for ExampleApplicationWindow {}
+    impl WidgetImpl for FrctlWindow {}
+    impl ApplicationWindowImpl for FrctlWindow {}
+    impl AdwApplicationWindowImpl for FrctlWindow {}
 }
 
 glib::wrapper! {
-    pub struct ExampleApplicationWindow(ObjectSubclass<imp::ExampleApplicationWindow>)
-        @extends gtk::Widget, gtk::Window, gtk::ApplicationWindow, @implements gio::ActionMap, gio::ActionGroup;
+    pub struct FrctlWindow(ObjectSubclass<imp::FrctlWindow>)
+        @extends gtk::Widget, gtk::Window, gtk::ApplicationWindow, adw::ApplicationWindow, @implements gio::ActionMap, gio::ActionGroup;
 }
 
-impl ExampleApplicationWindow {
-    pub fn new(app: &ExampleApplication) -> Self {
-        let window: Self =
-            glib::Object::new(&[]).expect("Failed to create ExampleApplicationWindow");
-        window.set_application(Some(app));
-
-        // Set icons for shell
-        gtk::Window::set_default_icon_name(APP_ID);
-
-        window
+impl FrctlWindow {
+    pub fn new(app: &FrctlApplication) -> Self {
+        glib::Object::new(&[("application", &Some(app)), ("icon-name", &Some(APP_ID))])
+            .expect("Failed to create FrctlWindow")
     }
 
     pub fn save_window_size(&self) -> Result<(), glib::BoolError> {
-        let settings = &imp::ExampleApplicationWindow::from_instance(self).settings;
+        let settings = &imp::FrctlWindow::from_instance(self).settings;
 
         let size = self.get_default_size();
 
@@ -108,16 +114,13 @@ impl ExampleApplicationWindow {
     }
 
     fn load_window_size(&self) {
-        let settings = &imp::ExampleApplicationWindow::from_instance(self).settings;
+        let settings = &imp::FrctlWindow::from_instance(self).settings;
 
         let width = settings.get_int("window-width");
         let height = settings.get_int("window-height");
         let is_maximized = settings.get_boolean("is-maximized");
 
         self.set_default_size(width, height);
-
-        if is_maximized {
-            self.maximize();
-        }
+        self.set_property_maximized(is_maximized);
     }
 }

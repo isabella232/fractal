@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="FrctlSession" parent="AdwBin">
+    <child>
+      <object class="AdwLeaflet" id="session">
+        <child>
+          <object class="FrctlSidebar" id="sidebar">
+            <property name="compact" bind-source="session" bind-property="folded" bind-flags="sync-create" />
+          </object>
+        </child>
+        <child>
+          <object class="FrctlContent" id="content">
+            <property name="compact" bind-source="session" bind-property="folded" bind-flags="sync-create" />
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

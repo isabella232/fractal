@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="FrctlLogin" parent="AdwBin">
+    <child>
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkHeaderBar" id="headerbar" />
+        </child>
+        <child>
+          <object class="AdwStatusPage">
+            <!-- TODO implement login -->
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

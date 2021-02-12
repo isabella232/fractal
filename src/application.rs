@@ -1,5 +1,5 @@
 use crate::config;
-use crate::window::ExampleApplicationWindow;
+use crate::widgets::FrctlWindow;
 use gio::ApplicationFlags;
 use glib::clone;
 use glib::WeakRef;
@@ -17,7 +17,7 @@ mod imp {
 
     #[derive(Debug)]
     pub struct ExampleApplication {
-        pub window: OnceCell<WeakRef<ExampleApplicationWindow>>,
+        pub window: OnceCell<WeakRef<FrctlWindow>>,
     }
 
     impl ObjectSubclass for ExampleApplication {
@@ -43,8 +43,7 @@ mod imp {
         fn activate(&self, app: &Self::Type) {
             debug!("GtkApplication<ExampleApplication>::activate");
 
-            let priv_ = ExampleApplication::from_instance(app);
-            if let Some(window) = priv_.window.get() {
+            if let Some(window) = self.window.get() {
                 let window = window.upgrade().unwrap();
                 window.show();
                 window.present();
@@ -54,7 +53,7 @@ mod imp {
             app.set_resource_base_path(Some("/org/gnome/FractalNext/"));
             app.setup_css();
 
-            let window = ExampleApplicationWindow::new(app);
+            let window = FrctlWindow::new(app);
             self.window
                 .set(window.downgrade())
                 .expect("Window already set.");
@@ -83,14 +82,18 @@ impl ExampleApplication {
     pub fn new() -> Self {
         glib::Object::new(&[
             ("application-id", &Some(config::APP_ID)),
-            ("flags", &ApplicationFlags::empty()),
+            ("flags", &ApplicationFlags::default()),
         ])
         .expect("Application initialization failed...")
     }
 
-    fn get_main_window(&self) -> ExampleApplicationWindow {
-        let priv_ = imp::ExampleApplication::from_instance(self);
-        priv_.window.get().unwrap().upgrade().unwrap()
+    fn get_main_window(&self) -> FrctlWindow {
+        imp::ExampleApplication::from_instance(self)
+            .window
+            .get()
+            .unwrap()
+            .upgrade()
+            .unwrap()
     }
 
     fn setup_gactions(&self) {

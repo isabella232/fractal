@@ -1,4 +1,16 @@
-.title-header{
+.title-header {
   font-size: 36px;
   font-weight: bold;
+}
+
+.content {
+  background-color: @theme_base_color;
+}
+
+.content:backdrop {
+  background-color: @theme_unfocused_base_color;
+}
+
+.send-message-area {
+  margin: 6px;
 }

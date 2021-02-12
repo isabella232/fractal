@@ -22,7 +22,12 @@ sources = files(
   'application.rs',
   'config.rs',
   'main.rs',
-  'window.rs',
+  'widgets/window.rs',
+  'widgets/content.rs',
+  'widgets/sidebar.rs',
+  'widgets/login.rs',
+  'widgets/mod.rs',
+  'widgets/session.rs',
 )
 
 custom_target(
