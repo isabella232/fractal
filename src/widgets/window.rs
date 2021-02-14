@@ -1,4 +1,4 @@
-use crate::application::ExampleApplication;
+use crate::application::FrctlApplication;
 use crate::config::{APP_ID, PROFILE};
 use crate::widgets::FrctlLogin;
 use crate::widgets::FrctlSession;

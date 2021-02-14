@@ -16,13 +16,13 @@ mod imp {
     use glib::subclass;
 
     #[derive(Debug)]
-    pub struct ExampleApplication {
+    pub struct FrctlApplication {
         pub window: OnceCell<WeakRef<FrctlWindow>>,
     }
 
-    impl ObjectSubclass for ExampleApplication {
-        const NAME: &'static str = "ExampleApplication";
-        type Type = super::ExampleApplication;
+    impl ObjectSubclass for FrctlApplication {
+        const NAME: &'static str = "FrctlApplication";
+        type Type = super::FrctlApplication;
         type ParentType = gtk::Application;
         type Interfaces = ();
         type Instance = subclass::simple::InstanceStruct<Self>;
@@ -37,11 +37,11 @@ mod imp {
         }
     }
 
-    impl ObjectImpl for ExampleApplication {}
+    impl ObjectImpl for FrctlApplication {}
 
-    impl gio::subclass::prelude::ApplicationImpl for ExampleApplication {
+    impl gio::subclass::prelude::ApplicationImpl for FrctlApplication {
         fn activate(&self, app: &Self::Type) {
-            debug!("GtkApplication<ExampleApplication>::activate");
+            debug!("GtkApplication<FrctlApplication>::activate");
 
             if let Some(window) = self.window.get() {
                 let window = window.upgrade().unwrap();
@@ -65,20 +65,20 @@ mod imp {
         }
 
         fn startup(&self, app: &Self::Type) {
-            debug!("GtkApplication<ExampleApplication>::startup");
+            debug!("GtkApplication<FrctlApplication>::startup");
             self.parent_startup(app);
         }
     }
 
-    impl GtkApplicationImpl for ExampleApplication {}
+    impl GtkApplicationImpl for FrctlApplication {}
 }
 
 glib::wrapper! {
-    pub struct ExampleApplication(ObjectSubclass<imp::ExampleApplication>)
+    pub struct FrctlApplication(ObjectSubclass<imp::FrctlApplication>)
         @extends gio::Application, gtk::Application, @implements gio::ActionMap, gio::ActionGroup;
 }
 
-impl ExampleApplication {
+impl FrctlApplication {
     pub fn new() -> Self {
         glib::Object::new(&[
             ("application-id", &Some(config::APP_ID)),
@@ -88,7 +88,7 @@ impl ExampleApplication {
     }
 
     fn get_main_window(&self) -> FrctlWindow {
-        imp::ExampleApplication::from_instance(self)
+        imp::FrctlApplication::from_instance(self)
             .window
             .get()
             .unwrap()

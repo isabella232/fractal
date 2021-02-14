@@ -4,7 +4,7 @@ mod config;
 mod widgets;
 
 use adw;
-use application::ExampleApplication;
+use application::FrctlApplication;
 use config::{GETTEXT_PACKAGE, LOCALEDIR, RESOURCES_FILE};
 use gettextrs::*;
 use gtk::gdk::Display;
@@ -33,6 +33,6 @@ fn main() {
         .unwrap()
         .add_resource_path("/org/gnome/FractalNext/icons");
 
-    let app = ExampleApplication::new();
+    let app = FrctlApplication::new();
     app.run();
 }
