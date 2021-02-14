@@ -129,7 +129,7 @@ Full reference in: <https://matrix.org/docs/spec/client_server/r0.2.0.html#m-roo
 Fractal does not currently have encryption support, but
 there is an initiative for it.
 
-We are now using using matrix-rust-sdk rather than our own implementation. (See https://gitlab.gnome.org/GNOME/fractal/-/issues/636)
+We are now partially using using matrix-rust-sdk rather than our own implementation. (See https://gitlab.gnome.org/GNOME/fractal/-/issues/636) and are working towards using it completely.
 
 Code and further information for this module can be found at [matrix/matrix-rust-sdk](https://github.com/matrix-org/matrix-rust-sdk).
 
@@ -140,16 +140,3 @@ GNOME application, and accordingly adheres GNOME
 guidelines and paradigms. This will be revisited if or
 when GNOME gets a "Do Not Disturb" feature.
 
-## The origin of Fractal
-
-This project is based on Fest <https://github.com/fest-im/fest>, formerly called ruma-gtk.
-
-The first version of this project was called guillotine, based on French revolution,
-in relation with the Riot client name, but it's a negative name so we decide
-to change for a math one.
-
-The name Fractal was proposed by Regina Bíró.
-
-## Code of Conduct
-
-Fractal follows the official GNOME Foundation code of conduct. You can read it [here](/code-of-conduct.md).
