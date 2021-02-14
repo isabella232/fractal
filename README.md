@@ -129,7 +129,7 @@ Full reference in: <https://matrix.org/docs/spec/client_server/r0.2.0.html#m-roo
 Fractal does not currently have encryption support, but
 there is an initiative for it.
 
-We are heading towards using matrix-rust-sdk rather than our own implementation. (See https://gitlab.gnome.org/GNOME/fractal/-/issues/636)
+We are now using using matrix-rust-sdk rather than our own implementation. (See https://gitlab.gnome.org/GNOME/fractal/-/issues/636)
 
 Code and further information for this module can be found at [matrix/matrix-rust-sdk](https://github.com/matrix-org/matrix-rust-sdk).
 
@@ -143,9 +143,6 @@ when GNOME gets a "Do Not Disturb" feature.
 ## The origin of Fractal
 
 This project is based on Fest <https://github.com/fest-im/fest>, formerly called ruma-gtk.
-
-Instead of using RUMA Client, Fractal calls directly to the matrix.org
-REST API.
 
 The first version of this project was called guillotine, based on French revolution,
 in relation with the Riot client name, but it's a negative name so we decide
