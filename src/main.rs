@@ -6,7 +6,9 @@ mod window;
 use application::ExampleApplication;
 use config::{GETTEXT_PACKAGE, LOCALEDIR, RESOURCES_FILE};
 use gettextrs::*;
+use gtk::gdk::Display;
 use gtk::gio;
+use gtk::IconTheme;
 
 fn main() {
     // Initialize logger, debug is carried out via debug!, info!, and warn!.
@@ -24,6 +26,10 @@ fn main() {
 
     let res = gio::Resource::load(RESOURCES_FILE).expect("Could not load gresource file");
     gio::resources_register(&res);
+
+    IconTheme::get_for_display(&Display::get_default().unwrap())
+        .unwrap()
+        .add_resource_path("/org/gnome/FractalNext/icons");
 
     let app = ExampleApplication::new();
     app.run();
