@@ -129,7 +129,7 @@ Full reference in: <https://matrix.org/docs/spec/client_server/r0.2.0.html#m-roo
 Fractal does not currently have encryption support, but
 there is an initiative for it.
 
-We are now partially using using matrix-rust-sdk rather than our own implementation. (See https://gitlab.gnome.org/GNOME/fractal/-/issues/636) and are working towards using it completely.
+We are now partially using matrix-rust-sdk rather than our own implementation. (See https://gitlab.gnome.org/GNOME/fractal/-/issues/636) and are working towards using it completely.
 
 Code and further information for this module can be found at [matrix/matrix-rust-sdk](https://github.com/matrix-org/matrix-rust-sdk).
 
@@ -139,4 +139,8 @@ Currently Fractal does not support this. Fractal is a
 GNOME application, and accordingly adheres GNOME
 guidelines and paradigms. This will be revisited if or
 when GNOME gets a "Do Not Disturb" feature.
+
+## Code of Conduct
+
+Fractal follows the official GNOME Foundation code of conduct. You can read it [here](/code-of-conduct.md).
 
