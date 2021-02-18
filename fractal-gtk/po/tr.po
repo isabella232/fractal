@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2021-01-31 14:02+0000\n"
-"PO-Revision-Date: 2021-02-01 01:55+0300\n"
+"POT-Creation-Date: 2021-02-05 12:39+0000\n"
+"PO-Revision-Date: 2021-02-18 04:00+0300\n"
 "Last-Translator: Emin Tufan Çetin <etcetin@gmail.com>\n"
 "Language-Team: Türkçe <gnome-turk@gnome.org>\n"
 "Language: tr\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.3.1\n"
+"X-Generator: Poedit 2.2.3\n"
 
 #: fractal-gtk/res/gtk/help-overlay.ui:13
 msgctxt "shortcut window"
@@ -185,7 +185,7 @@ msgid "Account Settings"
 msgstr "Hesap Ayarları"
 
 #: fractal-gtk/res/ui/account_settings.ui:30
-#: fractal-gtk/res/ui/main_window.ui:217 fractal-gtk/res/ui/main_window.ui:487
+#: fractal-gtk/res/ui/main_window.ui:217 fractal-gtk/res/ui/main_window.ui:454
 #: fractal-gtk/res/ui/media_viewer.ui:36 fractal-gtk/res/ui/room_settings.ui:30
 msgid "Back"
 msgstr "Geri"
@@ -347,59 +347,59 @@ msgstr "Ayrıldığınızda bu odadaki insanlarla etkileşemeyeceksiniz."
 msgid "Leave room"
 msgstr "Odayı terk et"
 
-#: fractal-gtk/res/ui/login_flow.ui:47
+#: fractal-gtk/res/ui/login_flow.ui:29
 msgid "Welcome to Fractal"
 msgstr "Fractal’a Hoş Geldiniz"
 
-#: fractal-gtk/res/ui/login_flow.ui:61 fractal-gtk/res/ui/login_flow.ui:251
+#: fractal-gtk/res/ui/login_flow.ui:42 fractal-gtk/res/ui/login_flow.ui:211
 msgid "_Log In"
 msgstr "_Giriş Yap"
 
-#: fractal-gtk/res/ui/login_flow.ui:73
+#: fractal-gtk/res/ui/login_flow.ui:55
 msgid "_Create Account"
 msgstr "_Hesap Yarat"
 
-#: fractal-gtk/res/ui/login_flow.ui:97
+#: fractal-gtk/res/ui/login_flow.ui:84
 msgid "Choose Provider"
 msgstr "Sağlayıcı Seç"
 
-#: fractal-gtk/res/ui/login_flow.ui:120
+#: fractal-gtk/res/ui/login_flow.ui:107
 msgid "_Next"
 msgstr "_Sonraki"
 
-#: fractal-gtk/res/ui/login_flow.ui:158
+#: fractal-gtk/res/ui/login_flow.ui:125
 msgid "What is your Provider?"
 msgstr "Sağlayıcınız Nedir?"
 
-#: fractal-gtk/res/ui/login_flow.ui:187
+#: fractal-gtk/res/ui/login_flow.ui:146
 msgid "Matrix provider domain, e.g. myserver.co"
 msgstr "Matrix sağlayıcı alan adı, örn: sunucum.co"
 
-#: fractal-gtk/res/ui/login_flow.ui:203
+#: fractal-gtk/res/ui/login_flow.ui:161
 msgid "The domain may not be empty."
 msgstr "Alan adı boş olamaz."
 
-#: fractal-gtk/res/ui/login_flow.ui:228
+#: fractal-gtk/res/ui/login_flow.ui:188
 msgid "Log In"
 msgstr "Giriş Yap"
 
-#: fractal-gtk/res/ui/login_flow.ui:276
+#: fractal-gtk/res/ui/login_flow.ui:236
 msgid "_User ID"
 msgstr "_Kullanıcı Kimliği"
 
-#: fractal-gtk/res/ui/login_flow.ui:292
+#: fractal-gtk/res/ui/login_flow.ui:252
 msgid "_Password"
 msgstr "_Parola"
 
-#: fractal-gtk/res/ui/login_flow.ui:324
+#: fractal-gtk/res/ui/login_flow.ui:284
 msgid "User name, email, or phone number"
 msgstr "Kullanıcı adı, e-posta veya telefon numarası"
 
-#: fractal-gtk/res/ui/login_flow.ui:357
+#: fractal-gtk/res/ui/login_flow.ui:317
 msgid "_Forgot Password?"
 msgstr "_Parolayı Unuttum?"
 
-#: fractal-gtk/res/ui/login_flow.ui:375
+#: fractal-gtk/res/ui/login_flow.ui:335
 msgid "Invalid username or password"
 msgstr "Geçersiz kullanıcı adı veya parola"
 
@@ -431,19 +431,19 @@ msgstr "Oda arama"
 msgid "Room Menu"
 msgstr "Oda Menüsü"
 
-#: fractal-gtk/res/ui/main_window.ui:362
-msgid "No room selected"
-msgstr "Oda seçilmedi"
+#: fractal-gtk/res/ui/main_window.ui:349
+msgid "No Room Selected"
+msgstr "Oda Seçilmedi"
 
-#: fractal-gtk/res/ui/main_window.ui:377
-msgid "Join a room to start chatting"
-msgstr "Sohbet etmek için odaya katılın"
+#: fractal-gtk/res/ui/main_window.ui:350
+msgid "Join a room to start chatting."
+msgstr "Sohbet etmek için odaya katıl."
 
-#: fractal-gtk/res/ui/main_window.ui:387
+#: fractal-gtk/res/ui/main_window.ui:354
 msgid "No room"
 msgstr "Hiç oda yok"
 
-#: fractal-gtk/res/ui/main_window.ui:527
+#: fractal-gtk/res/ui/main_window.ui:494
 #: fractal-gtk/res/ui/server_chooser_menu.ui:51
 #: fractal-gtk/src/ui/connect/directory.rs:117
 msgid "Default Matrix Server"
@@ -815,7 +815,7 @@ msgid "<b>{}</b> is typing…"
 msgid_plural "<b>{}</b> and <b>{}</b> are typing…"
 msgstr[0] "<b>{}</b> yazıyor…"
 
-#: fractal-gtk/src/appop/sync.rs:26
+#: fractal-gtk/src/appop/sync.rs:24
 msgid "Syncing, this could take a while"
 msgstr "Eşzamanlanıyor, biraz zaman alabilir"
 
@@ -1006,27 +1006,27 @@ msgstr "Moderatör"
 msgid "Privileged"
 msgstr "Ayrıcalıklı"
 
-#: fractal-gtk/src/widgets/message.rs:468
+#: fractal-gtk/src/widgets/message.rs:471
 #, c-format
 msgid "Last edited %c"
 msgstr "Son düzenleniş %c"
 
-#: fractal-gtk/src/widgets/message.rs:555
-#: fractal-gtk/src/widgets/message.rs:722
+#: fractal-gtk/src/widgets/message.rs:665
+#: fractal-gtk/src/widgets/message.rs:832
 msgid "Save"
 msgstr "Kaydet"
 
-#: fractal-gtk/src/widgets/message.rs:737
+#: fractal-gtk/src/widgets/message.rs:847
 msgid "Open"
 msgstr "Aç"
 
 #. Use 12h time format (AM/PM)
-#: fractal-gtk/src/widgets/message.rs:871
+#: fractal-gtk/src/widgets/message.rs:990
 msgid "%l∶%M %p"
 msgstr "%l∶%M %p"
 
 #. Use 24 time format
-#: fractal-gtk/src/widgets/message.rs:874
+#: fractal-gtk/src/widgets/message.rs:993
 msgid "%R"
 msgstr "%R"
 
