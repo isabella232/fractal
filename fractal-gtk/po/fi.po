@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fractal master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/fractal/issues\n"
-"POT-Creation-Date: 2020-08-13 10:34+0000\n"
-"PO-Revision-Date: 2020-08-16 17:46+0300\n"
+"POT-Creation-Date: 2021-02-05 12:39+0000\n"
+"PO-Revision-Date: 2021-02-22 17:33+0200\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: Finnish <lokalisointi-lista@googlegroups.com>\n"
 "Language: fi\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.4.1\n"
+"X-Generator: Poedit 2.4.2\n"
 
 #: fractal-gtk/res/gtk/help-overlay.ui:13
 msgctxt "shortcut window"
@@ -100,7 +100,7 @@ msgstr "Kirjoita uudelle riville"
 
 #: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:3
 #: fractal-gtk/res/org.gnome.Fractal.metainfo.xml.in.in:5
-#: fractal-gtk/res/ui/login_flow.ui:294 fractal-gtk/src/appop/mod.rs:213
+#: fractal-gtk/res/ui/login_flow.ui:19 fractal-gtk/src/appop/mod.rs:170
 msgid "Fractal"
 msgstr "Fractal"
 
@@ -117,17 +117,20 @@ msgstr "Fractal-ryhmäviestintä"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: fractal-gtk/res/org.gnome.Fractal.desktop.in.in:14
-msgid "Matrix;matrix.org;chat;irc;communications;talk;riot;"
+#| msgid "Matrix;matrix.org;chat;irc;communications;talk;riot;"
+msgid "Matrix;matrix.org;chat;irc;communications;talk;riot;element;"
 msgstr ""
-"Matrix;matrix.org;chat;irc;communications;talk;riot;keskustelu;pikaviestin;"
+"Matrix;matrix.org;chat;irc;communications;talk;riot;element;keskustelu;"
+"pikaviestin;"
 
 #: fractal-gtk/res/org.gnome.Fractal.gschema.xml:13
 msgid "Type of password and token storage"
-msgstr ""
+msgstr "Salasanan ja poletin tallennustilan tyyppi"
 
 #: fractal-gtk/res/org.gnome.Fractal.gschema.xml:14
 msgid "Type of password and token storage, default value is: Secret Service"
 msgstr ""
+"Salasanan ja poletin tallennustilan tyyppi, oletusarvo on: Secret Service"
 
 #: fractal-gtk/res/org.gnome.Fractal.gschema.xml:21
 msgid "If markdown sending is active"
@@ -175,53 +178,63 @@ msgstr ""
 "ohjelmointikielellä toteutettuna. Sen käyttöliittymä on optimoitu suuria "
 "ryhmiä, kuten avoimen lähdekoodin projekteja, varten."
 
-#: fractal-gtk/res/ui/account_settings.ui:73
+#: fractal-gtk/res/ui/account_settings.ui:14 fractal-gtk/res/ui/main_menu.ui:94
+msgid "Account Settings"
+msgstr "Tilin asetukset"
+
+#: fractal-gtk/res/ui/account_settings.ui:30
+#: fractal-gtk/res/ui/main_window.ui:217 fractal-gtk/res/ui/main_window.ui:454
+#: fractal-gtk/res/ui/media_viewer.ui:36 fractal-gtk/res/ui/room_settings.ui:30
+msgid "Back"
+msgstr "Takaisin"
+
+#: fractal-gtk/res/ui/account_settings.ui:92
 msgid "Other people can find you by searching for any of these identifiers."
 msgstr ""
 "Muut ihmiset voivat löytää sinut etsimällä mitä tahansa näistä tunnisteista."
 
-#: fractal-gtk/res/ui/account_settings.ui:101
+#: fractal-gtk/res/ui/account_settings.ui:115
 msgid "Name"
 msgstr "Nimi"
 
-#: fractal-gtk/res/ui/account_settings.ui:124
+#: fractal-gtk/res/ui/account_settings.ui:138
 msgid "Type in your name"
 msgstr "Kirjoita nimesi"
 
-#: fractal-gtk/res/ui/account_settings.ui:153
+#: fractal-gtk/res/ui/account_settings.ui:167
 msgid "Email"
 msgstr "Sähköposti"
 
-#: fractal-gtk/res/ui/account_settings.ui:182
+#: fractal-gtk/res/ui/account_settings.ui:196
 msgid "Phone"
 msgstr "Puhelin"
 
-#: fractal-gtk/res/ui/account_settings.ui:211
+#: fractal-gtk/res/ui/account_settings.ui:225
 msgid "Password"
 msgstr "Salasana"
 
-#: fractal-gtk/res/ui/account_settings.ui:278
+#: fractal-gtk/res/ui/account_settings.ui:287
 msgid "Advanced Information"
 msgstr "Lisätiedot"
 
-#: fractal-gtk/res/ui/account_settings.ui:308
+#: fractal-gtk/res/ui/account_settings.ui:312
 msgid "Homeserver"
 msgstr "Kotipalvelin"
 
-#: fractal-gtk/res/ui/account_settings.ui:337
+#: fractal-gtk/res/ui/account_settings.ui:341
 msgid "Matrix ID"
 msgstr "Matrix-tunniste"
 
-#: fractal-gtk/res/ui/account_settings.ui:366
+#: fractal-gtk/res/ui/account_settings.ui:370
 msgid "Device ID"
 msgstr "Laitetunniste"
 
-#: fractal-gtk/res/ui/account_settings.ui:421
-#: fractal-gtk/res/ui/account_settings.ui:502
+#: fractal-gtk/res/ui/account_settings.ui:410
+#: fractal-gtk/res/ui/account_settings.ui:466
 msgid "Deactivate Account"
 msgstr "Deaktivoi tili"
 
-#: fractal-gtk/res/ui/account_settings.ui:447
+#: fractal-gtk/res/ui/account_settings.ui:431
 msgid ""
 "Deactivating your account means that you will lose all your messages, "
 "contacts, and files."
@@ -229,106 +242,90 @@ msgstr ""
 "Tilin deaktivointi tarkoittaa, että menetät kaikki viestit, yhteystiedot ja "
 "tiedostot."
 
-#: fractal-gtk/res/ui/account_settings.ui:462
+#: fractal-gtk/res/ui/account_settings.ui:441
 msgid ""
 "To confirm that you really want to deactivate this account type in your "
 "password:"
 msgstr "Vahvista tilin deaktivointi antamalla salasanasi:"
 
-#: fractal-gtk/res/ui/account_settings.ui:487
+#: fractal-gtk/res/ui/account_settings.ui:456
 msgid "Also erase all messages"
 msgstr "Poista myös kaikki viestit"
 
-#: fractal-gtk/res/ui/account_settings.ui:586
-#: fractal-gtk/res/ui/main_menu.ui:109
-msgid "Account Settings"
-msgstr "Tilin asetukset"
-
-#: fractal-gtk/res/ui/account_settings.ui:602
-#: fractal-gtk/res/ui/main_window.ui:522 fractal-gtk/res/ui/main_window.ui:662
-#: fractal-gtk/res/ui/main_window.ui:762 fractal-gtk/res/ui/media_viewer.ui:236
-#: fractal-gtk/res/ui/room_settings.ui:1034
-msgid "Back"
-msgstr "Takaisin"
-
-#: fractal-gtk/res/ui/account_settings.ui:623
+#: fractal-gtk/res/ui/account_settings.ui:523
 msgid "Check your email"
 msgstr "Tarkista sähköpostisi"
 
-#: fractal-gtk/res/ui/account_settings.ui:626
-#: fractal-gtk/res/ui/direct_chat.ui:129 fractal-gtk/res/ui/invite_user.ui:129
-#: fractal-gtk/res/ui/join_room.ui:94 fractal-gtk/res/ui/leave_room.ui:32
-#: fractal-gtk/res/ui/new_room.ui:42 fractal-gtk/src/appop/account.rs:95
-#: fractal-gtk/src/appop/account.rs:158 fractal-gtk/src/appop/attach.rs:52
+#: fractal-gtk/res/ui/account_settings.ui:526
+#: fractal-gtk/res/ui/direct_chat.ui:83 fractal-gtk/res/ui/invite_user.ui:84
+#: fractal-gtk/res/ui/join_room.ui:71 fractal-gtk/res/ui/leave_room.ui:31
+#: fractal-gtk/res/ui/new_room.ui:24 fractal-gtk/src/appop/account.rs:87
+#: fractal-gtk/src/appop/account.rs:143 fractal-gtk/src/ui/attach.rs:41
 msgid "Cancel"
 msgstr "Peru"
 
-#: fractal-gtk/res/ui/account_settings.ui:634
+#: fractal-gtk/res/ui/account_settings.ui:534
 msgid "Apply"
 msgstr "Toteuta"
 
-#: fractal-gtk/res/ui/add_room_menu.ui:22
+#: fractal-gtk/res/ui/add_room_menu.ui:8
 msgid "Room Directory"
 msgstr "Huonehakemisto"
 
-#: fractal-gtk/res/ui/add_room_menu.ui:36
+#: fractal-gtk/res/ui/add_room_menu.ui:12
 msgid "Join Room"
 msgstr "Liity huoneeseen"
 
-#: fractal-gtk/res/ui/add_room_menu.ui:63
+#: fractal-gtk/res/ui/add_room_menu.ui:18
 msgid "New Room"
 msgstr "Uusi huone"
 
-#: fractal-gtk/res/ui/add_room_menu.ui:77
+#: fractal-gtk/res/ui/add_room_menu.ui:22
 msgid "New Direct Chat"
 msgstr "Uusi suorakeskustelu"
 
-#: fractal-gtk/res/ui/audio_player.ui:34 fractal-gtk/res/ui/audio_player.ui:50
+#: fractal-gtk/res/ui/audio_player.ui:34 fractal-gtk/res/ui/audio_player.ui:45
 msgid "Play"
 msgstr "Toista"
 
-#: fractal-gtk/res/ui/direct_chat.ui:126
+#: fractal-gtk/res/ui/direct_chat.ui:80
 msgid "New direct chat"
 msgstr "Uusi suorakeskustelu"
 
-#: fractal-gtk/res/ui/direct_chat.ui:137
+#: fractal-gtk/res/ui/direct_chat.ui:91
 msgid "Start chat"
 msgstr "Aloita keskustelu"
-
-#: fractal-gtk/res/ui/filechooser.ui:61
-msgid "Select room image file"
-msgstr "Valitse huoneen kuvatiedosto"
 
 #: fractal-gtk/res/ui/invite.ui:18
 msgid "Invitation"
 msgstr "Kutsu"
 
-#: fractal-gtk/res/ui/invite.ui:33
+#: fractal-gtk/res/ui/invite.ui:32
 msgid "Reject"
 msgstr "Hylkää"
 
-#: fractal-gtk/res/ui/invite.ui:46
+#: fractal-gtk/res/ui/invite.ui:40
 msgid "Accept"
 msgstr "Hyväksy"
 
-#: fractal-gtk/res/ui/invite_user.ui:126 fractal-gtk/res/ui/invite_user.ui:137
-#: fractal-gtk/src/appop/invite.rs:153
+#: fractal-gtk/res/ui/invite_user.ui:81 fractal-gtk/res/ui/invite_user.ui:92
+#: fractal-gtk/src/ui/invite.rs:133
 msgid "Invite"
 msgstr "Kutsu"
 
-#: fractal-gtk/res/ui/join_room.ui:52
+#: fractal-gtk/res/ui/join_room.ui:34
 msgid "ID or Alias"
 msgstr "Tunniste tai alias"
 
-#: fractal-gtk/res/ui/join_room.ui:91
+#: fractal-gtk/res/ui/join_room.ui:68
 msgid "Join room"
 msgstr "Liity huoneeseen"
 
-#: fractal-gtk/res/ui/join_room.ui:102 fractal-gtk/src/widgets/room.rs:124
+#: fractal-gtk/res/ui/join_room.ui:79 fractal-gtk/src/ui/directory.rs:245
 msgid "Join"
 msgstr "Liity"
 
-#: fractal-gtk/res/ui/kicked_room.ui:30 fractal-gtk/res/ui/msg_src_window.ui:32
+#: fractal-gtk/res/ui/kicked_room.ui:29 fractal-gtk/res/ui/msg_src_window.ui:32
 msgid "Close"
 msgstr "Sulje"
 
@@ -344,121 +341,109 @@ msgstr ""
 "Kun olet poistunut, et voi enää keskustella huoneessa olevien ihmisten "
 "kanssa."
 
-#: fractal-gtk/res/ui/leave_room.ui:45
+#: fractal-gtk/res/ui/leave_room.ui:39
 msgid "Leave room"
 msgstr "Poistu huoneesta"
 
-#: fractal-gtk/res/ui/login_flow.ui:33
+#: fractal-gtk/res/ui/login_flow.ui:29
 msgid "Welcome to Fractal"
 msgstr "Tervetuloa Fractaliin"
 
-#: fractal-gtk/res/ui/login_flow.ui:47 fractal-gtk/res/ui/login_flow.ui:371
+#: fractal-gtk/res/ui/login_flow.ui:42 fractal-gtk/res/ui/login_flow.ui:211
 msgid "_Log In"
 msgstr "Ki_rjaudu sisään"
 
-#: fractal-gtk/res/ui/login_flow.ui:59
+#: fractal-gtk/res/ui/login_flow.ui:55
 msgid "_Create Account"
 msgstr "_Luo tili"
 
-#: fractal-gtk/res/ui/login_flow.ui:95
-msgid "What is your Provider?"
-msgstr "Mikä on palveluntarjoajasi?"
-
-#: fractal-gtk/res/ui/login_flow.ui:124
-msgid "Matrix provider domain, e.g. myserver.co"
-msgstr "Matrix-palveluntarjoajan verkkotunnus, esim. omapalvelin.fi.com"
-
-#: fractal-gtk/res/ui/login_flow.ui:140
-msgid "The domain may not be empty."
-msgstr "Verkkotunnus ei voi olla tyhjä."
-
-#: fractal-gtk/res/ui/login_flow.ui:166
-msgid "_User ID"
-msgstr "_Käyttäjätunnus"
-
-#: fractal-gtk/res/ui/login_flow.ui:182
-msgid "_Password"
-msgstr "_Salasana"
-
-#: fractal-gtk/res/ui/login_flow.ui:214
-msgid "User name, email, or phone number"
-msgstr "Käyttäjätunnus, sähköposti tai puhelinnumero"
-
-#: fractal-gtk/res/ui/login_flow.ui:247
-msgid "_Forgot Password?"
-msgstr "_Unohditko salasanasi?"
-
-#: fractal-gtk/res/ui/login_flow.ui:265
-msgid "Invalid username or password"
-msgstr "Virheellinen käyttäjätunnus tai salasana"
-
-#: fractal-gtk/res/ui/login_flow.ui:306
+#: fractal-gtk/res/ui/login_flow.ui:84
 msgid "Choose Provider"
 msgstr "Valitse palveluntarjoaja"
 
-#: fractal-gtk/res/ui/login_flow.ui:329
+#: fractal-gtk/res/ui/login_flow.ui:107
 msgid "_Next"
 msgstr "_Seuraava"
 
-#: fractal-gtk/res/ui/login_flow.ui:348
+#: fractal-gtk/res/ui/login_flow.ui:125
+msgid "What is your Provider?"
+msgstr "Mikä on palveluntarjoajasi?"
+
+#: fractal-gtk/res/ui/login_flow.ui:146
+msgid "Matrix provider domain, e.g. myserver.co"
+msgstr "Matrix-palveluntarjoajan verkkotunnus, esim. omapalvelin.fi.com"
+
+#: fractal-gtk/res/ui/login_flow.ui:161
+msgid "The domain may not be empty."
+msgstr "Verkkotunnus ei voi olla tyhjä."
+
+#: fractal-gtk/res/ui/login_flow.ui:188
 msgid "Log In"
 msgstr "Kirjaudu sisään"
 
-#: fractal-gtk/res/ui/main_menu.ui:123
+#: fractal-gtk/res/ui/login_flow.ui:236
+msgid "_User ID"
+msgstr "_Käyttäjätunnus"
+
+#: fractal-gtk/res/ui/login_flow.ui:252
+msgid "_Password"
+msgstr "_Salasana"
+
+#: fractal-gtk/res/ui/login_flow.ui:284
+msgid "User name, email, or phone number"
+msgstr "Käyttäjätunnus, sähköposti tai puhelinnumero"
+
+#: fractal-gtk/res/ui/login_flow.ui:317
+msgid "_Forgot Password?"
+msgstr "_Unohditko salasanasi?"
+
+#: fractal-gtk/res/ui/login_flow.ui:335
+msgid "Invalid username or password"
+msgstr "Virheellinen käyttäjätunnus tai salasana"
+
+#: fractal-gtk/res/ui/main_menu.ui:103
 msgid "Log Out"
 msgstr "Kirjaudu ulos"
 
-#: fractal-gtk/res/ui/main_menu.ui:150
+#: fractal-gtk/res/ui/main_menu.ui:120
 msgid "Keyboard _Shortcuts"
 msgstr "_Pikanäppäimet"
 
-#: fractal-gtk/res/ui/main_menu.ui:164
+#: fractal-gtk/res/ui/main_menu.ui:129
 msgid "_About Fractal"
 msgstr "_Tietoja - Fractal"
 
-#: fractal-gtk/res/ui/main_window.ui:185
-msgid "No room selected"
-msgstr "Ei huonetta valittuna"
-
-#: fractal-gtk/res/ui/main_window.ui:200
-msgid "Join a room to start chatting"
-msgstr "Liity huoneeseen aloittaaksesi keskustelun"
-
-#: fractal-gtk/res/ui/main_window.ui:210
-msgid "No room"
-msgstr "Ei huonetta"
-
-#: fractal-gtk/res/ui/main_window.ui:291
-msgid "Chat"
-msgstr "Keskustelu"
-
-#: fractal-gtk/res/ui/main_window.ui:343
-msgid "Directory"
-msgstr "Hakemisto"
-
-#: fractal-gtk/res/ui/main_window.ui:367
-msgid "Loading"
-msgstr "Ladataan"
-
-#: fractal-gtk/res/ui/main_window.ui:412
+#: fractal-gtk/res/ui/main_window.ui:56
 msgid "User"
 msgstr "Käyttäjä"
 
-#: fractal-gtk/res/ui/main_window.ui:439
+#: fractal-gtk/res/ui/main_window.ui:82
 msgid "Add"
 msgstr "Lisää"
 
-#: fractal-gtk/res/ui/main_window.ui:469
+#: fractal-gtk/res/ui/main_window.ui:111
 msgid "Room search"
 msgstr "Huonehaku"
 
-#: fractal-gtk/res/ui/main_window.ui:596
+#: fractal-gtk/res/ui/main_window.ui:282
 msgid "Room Menu"
 msgstr "Huonevalikko"
 
-#: fractal-gtk/res/ui/main_window.ui:702
-#: fractal-gtk/res/ui/server_chooser_menu.ui:65
-#: fractal-gtk/src/app/connect/directory.rs:137
+#: fractal-gtk/res/ui/main_window.ui:349
+msgid "No Room Selected"
+msgstr "Ei huonetta valittuna"
+
+#: fractal-gtk/res/ui/main_window.ui:350
+msgid "Join a room to start chatting."
+msgstr "Liity huoneeseen aloittaaksesi keskustelun."
+
+#: fractal-gtk/res/ui/main_window.ui:354
+msgid "No room"
+msgstr "Ei huonetta"
+
+#: fractal-gtk/res/ui/main_window.ui:494
+#: fractal-gtk/res/ui/server_chooser_menu.ui:51
+#: fractal-gtk/src/ui/connect/directory.rs:117
 msgid "Default Matrix Server"
 msgstr "Oletusarvoinen Matrix-palvelin"
 
@@ -466,67 +451,63 @@ msgstr "Oletusarvoinen Matrix-palvelin"
 msgid "Markdown"
 msgstr "Markdown"
 
-#: fractal-gtk/res/ui/markdown_popover.ui:67
+#: fractal-gtk/res/ui/markdown_popover.ui:52
 msgid "> quote"
 msgstr "> lainaus"
 
-#: fractal-gtk/res/ui/markdown_popover.ui:78
+#: fractal-gtk/res/ui/markdown_popover.ui:63
 msgid "**bold**"
 msgstr "**lihavoitu**"
 
-#: fractal-gtk/res/ui/markdown_popover.ui:93
+#: fractal-gtk/res/ui/markdown_popover.ui:78
 msgid "`code`"
 msgstr "`koodi`"
 
-#: fractal-gtk/res/ui/markdown_popover.ui:105
+#: fractal-gtk/res/ui/markdown_popover.ui:90
 msgid "*italic*"
 msgstr "*kursivoitu*"
 
-#: fractal-gtk/res/ui/media_viewer.ui:173
-msgid "Loading more media"
-msgstr "Ladataan lisää mediaa"
-
-#: fractal-gtk/res/ui/media_viewer.ui:264
+#: fractal-gtk/res/ui/media_viewer.ui:63
 msgid "Toggle fullscreen"
 msgstr "Koko näyttö päälle/pois"
 
-#: fractal-gtk/res/ui/members.ui:25 fractal-gtk/res/ui/room_settings.ui:940
-msgid "Search for room members"
-msgstr "Etsi huoneen jäseniä"
+#: fractal-gtk/res/ui/media_viewer.ui:226
+msgid "Loading more media"
+msgstr "Ladataan lisää mediaa"
 
 #: fractal-gtk/res/ui/message_menu.ui:22
 msgid "Reply"
 msgstr "Vastaa"
 
-#: fractal-gtk/res/ui/message_menu.ui:34
+#: fractal-gtk/res/ui/message_menu.ui:29
 msgid "Open With…"
 msgstr "Avaa sovelluksella…"
 
-#: fractal-gtk/res/ui/message_menu.ui:47
+#: fractal-gtk/res/ui/message_menu.ui:37
 msgid "Save Image As…"
 msgstr "Tallenna kuva nimellä…"
 
-#: fractal-gtk/res/ui/message_menu.ui:60
+#: fractal-gtk/res/ui/message_menu.ui:45
 msgid "Save Video As…"
 msgstr "Tallenna video nimellä…"
 
-#: fractal-gtk/res/ui/message_menu.ui:73
+#: fractal-gtk/res/ui/message_menu.ui:53
 msgid "Copy Image"
 msgstr "Kopioi kuva"
 
-#: fractal-gtk/res/ui/message_menu.ui:86
+#: fractal-gtk/res/ui/message_menu.ui:61
 msgid "Copy Selection"
 msgstr "Kopioi valinta"
 
-#: fractal-gtk/res/ui/message_menu.ui:99
+#: fractal-gtk/res/ui/message_menu.ui:69
 msgid "Copy Text"
 msgstr "Kopioi teksti"
 
-#: fractal-gtk/res/ui/message_menu.ui:114
+#: fractal-gtk/res/ui/message_menu.ui:79
 msgid "View Source"
 msgstr "Näytä lähde"
 
-#: fractal-gtk/res/ui/message_menu.ui:139
+#: fractal-gtk/res/ui/message_menu.ui:94
 msgid "Delete Message"
 msgstr "Poista viesti"
 
@@ -538,33 +519,29 @@ msgstr "Viestin lähde"
 msgid "Copy To Clipboard"
 msgstr "Kopioi leikepöydälle"
 
-#: fractal-gtk/res/ui/new_room.ui:14
-msgid "Private Chat"
-msgstr "Yksitynen keskustelu"
-
-#: fractal-gtk/res/ui/new_room.ui:18 fractal-gtk/res/ui/new_room.ui:187
-msgid "Public"
-msgstr "Julkinen"
-
-#: fractal-gtk/res/ui/new_room.ui:39
+#: fractal-gtk/res/ui/new_room.ui:21
 msgid "Create new room"
 msgstr "Luo uusi huone"
 
-#: fractal-gtk/res/ui/new_room.ui:50
+#: fractal-gtk/res/ui/new_room.ui:32
 msgid "Create"
 msgstr "Luo"
 
-#: fractal-gtk/res/ui/new_room.ui:108
+#: fractal-gtk/res/ui/new_room.ui:71
 msgid "Room name"
 msgstr "Huoneen nimi"
 
-#: fractal-gtk/res/ui/new_room.ui:152
+#: fractal-gtk/res/ui/new_room.ui:100
 msgid "Visibility"
 msgstr "Näkyvyys"
 
-#: fractal-gtk/res/ui/new_room.ui:171
+#: fractal-gtk/res/ui/new_room.ui:114
 msgid "Private"
 msgstr "Yksityinen"
+
+#: fractal-gtk/res/ui/new_room.ui:125
+msgid "Public"
+msgstr "Julkinen"
 
 #: fractal-gtk/res/ui/password_dialog.ui:22
 #: fractal-gtk/src/widgets/file_dialog.rs:12
@@ -576,47 +553,51 @@ msgstr "_Peru"
 msgid "Ch_ange"
 msgstr "_Vaihda"
 
-#: fractal-gtk/res/ui/password_dialog.ui:133
+#: fractal-gtk/res/ui/password_dialog.ui:125
 msgid "The passwords do not match."
 msgstr "Salasanat eivät täsmää."
 
-#: fractal-gtk/res/ui/password_dialog.ui:151
+#: fractal-gtk/res/ui/password_dialog.ui:143
 msgid "_Verify New Password"
 msgstr "_Vahvista uusi salasana"
 
-#: fractal-gtk/res/ui/password_dialog.ui:168
+#: fractal-gtk/res/ui/password_dialog.ui:160
 msgid "_New Password"
 msgstr "_Uusi salasana"
 
-#: fractal-gtk/res/ui/password_dialog.ui:212
+#: fractal-gtk/res/ui/password_dialog.ui:204
 msgid "Current _Password"
 msgstr "_Nykyinen salasana"
 
-#: fractal-gtk/res/ui/room_menu.ui:22
+#: fractal-gtk/res/ui/room_menu.ui:8
 msgid "Room Details"
 msgstr "Huoneen tiedot"
 
-#: fractal-gtk/res/ui/room_menu.ui:36
+#: fractal-gtk/res/ui/room_menu.ui:12
 msgid "Invite to This Room"
 msgstr "Kutsu tähän huoneeseen"
 
-#: fractal-gtk/res/ui/room_menu.ui:63
+#: fractal-gtk/res/ui/room_menu.ui:18
 msgid "Leave Room"
 msgstr "Poistu huoneesta"
 
-#: fractal-gtk/res/ui/room_settings.ui:92
+#: fractal-gtk/res/ui/room_settings.ui:14
+msgid "Details"
+msgstr "Tiedot"
+
+#: fractal-gtk/res/ui/room_settings.ui:112
 msgid "Unknown"
 msgstr "Tuntematon"
 
-#: fractal-gtk/res/ui/room_settings.ui:118
+#: fractal-gtk/res/ui/room_settings.ui:133
 msgid "Add name"
 msgstr "Lisää nimi"
 
-#: fractal-gtk/res/ui/room_settings.ui:150
+#: fractal-gtk/res/ui/room_settings.ui:160
 msgid "Add topic"
 msgstr "Lisää aihe"
 
-#: fractal-gtk/res/ui/room_settings.ui:174
+#: fractal-gtk/res/ui/room_settings.ui:179
 msgid "Type in your room topic"
 msgstr "Kirjoita huoneesi aihe"
 
@@ -624,170 +605,150 @@ msgstr "Kirjoita huoneesi aihe"
 msgid "No room description"
 msgstr "Ei huoneen kuvausta"
 
-#: fractal-gtk/res/ui/room_settings.ui:239
+#: fractal-gtk/res/ui/room_settings.ui:230
 msgid "Notifications"
 msgstr "Ilmoitukset"
 
-#: fractal-gtk/res/ui/room_settings.ui:280
+#: fractal-gtk/res/ui/room_settings.ui:258
 msgid "Notification sounds"
 msgstr "Ilmoitusäänet"
 
-#: fractal-gtk/res/ui/room_settings.ui:325
+#: fractal-gtk/res/ui/room_settings.ui:290
 msgid "For all messages"
 msgstr "Kaikille viesteille"
 
-#: fractal-gtk/res/ui/room_settings.ui:366
+#: fractal-gtk/res/ui/room_settings.ui:322
 msgid "Only for mentions"
 msgstr "Vain maininnoille"
 
-#: fractal-gtk/res/ui/room_settings.ui:397
+#: fractal-gtk/res/ui/room_settings.ui:352
 msgid "Shared Media"
 msgstr "Jaettu media"
 
-#: fractal-gtk/res/ui/room_settings.ui:444
+#: fractal-gtk/res/ui/room_settings.ui:394
 msgid "photos"
 msgstr "kuvat"
 
-#: fractal-gtk/res/ui/room_settings.ui:484
+#: fractal-gtk/res/ui/room_settings.ui:424
 msgid "videos"
 msgstr "videot"
 
-#: fractal-gtk/res/ui/room_settings.ui:524
+#: fractal-gtk/res/ui/room_settings.ui:454
 msgid "documents"
 msgstr "asiakirjat"
 
-#: fractal-gtk/res/ui/room_settings.ui:555
+#: fractal-gtk/res/ui/room_settings.ui:475
 msgid "New members can see"
 msgstr "Uudet jäsenet voivat nähdä"
 
-#: fractal-gtk/res/ui/room_settings.ui:600
+#: fractal-gtk/res/ui/room_settings.ui:507
 msgid "All room history"
 msgstr "Huoneen koko historian"
 
-#: fractal-gtk/res/ui/room_settings.ui:641
+#: fractal-gtk/res/ui/room_settings.ui:539
 msgid "History after they were invited"
 msgstr "Historian kutsumisen jälkeen"
 
-#: fractal-gtk/res/ui/room_settings.ui:672
+#: fractal-gtk/res/ui/room_settings.ui:569
 msgid "Room Visibility"
 msgstr "Huoneen näkyvyys"
 
-#: fractal-gtk/res/ui/room_settings.ui:719
+#: fractal-gtk/res/ui/room_settings.ui:604
 msgid "Allow guests"
 msgstr "Salli vieraat"
 
-#: fractal-gtk/res/ui/room_settings.ui:759
+#: fractal-gtk/res/ui/room_settings.ui:635
 msgid "Allow joining without invite"
 msgstr "Salli liittyminen ilman kutsua"
 
-#: fractal-gtk/res/ui/room_settings.ui:799
+#: fractal-gtk/res/ui/room_settings.ui:666
 msgid "Publish in room directory"
 msgstr "Julkaise huonehakemistossa"
 
-#: fractal-gtk/res/ui/room_settings.ui:830
+#: fractal-gtk/res/ui/room_settings.ui:695
 msgid "Join addresses"
 msgstr "Liittymisosoitteet"
 
-#: fractal-gtk/res/ui/room_settings.ui:889
+#: fractal-gtk/res/ui/room_settings.ui:749
 msgid "members"
 msgstr "jäsenet"
 
-#: fractal-gtk/res/ui/room_settings.ui:905
+#: fractal-gtk/res/ui/room_settings.ui:761
 msgid "Invite New Member"
 msgstr "Kutsu uusi jäsen"
 
-#: fractal-gtk/res/ui/room_settings.ui:1018
-msgid "Details"
-msgstr "Tiedot"
+#: fractal-gtk/res/ui/room_settings.ui:786
+msgid "Search for room members"
+msgstr "Etsi huoneen jäseniä"
 
 #: fractal-gtk/res/ui/scroll_widget.ui:63
 msgid "Scroll to bottom"
 msgstr "Vieritä alas"
 
-#: fractal-gtk/res/ui/server_chooser_menu.ui:34
+#: fractal-gtk/res/ui/server_chooser_menu.ui:30
 msgid "Show rooms from:"
 msgstr "Näytä huoneet:"
 
-#: fractal-gtk/res/ui/server_chooser_menu.ui:90
+#: fractal-gtk/res/ui/server_chooser_menu.ui:65
 msgid "Your homeserver"
 msgstr "Kotipalvelimeltasi"
 
-#: fractal-gtk/res/ui/server_chooser_menu.ui:134
+#: fractal-gtk/res/ui/server_chooser_menu.ui:93
 msgid "Other Protocol"
 msgstr "Muu protokolla"
 
-#: fractal-gtk/res/ui/server_chooser_menu.ui:207
+#: fractal-gtk/res/ui/server_chooser_menu.ui:139
 msgid "Other Homeserver"
 msgstr "Muu kotipalvelin"
 
-#: fractal-gtk/res/ui/server_chooser_menu.ui:235
+#: fractal-gtk/res/ui/server_chooser_menu.ui:156
 msgid "Homeserver URL"
 msgstr "Kotipalvelimen osoite"
 
-#: fractal-gtk/src/actions/account_settings.rs:34
-#: fractal-gtk/src/actions/room_settings.rs:43
+#: fractal-gtk/src/actions/account_settings.rs:31
+#: fractal-gtk/src/actions/room_settings.rs:37
 msgid "Images"
 msgstr "Kuvat"
 
-#: fractal-gtk/src/actions/account_settings.rs:35
-#: fractal-gtk/src/actions/room_settings.rs:45
+#: fractal-gtk/src/actions/account_settings.rs:32
+#: fractal-gtk/src/actions/room_settings.rs:39
 msgid "Select a new avatar"
 msgstr "Valitse uusi avatar"
 
-#: fractal-gtk/src/actions/global.rs:298
+#: fractal-gtk/src/actions/global.rs:320
 msgid "Select a file"
 msgstr "Valitse tiedosto"
 
-#: fractal-gtk/src/actions/message.rs:74
+#: fractal-gtk/src/actions/message.rs:57
 msgid "This message has no source."
 msgstr "Tällä viestillä ei ole lähdettä."
 
-#: fractal-gtk/src/actions/message.rs:159
-#: fractal-gtk/src/actions/message.rs:197
+#: fractal-gtk/src/actions/message.rs:131
+#: fractal-gtk/src/actions/message.rs:162
 msgid "Could not download the file"
 msgstr "Tiedostoa ei voitu ladata"
 
-#: fractal-gtk/src/actions/message.rs:168
+#: fractal-gtk/src/actions/message.rs:138
 msgid "Couldn’t save file"
 msgstr "Tiedostoa ei voitu tallentaa"
 
-#: fractal-gtk/src/actions/room_settings.rs:61
+#: fractal-gtk/src/actions/room_settings.rs:53
 msgid "Couldn’t open file"
 msgstr "Tiedostoa ei voitu avata"
 
-#: fractal-gtk/src/appop/about.rs:20
-msgid "A Matrix.org client for GNOME"
-msgstr "Matrix-sovellus Gnomelle"
-
-#: fractal-gtk/src/appop/about.rs:22
-msgid "© 2017–2020 Daniel García Moreno, et al."
-msgstr "© 2017–2020 Daniel García Moreno, et al."
-
-#: fractal-gtk/src/appop/about.rs:29
-msgid "Learn more about Fractal"
-msgstr "Lisätietoja Fractalista"
-
-#: fractal-gtk/src/appop/about.rs:30
-msgid "translator-credits"
-msgstr "Jiri Grönroos"
-
-#: fractal-gtk/src/appop/about.rs:45
-msgid "Name by"
-msgstr "Nimennyt"
-
-#: fractal-gtk/src/appop/account.rs:68
+#: fractal-gtk/src/appop/account.rs:65
 msgid "The validation code is not correct."
 msgstr "Vahvistuskoodi ei ole oikein."
 
-#: fractal-gtk/src/appop/account.rs:81
+#: fractal-gtk/src/appop/account.rs:73
 msgid "Enter the code received via SMS"
 msgstr "Anna tekstiviestitse saatu koodi"
 
-#: fractal-gtk/src/appop/account.rs:96 fractal-gtk/src/appop/account.rs:159
+#: fractal-gtk/src/appop/account.rs:88 fractal-gtk/src/appop/account.rs:144
 msgid "Continue"
 msgstr "Jatka"
 
-#: fractal-gtk/src/appop/account.rs:149
+#: fractal-gtk/src/appop/account.rs:134
 msgid ""
 "In order to add this email address, go to your inbox and follow the link you "
 "received. Once you’ve done that, click Continue."
@@ -795,153 +756,110 @@ msgstr ""
 "Lisää tämä sähköpostiosoite menemällä postilaatikkoosi ja seuraamalla "
 "vastaanottamaasi linkkiä. Kun olet tehnyt sen, napsauta Jatka."
 
-#: fractal-gtk/src/appop/account.rs:218
-msgid "OK"
-msgstr "OK"
-
-#: fractal-gtk/src/appop/account.rs:786
+#: fractal-gtk/src/appop/account.rs:348
 msgid "Are you sure you want to delete your account?"
 msgstr "Haluatko varmasti poistaa tilisi?"
 
-#: fractal-gtk/src/appop/attach.rs:37
-msgid "Image from Clipboard"
-msgstr "Kuva leikepöydältä"
-
-#: fractal-gtk/src/appop/attach.rs:53
-msgid "Send"
-msgstr "Lähetä"
-
-#. Filename for the attached image
-#: fractal-gtk/src/appop/attach.rs:82
-msgid "image"
-msgstr "kuva"
-
-#: fractal-gtk/src/appop/invite.rs:151
-msgid "Invite to {name}"
-msgstr "Kutsu huoneeseen {name}"
-
-#: fractal-gtk/src/appop/invite.rs:269
-msgid "Join {room_name}?"
-msgstr "Liitytäänkö huoneeseen {room_name}?"
-
-#: fractal-gtk/src/appop/invite.rs:274
-msgid ""
-"You’ve been invited to join <b>{room_name}</b> room by <b>{sender_name}</b>"
-msgstr ""
-"Sinut on kutsuttu huoneeseen <b>{room_name}</b> henkilön <b>{sender_name}</"
-"b> toimesta"
-
-#: fractal-gtk/src/appop/invite.rs:279
-msgid "You’ve been invited to join <b>{room_name}</b>"
-msgstr "Sinut on kutsuttu liittymään huoneeseen <b>{room_name}</b>"
-
-#. Translators: The placeholder is for the number of unread messages in the
-#. application
-#: fractal-gtk/src/appop/mod.rs:217
-#| msgid "Fractal"
+#: fractal-gtk/src/appop/mod.rs:176
 msgid "Fractal [{}]"
 msgstr "Fractal [{}]"
 
-#: fractal-gtk/src/appop/notify.rs:52
+#: fractal-gtk/src/appop/notify.rs:18
 msgid "An audio file has been added to the conversation."
 msgstr "Äänitiedosto on lisätty keskusteluun."
 
-#: fractal-gtk/src/appop/notify.rs:53
+#: fractal-gtk/src/appop/notify.rs:19
 msgid "An image has been added to the conversation."
 msgstr "Kuva on lisätty keskusteluun."
 
-#: fractal-gtk/src/appop/notify.rs:54
+#: fractal-gtk/src/appop/notify.rs:20
 msgid "A video has been added to the conversation."
 msgstr "Video on lisätty keskusteluun."
 
-#: fractal-gtk/src/appop/notify.rs:55
+#: fractal-gtk/src/appop/notify.rs:21
 msgid "A file has been added to the conversation."
 msgstr "Tiedosto on lisätty keskusteluun."
 
-#: fractal-gtk/src/appop/notify.rs:60
+#: fractal-gtk/src/appop/notify.rs:26
 msgid " (direct message)"
 msgstr " (suoraviesti)"
 
-#: fractal-gtk/src/appop/room.rs:358
+#: fractal-gtk/src/appop/room.rs:352
 msgid "Leave {room_name}?"
 msgstr "Poistutaanko huoneesta {room_name}?"
 
-#: fractal-gtk/src/appop/room.rs:573
+#: fractal-gtk/src/appop/room.rs:539
 msgid "The room ID is malformed"
 msgstr "Huoneen tunniste on muotoiltu väärin"
 
-#: fractal-gtk/src/appop/room.rs:643
+#: fractal-gtk/src/appop/room.rs:607
 msgid "EMPTY ROOM"
 msgstr "TYHJÄ HUONE"
 
-#: fractal-gtk/src/appop/room.rs:645
+#: fractal-gtk/src/appop/room.rs:609
 msgid "{m1} and {m2}"
 msgstr "{m1} ja {m2}"
 
-#: fractal-gtk/src/appop/room.rs:646
+#: fractal-gtk/src/appop/room.rs:610
 msgid "{m1} and Others"
 msgstr "{m1} ja muita"
 
-#: fractal-gtk/src/appop/room.rs:745
+#: fractal-gtk/src/appop/room.rs:710
 msgid "Several users are typing…"
 msgstr "Useat käyttäjät kirjoittavat…"
 
-#: fractal-gtk/src/appop/room.rs:748
+#: fractal-gtk/src/appop/room.rs:713
 msgid "<b>{}</b> is typing…"
 msgid_plural "<b>{}</b> and <b>{}</b> are typing…"
 msgstr[0] "<b>{}</b> kirjoittaa…"
 msgstr[1] "<b>{}</b> ja <b>{}</b> kirjoittavat…"
 
-#: fractal-gtk/src/appop/sync.rs:16
+#: fractal-gtk/src/appop/sync.rs:24
 msgid "Syncing, this could take a while"
 msgstr "Synkronoidaan, tässä voi kestää hetki"
 
-#: fractal-gtk/src/backend/directory.rs:39
-#: fractal-gtk/src/backend/directory.rs:80
+#: fractal-gtk/src/backend/directory.rs:35
+#: fractal-gtk/src/backend/directory.rs:81
 msgid "Error searching for rooms"
 msgstr "Virhe huoneita etsiessä"
 
-#: fractal-gtk/src/backend/register.rs:37
+#: fractal-gtk/src/backend/register.rs:42
 msgid "Can’t login, try again"
 msgstr "Kirjautuminen ei onnistu, yritä uudelleen"
 
-#: fractal-gtk/src/backend/room.rs:352
+#: fractal-gtk/src/backend/room.rs:403
 msgid "Error deleting message"
 msgstr "Virhe viestiä poistaessa"
 
-#: fractal-gtk/src/backend/room.rs:419
+#: fractal-gtk/src/backend/room.rs:443
 msgid "Can’t join the room, try again."
 msgstr "Huoneeseen ei voitu liittyä, yritä uudelleen."
 
-#: fractal-gtk/src/backend/room.rs:684 fractal-gtk/src/backend/room.rs:741
+#: fractal-gtk/src/backend/room.rs:675 fractal-gtk/src/backend/room.rs:727
 msgid "Can’t create the room, try again"
 msgstr "Huonetta ei voitu luoda, yritä uudelleen"
 
-#: fractal-gtk/src/backend/user.rs:162
+#: fractal-gtk/src/backend/user.rs:113
 msgid "Sorry, account settings can’t be loaded."
 msgstr "Valitettavasti tilin asetuksia ei voitu ladata."
 
-#: fractal-gtk/src/backend/user.rs:201
+#: fractal-gtk/src/backend/user.rs:141
 msgid "Email is already in use"
 msgstr "Sähköpostiosoite on jo käytössä"
 
-#: fractal-gtk/src/backend/user.rs:205
+#: fractal-gtk/src/backend/user.rs:144
 msgid "Please enter a valid email address."
 msgstr "Kirjoita kelvollinen sähköpostiosoite."
 
-#: fractal-gtk/src/backend/user.rs:209
+#: fractal-gtk/src/backend/user.rs:147
 msgid "Couldn’t add the email address."
 msgstr "Sähköpostiosoitetta ei voitu lisätä."
 
-#: fractal-gtk/src/backend/user.rs:218 fractal-gtk/src/backend/user.rs:296
-msgid "The identity server is invalid."
-msgstr "Identiteettipalvelin on virheellinen."
-
-#: fractal-gtk/src/backend/user.rs:277
+#: fractal-gtk/src/backend/user.rs:184
 msgid "Phone number is already in use"
 msgstr "Puhelinnumero on jo käytössä"
 
-#: fractal-gtk/src/backend/user.rs:282
+#: fractal-gtk/src/backend/user.rs:188
 msgid ""
 "Please enter your phone number in the format: \n"
 " + your country code and your phone number."
@@ -949,21 +867,89 @@ msgstr ""
 "Kirjoita puhelinnumero seuraavassa muodossa: \n"
 " + maakoodi ja puhelinnumerosi."
 
-#: fractal-gtk/src/backend/user.rs:287
+#: fractal-gtk/src/backend/user.rs:192
 msgid "Couldn’t add the phone number."
 msgstr "Puhelinnumeroa ei voitu lisätä."
 
-#: fractal-gtk/src/backend/user.rs:443
+#: fractal-gtk/src/backend/user.rs:330
 msgid "Couldn’t change the password"
 msgstr "Salasanaa ei voitu vaihtaa"
 
-#: fractal-gtk/src/backend/user.rs:487
+#: fractal-gtk/src/backend/user.rs:383
 msgid "Couldn’t delete the account"
 msgstr "Tiliä ei voitu poistaa"
 
-#: fractal-gtk/src/uibuilder.rs:52
+#: fractal-gtk/src/ui/about.rs:12
+msgid "A Matrix.org client for GNOME"
+msgstr "Matrix-sovellus Gnomelle"
+
+#: fractal-gtk/src/ui/about.rs:14
+msgid "© 2017–2020 Daniel García Moreno, et al."
+msgstr "© 2017–2020 Daniel García Moreno, et al."
+
+#: fractal-gtk/src/ui/about.rs:21
+msgid "Learn more about Fractal"
+msgstr "Lisätietoja Fractalista"
+
+#: fractal-gtk/src/ui/about.rs:22
+msgid "translator-credits"
+msgstr "Jiri Grönroos"
+
+#: fractal-gtk/src/ui/about.rs:37
+msgid "Name by"
+msgstr "Nimennyt"
+
+#: fractal-gtk/src/ui/attach.rs:26
+msgid "Image from Clipboard"
+msgstr "Kuva leikepöydältä"
+
+#: fractal-gtk/src/ui/attach.rs:42
+msgid "Send"
+msgstr "Lähetä"
+
+#. Filename for the attached image
+#: fractal-gtk/src/ui/attach.rs:90
+msgid "image"
+msgstr "kuva"
+
+#: fractal-gtk/src/ui/invite.rs:131
+msgid "Invite to {name}"
+msgstr "Kutsu huoneeseen {name}"
+
+#: fractal-gtk/src/ui/invite.rs:183
+msgid "Join {room_name}?"
+msgstr "Liitytäänkö huoneeseen {room_name}?"
+
+#: fractal-gtk/src/ui/invite.rs:187
+msgid ""
+"You’ve been invited to join <b>{room_name}</b> room by <b>{sender_name}</b>"
+msgstr ""
+"Sinut on kutsuttu huoneeseen <b>{room_name}</b> henkilön <b>{sender_name}</"
+"b> toimesta"
+
+#: fractal-gtk/src/ui/invite.rs:192
+msgid "You’ve been invited to join <b>{room_name}</b>"
+msgstr "Sinut on kutsuttu liittymään huoneeseen <b>{room_name}</b>"
+
+#: fractal-gtk/src/ui/mod.rs:77
 msgid "You don’t have permission to post to this room"
 msgstr "Sinulla ei ole oikeutta lähettää tähän huoneeseen"
+
+#: fractal-gtk/src/ui/mod.rs:159
+msgid "OK"
+msgstr "OK"
+
+#: fractal-gtk/src/ui/room_settings.rs:264
+msgid "Room · {} member"
+msgid_plural "Room · {} members"
+msgstr[0] "Huone · {} jäsen"
+msgstr[1] "Huone · {} jäsentä"
+
+#: fractal-gtk/src/ui/room_settings.rs:699
+msgid "{} member"
+msgid_plural "{} members"
+msgstr[0] "{} jäsen"
+msgstr[1] "{} jäsentä"
 
 #: fractal-gtk/src/widgets/file_dialog.rs:8
 msgid "Save media as"
@@ -977,7 +963,7 @@ msgstr "_Tallenna"
 msgid "_Select"
 msgstr "_Valitse"
 
-#: fractal-gtk/src/widgets/inline_player.rs:521
+#: fractal-gtk/src/widgets/inline_player.rs:513
 msgid "Could not retrieve file URI"
 msgstr "Tiedoston URI:a ei voitu noutaa"
 
@@ -993,95 +979,67 @@ msgstr ""
 "Potkun suoritti: {}\n"
 " “{}”"
 
-#: fractal-gtk/src/widgets/login.rs:98
+#: fractal-gtk/src/widgets/login.rs:95
 msgid "Malformed server URL"
 msgstr "Palvelimen osoite on muotoiltu väärin"
 
-#: fractal-gtk/src/widgets/media_viewer.rs:1050
+#: fractal-gtk/src/widgets/media_viewer.rs:1026
 msgid "Error while loading previous media"
 msgstr "Virhe aiempaa mediaa ladatessa"
 
-#: fractal-gtk/src/widgets/members_list.rs:51
+#: fractal-gtk/src/widgets/members_list.rs:50
 msgid "No matching members found"
 msgstr "Vastaavia jäseniä ei löytynyt"
 
-#: fractal-gtk/src/widgets/members_list.rs:167
+#: fractal-gtk/src/widgets/members_list.rs:146
 msgid "Admin"
 msgstr "Ylläpitäjä"
 
-#: fractal-gtk/src/widgets/members_list.rs:168
+#: fractal-gtk/src/widgets/members_list.rs:147
 msgid "Moderator"
 msgstr "Moderaattori"
 
-#: fractal-gtk/src/widgets/members_list.rs:169
+#: fractal-gtk/src/widgets/members_list.rs:148
 msgid "Privileged"
 msgstr "Etuoikeutettu"
 
-#: fractal-gtk/src/widgets/message.rs:90
-msgid "Uploading video."
-msgstr "Lähetetään videota."
-
-#: fractal-gtk/src/widgets/message.rs:95
-msgid "Uploading audio."
-msgstr "Lähetetään ääntä."
-
-#: fractal-gtk/src/widgets/message.rs:100
-msgid "Uploading image."
-msgstr "Lähetetään kuvaa."
-
-#: fractal-gtk/src/widgets/message.rs:104
-msgid "Uploading file."
-msgstr "Lähetetään tiedostoa."
-
-#: fractal-gtk/src/widgets/message.rs:256
+#: fractal-gtk/src/widgets/message.rs:471
 #, c-format
 msgid "Last edited %c"
 msgstr "Viimeksi muokattu %c"
 
-#: fractal-gtk/src/widgets/message.rs:481
-#: fractal-gtk/src/widgets/message.rs:596
+#: fractal-gtk/src/widgets/message.rs:665
+#: fractal-gtk/src/widgets/message.rs:832
 msgid "Save"
 msgstr "Tallenna"
 
-#: fractal-gtk/src/widgets/message.rs:610
+#: fractal-gtk/src/widgets/message.rs:847
 msgid "Open"
 msgstr "Avaa"
 
 #. Use 12h time format (AM/PM)
-#: fractal-gtk/src/widgets/message.rs:630
+#: fractal-gtk/src/widgets/message.rs:990
 msgid "%l∶%M %p"
 msgstr "%l∶%M %p"
 
 #. Use 24 time format
-#: fractal-gtk/src/widgets/message.rs:633
+#: fractal-gtk/src/widgets/message.rs:993
 msgid "%R"
 msgstr "%R"
 
-#: fractal-gtk/src/widgets/room_history.rs:96
+#: fractal-gtk/src/widgets/room_history.rs:108
 msgid "New Messages"
 msgstr "Uudet viestit"
 
 #. Translators: This is a date format in the day divider without the year
-#: fractal-gtk/src/widgets/room_history.rs:795
+#: fractal-gtk/src/widgets/room_history.rs:798
 msgid "%B %e"
 msgstr "%e. %Bta"
 
 #. Translators: This is a date format in the day divider with the year
-#: fractal-gtk/src/widgets/room_history.rs:798
+#: fractal-gtk/src/widgets/room_history.rs:801
 msgid "%B %e, %Y"
 msgstr "%e. %Bta %Y"
-
-#: fractal-gtk/src/widgets/room_settings.rs:211
-msgid "Room · {} member"
-msgid_plural "Room · {} members"
-msgstr[0] "Huone · {} jäsen"
-msgstr[1] "Huone · {} jäsentä"
-
-#: fractal-gtk/src/widgets/room_settings.rs:659
-msgid "{} member"
-msgid_plural "{} members"
-msgstr[0] "{} jäsen"
-msgstr[1] "{} jäsentä"
 
 #: fractal-gtk/src/widgets/roomlist.rs:480
 msgid "Invites"
@@ -1106,6 +1064,36 @@ msgstr "Huoneet"
 #: fractal-gtk/src/widgets/roomlist.rs:491
 msgid "You don’t have any rooms yet"
 msgstr "Sinulla ei ole vielä yhtäkään huonetta"
+
+#~ msgid "Select room image file"
+#~ msgstr "Valitse huoneen kuvatiedosto"
+
+#~ msgid "Chat"
+#~ msgstr "Keskustelu"
+
+#~ msgid "Directory"
+#~ msgstr "Hakemisto"
+
+#~ msgid "Loading"
+#~ msgstr "Ladataan"
+
+#~ msgid "Private Chat"
+#~ msgstr "Yksitynen keskustelu"
+
+#~ msgid "The identity server is invalid."
+#~ msgstr "Identiteettipalvelin on virheellinen."
+
+#~ msgid "Uploading video."
+#~ msgstr "Lähetetään videota."
+
+#~ msgid "Uploading audio."
+#~ msgstr "Lähetetään ääntä."
+
+#~ msgid "Uploading image."
+#~ msgstr "Lähetetään kuvaa."
+
+#~ msgid "Uploading file."
+#~ msgstr "Lähetetään tiedostoa."
 
 #~ msgid "Save as…"
 #~ msgstr "Tallenna nimellä…"
