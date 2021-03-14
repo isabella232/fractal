@@ -1,7 +1,7 @@
 project(
   'fractal', 'rust',
   version: '4.4.0',
-  license: 'GPLv3',
+  license: 'GPL-3.0-or-later',
 )
 
 dependency('openssl', version: '>= 1.0')
